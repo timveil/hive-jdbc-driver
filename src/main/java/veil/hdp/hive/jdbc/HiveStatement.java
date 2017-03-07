@@ -17,27 +17,21 @@ public class HiveStatement extends AbstractStatement {
 
     private static final Logger log = LoggerFactory.getLogger(HiveStatement.class);
 
-
+    // constructor
+    private final HiveConnection connection;
     private TCLIService.Client client;
     private final TSessionHandle sessionHandle;
     private boolean isScrollableResultSet = false;
 
-    private final HiveConnection connection;
+    // private
+    private TOperationHandle statementHandle;
+
+    // public getter & setter
     private int queryTimeout = 0;
     private int maxRows = 0;
     private int fetchSize = 1000;
     private ResultSet resultSet;
-
-    ////////////////////////////
-
-
-
-
-
-
-
-
-
+    private boolean isClosed = false;
 
 
     public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle) {
@@ -55,10 +49,18 @@ public class HiveStatement extends AbstractStatement {
     public boolean execute(String sql) throws SQLException {
 
         try {
-            return HiveServiceUtils.executeSql(client, sessionHandle, queryTimeout, sql, new OperationHandleCallback() {
-                @Override
-                public void process(TOperationHandle statementHandle) {
-                  /*  resultSet = new HiveQueryResultSet.Builder(this)
+            statementHandle = HiveServiceUtils.executeSql(client, sessionHandle, queryTimeout, sql);
+            HiveServiceUtils.waitForStatementToComplete(client, statementHandle);
+        } catch (TException e) {
+            throw new SQLException(e.getMessage(), "", e);
+        }
+
+
+        if (!statementHandle.isHasResultSet()) {
+            return false;
+        }
+
+           /*  resultSet = new HiveQueryResultSet.Builder(this)
                             .setClient(client)
                             .setSessionHandle(sessionHandle)
                             .setStmtHandle(statementHandle)
@@ -66,13 +68,28 @@ public class HiveStatement extends AbstractStatement {
                             .setFetchSize(fetchSize)
                             .setScrollable(isScrollableResultSet)
                             .build();*/
-                }
-            });
-        } catch (TException e) {
-            throw new SQLException(e.getMessage(), "", e);
+
+        return true;
+    }
+
+    @Override
+    public ResultSet executeQuery(String sql) throws SQLException {
+        if (!execute(sql)) {
+            throw new SQLException("The query did not generate a result set!");
         }
+        return resultSet;
+    }
 
+    @Override
+    public int executeUpdate(String sql) throws SQLException {
+        execute(sql);
 
+        return 0;
+    }
+
+    @Override
+    public int getFetchDirection() throws SQLException {
+        return ResultSet.FETCH_FORWARD;
     }
 
     @Override
@@ -111,12 +128,44 @@ public class HiveStatement extends AbstractStatement {
     }
 
     @Override
+    public int getResultSetType() throws SQLException {
+        return ResultSet.TYPE_FORWARD_ONLY;
+    }
+
+    @Override
     public Connection getConnection() throws SQLException {
         return this.connection;
     }
 
     @Override
+    public void cancel() throws SQLException {
+        HiveServiceUtils.cancelOperation(client, statementHandle);
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        return this.isClosed;
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean isPoolable() throws SQLException {
+        return false;
+    }
+
+    @Override
     public void close() throws SQLException {
-       //HiveServiceUtils.closeOperation(client, );
+       HiveServiceUtils.closeOperation(client, statementHandle);
+       client = null;
+       statementHandle = null;
+
+       resultSet.close();
+       resultSet= null;
+
+       isClosed = true;
     }
 }

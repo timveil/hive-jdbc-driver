@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 import org.apache.hive.service.auth.HiveAuthFactory;
 import org.apache.hive.service.cli.HiveSQLException;
+import org.apache.hive.service.cli.TableSchema;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -12,7 +13,10 @@ import veil.hdp.hive.jdbc.OperationHandleCallback;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.apache.hive.service.cli.thrift.TCLIServiceConstants.TYPE_NAMES;
 
 /**
  * Created by timve on 3/6/2017.
@@ -37,11 +41,29 @@ public class HiveServiceUtils {
         throw new HiveSQLException(status);
     }
 
+    public static TRowSet fetchResults(TCLIService.Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
+        TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
+        TFetchResultsResp fetchResp = client.FetchResults(fetchReq);
+
+
+        return fetchResp.getResults();
+    }
+
     public static void closeOperation(TCLIService.Client client, TOperationHandle operationHandle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(operationHandle);
 
         try {
             client.CloseOperation(closeRequest);
+        } catch (TException e) {
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    public static void cancelOperation(TCLIService.Client client, TOperationHandle operationHandle) {
+        TCancelOperationReq cancelRequest = new TCancelOperationReq(operationHandle);
+
+        try {
+            client.CancelOperation(cancelRequest);
         } catch (TException e) {
             log.warn(e.getMessage(), e);
         }
@@ -57,28 +79,19 @@ public class HiveServiceUtils {
         }
     }
 
-    public static boolean executeSql(TCLIService.Client client, TSessionHandle sessionHandle, long queryTimeout, String sql, OperationHandleCallback callback) throws TException, SQLException {
+    public static TOperationHandle executeSql(TCLIService.Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException, SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
-        //executeStatementReq.setConfOverlay(sessionConf);
         executeStatementReq.setQueryTimeout(queryTimeout);
 
         TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
 
-        TOperationHandle statementHandle = executeStatementResp.getOperationHandle();
+        return executeStatementResp.getOperationHandle();
 
-        waiteForStatementToComplete(client, statementHandle);
 
-        if (!statementHandle.isHasResultSet()) {
-            return false;
-        }
-
-        callback.process(statementHandle);
-
-        return true;
     }
 
-    private static void waiteForStatementToComplete(TCLIService.Client client, TOperationHandle statementHandle) throws TException, SQLException {
+    public static void waitForStatementToComplete(TCLIService.Client client, TOperationHandle statementHandle) throws TException, SQLException {
         boolean isComplete = false;
 
         while (!isComplete) {
@@ -147,5 +160,13 @@ public class HiveServiceUtils {
         }
 
         return openSessionConfig;
+    }
+
+    public static TTableSchema getSchema(TCLIService.Client client, TOperationHandle operationHandle) throws TException {
+
+        TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
+        TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
+
+        return metadataResp.getSchema();
     }
 }
