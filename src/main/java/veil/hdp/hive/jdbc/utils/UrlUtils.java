@@ -49,17 +49,17 @@ public class UrlUtils {
         connectionParameters.setDatabaseName(databaseName);
 
         Map<String, String> sessionVariables = parseSessionVariables(uriPath);
-        connectionParameters.setSessionVariables(sessionVariables);
+        connectionParameters.addSessionVariables(sessionVariables);
 
         String uriQuery = tmpUri.getQuery();
 
         Map<String, String> hiveConfigurationParameters = parseHiveConfigurationParameters(uriQuery);
-        connectionParameters.setHiveConfigurationParameters(hiveConfigurationParameters);
+        connectionParameters.addHiveConfigurationParameters(hiveConfigurationParameters);
 
         String uriFragment = tmpUri.getFragment();
 
         Map<String, String> hiveVariables = parseHiveVariables(uriFragment);
-        connectionParameters.setHiveVariables(hiveVariables);
+        connectionParameters.addHiveVariables(hiveVariables);
 
         if (!connectionParameters.getHosts().isEmpty()) {
 
@@ -87,8 +87,8 @@ public class UrlUtils {
 
     private static Map<String, String> parseHiveConfigurationParameters(String query) {
 
-        if (query != null ) {
-           return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(query);
+        if (query != null) {
+            return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(query);
         }
 
         return null;
@@ -97,8 +97,8 @@ public class UrlUtils {
 
     private static Map<String, String> parseHiveVariables(String fragment) {
 
-        if (fragment != null ) {
-           return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(fragment);
+        if (fragment != null) {
+            return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(fragment);
         }
 
         return null;
@@ -109,7 +109,7 @@ public class UrlUtils {
     private static Map<String, String> parseSessionVariables(String path) {
 
         if (path != null && path.contains(";")) {
-            path =  path.substring(path.indexOf(';'));
+            path = path.substring(path.indexOf(';'));
             return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path);
         }
 

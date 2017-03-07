@@ -1,22 +1,25 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
-import org.apache.hive.service.cli.thrift.TCloseSessionReq;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
+import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import veil.hdp.hive.jdbc.utils.UrlUtils;
 
+import javax.security.sasl.SaslException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class HiveConnection extends BaseHiveConnection {
+public class HiveConnection extends AbstractConnection {
 
     private static final Logger log = LoggerFactory.getLogger(HiveConnection.class);
 
@@ -27,17 +30,23 @@ public class HiveConnection extends BaseHiveConnection {
     private boolean sessionClosed = true;
 
 
-    public HiveConnection(String url, Properties info) throws SQLException {
+    public HiveConnection(String url, Properties info) throws TException, SaslException {
 
         ConnectionParameters connectionParameters = UrlUtils.parseURL(url);
+
+        PropertyUtils.mergeProperties(connectionParameters, info);
+
+        log.debug(connectionParameters.toString());
 
         if (!connectionParameters.isEmbeddedMode()) {
 
             transport = ThriftUtils.createBinaryTransport(connectionParameters, getLoginTimeout());
 
+            ThriftUtils.openTransport(transport);
+
             thriftClient = new TCLIService.Client(new TBinaryProtocol(transport));
 
-            sessionHandle = ThriftUtils.openSession(connectionParameters, thriftClient);
+            sessionHandle = HiveServiceUtils.openSession(connectionParameters, thriftClient);
 
             sessionClosed = false;
 
@@ -45,7 +54,6 @@ public class HiveConnection extends BaseHiveConnection {
         }
 
     }
-
 
 
     private int getLoginTimeout() {
@@ -64,19 +72,11 @@ public class HiveConnection extends BaseHiveConnection {
 
         if (!isClosed()) {
 
-            TCloseSessionReq closeRequest = new TCloseSessionReq(sessionHandle);
+            HiveServiceUtils.closeSession(thriftClient, sessionHandle);
 
-            try {
-                thriftClient.CloseSession(closeRequest);
-            } catch (TException e) {
-                log.warn(e.getMessage(), e);
-            }
+            ThriftUtils.closeTransport(transport);
 
-            try {
-                transport.close();
-            } finally {
-                this.sessionClosed = true;
-            }
+            this.sessionClosed = true;
         }
 
     }
@@ -86,4 +86,8 @@ public class HiveConnection extends BaseHiveConnection {
         return sessionClosed;
     }
 
+    @Override
+    public Statement createStatement() throws SQLException {
+        return new HiveStatement(this, thriftClient, sessionHandle);
+    }
 }

@@ -71,56 +71,59 @@ public class ConnectionParameters {
         return sessionVariables;
     }
 
-    public void setSessionVariables(Map<String, String> sessionVariables) {
-        this.sessionVariables = sessionVariables;
+    public void addSessionVariables(Map<String, String> sessionVariables) {
+        if (sessionVariables != null) {
+            this.sessionVariables.putAll(sessionVariables);
+        }
     }
 
     public Map<String, String> getHiveConfigurationParameters() {
         return hiveConfigurationParameters;
     }
 
-    public void setHiveConfigurationParameters(Map<String, String> hiveConfigurationParameters) {
-        this.hiveConfigurationParameters = hiveConfigurationParameters;
+    public void addHiveConfigurationParameters(Map<String, String> hiveConfigurationParameters) {
+        if (hiveConfigurationParameters != null) {
+            this.hiveConfigurationParameters.putAll(hiveConfigurationParameters);
+        }
     }
 
     public Map<String, String> getHiveVariables() {
         return hiveVariables;
     }
 
-    public void setHiveVariables(Map<String, String> hiveVariables) {
-        this.hiveVariables = hiveVariables;
+    public void addHiveVariables(Map<String, String> hiveVariables) {
+        if (hiveVariables != null) {
+            this.hiveVariables.putAll(hiveVariables);
+        }
     }
 
-    public int getRetries() {
-        return sessionVariables.get("retries") != null ? Integer.parseInt(sessionVariables.get("retries")) : 1;
+    public String getUser() {
+        return sessionVariables.get("user");
     }
 
-    public boolean isHttpTransportMode() {
-        return sessionVariables.get("transportMode") != null && sessionVariables.get("transportMode").equalsIgnoreCase("http");
-    }
-
-    public boolean isSSL() {
-        return sessionVariables.get("ssl") != null && sessionVariables.get("ssl").equalsIgnoreCase("true");
-    }
-
-    public boolean isCookieEnabled() {
-        return sessionVariables.get("cookieAuth") == null || !sessionVariables.get("cookieAuth").equalsIgnoreCase("false");
-    }
-
-    public String getCookieName() {
-        return sessionVariables.get("cookieName") != null ? sessionVariables.get("cookieName") : "hive.server2.auth";
-    }
-
-    public String getPrincipal() {
-        return sessionVariables.get("principal");
+    public String getPassword() {
+        return sessionVariables.get("password");
     }
 
     public boolean isZookeeperDiscoverMode() {
         return sessionVariables.get("serviceDiscoveryMode") != null && sessionVariables.get("serviceDiscoveryMode").equalsIgnoreCase("zooKeeper");
     }
 
-    public boolean isKerberos() {
-        return !"noSasl".equals(sessionVariables.get("auth")) && sessionVariables.containsKey("principal");
+    public boolean isNoSasl() {
+        return "noSasl".equals(sessionVariables.get("auth"));
     }
 
+    @Override
+    public String toString() {
+        return "ConnectionParameters{" +
+                "embeddedMode=" + embeddedMode +
+                ", databaseName='" + databaseName + '\'' +
+                ", host='" + host + '\'' +
+                ", port=" + port +
+                ", hosts=" + hosts +
+                ", sessionVariables=" + sessionVariables +
+                ", hiveConfigurationParameters=" + hiveConfigurationParameters +
+                ", hiveVariables=" + hiveVariables +
+                '}';
+    }
 }
