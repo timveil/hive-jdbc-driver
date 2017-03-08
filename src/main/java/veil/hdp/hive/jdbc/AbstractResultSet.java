@@ -8,9 +8,6 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-/**
- * Created by timve on 3/6/2017.
- */
 public abstract class AbstractResultSet implements ResultSet {
     @Override
     public boolean next() throws SQLException {

@@ -50,7 +50,7 @@ public class HiveConnection extends AbstractConnection {
 
             sessionClosed = false;
 
-            //syncronize client?
+            //synchronize client?
         }
 
     }

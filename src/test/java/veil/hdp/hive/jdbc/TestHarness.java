@@ -1,21 +1,24 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.hive.jdbc.*;
+import org.apache.hive.jdbc.HiveStatement;
 import org.junit.Test;
 
 import java.sql.*;
 import java.util.List;
 
-/**
- * Created by timve on 3/5/2017.
- */
+import static java.lang.Class.forName;
+import static java.lang.System.out;
+import static java.sql.DriverManager.getConnection;
+
 public class TestHarness {
 
     @Test
     public void testNewConnection() throws SQLException, ClassNotFoundException {
 
-        Class.forName("veil.hdp.hive.jdbc.HiveDriver");
+        forName("veil.hdp.hive.jdbc.HiveDriver");
 
-        Connection connection = DriverManager.getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
+        Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
 
         connection.close();
 
@@ -25,22 +28,23 @@ public class TestHarness {
     @Test
     public void testOldConnection() throws SQLException, ClassNotFoundException {
 
-        Class.forName("org.apache.hive.jdbc.HiveDriver");
+        forName("org.apache.hive.jdbc.HiveDriver");
 
-        Connection connection = DriverManager.getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
+        Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
 
         Statement statement = connection.createStatement();
-        boolean execute = statement.execute("show databases");
+        boolean execute = statement.execute("select * from test_table");
 
         ResultSet rs = statement.getResultSet();
 
-        while(rs.next()) {
-            System.out.println(rs.getString("database_name"));
+        while (rs.next()) {
+
+            out.println(rs.getDouble("col_double"));
         }
 
-        org.apache.hive.jdbc.HiveStatement hiveStatement = (org.apache.hive.jdbc.HiveStatement)statement;
+        org.apache.hive.jdbc.HiveStatement hiveStatement = (HiveStatement) statement;
 
-        System.out.println("yarn guid [" + hiveStatement.getYarnATSGuid() +"]");
+        out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
 
 
         statement.close();

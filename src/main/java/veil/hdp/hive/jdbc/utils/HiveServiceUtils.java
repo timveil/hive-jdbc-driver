@@ -1,29 +1,25 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.apache.hive.service.auth.HiveAuthFactory;
 import org.apache.hive.service.cli.HiveSQLException;
-import org.apache.hive.service.cli.TableSchema;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.ConnectionParameters;
-import veil.hdp.hive.jdbc.OperationHandleCallback;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.apache.hive.service.cli.thrift.TCLIServiceConstants.TYPE_NAMES;
+import static org.apache.hive.service.auth.HiveAuthFactory.HS2_PROXY_USER;
+import static org.apache.hive.service.cli.thrift.TCLIService.Client;
+import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
+import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_WITH_INFO_STATUS;
+import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by timve on 3/6/2017.
- */
 public class HiveServiceUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(HiveServiceUtils.class);
+    private static final Logger log = getLogger(HiveServiceUtils.class);
 
     public static void verifySuccessWithInfo(TStatus status) throws SQLException {
         verifySuccess(status, true);
@@ -34,14 +30,14 @@ public class HiveServiceUtils {
     }
 
     public static void verifySuccess(TStatus status, boolean withInfo) throws SQLException {
-        if (status.getStatusCode() == TStatusCode.SUCCESS_STATUS || (withInfo && status.getStatusCode() == TStatusCode.SUCCESS_WITH_INFO_STATUS)) {
+        if (status.getStatusCode() == SUCCESS_STATUS || (withInfo && status.getStatusCode() == SUCCESS_WITH_INFO_STATUS)) {
             return;
         }
 
         throw new HiveSQLException(status);
     }
 
-    public static TRowSet fetchResults(TCLIService.Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
+    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         TFetchResultsResp fetchResp = client.FetchResults(fetchReq);
 
@@ -49,7 +45,7 @@ public class HiveServiceUtils {
         return fetchResp.getResults();
     }
 
-    public static void closeOperation(TCLIService.Client client, TOperationHandle operationHandle) {
+    public static void closeOperation(Client client, TOperationHandle operationHandle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(operationHandle);
 
         try {
@@ -59,7 +55,7 @@ public class HiveServiceUtils {
         }
     }
 
-    public static void cancelOperation(TCLIService.Client client, TOperationHandle operationHandle) {
+    public static void cancelOperation(Client client, TOperationHandle operationHandle) {
         TCancelOperationReq cancelRequest = new TCancelOperationReq(operationHandle);
 
         try {
@@ -69,7 +65,7 @@ public class HiveServiceUtils {
         }
     }
 
-    public static void closeSession(TCLIService.Client client, TSessionHandle sessionHandle) {
+    public static void closeSession(Client client, TSessionHandle sessionHandle) {
         TCloseSessionReq closeRequest = new TCloseSessionReq(sessionHandle);
 
         try {
@@ -79,7 +75,7 @@ public class HiveServiceUtils {
         }
     }
 
-    public static TOperationHandle executeSql(TCLIService.Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException, SQLException {
+    public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
@@ -91,7 +87,7 @@ public class HiveServiceUtils {
 
     }
 
-    public static void waitForStatementToComplete(TCLIService.Client client, TOperationHandle statementHandle) throws TException, SQLException {
+    public static void waitForStatementToComplete(Client client, TOperationHandle statementHandle) throws TException, SQLException {
         boolean isComplete = false;
 
         while (!isComplete) {
@@ -125,7 +121,7 @@ public class HiveServiceUtils {
     }
 
 
-    public static TSessionHandle openSession(ConnectionParameters connectionParameters, TCLIService.Client client) throws TException {
+    public static TSessionHandle openSession(ConnectionParameters connectionParameters, Client client) throws TException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
 
         openSessionReq.setConfiguration(buildSessionConfig(connectionParameters));
@@ -155,14 +151,14 @@ public class HiveServiceUtils {
 
         Map<String, String> sessionVariables = connectionParameters.getSessionVariables();
 
-        if (sessionVariables.containsKey(HiveAuthFactory.HS2_PROXY_USER)) {
-            openSessionConfig.put(HiveAuthFactory.HS2_PROXY_USER, sessionVariables.get(HiveAuthFactory.HS2_PROXY_USER));
+        if (sessionVariables.containsKey(HS2_PROXY_USER)) {
+            openSessionConfig.put(HS2_PROXY_USER, sessionVariables.get(HS2_PROXY_USER));
         }
 
         return openSessionConfig;
     }
 
-    public static TTableSchema getSchema(TCLIService.Client client, TOperationHandle operationHandle) throws TException {
+    public static TTableSchema getSchema(Client client, TOperationHandle operationHandle) throws TException {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
         TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);

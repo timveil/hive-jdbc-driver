@@ -2,9 +2,6 @@ package veil.hdp.hive.jdbc;
 
 import java.sql.*;
 
-/**
- * Created by timve on 3/5/2017.
- */
 public abstract class AbstractStatement implements Statement {
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {

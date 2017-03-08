@@ -5,49 +5,53 @@ import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.metadata.TableSchema;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
+import veil.hdp.hive.jdbc.utils.ResultSetUtils;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.*;
 import java.util.Iterator;
-import java.util.List;
 
 public class HiveQueryResultSet extends HiveResultSet {
+
+    private static final Logger log = LoggerFactory.getLogger(HiveQueryResultSet.class);
 
     // constructor
     private TCLIService.Client client;
     private TOperationHandle statementHandle;
     private TProtocolVersion protocol;
+    private HiveStatement statement;
     private boolean scrollable;
     private int maxRows;
 
     // private
     private TableSchema tableSchema;
+    private boolean fetchFirst = false;
+    private RowSet fetchedRows;
+    private Iterator<Object[]> fetchedRowsItr;
+    private Object[] row;
+
 
     // public getter & setter
-
-
+    private int rowsFetched;
+    private int fetchSize;
 
 
     // lets get rid of this
     private boolean emptyResultSet;
-    private int rowsFetched;
-    private boolean fetchFirst = false;
-    private RowSet fetchedRows;
-    private Iterator<Object[]> fetchedRowsItr;
-    private int fetchSize;
-    private Object[] row;
-    private HiveStatement statement;
 
 
-
-
-    public HiveQueryResultSet(TCLIService.Client client, TOperationHandle statementHandle,TProtocolVersion protocol, boolean scrollable, int maxRows) throws TException {
+    public HiveQueryResultSet(TCLIService.Client client, TOperationHandle statementHandle, TProtocolVersion protocol, HiveStatement statement, boolean scrollable, int maxRows) throws TException {
         this.client = client;
         this.statementHandle = statementHandle;
+        this.protocol = protocol;
+        this.statement = statement;
         this.scrollable = scrollable;
         this.maxRows = maxRows;
-        this.protocol = protocol;
 
         this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(client, statementHandle));
 
@@ -55,9 +59,10 @@ public class HiveQueryResultSet extends HiveResultSet {
     }
 
 
-
     @Override
     public boolean next() throws SQLException {
+
+        // i bet i can improve this eventually
 
         if (emptyResultSet || (maxRows > 0 && rowsFetched >= maxRows)) {
             return false;
@@ -100,11 +105,6 @@ public class HiveQueryResultSet extends HiveResultSet {
         client = null;
         statementHandle = null;
     }
-
-  /*  @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData(columnNames, columnTypes, columnAttributes);
-    }*/
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
@@ -157,4 +157,170 @@ public class HiveQueryResultSet extends HiveResultSet {
 
         throw new SQLException("Could not find column for name " + columnLabel + " in TableSchema " + tableSchema);
     }
+
+    @Override
+    public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
+        return (BigDecimal) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+        MathContext mc = new MathContext(scale);
+        return getBigDecimal(columnIndex).round(mc);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+        return getBigDecimal(findColumn(columnLabel), scale);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
+        return getBigDecimal(findColumn(columnLabel));
+    }
+
+    @Override
+    public boolean getBoolean(int columnIndex) throws SQLException {
+        return (Boolean) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public boolean getBoolean(String columnLabel) throws SQLException {
+        return getBoolean(findColumn(columnLabel));
+    }
+
+    @Override
+    public int getConcurrency() throws SQLException {
+        return ResultSet.CONCUR_READ_ONLY;
+    }
+
+    @Override
+    public Date getDate(int columnIndex) throws SQLException {
+        return (Date) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public Date getDate(String columnLabel) throws SQLException {
+        return getDate(findColumn(columnLabel));
+    }
+
+    @Override
+    public double getDouble(int columnIndex) throws SQLException {
+        return (Double)ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public double getDouble(String columnLabel) throws SQLException {
+        return getDouble(findColumn(columnLabel));
+    }
+
+    @Override
+    public int getFetchDirection() throws SQLException {
+        return ResultSet.FETCH_FORWARD;
+    }
+
+    @Override
+    public float getFloat(int columnIndex) throws SQLException {
+        return (Float)ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public float getFloat(String columnLabel) throws SQLException {
+        return getFloat(findColumn(columnLabel));
+    }
+
+    @Override
+    public int getInt(int columnIndex) throws SQLException {
+        return (Integer) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public int getInt(String columnLabel) throws SQLException {
+        return getInt(findColumn(columnLabel));
+    }
+
+    @Override
+    public long getLong(int columnIndex) throws SQLException {
+        return (Long) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public long getLong(String columnLabel) throws SQLException {
+        return getLong(findColumn(columnLabel));
+    }
+
+    @Override
+    public Object getObject(int columnIndex) throws SQLException {
+        return ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public Object getObject(String columnLabel) throws SQLException {
+        return getObject(findColumn(columnLabel));
+    }
+
+    @Override
+    public short getShort(int columnIndex) throws SQLException {
+        return (Short) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public short getShort(String columnLabel) throws SQLException {
+        return getShort(findColumn(columnLabel));
+    }
+
+    @Override
+    public Statement getStatement() throws SQLException {
+        return this.statement;
+    }
+
+    @Override
+    public String getString(int columnIndex) throws SQLException {
+        return (String) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public String getString(String columnLabel) throws SQLException {
+        return getString(findColumn(columnLabel));
+    }
+
+    @Override
+    public Timestamp getTimestamp(int columnIndex) throws SQLException {
+        return (Timestamp) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+    }
+
+    @Override
+    public Timestamp getTimestamp(String columnLabel) throws SQLException {
+        return getTimestamp(findColumn(columnLabel));
+    }
+
+       /*
+
+       @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return new HiveResultSetMetaData(columnNames, columnTypes, columnAttributes);
+    }
+
+    @Override
+    public byte getByte(int columnIndex) throws SQLException {
+        return super.getByte(columnIndex);
+    }
+
+
+
+    @Override
+    public byte getByte(int columnIndex) throws SQLException {
+        return super.getByte(columnIndex);
+    }
+
+    @Override
+    public InputStream getBinaryStream(int columnIndex) throws SQLException {
+        return super.getBinaryStream(columnIndex);
+    }
+
+    @Override
+    public InputStream getBinaryStream(String columnLabel) throws SQLException {
+        return super.getBinaryStream(columnLabel);
+    }
+    */
 }

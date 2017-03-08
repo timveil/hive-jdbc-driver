@@ -4,9 +4,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
-/**
- * Created by timve on 3/6/2017.
- */
 public abstract class AbstractResultSetMetaData implements ResultSetMetaData {
     @Override
     public int getColumnCount() throws SQLException {
