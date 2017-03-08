@@ -1,7 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.jdbc.*;
-import org.apache.hive.jdbc.HiveStatement;
+
 import org.junit.Test;
 
 import java.sql.*;
@@ -18,17 +17,7 @@ public class TestHarness {
 
         forName("veil.hdp.hive.jdbc.HiveDriver");
 
-        Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
-
-        connection.close();
-
-
-    }
-
-    @Test
-    public void testOldConnection() throws SQLException, ClassNotFoundException {
-
-        forName("org.apache.hive.jdbc.HiveDriver");
+        //forName("org.apache.hive.jdbc.HiveDriver");
 
         Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10000/default", "hive", "dummy");
 
@@ -42,9 +31,15 @@ public class TestHarness {
             out.println(rs.getDouble("col_double"));
         }
 
-        org.apache.hive.jdbc.HiveStatement hiveStatement = (HiveStatement) statement;
+       /* org.apache.hive.jdbc.HiveStatement hiveStatement = (HiveStatement) statement;
 
         out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
+
+        List<String> queryLog = hiveStatement.getQueryLog(true, 10000);
+
+        for (String log : queryLog) {
+            System.out.println("log: [" + log + "]");
+        }*/
 
 
         statement.close();

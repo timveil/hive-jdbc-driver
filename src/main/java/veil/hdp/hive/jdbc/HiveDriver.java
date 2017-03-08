@@ -9,7 +9,7 @@ import javax.security.sasl.SaslException;
 import java.sql.*;
 import java.util.Properties;
 
-public class HiveDriver implements Driver {
+public class HiveDriver extends AbstractHiveDriver {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
 
@@ -33,23 +33,5 @@ public class HiveDriver implements Driver {
         return UrlUtils.acceptURL(url);
     }
 
-    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        return new DriverPropertyInfo[0];
-    }
 
-    public int getMajorVersion() {
-        return 0;
-    }
-
-    public int getMinorVersion() {
-        return 0;
-    }
-
-    public boolean jdbcCompliant() {
-        return false;
-    }
-
-    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException();
-    }
 }

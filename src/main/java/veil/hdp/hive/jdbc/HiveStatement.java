@@ -31,6 +31,7 @@ public class HiveStatement extends AbstractStatement {
     // public getter & setter
     private int queryTimeout = 0;
     private int maxRows = 0;
+    // lets handle defaults better
     private int fetchSize = 1000;
     private ResultSet resultSet;
     private boolean isClosed = false;
@@ -65,6 +66,8 @@ public class HiveStatement extends AbstractStatement {
 
         try {
             resultSet = new HiveQueryResultSet(client, statementHandle, protocolVersion, this, isScrollableResultSet, maxRows);
+            //todo: should fetch size be part of statement constructor
+            resultSet.setFetchSize(fetchSize);
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
