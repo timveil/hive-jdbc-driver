@@ -121,17 +121,12 @@ public class HiveServiceUtils {
     }
 
 
-    public static TSessionHandle openSession(ConnectionParameters connectionParameters, Client client) throws TException {
+    public static TOpenSessionResp openSession(ConnectionParameters connectionParameters, Client client) throws TException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
 
         openSessionReq.setConfiguration(buildSessionConfig(connectionParameters));
 
-        TOpenSessionResp openResp = client.OpenSession(openSessionReq);
-
-        log.debug("status {}", openResp.getStatus());
-        log.debug("protocol version {}", openResp.getServerProtocolVersion());
-
-        return openResp.getSessionHandle();
+        return client.OpenSession(openSessionReq);
 
     }
 

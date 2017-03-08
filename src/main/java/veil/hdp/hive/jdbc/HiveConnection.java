@@ -1,6 +1,8 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
+import org.apache.hive.service.cli.thrift.TOpenSessionResp;
+import org.apache.hive.service.cli.thrift.TProtocolVersion;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -26,6 +28,7 @@ public class HiveConnection extends AbstractConnection {
     private TTransport transport;
     private TCLIService.Client thriftClient;
     private TSessionHandle sessionHandle;
+    private TProtocolVersion protocolVersion;
 
     private boolean sessionClosed = true;
 
@@ -46,7 +49,11 @@ public class HiveConnection extends AbstractConnection {
 
             thriftClient = new TCLIService.Client(new TBinaryProtocol(transport));
 
-            sessionHandle = HiveServiceUtils.openSession(connectionParameters, thriftClient);
+            TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(connectionParameters, thriftClient);
+
+            protocolVersion = tOpenSessionResp.getServerProtocolVersion();
+
+            sessionHandle = tOpenSessionResp.getSessionHandle();
 
             sessionClosed = false;
 
@@ -88,6 +95,8 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new HiveStatement(this, thriftClient, sessionHandle);
+        return new HiveStatement(this, thriftClient, sessionHandle, protocolVersion);
     }
+
+
 }

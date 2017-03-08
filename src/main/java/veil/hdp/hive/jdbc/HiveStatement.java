@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
+import org.apache.hive.service.cli.thrift.TProtocolVersion;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class HiveStatement extends AbstractStatement {
     private TCLIService.Client client;
     private final TSessionHandle sessionHandle;
     private boolean isScrollableResultSet = false;
+    private TProtocolVersion protocolVersion;
 
     // private
     private TOperationHandle statementHandle;
@@ -34,14 +36,15 @@ public class HiveStatement extends AbstractStatement {
     private boolean isClosed = false;
 
 
-    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle) {
-        this(connection, client, sessionHandle, false);
+    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+        this(connection, client, sessionHandle, protocolVersion, false);
     }
 
-    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle, boolean isScrollableResultSet) {
+    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion, boolean isScrollableResultSet) {
         this.connection = connection;
         this.client = client;
         this.sessionHandle = sessionHandle;
+        this.protocolVersion = protocolVersion;
         this.isScrollableResultSet = isScrollableResultSet;
     }
 
@@ -60,14 +63,11 @@ public class HiveStatement extends AbstractStatement {
             return false;
         }
 
-           /*  resultSet = new HiveQueryResultSet.Builder(this)
-                            .setClient(client)
-                            .setSessionHandle(sessionHandle)
-                            .setStmtHandle(statementHandle)
-                            .setMaxRows(maxRows)
-                            .setFetchSize(fetchSize)
-                            .setScrollable(isScrollableResultSet)
-                            .build();*/
+        try {
+            resultSet = new HiveQueryResultSet(client, statementHandle, protocolVersion, this, isScrollableResultSet, maxRows);
+        } catch (TException e) {
+            throw new SQLException(e.getMessage(), "", e);
+        }
 
         return true;
     }

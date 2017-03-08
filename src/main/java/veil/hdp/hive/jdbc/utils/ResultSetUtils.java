@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -16,14 +17,20 @@ public class ResultSetUtils {
 
     private static final Logger log = getLogger(ResultSetUtils.class);
 
-    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex) {
-        validateRow(row, columnIndex);
+    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
 
-        Type columnType = schema.getColumnDescriptorAt(columnIndex - 1).getType();
+        try {
+            validateRow(row, columnIndex);
 
-        Object value = row[columnIndex - 1];
+            Type columnType = schema.getColumnDescriptorAt(columnIndex - 1).getType();
 
-        return evaluate(columnType, value);
+            Object value = row[columnIndex - 1];
+
+            return evaluate(columnType, value);
+
+        } catch (Exception e) {
+            throw new SQLException(e.getMessage(), e);
+        }
 
     }
 
@@ -117,7 +124,7 @@ public class ResultSetUtils {
             return (String) obj;
         }
 
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to String");
+        return obj.toString();
     }
 
     private static short evaluateShort(Object obj) {
