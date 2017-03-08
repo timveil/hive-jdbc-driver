@@ -1,11 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import org.apache.hive.service.cli.ColumnDescriptor;
 import org.apache.hive.service.cli.thrift.TTableSchema;
-
-import java.util.List;
 
 public class TableSchema extends org.apache.hive.service.cli.TableSchema {
 
@@ -18,11 +14,7 @@ public class TableSchema extends org.apache.hive.service.cli.TableSchema {
 
         for (ColumnDescriptor columnDescriptor : getColumnDescriptors()) {
 
-            String originalName = columnDescriptor.getName();
-
-            List<String> nameParts = Splitter.on(".").omitEmptyStrings().trimResults().splitToList(originalName);
-
-            String normalizedName = Lists.reverse(nameParts).get(0);
+            String normalizedName = getNormalizedName(columnDescriptor);
 
             if (normalizedName.equalsIgnoreCase(columnName)) {
                 return columnDescriptor;
@@ -32,4 +24,13 @@ public class TableSchema extends org.apache.hive.service.cli.TableSchema {
         return null;
     }
 
+    public String getNormalizedName(ColumnDescriptor columnDescriptor) {
+        String name = columnDescriptor.getName();
+
+        if (name.contains(".")) {
+            name = name.substring(name.lastIndexOf(".") + 1);
+        }
+
+        return name;
+    }
 }
