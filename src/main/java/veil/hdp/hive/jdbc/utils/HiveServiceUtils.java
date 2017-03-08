@@ -41,6 +41,9 @@ public class HiveServiceUtils {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         TFetchResultsResp fetchResp = client.FetchResults(fetchReq);
 
+        if (log.isDebugEnabled()) {
+            log.debug(fetchResp.toString());
+        }
 
         return fetchResp.getResults();
     }
@@ -50,6 +53,11 @@ public class HiveServiceUtils {
 
         try {
             client.CloseOperation(closeRequest);
+
+            if (log.isDebugEnabled()) {
+                log.debug(closeRequest.toString());
+            }
+
         } catch (TException e) {
             log.warn(e.getMessage(), e);
         }
@@ -60,6 +68,11 @@ public class HiveServiceUtils {
 
         try {
             client.CancelOperation(cancelRequest);
+
+            if (log.isDebugEnabled()) {
+                log.debug(cancelRequest.toString());
+            }
+
         } catch (TException e) {
             log.warn(e.getMessage(), e);
         }
@@ -70,6 +83,11 @@ public class HiveServiceUtils {
 
         try {
             client.CloseSession(closeRequest);
+
+            if (log.isDebugEnabled()) {
+                log.debug(closeRequest.toString());
+            }
+
         } catch (TException e) {
             log.warn(e.getMessage(), e);
         }
@@ -81,6 +99,10 @@ public class HiveServiceUtils {
         executeStatementReq.setQueryTimeout(queryTimeout);
 
         TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
+
+        if (log.isDebugEnabled()) {
+            log.debug(executeStatementResp.toString());
+        }
 
         return executeStatementResp.getOperationHandle();
 
@@ -126,6 +148,10 @@ public class HiveServiceUtils {
 
         openSessionReq.setConfiguration(buildSessionConfig(connectionParameters));
 
+        if (log.isDebugEnabled()) {
+            log.debug(openSessionReq.toString());
+        }
+
         return client.OpenSession(openSessionReq);
 
     }
@@ -157,6 +183,10 @@ public class HiveServiceUtils {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
         TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
+
+        if (log.isDebugEnabled()) {
+            log.debug(metadataResp.toString());
+        }
 
         return metadataResp.getSchema();
     }

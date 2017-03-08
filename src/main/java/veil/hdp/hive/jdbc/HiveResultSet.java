@@ -55,6 +55,10 @@ public class HiveResultSet extends AbstractResultSet {
 
         this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(client, statementHandle));
 
+        if (log.isDebugEnabled()) {
+            log.debug(tableSchema.toString());
+        }
+
         // parse schema for columnNames, etc
     }
 
@@ -148,14 +152,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-
-        ColumnDescriptor columnDescriptorForName = tableSchema.getColumnDescriptorForName(columnLabel);
-
-        if (columnDescriptorForName != null) {
-            return columnDescriptorForName.getOrdinalPosition();
-        }
-
-        throw new SQLException("Could not find column for name " + columnLabel + " in TableSchema " + tableSchema);
+        return ResultSetUtils.findColumnIndex(tableSchema, columnLabel);
     }
 
     @Override
