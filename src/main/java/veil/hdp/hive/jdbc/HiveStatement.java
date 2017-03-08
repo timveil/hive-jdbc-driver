@@ -65,7 +65,7 @@ public class HiveStatement extends AbstractStatement {
         }
 
         try {
-            resultSet = new HiveQueryResultSet(client, statementHandle, protocolVersion, this, isScrollableResultSet, maxRows);
+            resultSet = new HiveResultSet(client, statementHandle, protocolVersion, this, isScrollableResultSet, maxRows);
             //todo: should fetch size be part of statement constructor
             resultSet.setFetchSize(fetchSize);
         } catch (TException e) {
