@@ -210,12 +210,12 @@ public abstract class AbstractConnection implements Connection {
 
     @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
-        //no-op
+        throw new SQLClientInfoException();
     }
 
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        //no-op
+        throw new SQLClientInfoException();
     }
 
     @Override
