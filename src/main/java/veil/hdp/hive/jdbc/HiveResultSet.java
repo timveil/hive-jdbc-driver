@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.*;
 import java.util.Iterator;
+import java.util.List;
 
 public class HiveResultSet extends AbstractResultSet {
 

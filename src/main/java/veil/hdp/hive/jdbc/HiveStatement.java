@@ -1,10 +1,6 @@
 package veil.hdp.hive.jdbc;
 
 
-import org.apache.hive.service.cli.RowSet;
-import org.apache.hive.service.cli.RowSetFactory;
-import org.apache.hive.service.cli.thrift.TFetchResultsReq;
-import org.apache.hive.service.cli.thrift.TFetchResultsResp;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -14,8 +10,6 @@ import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -169,10 +163,6 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public boolean isPoolable() throws SQLException {
         return false;
-    }
-
-    public List<String> getLogs() {
-        return HiveServiceUtils.fetchLogs(connection.getThriftClient(), statementHandle, connection.getProtocolVersion());
     }
 
     @Override

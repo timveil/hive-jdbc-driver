@@ -34,12 +34,14 @@ public class TestHarness {
        HiveStatement hiveStatement = (HiveStatement) statement;
 
         //out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
+/*
 
         List<String> logs = hiveStatement.getLogs();
 
         for (String log : logs) {
             System.out.println("log: [" + log + "]");
         }
+*/
 
 
         rs.close();
