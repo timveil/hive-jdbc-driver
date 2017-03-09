@@ -31,7 +31,7 @@ public class HiveStatement extends AbstractStatement {
     // public getter only
     private boolean closed;
 
-    public HiveStatement(HiveConnection connection) {
+    HiveStatement(HiveConnection connection) {
         this.connection = connection;
 
         this.queryTimeout = 0;
@@ -53,8 +53,8 @@ public class HiveStatement extends AbstractStatement {
         closeStatementHandle();
 
         try {
-            statementHandle = HiveServiceUtils.executeSql(connection.getThriftClient(), connection.getSessionHandle(), queryTimeout, sql);
-            HiveServiceUtils.waitForStatementToComplete(connection.getThriftClient(), statementHandle);
+            statementHandle = HiveServiceUtils.executeSql(connection.getClient(), connection.getSessionHandle(), queryTimeout, sql);
+            HiveServiceUtils.waitForStatementToComplete(connection.getClient(), statementHandle);
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
@@ -102,7 +102,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getQueryTimeout() throws SQLException {
-        return this.queryTimeout;
+        return queryTimeout;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getMaxRows() throws SQLException {
-        return this.maxRows;
+        return maxRows;
     }
 
     @Override
@@ -127,12 +127,12 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getFetchSize() throws SQLException {
-        return this.fetchSize;
+        return fetchSize;
     }
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return this.resultSet;
+        return resultSet;
     }
 
     @Override
@@ -147,12 +147,12 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void cancel() throws SQLException {
-        HiveServiceUtils.cancelOperation(connection.getThriftClient(), statementHandle);
+        HiveServiceUtils.cancelOperation(connection.getClient(), statementHandle);
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return this.closed;
+        return closed;
     }
 
     @Override
@@ -174,17 +174,21 @@ public class HiveStatement extends AbstractStatement {
 
         closeStatementHandle();
 
-        if (resultSet != null) {
-            resultSet.close();
-            resultSet = null;
-        }
+        closeResultSet();
 
         closed = true;
     }
 
+    private void closeResultSet() throws SQLException {
+        if (resultSet != null) {
+            resultSet.close();
+            resultSet = null;
+        }
+    }
+
     private void closeStatementHandle() {
         if (statementHandle != null) {
-            HiveServiceUtils.closeOperation(connection.getThriftClient(), statementHandle);
+            HiveServiceUtils.closeOperation(connection.getClient(), statementHandle);
             statementHandle = null;
         }
     }

@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class ConnectionParameters {
 
-    private boolean embeddedMode;
     private String databaseName;
     private String host;
     private int port;
@@ -41,14 +40,6 @@ public class ConnectionParameters {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public boolean isEmbeddedMode() {
-        return embeddedMode;
-    }
-
-    public void setEmbeddedMode(boolean embeddedMode) {
-        this.embeddedMode = embeddedMode;
     }
 
     public String getDatabaseName() {
@@ -116,8 +107,7 @@ public class ConnectionParameters {
     @Override
     public String toString() {
         return "ConnectionParameters{" +
-                "embeddedMode=" + embeddedMode +
-                ", databaseName='" + databaseName + '\'' +
+                "databaseName='" + databaseName + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", hosts=" + hosts +

@@ -33,7 +33,7 @@ public class HiveServiceUtils {
         verifySuccess(status, false);
     }
 
-    public static void verifySuccess(TStatus status, boolean withInfo) throws SQLException {
+    private static void verifySuccess(TStatus status, boolean withInfo) throws SQLException {
         if (status.getStatusCode() == SUCCESS_STATUS || (withInfo && status.getStatusCode() == SUCCESS_WITH_INFO_STATUS)) {
             return;
         }

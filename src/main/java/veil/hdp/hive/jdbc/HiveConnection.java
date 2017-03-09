@@ -1,78 +1,50 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
-import org.apache.hive.service.cli.thrift.TOpenSessionResp;
 import org.apache.hive.service.cli.thrift.TProtocolVersion;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
-import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
-import veil.hdp.hive.jdbc.utils.UrlUtils;
 
-import javax.security.sasl.SaslException;
 import java.sql.*;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 public class HiveConnection extends AbstractConnection {
 
     private static final Logger log = LoggerFactory.getLogger(HiveConnection.class);
 
     // constructor
-    private final String url;
     private final ConnectionParameters connectionParameters;
+    private final TTransport transport;
+    private final TCLIService.Client client;
+    private final TSessionHandle sessionHandle;
+    private final TProtocolVersion protocolVersion;
 
-    // private
-    private TTransport transport;
-    private TCLIService.Client thriftClient;
-    private TSessionHandle sessionHandle;
-    private TProtocolVersion protocolVersion;
-    private boolean sessionClosed;
+    // public getter & setter
+    private boolean closed;
 
+    HiveConnection(ConnectionParameters connectionParameters, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+        this.connectionParameters = connectionParameters;
+        this.transport = transport;
+        this.client = client;
+        this.sessionHandle = sessionHandle;
+        this.protocolVersion = protocolVersion;
 
-    public HiveConnection(String url, Properties info) throws TException, SaslException {
+        closed = false;
+    }
 
-        this.url = url;
-        this.connectionParameters = UrlUtils.parseURL(url);
-
-        PropertyUtils.mergeProperties(connectionParameters, info);
-
-        if (log.isDebugEnabled()) {
-            log.debug(connectionParameters.toString());
-        }
-
-        if (!connectionParameters.isEmbeddedMode()) {
-
-            transport = ThriftUtils.createBinaryTransport(connectionParameters, getLoginTimeout());
-
-            ThriftUtils.openTransport(transport);
-
-            thriftClient = new TCLIService.Client(new TBinaryProtocol(transport));
-
-            TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(connectionParameters, thriftClient);
-
-            protocolVersion = tOpenSessionResp.getServerProtocolVersion();
-
-            sessionHandle = tOpenSessionResp.getSessionHandle();
-
-            sessionClosed = false;
-
-            //synchronize client?
-        }
-
+    ConnectionParameters getConnectionParameters() {
+        return connectionParameters;
     }
 
     TTransport getTransport() {
         return transport;
     }
 
-    TCLIService.Client getThriftClient() {
-        return thriftClient;
+    TCLIService.Client getClient() {
+        return client;
     }
 
     TSessionHandle getSessionHandle() {
@@ -83,25 +55,6 @@ public class HiveConnection extends AbstractConnection {
         return protocolVersion;
     }
 
-    ConnectionParameters getConnectionParameters() {
-        return connectionParameters;
-    }
-
-    String getUrl() {
-        return url;
-    }
-
-    private int getLoginTimeout() {
-        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
-
-        if (timeOut > Integer.MAX_VALUE) {
-            timeOut = Integer.MAX_VALUE;
-        }
-
-        return (int) timeOut;
-    }
-
-
     @Override
     public void close() throws SQLException {
 
@@ -111,22 +64,17 @@ public class HiveConnection extends AbstractConnection {
 
         if (!isClosed()) {
 
-            HiveServiceUtils.closeSession(thriftClient, sessionHandle);
+            HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);
 
-            transport = null;
-            thriftClient = null;
-            sessionHandle = null;
-            protocolVersion = null;
-
-            sessionClosed = true;
+            closed = true;
         }
 
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return sessionClosed;
+        return closed;
     }
 
     @Override
@@ -193,5 +141,15 @@ public class HiveConnection extends AbstractConnection {
     }
     */
 
-
+    @Override
+    public String toString() {
+        return "HiveConnection{" +
+                "connectionParameters=" + connectionParameters +
+                ", transport=" + transport +
+                ", client=" + client +
+                ", sessionHandle=" + sessionHandle +
+                ", protocolVersion=" + protocolVersion +
+                ", closed=" + closed +
+                '}';
+    }
 }

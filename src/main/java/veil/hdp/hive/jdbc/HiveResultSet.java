@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.*;
 import java.util.Iterator;
-import java.util.List;
 
 public class HiveResultSet extends AbstractResultSet {
 
@@ -41,16 +40,13 @@ public class HiveResultSet extends AbstractResultSet {
     private int rowCount;
 
 
-    // lets get rid of this
-    private boolean emptyResultSet;
-
-
-    public HiveResultSet(HiveConnection connection, HiveStatement statement) throws TException {
+    HiveResultSet(HiveConnection connection, HiveStatement statement) throws TException {
         this.connection = connection;
         this.statement = statement;
+
         this.fetchDirection = ResultSet.FETCH_FORWARD;
 
-        this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getThriftClient(), statement.getStatementHandle()));
+        this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getClient(), statement.getStatementHandle()));
 
         if (log.isDebugEnabled()) {
             log.debug(tableSchema.toString());
@@ -64,14 +60,14 @@ public class HiveResultSet extends AbstractResultSet {
 
         // i bet i can improve this eventually
 
-        if (emptyResultSet || (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows())) {
+        if (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows()) {
             return false;
         }
 
         try {
 
             if (rowSet == null || !rowSetIterator.hasNext()) {
-                TRowSet results = HiveServiceUtils.fetchResults(connection.getThriftClient(), statement.getStatementHandle(), TFetchOrientation.FETCH_NEXT, fetchSize);
+                TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statement.getStatementHandle(), TFetchOrientation.FETCH_NEXT, fetchSize);
                 rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
                 rowSetIterator = rowSet.iterator();
             }

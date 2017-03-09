@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class UrlUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
+    private static final Logger log = LoggerFactory.getLogger(UrlUtils.class);
 
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";
@@ -24,7 +24,7 @@ public class UrlUtils {
     private static final String TMP_HOST = "tmp_host:00000";
 
     public static boolean acceptURL(String url) {
-        return url != null && url.startsWith(JDBC_HIVE2_PREFIX);
+        return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 
     public static ConnectionParameters parseURL(String url) {
@@ -33,13 +33,9 @@ public class UrlUtils {
 
         String hostString = parseHostString(url);
 
-        if (Strings.isNullOrEmpty(hostString)) {
-            connectionParameters.setEmbeddedMode(true);
-        } else {
-            setHosts(connectionParameters, hostString);
+        setHosts(connectionParameters, hostString);
 
-            url = url.replace(hostString, TMP_HOST);
-        }
+        url = url.replace(hostString, TMP_HOST);
 
         URI tmpUri = URI.create(stripPrefix(JDBC_PART, url));
 

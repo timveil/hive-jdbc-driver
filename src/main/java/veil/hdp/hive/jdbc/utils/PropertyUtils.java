@@ -1,12 +1,17 @@
 package veil.hdp.hive.jdbc.utils;
 
 
+import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.ConnectionParameters;
 
 import java.util.Map;
 import java.util.Properties;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class PropertyUtils {
+
+    private static final Logger log = getLogger(PropertyUtils.class);
 
     private static final String HIVE_VAR_PREFIX = "hivevar:";
     private static final String HIVE_CONF_PREFIX = "hiveconf:";
