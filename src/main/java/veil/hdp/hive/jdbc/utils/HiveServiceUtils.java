@@ -6,7 +6,7 @@ import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.ConnectionParameters;
+import veil.hdp.hive.jdbc.HiveConfiguration;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
@@ -131,6 +131,8 @@ public class HiveServiceUtils {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
+        // allows per statement configuration of session handle
+        //executeStatementReq.setConfOverlay(null);
 
         TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
 
@@ -177,10 +179,11 @@ public class HiveServiceUtils {
     }
 
 
-    public static TOpenSessionResp openSession(ConnectionParameters connectionParameters, Client client) throws TException {
+    public static TOpenSessionResp openSession(HiveConfiguration hiveConfiguration, Client client) throws TException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
 
-        openSessionReq.setConfiguration(buildSessionConfig(connectionParameters));
+        // set properties for session
+        openSessionReq.setConfiguration(buildSessionConfig(hiveConfiguration));
 
         if (log.isDebugEnabled()) {
             log.debug(openSessionReq.toString());
@@ -191,20 +194,20 @@ public class HiveServiceUtils {
     }
 
 
-    private static Map<String, String> buildSessionConfig(ConnectionParameters connectionParameters) {
+    private static Map<String, String> buildSessionConfig(HiveConfiguration hiveConfiguration) {
         Map<String, String> openSessionConfig = new HashMap<>();
 
-        for (Map.Entry<String, String> hiveConf : connectionParameters.getHiveConfigurationParameters().entrySet()) {
+        for (Map.Entry<String, String> hiveConf : hiveConfiguration.getHiveConfigurationParameters().entrySet()) {
             openSessionConfig.put("set:hiveconf:" + hiveConf.getKey(), hiveConf.getValue());
         }
 
-        for (Map.Entry<String, String> hiveVar : connectionParameters.getHiveVariables().entrySet()) {
+        for (Map.Entry<String, String> hiveVar : hiveConfiguration.getHiveVariables().entrySet()) {
             openSessionConfig.put("set:hivevar:" + hiveVar.getKey(), hiveVar.getValue());
         }
 
-        openSessionConfig.put("use:database", connectionParameters.getDatabaseName());
+        openSessionConfig.put("use:database", hiveConfiguration.getDatabaseName());
 
-        Map<String, String> sessionVariables = connectionParameters.getSessionVariables();
+        Map<String, String> sessionVariables = hiveConfiguration.getSessionVariables();
 
         if (sessionVariables.containsKey(HS2_PROXY_USER)) {
             openSessionConfig.put(HS2_PROXY_USER, sessionVariables.get(HS2_PROXY_USER));

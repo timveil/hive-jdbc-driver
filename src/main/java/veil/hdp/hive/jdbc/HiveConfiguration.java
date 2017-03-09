@@ -6,8 +6,11 @@ import com.google.common.collect.Maps;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
-public class ConnectionParameters {
+public class HiveConfiguration {
+
+    private final String url;
 
     private String databaseName;
     private String host;
@@ -16,14 +19,30 @@ public class ConnectionParameters {
     private Map<String, String> sessionVariables;
     private Map<String, String> hiveConfigurationParameters;
     private Map<String, String> hiveVariables;
+    private Map<String, String> connectionArguments;
 
-    public ConnectionParameters() {
+    public HiveConfiguration(String url, Properties info) {
+        this.url = url;
+
+        this.connectionArguments = Maps.newHashMap();
         this.hosts = Lists.newArrayList();
         this.sessionVariables = Maps.newHashMap();
         this.hiveConfigurationParameters = Maps.newHashMap();
         this.hiveVariables = Maps.newHashMap();
+
         this.port = 10000;
         this.databaseName = "default";
+
+        if (info != null) {
+            for  (String name : info.stringPropertyNames()) {
+                connectionArguments.put(name, info.getProperty(name));
+            }
+        }
+
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getHost() {
@@ -88,12 +107,16 @@ public class ConnectionParameters {
         }
     }
 
+    public Map<String, String> getConnectionArguments() {
+        return connectionArguments;
+    }
+
     public String getUser() {
-        return sessionVariables.get("user");
+        return connectionArguments.get("user");
     }
 
     public String getPassword() {
-        return sessionVariables.get("password");
+        return connectionArguments.get("password");
     }
 
     public boolean isZookeeperDiscoverMode() {
@@ -106,14 +129,16 @@ public class ConnectionParameters {
 
     @Override
     public String toString() {
-        return "ConnectionParameters{" +
-                "databaseName='" + databaseName + '\'' +
+        return "HiveConfiguration{" +
+                "url='" + url + '\'' +
+                ", databaseName='" + databaseName + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", hosts=" + hosts +
                 ", sessionVariables=" + sessionVariables +
                 ", hiveConfigurationParameters=" + hiveConfigurationParameters +
                 ", hiveVariables=" + hiveVariables +
+                ", connectionArguments=" + connectionArguments +
                 '}';
     }
 }

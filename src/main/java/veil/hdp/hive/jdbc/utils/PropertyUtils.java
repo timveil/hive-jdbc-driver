@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.ConnectionParameters;
+import veil.hdp.hive.jdbc.HiveConfiguration;
 
 import java.util.Map;
 import java.util.Properties;
@@ -21,7 +21,7 @@ public class PropertyUtils {
 
 
     // hack: don't like this.  can we rethink this and put it somewhere else
-    public static void mergeProperties(ConnectionParameters connParams, Properties info) {
+    public static void mergeProperties(HiveConfiguration connParams, Properties info) {
         for (Map.Entry<Object, Object> kv : info.entrySet()) {
             if ((kv.getKey() instanceof String)) {
                 String key = (String) kv.getKey();

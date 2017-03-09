@@ -11,12 +11,13 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
-import veil.hdp.hive.jdbc.utils.UrlUtils;
+import veil.hdp.hive.jdbc.utils.ConnectionUtils;
 
 import javax.security.sasl.SaslException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +33,8 @@ public class HiveDriver extends AbstractHiveDriver {
         }
     }
 
+    //public Connection connect(String url, Map<String, String> hiveConfigurationParameters, Map<String, String> )
+
     public Connection connect(String url, Properties info) throws SQLException {
 
         Connection connection = null;
@@ -40,27 +43,24 @@ public class HiveDriver extends AbstractHiveDriver {
 
             try {
 
-                ConnectionParameters connectionParameters = UrlUtils.parseURL(url);
+                HiveConfiguration hiveConfiguration = ConnectionUtils.buildConnectionParameters(url, info);
 
-                PropertyUtils.mergeProperties(connectionParameters, info);
-
-                if (log.isDebugEnabled()) {
-                    log.debug(connectionParameters.toString());
-                }
-
-                TTransport transport = ThriftUtils.createBinaryTransport(connectionParameters, getLoginTimeout());
+                TTransport transport = ThriftUtils.createBinaryTransport(hiveConfiguration, getLoginTimeout());
 
                 ThriftUtils.openTransport(transport);
 
                 TCLIService.Client thriftClient = ThriftUtils.createClient(transport);
 
-                TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(connectionParameters, thriftClient);
+                TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(hiveConfiguration, thriftClient);
+                Map<String, String> configuration = tOpenSessionResp.getConfiguration();
+
+                log.debug("configuration for session {}", configuration);
 
                 TProtocolVersion protocolVersion = tOpenSessionResp.getServerProtocolVersion();
 
                 TSessionHandle sessionHandle = tOpenSessionResp.getSessionHandle();
 
-                connection = new HiveConnection(connectionParameters, transport, thriftClient, sessionHandle, protocolVersion);
+                connection = new HiveConnection(hiveConfiguration, transport, thriftClient, sessionHandle, protocolVersion);
 
             } catch (SaslException | TException e) {
                 throw new SQLException(e.getMessage(), "", e);
@@ -77,7 +77,7 @@ public class HiveDriver extends AbstractHiveDriver {
             throw new SQLException("url is null");
         }
 
-        return UrlUtils.acceptURL(url);
+        return ConnectionUtils.acceptURL(url);
     }
 
     private int getLoginTimeout() {

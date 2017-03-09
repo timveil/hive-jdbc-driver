@@ -16,7 +16,7 @@ public class HiveConnection extends AbstractConnection {
     private static final Logger log = LoggerFactory.getLogger(HiveConnection.class);
 
     // constructor
-    private final ConnectionParameters connectionParameters;
+    private final HiveConfiguration hiveConfiguration;
     private final TTransport transport;
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
@@ -25,8 +25,8 @@ public class HiveConnection extends AbstractConnection {
     // public getter & setter
     private boolean closed;
 
-    HiveConnection(ConnectionParameters connectionParameters, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
-        this.connectionParameters = connectionParameters;
+    HiveConnection(HiveConfiguration hiveConfiguration, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+        this.hiveConfiguration = hiveConfiguration;
         this.transport = transport;
         this.client = client;
         this.sessionHandle = sessionHandle;
@@ -35,8 +35,8 @@ public class HiveConnection extends AbstractConnection {
         closed = false;
     }
 
-    ConnectionParameters getConnectionParameters() {
-        return connectionParameters;
+    HiveConfiguration getHiveConfiguration() {
+        return hiveConfiguration;
     }
 
     TTransport getTransport() {
@@ -144,7 +144,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public String toString() {
         return "HiveConnection{" +
-                "connectionParameters=" + connectionParameters +
+                "hiveConfiguration=" + hiveConfiguration +
                 ", transport=" + transport +
                 ", client=" + client +
                 ", sessionHandle=" + sessionHandle +
