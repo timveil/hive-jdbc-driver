@@ -1,10 +1,11 @@
 package veil.hdp.hive.jdbc;
 
 
-import org.apache.hive.service.cli.thrift.TCLIService;
+import org.apache.hive.service.cli.RowSet;
+import org.apache.hive.service.cli.RowSetFactory;
+import org.apache.hive.service.cli.thrift.TFetchResultsReq;
+import org.apache.hive.service.cli.thrift.TFetchResultsResp;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
-import org.apache.hive.service.cli.thrift.TProtocolVersion;
-import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -20,41 +23,44 @@ public class HiveStatement extends AbstractStatement {
 
     // constructor
     private final HiveConnection connection;
-    private TCLIService.Client client;
-    private final TSessionHandle sessionHandle;
-    private boolean isScrollableResultSet = false;
-    private TProtocolVersion protocolVersion;
 
     // private
     private TOperationHandle statementHandle;
+    private ResultSet resultSet;
 
     // public getter & setter
-    private int queryTimeout = 0;
-    private int maxRows = 0;
-    // lets handle defaults better
-    private int fetchSize = 1000;
-    private ResultSet resultSet;
-    private boolean isClosed = false;
+    private int queryTimeout;
+    private int maxRows;
+    private int fetchSize;
+    private int fetchDirection;
 
+    // public getter only
+    private boolean closed;
 
-    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
-        this(connection, client, sessionHandle, protocolVersion, false);
-    }
-
-    public HiveStatement(HiveConnection connection, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion, boolean isScrollableResultSet) {
+    public HiveStatement(HiveConnection connection) {
         this.connection = connection;
-        this.client = client;
-        this.sessionHandle = sessionHandle;
-        this.protocolVersion = protocolVersion;
-        this.isScrollableResultSet = isScrollableResultSet;
+
+        this.queryTimeout = 0;
+        this.maxRows = 0;
+        this.fetchSize = 1000;
+        this.fetchDirection = ResultSet.FETCH_FORWARD;
+
+        resultSet = null;
     }
+
+    TOperationHandle getStatementHandle() {
+        return statementHandle;
+    }
+
 
     @Override
     public boolean execute(String sql) throws SQLException {
 
+        closeStatementHandle();
+
         try {
-            statementHandle = HiveServiceUtils.executeSql(client, sessionHandle, queryTimeout, sql);
-            HiveServiceUtils.waitForStatementToComplete(client, statementHandle);
+            statementHandle = HiveServiceUtils.executeSql(connection.getThriftClient(), connection.getSessionHandle(), queryTimeout, sql);
+            HiveServiceUtils.waitForStatementToComplete(connection.getThriftClient(), statementHandle);
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
@@ -65,9 +71,9 @@ public class HiveStatement extends AbstractStatement {
         }
 
         try {
-            resultSet = new HiveResultSet(client, statementHandle, protocolVersion, this, isScrollableResultSet, maxRows);
-            //todo: should fetch size be part of statement constructor
+            resultSet = new HiveResultSet(connection, this);
             resultSet.setFetchSize(fetchSize);
+            resultSet.setFetchDirection(fetchDirection);
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
@@ -92,7 +98,12 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getFetchDirection() throws SQLException {
-        return ResultSet.FETCH_FORWARD;
+        return fetchDirection;
+    }
+
+    @Override
+    public void setFetchDirection(int direction) throws SQLException {
+        this.fetchDirection = direction;
     }
 
     @Override
@@ -112,17 +123,17 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void setMaxRows(int max) throws SQLException {
-       this.maxRows = max;
+        this.maxRows = max;
     }
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
-       this.fetchSize = rows;
+        this.fetchSize = rows;
     }
 
     @Override
     public int getFetchSize() throws SQLException {
-       return this.fetchSize;
+        return this.fetchSize;
     }
 
     @Override
@@ -142,12 +153,12 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void cancel() throws SQLException {
-        HiveServiceUtils.cancelOperation(client, statementHandle);
+        HiveServiceUtils.cancelOperation(connection.getThriftClient(), statementHandle);
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return this.isClosed;
+        return this.closed;
     }
 
     @Override
@@ -160,15 +171,31 @@ public class HiveStatement extends AbstractStatement {
         return false;
     }
 
+    public List<String> getLogs() {
+        return HiveServiceUtils.fetchLogs(connection.getThriftClient(), statementHandle, connection.getProtocolVersion());
+    }
+
     @Override
     public void close() throws SQLException {
-       HiveServiceUtils.closeOperation(client, statementHandle);
-       client = null;
-       statementHandle = null;
 
-       resultSet.close();
-       resultSet= null;
+        if (log.isDebugEnabled()) {
+            log.debug("attempting to close {}", this.getClass().getName());
+        }
 
-       isClosed = true;
+        closeStatementHandle();
+
+        if (resultSet != null) {
+            resultSet.close();
+            resultSet = null;
+        }
+
+        closed = true;
+    }
+
+    private void closeStatementHandle() {
+        if (statementHandle != null) {
+            HiveServiceUtils.closeOperation(connection.getThriftClient(), statementHandle);
+            statementHandle = null;
+        }
     }
 }

@@ -31,14 +31,14 @@ public class ThriftUtils {
 
     }
 
-    public static TTransport createBinaryTransport(ConnectionParameters connectionParameters, int loginTimeout) throws SaslException {
+    public static TTransport createBinaryTransport(ConnectionParameters connectionParameters, int loginTimeoutMilliseconds) throws SaslException {
 
         if (connectionParameters.isNoSasl()) {
-            return HiveAuthFactory.getSocketTransport(connectionParameters.getHost(), connectionParameters.getPort(), loginTimeout);
+            return HiveAuthFactory.getSocketTransport(connectionParameters.getHost(), connectionParameters.getPort(), loginTimeoutMilliseconds);
         } else {
             //no support for delegation tokens or ssl yet
 
-            TTransport socketTransport = HiveAuthFactory.getSocketTransport(connectionParameters.getHost(), connectionParameters.getPort(), loginTimeout);
+            TTransport socketTransport = HiveAuthFactory.getSocketTransport(connectionParameters.getHost(), connectionParameters.getPort(), loginTimeoutMilliseconds);
 
             //hack: password can't be empty.  must always specify a non-null, non-empty string
             return PlainSaslHelper.getPlainTransport(connectionParameters.getUser(), connectionParameters.getPassword(), socketTransport);

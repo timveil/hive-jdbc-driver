@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.ColumnDescriptor;
 import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
-import org.apache.hive.service.cli.thrift.*;
+import org.apache.hive.service.cli.thrift.TFetchOrientation;
+import org.apache.hive.service.cli.thrift.TRowSet;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,39 +21,35 @@ public class HiveResultSet extends AbstractResultSet {
     private static final Logger log = LoggerFactory.getLogger(HiveResultSet.class);
 
     // constructor
-    private TCLIService.Client client;
-    private TOperationHandle statementHandle;
-    private TProtocolVersion protocol;
-    private HiveStatement statement;
-    private boolean scrollable;
-    private int maxRows;
+    private final HiveConnection connection;
+    private final HiveStatement statement;
+
 
     // private
     private TableSchema tableSchema;
-    private boolean fetchFirst = false;
-    private RowSet fetchedRows;
-    private Iterator<Object[]> fetchedRowsItr;
+    private RowSet rowSet;
+    private Iterator<Object[]> rowSetIterator;
     private Object[] row;
 
 
     // public getter & setter
-    private int rowsFetched;
     private int fetchSize;
+    private int fetchDirection;
+
+    // public getter only
+    private int rowCount;
 
 
     // lets get rid of this
     private boolean emptyResultSet;
 
 
-    public HiveResultSet(TCLIService.Client client, TOperationHandle statementHandle, TProtocolVersion protocol, HiveStatement statement, boolean scrollable, int maxRows) throws TException {
-        this.client = client;
-        this.statementHandle = statementHandle;
-        this.protocol = protocol;
+    public HiveResultSet(HiveConnection connection, HiveStatement statement) throws TException {
+        this.connection = connection;
         this.statement = statement;
-        this.scrollable = scrollable;
-        this.maxRows = maxRows;
+        this.fetchDirection = ResultSet.FETCH_FORWARD;
 
-        this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(client, statementHandle));
+        this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getThriftClient(), statement.getStatementHandle()));
 
         if (log.isDebugEnabled()) {
             log.debug(tableSchema.toString());
@@ -62,39 +58,30 @@ public class HiveResultSet extends AbstractResultSet {
         // parse schema for columnNames, etc
     }
 
-
     @Override
     public boolean next() throws SQLException {
 
         // i bet i can improve this eventually
 
-        if (emptyResultSet || (maxRows > 0 && rowsFetched >= maxRows)) {
+        if (emptyResultSet || (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows())) {
             return false;
         }
 
         try {
-            TFetchOrientation orientation = TFetchOrientation.FETCH_NEXT;
 
-            if (fetchFirst) {
-                orientation = TFetchOrientation.FETCH_FIRST;
-                fetchedRows = null;
-                fetchedRowsItr = null;
-                fetchFirst = false;
+            if (rowSet == null || !rowSetIterator.hasNext()) {
+                TRowSet results = HiveServiceUtils.fetchResults(connection.getThriftClient(), statement.getStatementHandle(), TFetchOrientation.FETCH_NEXT, fetchSize);
+                rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
+                rowSetIterator = rowSet.iterator();
             }
 
-            if (fetchedRows == null || !fetchedRowsItr.hasNext()) {
-                TRowSet results = HiveServiceUtils.fetchResults(client, statementHandle, orientation, fetchSize);
-                fetchedRows = RowSetFactory.create(results, protocol);
-                fetchedRowsItr = fetchedRows.iterator();
-            }
-
-            if (fetchedRowsItr.hasNext()) {
-                row = fetchedRowsItr.next();
+            if (rowSetIterator.hasNext()) {
+                row = rowSetIterator.next();
             } else {
                 return false;
             }
 
-            rowsFetched++;
+            rowCount++;
 
 
         } catch (TException e) {
@@ -106,8 +93,20 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public void close() throws SQLException {
-        client = null;
-        statementHandle = null;
+
+        if (log.isDebugEnabled()) {
+            log.debug("attempting to close {}", this.getClass().getName());
+        }
+
+        tableSchema = null;
+        rowSet = null;
+        rowSetIterator = null;
+        row = null;
+    }
+
+    @Override
+    public int getFetchSize() throws SQLException {
+        return fetchSize;
     }
 
     @Override
@@ -117,37 +116,17 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getType() throws SQLException {
-        if (scrollable) {
-            return ResultSet.TYPE_SCROLL_INSENSITIVE;
-        } else {
-            return ResultSet.TYPE_FORWARD_ONLY;
-        }
-    }
-
-    @Override
-    public int getFetchSize() throws SQLException {
-        return fetchSize;
-    }
-
-    @Override
-    public void beforeFirst() throws SQLException {
-
-        if (!scrollable) {
-            throw new SQLException("ResultSet not SCROLLABLE");
-        }
-
-        this.fetchFirst = true;
-        this.rowsFetched = 0;
+        return ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
-        return rowsFetched == 0;
+        return rowCount == 0;
     }
 
     @Override
     public int getRow() throws SQLException {
-        return rowsFetched;
+        return rowCount;
     }
 
     @Override
@@ -203,7 +182,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        return (Double)ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+        return (Double) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
     }
 
     @Override
@@ -213,12 +192,17 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getFetchDirection() throws SQLException {
-        return ResultSet.FETCH_FORWARD;
+        return fetchDirection;
+    }
+
+    @Override
+    public void setFetchDirection(int direction) throws SQLException {
+        this.fetchDirection = direction;
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        return (Float)ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+        return (Float) ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
     }
 
     @Override

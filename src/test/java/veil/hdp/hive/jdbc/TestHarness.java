@@ -31,19 +31,19 @@ public class TestHarness {
             out.println(rs.getDouble("col_double"));
         }
 
-       /* org.apache.hive.jdbc.HiveStatement hiveStatement = (HiveStatement) statement;
+       HiveStatement hiveStatement = (HiveStatement) statement;
 
-        out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
+        //out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
 
-        List<String> queryLog = hiveStatement.getQueryLog(true, 10000);
+        List<String> logs = hiveStatement.getLogs();
 
-        for (String log : queryLog) {
+        for (String log : logs) {
             System.out.println("log: [" + log + "]");
-        }*/
+        }
 
 
-        statement.close();
         rs.close();
+        statement.close();
         connection.close();
 
 

@@ -1,6 +1,8 @@
 package veil.hdp.hive.jdbc.utils;
 
 import org.apache.hive.service.cli.HiveSQLException;
+import org.apache.hive.service.cli.RowSet;
+import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -8,7 +10,9 @@ import veil.hdp.hive.jdbc.ConnectionParameters;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.hive.service.auth.HiveAuthFactory.HS2_PROXY_USER;
@@ -39,13 +43,43 @@ public class HiveServiceUtils {
 
     public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
-        TFetchResultsResp fetchResp = client.FetchResults(fetchReq);
+        fetchReq.setFetchType((short)0);
+        TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
 
         if (log.isDebugEnabled()) {
-            log.debug(fetchResp.toString());
+            log.debug(fetchResults.toString());
         }
 
-        return fetchResp.getResults();
+        return fetchResults.getResults();
+    }
+
+    public static List<String> fetchLogs(Client client, TOperationHandle operationHandle, TProtocolVersion protocolVersion) {
+
+        List<String> logs = new ArrayList<>();
+
+        TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
+        tFetchResultsReq.setFetchType((short)1);
+
+        try {
+            TFetchResultsResp fetchResults = client.FetchResults(tFetchResultsReq);
+
+
+            if (log.isDebugEnabled()) {
+                log.debug(fetchResults.toString());
+            }
+
+            RowSet rowSet = RowSetFactory.create(fetchResults.getResults(), protocolVersion);
+
+            for (Object[] row : rowSet) {
+                logs.add(String.valueOf(row[0]));
+            }
+
+        } catch (TException e) {
+           log.error("error fetching logs: {}", e.getMessage(), e);
+        }
+
+
+        return logs;
     }
 
     public static void closeOperation(Client client, TOperationHandle operationHandle) {
