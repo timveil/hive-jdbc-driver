@@ -54,7 +54,9 @@ public class HiveDriver extends AbstractHiveDriver {
                 TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(hiveConfiguration, thriftClient);
                 Map<String, String> configuration = tOpenSessionResp.getConfiguration();
 
-                log.debug("configuration for session {}", configuration);
+                if (log.isDebugEnabled()) {
+                    log.debug("configuration for session returned by thrift {}", configuration);
+                }
 
                 TProtocolVersion protocolVersion = tOpenSessionResp.getServerProtocolVersion();
 

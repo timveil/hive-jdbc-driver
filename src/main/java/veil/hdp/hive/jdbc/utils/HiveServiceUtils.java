@@ -183,7 +183,13 @@ public class HiveServiceUtils {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
 
         // set properties for session
-        openSessionReq.setConfiguration(buildSessionConfig(hiveConfiguration));
+        Map<String, String> configuration = buildSessionConfig(hiveConfiguration);
+
+        if (log.isDebugEnabled()) {
+            log.debug("configuration for session provided to thrift {}", configuration);
+        }
+
+        openSessionReq.setConfiguration(configuration);
 
         if (log.isDebugEnabled()) {
             log.debug(openSessionReq.toString());
