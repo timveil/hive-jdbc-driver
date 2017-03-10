@@ -30,7 +30,7 @@ public class TableSchema extends org.apache.hive.service.cli.TableSchema {
             name = name.substring(name.lastIndexOf(".") + 1);
         }
 
-        return name;
+        return name.toLowerCase();
     }
 
     @Override
