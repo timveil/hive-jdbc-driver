@@ -10,7 +10,7 @@ import static java.lang.Class.forName;
 import static java.lang.System.out;
 import static java.sql.DriverManager.getConnection;
 
-public class TestHarness {
+public class TestHarness extends BaseJunitTest {
 
     @Test
     public void testNewConnection() throws SQLException, ClassNotFoundException {

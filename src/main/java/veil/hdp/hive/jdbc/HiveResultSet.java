@@ -58,8 +58,6 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public boolean next() throws SQLException {
 
-        // i bet i can improve this eventually
-
         if (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows()) {
             return false;
         }
@@ -80,9 +78,8 @@ public class HiveResultSet extends AbstractResultSet {
 
             rowCount++;
 
-
         } catch (TException e) {
-            throw new SQLException(e.getMessage(), "", e);
+            throw new SQLException(e.getMessage(), e);
         }
 
         return true;
