@@ -38,6 +38,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter only
     private int rowCount;
+    private boolean closed;
 
 
     HiveResultSet(HiveConnection connection, HiveStatement statement) throws TException {
@@ -91,14 +92,20 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public void close() throws SQLException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("attempting to close {}", this.getClass().getName());
-        }
+        if (!closed) {
 
-        tableSchema = null;
-        rowSet = null;
-        rowSetIterator = null;
-        row = null;
+            if (log.isDebugEnabled()) {
+                log.debug("attempting to close {}", this.getClass().getName());
+            }
+
+            tableSchema = null;
+            rowSet = null;
+            rowSetIterator = null;
+            row = null;
+
+            closed = true;
+
+        }
     }
 
     @Override
