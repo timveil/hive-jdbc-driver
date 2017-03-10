@@ -168,15 +168,18 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void close() throws SQLException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("attempting to close {}", this.getClass().getName());
+        if (!closed) {
+
+            if (log.isDebugEnabled()) {
+                log.debug("attempting to close {}", this.getClass().getName());
+            }
+
+            closeStatementHandle();
+
+            closeResultSet();
+
+            closed = true;
         }
-
-        closeStatementHandle();
-
-        closeResultSet();
-
-        closed = true;
     }
 
     private void closeResultSet() throws SQLException {
