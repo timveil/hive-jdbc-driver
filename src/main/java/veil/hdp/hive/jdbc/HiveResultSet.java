@@ -23,10 +23,10 @@ public class HiveResultSet extends AbstractResultSet {
     // constructor
     private final HiveConnection connection;
     private final HiveStatement statement;
-
+    private final TableSchema tableSchema;
 
     // private
-    private TableSchema tableSchema;
+
     private RowSet rowSet;
     private Iterator<Object[]> rowSetIterator;
     private Object[] row;
@@ -38,28 +38,18 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter only
     private int rowCount;
-    private boolean closed;
 
 
-    HiveResultSet(HiveConnection connection, HiveStatement statement) throws TException {
+    HiveResultSet(HiveConnection connection, HiveStatement statement, TableSchema tableSchema) {
         this.connection = connection;
         this.statement = statement;
+        this.tableSchema = tableSchema;
 
         this.fetchDirection = ResultSet.FETCH_FORWARD;
-
-        this.tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getClient(), statement.getStatementHandle()));
-
-        if (log.isDebugEnabled()) {
-            log.debug(tableSchema.toString());
-        }
-
-        // parse schema for columnNames, etc
     }
 
     @Override
     public boolean next() throws SQLException {
-
-        // i bet i can improve this eventually
 
         if (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows()) {
             return false;
@@ -81,9 +71,8 @@ public class HiveResultSet extends AbstractResultSet {
 
             rowCount++;
 
-
         } catch (TException e) {
-            throw new SQLException(e.getMessage(), "", e);
+            throw new SQLException(e.getMessage(), e);
         }
 
         return true;
@@ -92,20 +81,13 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public void close() throws SQLException {
 
-        if (!closed) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("attempting to close {}", this.getClass().getName());
-            }
-
-            tableSchema = null;
-            rowSet = null;
-            rowSetIterator = null;
-            row = null;
-
-            closed = true;
-
+        if (log.isDebugEnabled()) {
+            log.debug("attempting to close {}", this.getClass().getName());
         }
+
+        rowSet = null;
+        rowSetIterator = null;
+        row = null;
     }
 
     @Override

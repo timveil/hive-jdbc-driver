@@ -5,6 +5,7 @@ import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.metadata.TableSchema;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 
 import java.sql.Connection;
@@ -55,19 +56,21 @@ public class HiveStatement extends AbstractStatement {
         try {
             statementHandle = HiveServiceUtils.executeSql(connection.getClient(), connection.getSessionHandle(), queryTimeout, sql);
             HiveServiceUtils.waitForStatementToComplete(connection.getClient(), statementHandle);
-        } catch (TException e) {
-            throw new SQLException(e.getMessage(), "", e);
-        }
 
+            if (!statementHandle.isHasResultSet()) {
+                return false;
+            }
 
-        if (!statementHandle.isHasResultSet()) {
-            return false;
-        }
+            TableSchema tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getClient(), statementHandle));
 
-        try {
-            resultSet = new HiveResultSet(connection, this);
+            if (log.isDebugEnabled()) {
+                log.debug(tableSchema.toString());
+            }
+
+            resultSet = new HiveResultSet(connection, this, tableSchema);
             resultSet.setFetchSize(fetchSize);
             resultSet.setFetchDirection(fetchDirection);
+
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
