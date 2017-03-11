@@ -39,20 +39,17 @@ public class ThriftUtils {
 
 
     public static TTransport createBinaryTransport(HiveConfiguration hiveConfiguration, int loginTimeoutMilliseconds) throws SaslException {
+        // no support for no-sasl
+        // no support for delegation tokens or ssl yet
 
-        if (hiveConfiguration.isNoSasl()) {
-            return HiveAuthFactory.getSocketTransport(hiveConfiguration.getHost(), hiveConfiguration.getPort(), loginTimeoutMilliseconds);
-        } else {
-            //no support for delegation tokens or ssl yet
+        String user = hiveConfiguration.getSessionVariables().get("user");
+        String password = hiveConfiguration.getSessionVariables().get("password");
 
-            TTransport socketTransport = HiveAuthFactory.getSocketTransport(hiveConfiguration.getHost(), hiveConfiguration.getPort(), loginTimeoutMilliseconds);
+        TTransport socketTransport = HiveAuthFactory.getSocketTransport(hiveConfiguration.getHost(), hiveConfiguration.getPort(), loginTimeoutMilliseconds);
 
-            //hack: password can't be empty.  must always specify a non-null, non-empty string
-            return PlainSaslHelper.getPlainTransport(hiveConfiguration.getUser(), hiveConfiguration.getPassword(), socketTransport);
-
-        }
+        // hack: password can't be empty.  must always specify a non-null, non-empty string
+        return PlainSaslHelper.getPlainTransport(user, password, socketTransport);
 
     }
-
 
 }

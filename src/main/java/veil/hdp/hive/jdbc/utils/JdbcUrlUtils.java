@@ -29,7 +29,9 @@ public class JdbcUrlUtils {
         return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 
-    public static void parseUrl(String url, Properties info, HiveConfiguration hiveConfiguration) {
+    public static HiveConfiguration parseUrl(String url, Properties info) {
+
+        HiveConfiguration hiveConfiguration = new HiveConfiguration(url, info);
 
         String hostString = parseHostString(url);
 
@@ -57,22 +59,13 @@ public class JdbcUrlUtils {
         Map<String, String> hiveVariables = parseHiveVariables(uriFragment);
         hiveConfiguration.addHiveVariables(hiveVariables);
 
-        if (!hiveConfiguration.getHosts().isEmpty()) {
-
-            if (!hiveConfiguration.isZookeeperDiscoverMode()) {
-                URI firstHost = hiveConfiguration.getHosts().get(0);
-                hiveConfiguration.setHost(firstHost.getHost());
-                hiveConfiguration.setPort(firstHost.getPort());
-            } else {
-                // todo
-            }
-        }
-
         overlayProperties(hiveConfiguration, info);
 
         if (log.isDebugEnabled()) {
             log.debug(hiveConfiguration.toString());
         }
+
+        return hiveConfiguration;
 
     }
 
@@ -154,8 +147,6 @@ public class JdbcUrlUtils {
             for (String key : info.stringPropertyNames()) {
 
                 key = key.toLowerCase();
-
-                hiveConfiguration.addOriginalProperty(key, info.getProperty(key));
 
                 if (key.startsWith(HIVE_VAR_PREFIX)) {
                     String varKey = key.substring(HIVE_VAR_PREFIX.length());
