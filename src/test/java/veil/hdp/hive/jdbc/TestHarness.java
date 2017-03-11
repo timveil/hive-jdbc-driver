@@ -4,11 +4,12 @@ package veil.hdp.hive.jdbc;
 import org.junit.Test;
 
 import java.sql.*;
-import java.util.List;
+import java.util.Properties;
 
 import static java.lang.Class.forName;
 import static java.lang.System.out;
 import static java.sql.DriverManager.getConnection;
+import static veil.hdp.hive.jdbc.utils.JdbcUrlUtils.parseUrl;
 
 public class TestHarness extends BaseJunitTest {
 
@@ -50,4 +51,5 @@ public class TestHarness extends BaseJunitTest {
 
 
     }
+
 }

@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import veil.hdp.hive.jdbc.utils.JdbcUrlUtils;
 
 import java.net.URI;
 import java.util.List;
@@ -10,35 +11,24 @@ import java.util.Properties;
 
 public class HiveConfiguration {
 
+    // constructor
     private final String url;
 
-    private String databaseName;
-    private String host;
-    private int port;
-    private List<URI> hosts;
-    private Map<String, String> sessionVariables;
-    private Map<String, String> hiveConfigurationParameters;
-    private Map<String, String> hiveVariables;
-    private Map<String, String> connectionArguments;
+    // public getter & setter
+    private String databaseName = "default";
+    private int port = 10000;
 
-    public HiveConfiguration(String url, Properties info) {
+    private String host;
+    private List<URI> hosts = Lists.newArrayList();
+    private final Map<String, String> sessionVariables = Maps.newHashMap();
+    private final Map<String, String> hiveConfigurationParameters = Maps.newHashMap();
+    private final Map<String, String> hiveVariables = Maps.newHashMap();
+    private final Map<String, String> originalProperties = Maps.newHashMap();
+
+    HiveConfiguration(String url, Properties info) {
         this.url = url;
 
-        this.connectionArguments = Maps.newHashMap();
-        this.hosts = Lists.newArrayList();
-        this.sessionVariables = Maps.newHashMap();
-        this.hiveConfigurationParameters = Maps.newHashMap();
-        this.hiveVariables = Maps.newHashMap();
-
-        this.port = 10000;
-        this.databaseName = "default";
-
-        if (info != null) {
-            for  (String name : info.stringPropertyNames()) {
-                connectionArguments.put(name, info.getProperty(name));
-            }
-        }
-
+        JdbcUrlUtils.parseUrl(url, info, this);
     }
 
     public String getUrl() {
@@ -87,6 +77,10 @@ public class HiveConfiguration {
         }
     }
 
+    public void addSessionVariable(String key, String value) {
+        this.sessionVariables.put(key, value);
+    }
+
     public Map<String, String> getHiveConfigurationParameters() {
         return hiveConfigurationParameters;
     }
@@ -95,6 +89,10 @@ public class HiveConfiguration {
         if (hiveConfigurationParameters != null) {
             this.hiveConfigurationParameters.putAll(hiveConfigurationParameters);
         }
+    }
+
+    public void addHiveConfigurationParameter(String key, String value) {
+        this.hiveConfigurationParameters.put(key, value);
     }
 
     public Map<String, String> getHiveVariables() {
@@ -107,16 +105,24 @@ public class HiveConfiguration {
         }
     }
 
-    public Map<String, String> getConnectionArguments() {
-        return connectionArguments;
+    public void addHiveVariable(String key, String value) {
+        this.hiveVariables.put(key, value);
+    }
+
+    public Map<String, String> getOriginalProperties() {
+        return originalProperties;
+    }
+
+    public void addOriginalProperty(String key, String value) {
+        this.originalProperties.put(key, value);
     }
 
     public String getUser() {
-        return connectionArguments.get("user");
+        return sessionVariables.get("user");
     }
 
     public String getPassword() {
-        return connectionArguments.get("password");
+        return sessionVariables.get("password");
     }
 
     public boolean isZookeeperDiscoverMode() {
@@ -138,7 +144,7 @@ public class HiveConfiguration {
                 ", sessionVariables=" + sessionVariables +
                 ", hiveConfigurationParameters=" + hiveConfigurationParameters +
                 ", hiveVariables=" + hiveVariables +
-                ", connectionArguments=" + connectionArguments +
+                ", originalProperties=" + originalProperties +
                 '}';
     }
 }

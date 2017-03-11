@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
-import veil.hdp.hive.jdbc.utils.ConnectionUtils;
+import veil.hdp.hive.jdbc.utils.JdbcUrlUtils;
 
 import javax.security.sasl.SaslException;
 import java.sql.Connection;
@@ -42,7 +42,7 @@ public class HiveDriver extends AbstractHiveDriver {
 
             try {
 
-                HiveConfiguration hiveConfiguration = ConnectionUtils.buildConnectionParameters(url, info);
+                HiveConfiguration hiveConfiguration = new HiveConfiguration(url, info);
 
                 TTransport transport = ThriftUtils.createBinaryTransport(hiveConfiguration, getLoginTimeout());
 
@@ -78,7 +78,7 @@ public class HiveDriver extends AbstractHiveDriver {
             throw new SQLException("url is null");
         }
 
-        return ConnectionUtils.acceptURL(url);
+        return JdbcUrlUtils.acceptURL(url);
     }
 
     private int getLoginTimeout() {
