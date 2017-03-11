@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class HiveDriver extends AbstractHiveDriver {
+public class HiveDriver extends AbstractDriver {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
 

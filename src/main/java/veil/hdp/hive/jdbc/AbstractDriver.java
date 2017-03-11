@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class AbstractHiveDriver implements Driver {
+public class AbstractDriver implements Driver {
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
         throw new SQLFeatureNotSupportedException();
