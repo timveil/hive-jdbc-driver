@@ -26,11 +26,9 @@ public class HiveResultSet extends AbstractResultSet {
     private final TableSchema tableSchema;
 
     // private
-
     private RowSet rowSet;
     private Iterator<Object[]> rowSetIterator;
     private Object[] row;
-
 
     // public getter & setter
     private int fetchSize;
@@ -38,6 +36,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter only
     private int rowCount;
+    private boolean closed;
 
 
     HiveResultSet(HiveConnection connection, HiveStatement statement, TableSchema tableSchema) {
@@ -79,15 +78,25 @@ public class HiveResultSet extends AbstractResultSet {
     }
 
     @Override
+    public boolean isClosed() {
+        return closed;
+    }
+
+    @Override
     public void close() throws SQLException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("attempting to close {}", this.getClass().getName());
-        }
+        if (!closed) {
 
-        rowSet = null;
-        rowSetIterator = null;
-        row = null;
+            if (log.isDebugEnabled()) {
+                log.debug("attempting to close {}", this.getClass().getName());
+            }
+
+            rowSet = null;
+            rowSetIterator = null;
+            row = null;
+
+            closed = true;
+        }
     }
 
     @Override

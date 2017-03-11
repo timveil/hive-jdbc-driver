@@ -186,7 +186,7 @@ public class HiveStatement extends AbstractStatement {
     }
 
     private void closeResultSet() throws SQLException {
-        if (resultSet != null) {
+        if (resultSet != null && !resultSet.isClosed()) {
             resultSet.close();
             resultSet = null;
         }
