@@ -6,7 +6,6 @@ import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.HiveConfiguration;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;

@@ -4,18 +4,18 @@ package veil.hdp.hive.jdbc.utils;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveConfiguration;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class JdbcUrlUtils {
+public class ConfigurationUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(JdbcUrlUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(ConfigurationUtils.class);
 
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";
@@ -29,13 +29,11 @@ public class JdbcUrlUtils {
         return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 
-    public static HiveConfiguration parseUrl(String url, Properties info) {
-
-        HiveConfiguration hiveConfiguration = new HiveConfiguration(url, info);
+    public static HiveConfiguration buildConfiguration(String url, Properties info) {
 
         String hostString = parseHostString(url);
 
-        setHosts(hiveConfiguration, hostString);
+        List<URI> hosts = getHosts(hostString);
 
         url = url.replace(hostString, TMP_HOST);
 
@@ -44,20 +42,14 @@ public class JdbcUrlUtils {
         String uriPath = getPath(tmpUri);
 
         String databaseName = parseDatabaseName(uriPath);
-        hiveConfiguration.setDatabaseName(databaseName);
 
         Map<String, String> sessionVariables = parseSessionVariables(uriPath);
-        hiveConfiguration.addSessionVariables(sessionVariables);
 
-        String uriQuery = tmpUri.getQuery();
+        Map<String, String> hiveConfigurationParameters = parseHiveConfigurationParameters(tmpUri.getQuery());
 
-        Map<String, String> hiveConfigurationParameters = parseHiveConfigurationParameters(uriQuery);
-        hiveConfiguration.addHiveConfigurationParameters(hiveConfigurationParameters);
+        Map<String, String> hiveVariables = parseHiveVariables(tmpUri.getFragment());
 
-        String uriFragment = tmpUri.getFragment();
-
-        Map<String, String> hiveVariables = parseHiveVariables(uriFragment);
-        hiveConfiguration.addHiveVariables(hiveVariables);
+        HiveConfiguration hiveConfiguration = new HiveConfiguration(url, databaseName, hosts, sessionVariables, hiveConfigurationParameters, hiveVariables);
 
         overlayProperties(hiveConfiguration, info);
 
@@ -69,20 +61,20 @@ public class JdbcUrlUtils {
 
     }
 
-    private static void setHosts(HiveConfiguration hiveConfiguration, String hostString) {
+    private static List<URI> getHosts(String hostString) {
         List<URI> uris = Lists.newArrayList();
 
         for (String host : Splitter.on(",").trimResults().omitEmptyStrings().split(hostString)) {
             uris.add(URI.create(HIVE2_PART + "//" + host));
         }
 
-        hiveConfiguration.setHosts(uris);
+        return uris;
     }
 
     private static Map<String, String> parseHiveConfigurationParameters(String query) {
 
         if (query != null) {
-            return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(query);
+            return Maps.newHashMap(Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(query));
         }
 
         return null;
@@ -92,7 +84,7 @@ public class JdbcUrlUtils {
     private static Map<String, String> parseHiveVariables(String fragment) {
 
         if (fragment != null) {
-            return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(fragment);
+            return Maps.newHashMap(Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(fragment));
         }
 
         return null;
@@ -104,7 +96,7 @@ public class JdbcUrlUtils {
 
         if (path != null && path.contains(";")) {
             path = path.substring(path.indexOf(';'));
-            return Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path);
+            return Maps.newHashMap(Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
         }
 
         return null;
@@ -152,7 +144,7 @@ public class JdbcUrlUtils {
                     String varKey = key.substring(HIVE_VAR_PREFIX.length());
 
                     if (hiveConfiguration.getHiveVariables().containsKey(varKey)) {
-                        log.debug("hive variables map already contains key {}", varKey);
+                        log.warn("hive variables map already contains key {}", varKey);
                     }
 
                     hiveConfiguration.addHiveVariable(varKey, info.getProperty(key));
@@ -160,14 +152,14 @@ public class JdbcUrlUtils {
                     String confKey = key.substring(HIVE_CONF_PREFIX.length());
 
                     if (hiveConfiguration.getHiveConfigurationParameters().containsKey(confKey)) {
-                        log.debug("hive configuration parameters map already contains key {}", confKey);
+                        log.warn("hive configuration parameters map already contains key {}", confKey);
                     }
 
                     hiveConfiguration.addHiveConfigurationParameter(confKey, info.getProperty(key));
                 } else {
 
                     if (hiveConfiguration.getSessionVariables().containsKey(key)) {
-                        log.debug("hive session variables map already contains key {}", key);
+                        log.warn("hive session variables map already contains key {}", key);
                     }
 
                     hiveConfiguration.addSessionVariable(key, info.getProperty(key));

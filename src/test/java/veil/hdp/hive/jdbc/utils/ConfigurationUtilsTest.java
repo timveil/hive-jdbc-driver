@@ -7,12 +7,9 @@ import veil.hdp.hive.jdbc.BaseJunitTest;
 
 import java.util.Properties;
 
-/**
- * Created by tveil on 3/10/17.
- */
-public class JdbcUrlUtilsTest extends BaseJunitTest {
+public class ConfigurationUtilsTest extends BaseJunitTest {
 
-    String url = null;
+    private String url = null;
 
     @Before
     public void setUp() throws Exception {
@@ -26,11 +23,11 @@ public class JdbcUrlUtilsTest extends BaseJunitTest {
 
     @Test
     public void acceptURL() throws Exception {
-        boolean accepts = JdbcUrlUtils.acceptURL(url);
+        boolean accepts = ConfigurationUtils.acceptURL(url);
     }
 
     @Test
-    public void parseUrl() throws Exception {
+    public void buildConfiguration() throws Exception {
 
 
         Properties info = new Properties();
@@ -40,9 +37,8 @@ public class JdbcUrlUtilsTest extends BaseJunitTest {
         info.put("hivevar:randhivevar", "yyyyyyy");
         info.put("hiveconf:randhiveconf", "xxxxxxx");
 
-      /*  HiveConfiguration mock = Mockito.spy(HiveConfiguration.class);
 
-        JdbcUrlUtils.parseUrl(url, info, mock);*/
+        HiveConfiguration hiveConfiguration = ConfigurationUtils.buildConfiguration(url, info);
 
     }
 

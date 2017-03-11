@@ -8,7 +8,6 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveConfiguration;
 
 import javax.security.sasl.SaslException;
 

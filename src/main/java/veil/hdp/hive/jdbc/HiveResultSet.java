@@ -40,7 +40,7 @@ public class HiveResultSet extends AbstractResultSet {
     private int rowCount;
 
 
-    HiveResultSet(HiveConnection connection, HiveStatement statement, TableSchema tableSchema) throws TException {
+    HiveResultSet(HiveConnection connection, HiveStatement statement, TableSchema tableSchema) {
         this.connection = connection;
         this.statement = statement;
         this.tableSchema = tableSchema;

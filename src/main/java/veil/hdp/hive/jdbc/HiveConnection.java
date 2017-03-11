@@ -6,6 +6,7 @@ import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.HiveConfiguration;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
