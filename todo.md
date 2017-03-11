@@ -1,0 +1,1 @@
+1.  doesn't matter where in the list the values come, all that matters is that they are understood.  can get rid of separate conf and session collections.  only variables can be handled differently
