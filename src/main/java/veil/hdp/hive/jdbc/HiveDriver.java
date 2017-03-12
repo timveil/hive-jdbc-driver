@@ -8,7 +8,7 @@ import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.utils.ConfigurationUtils;
+import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.HiveConfiguration;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
@@ -16,6 +16,7 @@ import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import javax.security.sasl.SaslException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +33,8 @@ public class HiveDriver extends AbstractDriver {
             log.error(e.getMessage(), e);
         }
     }
+
+
 
     public Connection connect(HiveConfiguration hiveConfiguration)  throws SQLException {
         Connection connection = null;
@@ -68,7 +71,12 @@ public class HiveDriver extends AbstractDriver {
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        return connect(ConfigurationUtils.buildConfiguration(url, info));
+        return connect(DriverUtils.buildConfiguration(url, info));
+    }
+
+    @Override
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+        return DriverUtils.buildDriverPropertyInfo(url, info);
     }
 
     public boolean acceptsURL(String url) throws SQLException {
@@ -77,7 +85,7 @@ public class HiveDriver extends AbstractDriver {
             throw new SQLException("url is null");
         }
 
-        return ConfigurationUtils.acceptURL(url);
+        return DriverUtils.acceptURL(url);
     }
 
     private int getLoginTimeout() {

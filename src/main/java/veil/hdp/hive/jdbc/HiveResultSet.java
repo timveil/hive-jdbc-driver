@@ -135,17 +135,6 @@ public class HiveResultSet extends AbstractResultSet {
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        MathContext mc = new MathContext(scale);
-        return getBigDecimal(columnIndex).round(mc);
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        return getBigDecimal(findColumn(columnLabel), scale);
-    }
-
-    @Override
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         return getBigDecimal(findColumn(columnLabel));
     }

@@ -7,7 +7,7 @@ import veil.hdp.hive.jdbc.BaseJunitTest;
 
 import java.util.Properties;
 
-public class ConfigurationUtilsTest extends BaseJunitTest {
+public class DriverUtilsTest extends BaseJunitTest {
 
     private String url = null;
 
@@ -23,7 +23,7 @@ public class ConfigurationUtilsTest extends BaseJunitTest {
 
     @Test
     public void acceptURL() throws Exception {
-        boolean accepts = ConfigurationUtils.acceptURL(url);
+        boolean accepts = DriverUtils.acceptURL(url);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class ConfigurationUtilsTest extends BaseJunitTest {
         info.put("hiveconf:randhiveconf", "xxxxxxx");
 
 
-        HiveConfiguration hiveConfiguration = ConfigurationUtils.buildConfiguration(url, info);
+        HiveConfiguration hiveConfiguration = DriverUtils.buildConfiguration(url, info);
 
     }
 
