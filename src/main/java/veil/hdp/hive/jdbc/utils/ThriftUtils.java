@@ -66,6 +66,7 @@ public class ThriftUtils {
             }
         });
 
+        //todo: don't think this client is being properly closed
         CloseableHttpClient client = clientBuilder.build();
 
         return new THttpClient("http://" + host + ":" + port + "/cliservice", client);

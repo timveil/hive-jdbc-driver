@@ -14,15 +14,12 @@ import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import javax.security.sasl.SaslException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class HiveDriver extends AbstractDriver {
+public class HiveDriver implements Driver {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
 
@@ -61,6 +58,8 @@ public class HiveDriver extends AbstractDriver {
 
             connection = new HiveConnection(properties, transport, thriftClient, sessionHandle, protocolVersion);
 
+            // todo: implement connect method so much of this can move there.  shouldn't be in driver.
+
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
@@ -80,6 +79,26 @@ public class HiveDriver extends AbstractDriver {
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
         return DriverUtils.buildDriverPropertyInfo(url, info);
+    }
+
+    @Override
+    public int getMajorVersion() {
+        return 0;
+    }
+
+    @Override
+    public int getMinorVersion() {
+        return 0;
+    }
+
+    @Override
+    public boolean jdbcCompliant() {
+        return false;
+    }
+
+    @Override
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
     }
 
     public boolean acceptsURL(String url) throws SQLException {

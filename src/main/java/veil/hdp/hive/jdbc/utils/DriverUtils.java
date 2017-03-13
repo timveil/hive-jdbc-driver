@@ -171,7 +171,11 @@ public class DriverUtils {
         Properties properties = new Properties();
 
         for (String key : map.keySet()) {
-            properties.setProperty(key, map.get(key));
+            String value = map.get(key);
+
+            if (value != null) {
+                properties.setProperty(key, value);
+            }
         }
 
         return properties;
