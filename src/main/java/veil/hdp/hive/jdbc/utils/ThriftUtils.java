@@ -8,8 +8,11 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.HiveDriverIntProperty;
+import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import javax.security.sasl.SaslException;
+import java.util.Properties;
 
 
 public class ThriftUtils {
@@ -37,14 +40,16 @@ public class ThriftUtils {
     }
 
 
-    public static TTransport createBinaryTransport(HiveConfiguration hiveConfiguration, int loginTimeoutMilliseconds) throws SaslException {
+    public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SaslException {
         // no support for no-sasl
         // no support for delegation tokens or ssl yet
 
-        String user = hiveConfiguration.getSessionVariables().get("user");
-        String password = hiveConfiguration.getSessionVariables().get("password");
+        String user = properties.getProperty(HiveDriverStringProperty.USERNAME.getName());
+        String password = properties.getProperty(HiveDriverStringProperty.PASSWORD.getName());
+        String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
+        int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
 
-        TTransport socketTransport = HiveAuthFactory.getSocketTransport(hiveConfiguration.getHost(), hiveConfiguration.getPort(), loginTimeoutMilliseconds);
+        TTransport socketTransport = HiveAuthFactory.getSocketTransport(host, port, loginTimeoutMilliseconds);
 
         // hack: password can't be empty.  must always specify a non-null, non-empty string
         return PlainSaslHelper.getPlainTransport(user, password, socketTransport);

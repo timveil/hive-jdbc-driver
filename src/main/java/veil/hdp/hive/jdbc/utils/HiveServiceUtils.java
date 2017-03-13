@@ -1,18 +1,17 @@
 package veil.hdp.hive.jdbc.utils;
 
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hive.service.cli.HiveSQLException;
 import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
+import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.hive.service.auth.HiveAuthFactory.HS2_PROXY_USER;
 import static org.apache.hive.service.cli.thrift.TCLIService.Client;
@@ -178,11 +177,17 @@ public class HiveServiceUtils {
     }
 
 
-    public static TOpenSessionResp openSession(HiveConfiguration hiveConfiguration, Client client) throws TException {
+    public static TOpenSessionResp openSession(Properties properties, Client client) throws TException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
+        String username = properties.getProperty(HiveDriverStringProperty.USERNAME.getName());
+
+        if (username != null) {
+            openSessionReq.setUsername(username);
+            openSessionReq.setPassword(properties.getProperty(HiveDriverStringProperty.PASSWORD.getName()));
+        }
 
         // set properties for session
-        Map<String, String> configuration = buildSessionConfig(hiveConfiguration);
+        Map<String, String> configuration = buildSessionConfig(properties);
 
         if (log.isDebugEnabled()) {
             log.debug("configuration for session provided to thrift {}", configuration);
@@ -199,24 +204,18 @@ public class HiveServiceUtils {
     }
 
 
-    private static Map<String, String> buildSessionConfig(HiveConfiguration hiveConfiguration) {
+    private static Map<String, String> buildSessionConfig(Properties properties) {
         Map<String, String> openSessionConfig = new HashMap<>();
 
-        for (Map.Entry<String, String> hiveConf : hiveConfiguration.getHiveConfigurationParameters().entrySet()) {
-            openSessionConfig.put("set:hiveconf:" + hiveConf.getKey(), hiveConf.getValue());
+        for (String property : properties.stringPropertyNames()) {
+            HiveConf.ConfVars confVar = HiveConf.getConfVars(property);
+
+            if (confVar != null) {
+                openSessionConfig.put("set:hiveconf:" + property, properties.getProperty(property));
+            }
         }
 
-        for (Map.Entry<String, String> hiveVar : hiveConfiguration.getHiveVariables().entrySet()) {
-            openSessionConfig.put("set:hivevar:" + hiveVar.getKey(), hiveVar.getValue());
-        }
-
-        openSessionConfig.put("use:database", hiveConfiguration.getDatabaseName());
-
-        Map<String, String> sessionVariables = hiveConfiguration.getSessionVariables();
-
-        if (sessionVariables.containsKey(HS2_PROXY_USER)) {
-            openSessionConfig.put(HS2_PROXY_USER, sessionVariables.get(HS2_PROXY_USER));
-        }
+        openSessionConfig.put("use:database", properties.getProperty(HiveDriverStringProperty.DATABASE_NAME.getName()));
 
         return openSessionConfig;
     }

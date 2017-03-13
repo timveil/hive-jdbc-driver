@@ -11,13 +11,14 @@ import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.*;
+import java.util.Properties;
 
 public class HiveConnection extends AbstractConnection {
 
     private static final Logger log = LoggerFactory.getLogger(HiveConnection.class);
 
     // constructor
-    private final HiveConfiguration hiveConfiguration;
+    private final Properties properties;
     private final TTransport transport;
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
@@ -26,8 +27,8 @@ public class HiveConnection extends AbstractConnection {
     // public getter & setter
     private boolean closed;
 
-    HiveConnection(HiveConfiguration hiveConfiguration, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
-        this.hiveConfiguration = hiveConfiguration;
+    HiveConnection(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+        this.properties = properties;
         this.transport = transport;
         this.client = client;
         this.sessionHandle = sessionHandle;
@@ -36,8 +37,8 @@ public class HiveConnection extends AbstractConnection {
         closed = false;
     }
 
-    HiveConfiguration getHiveConfiguration() {
-        return hiveConfiguration;
+    Properties getProperties() {
+        return properties;
     }
 
     TTransport getTransport() {
@@ -145,7 +146,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public String toString() {
         return "HiveConnection{" +
-                "hiveConfiguration=" + hiveConfiguration +
+                "properties=" + properties +
                 ", transport=" + transport +
                 ", client=" + client +
                 ", sessionHandle=" + sessionHandle +

@@ -35,43 +35,45 @@ public class HiveDriver extends AbstractDriver {
     }
 
 
-
-    public Connection connect(HiveConfiguration hiveConfiguration)  throws SQLException {
+    public Connection connect(Properties properties) throws SQLException {
         Connection connection = null;
 
-        if (acceptsURL(hiveConfiguration.getUrl())) {
 
-            try {
+        try {
 
-                TTransport transport = ThriftUtils.createBinaryTransport(hiveConfiguration, getLoginTimeout());
+            TTransport transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
 
-                ThriftUtils.openTransport(transport);
+            ThriftUtils.openTransport(transport);
 
-                TCLIService.Client thriftClient = ThriftUtils.createClient(transport);
+            TCLIService.Client thriftClient = ThriftUtils.createClient(transport);
 
-                TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(hiveConfiguration, thriftClient);
-                Map<String, String> configuration = tOpenSessionResp.getConfiguration();
+            TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, thriftClient);
+            Map<String, String> configuration = tOpenSessionResp.getConfiguration();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("configuration for session returned by thrift {}", configuration);
-                }
-
-                TProtocolVersion protocolVersion = tOpenSessionResp.getServerProtocolVersion();
-
-                TSessionHandle sessionHandle = tOpenSessionResp.getSessionHandle();
-
-                connection = new HiveConnection(hiveConfiguration, transport, thriftClient, sessionHandle, protocolVersion);
-
-            } catch (SaslException | TException e) {
-                throw new SQLException(e.getMessage(), "", e);
+            if (log.isDebugEnabled()) {
+                log.debug("configuration for session returned by thrift {}", configuration);
             }
+
+            TProtocolVersion protocolVersion = tOpenSessionResp.getServerProtocolVersion();
+
+            TSessionHandle sessionHandle = tOpenSessionResp.getSessionHandle();
+
+            connection = new HiveConnection(properties, transport, thriftClient, sessionHandle, protocolVersion);
+
+        } catch (SaslException | TException e) {
+            throw new SQLException(e.getMessage(), "", e);
         }
+
 
         return connection;
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
-        return connect(DriverUtils.buildConfiguration(url, info));
+        if (acceptsURL(url)) {
+            return connect(DriverUtils.buildProperties(url, info));
+        }
+
+        return null;
     }
 
     @Override

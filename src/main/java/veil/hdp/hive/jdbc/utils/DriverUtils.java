@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc.utils;
 
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -27,7 +27,6 @@ public class DriverUtils {
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";
     private static final String JDBC_HIVE2_PREFIX = JDBC_PART + HIVE2_PART + "//";
-    private static final String TMP_HOST = "tmp_host:00000";
 
 
     public static boolean acceptURL(String url) {
@@ -38,6 +37,11 @@ public class DriverUtils {
             new HiveDriverPropertyInfo(HiveDriverStringProperty.DATABASE_NAME.getName(),
                     HiveDriverStringProperty.DATABASE_NAME.getDescription(),
                     HiveDriverStringProperty.DATABASE_NAME.getDefaultValue(),
+                    false,
+                    null),
+            new HiveDriverPropertyInfo(HiveDriverStringProperty.HOST.getName(),
+                    HiveDriverStringProperty.HOST.getDescription(),
+                    HiveDriverStringProperty.HOST.getDefaultValue(),
                     false,
                     null),
             new HiveDriverPropertyInfo(HiveDriverIntProperty.PORT_NUMBER.getName(),
@@ -75,15 +79,9 @@ public class DriverUtils {
 
 
     public static Properties buildProperties(String url, Properties suppliedProperties) throws SQLException {
-        //pull property names from url
-        //normailize names ie lower
-        //fix synonyms - forget this; no synonyms
-        //check names against driver properties + hiveconf
-        //warn or error if not found
-        //parse hive variables variables
 
-        Map<String, String> urlMap = normalizeKeys(parseUrl(url));
-        Map<String, String> suppliedMap = normalizeKeys(convertPropertiesToMap(suppliedProperties));
+        Map<String, String> urlMap = normalize(parseUrl(url));
+        Map<String, String> suppliedMap = normalize(convertPropertiesToMap(suppliedProperties));
 
         urlMap.putAll(suppliedMap);
 
@@ -107,12 +105,12 @@ public class DriverUtils {
     }
 
 
-    private static Map<String, String> normalizeKeys(Map<String, String> properties) {
+    private static Map<String, String> normalize(Map<String, String> properties) {
 
         Map<String, String> normalized = Maps.newHashMap();
 
         for(String key : properties.keySet()) {
-            normalized.put(key.toLowerCase(), properties.get(key));
+            normalized.put(key.toLowerCase(), Strings.emptyToNull(properties.get(key)));
         }
 
         return normalized;
@@ -177,72 +175,67 @@ public class DriverUtils {
         return map;
     }
 
-    private static Map<String, String> parseUrl(String url) {
+    private static Map<String, String> parseUrl(String url) throws SQLException {
 
         Map<String, String> properties = Maps.newHashMap();
 
-        String tmpUrl = url;
+        URI uri = URI.create(stripPrefix(JDBC_PART, url));
 
-        String hostString = parseHostString(tmpUrl);
+        String databaseName = Strings.emptyToNull(getDatabaseName(uri));
 
-        List<URI> hosts = getHosts(hostString);
+        properties.put(HiveDriverStringProperty.DATABASE_NAME.getName(), databaseName != null ? databaseName : HiveDriverStringProperty.DATABASE_NAME.getDefaultValue());
 
-        tmpUrl = tmpUrl.replace(hostString, TMP_HOST);
+        String uriQuery = uri.getQuery();
 
-        URI tmpUri = URI.create(stripPrefix(JDBC_PART, tmpUrl));
+        properties.putAll(parseQueryParameters(uriQuery));
 
-        String uriPath = getPath(tmpUri);
+        String host = null;
+        int port = -1;
 
-        String databaseName = parseDatabaseName(uriPath);
-
-        properties.put(HiveDriverStringProperty.DATABASE_NAME.getName(), databaseName);
-
-        properties.putAll(parseSessionVariables(uriPath));
-
-        if (hosts.size() > 1 && properties.containsKey(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName())) {
+        if (properties.containsKey(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName())) {
             // fetch host from zookeeper
+
+            String authority = uri.getAuthority();
+            List<URI> uris = getZookeepers(authority);
+
         } else {
-            URI firstHost = hosts.get(0);
-            properties.put(HiveDriverStringProperty.HOST.getName(), firstHost.getHost());
-            properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(firstHost.getPort()));
+            host = uri.getHost();
+            port = uri.getPort();
         }
+
+        if (Strings.isNullOrEmpty(host)) {
+            throw new SQLException("host is invalid: host [" + host + "]");
+        }
+
+        properties.put(HiveDriverStringProperty.HOST.getName(), host);
+        properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(port != -1 ? port : HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()));
 
         return properties;
     }
 
-    private static List<URI> getHosts(String hostString) {
+    private static List<URI> getZookeepers(String authority) {
         List<URI> uris = Lists.newArrayList();
 
-        for (String host : Splitter.on(",").trimResults().omitEmptyStrings().split(hostString)) {
+        for (String host : Splitter.on(",").trimResults().omitEmptyStrings().split(authority)) {
             uris.add(URI.create(HIVE2_PART + "//" + host));
         }
 
         return uris;
     }
 
-    private static Map<String, String> parseSessionVariables(String path) {
+    private static Map<String, String> parseQueryParameters(String path) {
 
         Map<String, String> parameters = Maps.newHashMap();
 
-        if (path != null && path.contains(";")) {
-            path = path.substring(path.indexOf(';'));
-            parameters.putAll(Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
+        if (path != null) {
+            parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
         }
 
         return parameters;
 
     }
 
-    private static String parseDatabaseName(String path) {
-
-        if (path != null && path.contains(";")) {
-            return path.substring(0, path.indexOf(';'));
-        } else {
-            return path;
-        }
-    }
-
-    private static String getPath(URI uri) {
+    private static String getDatabaseName(URI uri) {
         String path = uri.getPath();
 
         if (path != null && path.startsWith("/")) {
@@ -252,12 +245,6 @@ public class DriverUtils {
         return null;
     }
 
-    private static String parseHostString(String url) {
-
-        url = stripPrefix(JDBC_HIVE2_PREFIX, url);
-
-        return url.substring(0, CharMatcher.anyOf("/?#").indexIn(url));
-    }
 
     private static String stripPrefix(String prefix, String url) {
         return url.replace(prefix, "").trim();
