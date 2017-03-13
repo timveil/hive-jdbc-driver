@@ -17,6 +17,7 @@
         <hadoop.version>2.7.3.2.5.3.0-37</hadoop.version>
         <libthrift.version>0.9.3</libthrift.version>
         <junit.version>4.12</junit.version>
+        <curator-framework.version>2.10.0</curator-framework.version>
     </properties>
 
 
@@ -147,6 +148,12 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>${curator-framework.version}</version>
         </dependency>
 
         <!-- this adds almost 6mb to the jar -->

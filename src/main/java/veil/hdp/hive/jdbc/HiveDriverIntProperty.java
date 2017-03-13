@@ -11,7 +11,9 @@ public enum HiveDriverIntProperty {
     STATEMENT_MAX_ROWS("statement.max.rows", "", 0),
 
     //If the value specified is zero, then the hint is ignored. should be default for resultset
-    STATEMENT_FETCH_SIZE("statement.fetch.size", "", 1000);
+    STATEMENT_FETCH_SIZE("statement.fetch.size", "", 1000),
+
+    ZOOKEEPER_RETRY_WAIT("zookeeper.retry.wait", "", 1000);
 
     private String name;
     private int defaultValue;

@@ -3,8 +3,10 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.RetryOneTime;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +16,13 @@ import veil.hdp.hive.jdbc.HiveDriverPropertyInfo;
 import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 public class DriverUtils {
 
@@ -47,6 +51,11 @@ public class DriverUtils {
             new HiveDriverPropertyInfo(HiveDriverIntProperty.PORT_NUMBER.getName(),
                     HiveDriverIntProperty.PORT_NUMBER.getDescription(),
                     Integer.toString(HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()),
+                    false,
+                    null),
+            new HiveDriverPropertyInfo(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getName(),
+                    HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDescription(),
+                    Integer.toString(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDefaultValue()),
                     false,
                     null),
             new HiveDriverPropertyInfo(HiveDriverIntProperty.STATEMENT_QUERY_TIMEOUT.getName(),
@@ -109,7 +118,7 @@ public class DriverUtils {
 
         Map<String, String> normalized = Maps.newHashMap();
 
-        for(String key : properties.keySet()) {
+        for (String key : properties.keySet()) {
             normalized.put(key.toLowerCase(), Strings.emptyToNull(properties.get(key)));
         }
 
@@ -119,7 +128,7 @@ public class DriverUtils {
 
     private static void validateProperties(Map<String, String> properties) throws SQLException {
 
-        for(String key : properties.keySet()) {
+        for (String key : properties.keySet()) {
 
             boolean found = false;
 
@@ -193,10 +202,18 @@ public class DriverUtils {
         int port = -1;
 
         if (properties.containsKey(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName())) {
-            // fetch host from zookeeper
 
             String authority = uri.getAuthority();
-            List<URI> uris = getZookeepers(authority);
+
+            String zooKeeperNamespace = properties.get(HiveDriverStringProperty.ZOOKEEPER_NAMESPACE.getName()) ;
+            String retry = properties.get(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getName());
+
+            URI zookeeperUri = getHostFromZookeeper(authority,
+                    zooKeeperNamespace != null ? zooKeeperNamespace : HiveDriverStringProperty.ZOOKEEPER_NAMESPACE.getDefaultValue(),
+                    retry != null ? Integer.parseInt(retry) : HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDefaultValue());
+
+            host = zookeeperUri.getHost();
+            port = zookeeperUri.getPort();
 
         } else {
             host = uri.getHost();
@@ -211,16 +228,6 @@ public class DriverUtils {
         properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(port != -1 ? port : HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()));
 
         return properties;
-    }
-
-    private static List<URI> getZookeepers(String authority) {
-        List<URI> uris = Lists.newArrayList();
-
-        for (String host : Splitter.on(",").trimResults().omitEmptyStrings().split(authority)) {
-            uris.add(URI.create(HIVE2_PART + "//" + host));
-        }
-
-        return uris;
     }
 
     private static Map<String, String> parseQueryParameters(String path) {
@@ -248,6 +255,27 @@ public class DriverUtils {
 
     private static String stripPrefix(String prefix, String url) {
         return url.replace(prefix, "").trim();
+    }
+
+    private static URI getHostFromZookeeper(String authority, String zooKeeperNamespace, int retry) throws SQLException {
+
+        Random random = new Random();
+
+        try (CuratorFramework zooKeeperClient = CuratorFrameworkFactory.builder().connectString(authority).retryPolicy(new RetryOneTime(retry)).build()) {
+
+            zooKeeperClient.start();
+
+            List<String> hosts = zooKeeperClient.getChildren().forPath("/" + zooKeeperNamespace);
+
+            String randomHost = hosts.get(random.nextInt(hosts.size()));
+
+            String hostData = new String(zooKeeperClient.getData().forPath("/" + zooKeeperNamespace + "/" + randomHost), Charset.forName("UTF-8"));
+
+           return URI.create(hostData);
+
+        } catch (Exception e) {
+            throw new SQLException(e.getMessage(), e);
+        }
     }
 
 }

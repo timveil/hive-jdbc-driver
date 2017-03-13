@@ -19,7 +19,7 @@ public enum HiveDriverStringProperty {
     // only applicable in http mode
     COOKIE_NAME("cookie.name", "", "hive.server2.auth"),
     //HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zooKeeperNamespace", "", ""),
+    ZOOKEEPER_NAMESPACE("zookeeper.namespace", "", ""),
     DATABASE_NAME("database", "", "default"),
     PASSWORD("password","",""),
     HOST("host","","")
