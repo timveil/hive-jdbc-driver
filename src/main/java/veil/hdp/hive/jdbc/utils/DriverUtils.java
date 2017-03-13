@@ -53,9 +53,9 @@ public class DriverUtils {
                     Integer.toString(HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()),
                     false,
                     null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getName(),
-                    HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDefaultValue()),
+            new HiveDriverPropertyInfo(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName(),
+                    HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDescription(),
+                    Integer.toString(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue()),
                     false,
                     null),
             new HiveDriverPropertyInfo(HiveDriverIntProperty.STATEMENT_QUERY_TIMEOUT.getName(),
@@ -205,12 +205,12 @@ public class DriverUtils {
 
             String authority = uri.getAuthority();
 
-            String zooKeeperNamespace = properties.get(HiveDriverStringProperty.ZOOKEEPER_NAMESPACE.getName()) ;
-            String retry = properties.get(HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getName());
+            String zooKeeperNamespace = properties.get(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName()) ;
+            String retry = properties.get(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName());
 
             URI zookeeperUri = getHostFromZookeeper(authority,
-                    zooKeeperNamespace != null ? zooKeeperNamespace : HiveDriverStringProperty.ZOOKEEPER_NAMESPACE.getDefaultValue(),
-                    retry != null ? Integer.parseInt(retry) : HiveDriverIntProperty.ZOOKEEPER_RETRY_WAIT.getDefaultValue());
+                    zooKeeperNamespace != null ? zooKeeperNamespace : HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getDefaultValue(),
+                    retry != null ? Integer.parseInt(retry) : HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue());
 
             host = zookeeperUri.getHost();
             port = zookeeperUri.getPort();

@@ -13,7 +13,7 @@ public enum HiveDriverIntProperty {
     //If the value specified is zero, then the hint is ignored. should be default for resultset
     STATEMENT_FETCH_SIZE("statement.fetch.size", "", 1000),
 
-    ZOOKEEPER_RETRY_WAIT("zookeeper.retry.wait", "", 1000);
+    ZOOKEEPER_DISCOVERY_RETRY("zookeeper.discovery.retry", "", 1000);
 
     private String name;
     private int defaultValue;
