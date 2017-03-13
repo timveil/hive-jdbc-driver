@@ -3,6 +3,13 @@ package veil.hdp.hive.jdbc;
 import org.apache.hadoop.hive.conf.HiveConf;
 
 public enum HiveDriverStringProperty {
+    HOST("host","",""),
+    DATABASE_NAME("database", "", "default"),
+    USER("user","", ""),
+    PASSWORD("password","",""),
+
+    // i think these need to be prefixed (like jdbc.) these should not be confused with actual hive conf parameters even thought they may result in the same value
+
     //HiveConf.ConfVars.HIVE_SERVER2_AUTHENTICATION
     AUTHENTICATION_TYPE("authentication.type", "", ""),
     //HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE
@@ -12,7 +19,7 @@ public enum HiveDriverStringProperty {
     // only applicable for kerberos
     //HiveConf.ConfVars.HIVE_SERVER2_THRIFT_SASL_QOP
     KERBEROS_SASL_QOP("kerberos.sasl.qop","", ""),
-    USERNAME("username","", ""),
+
     // only applicable in http mode
     SSL_TRUSTSTORE_PATH("ssl.truststore.path","", ""),
     SSL_TRUSTSTORE_PASSWORD("ssl.truststore.password", "", ""),
@@ -22,9 +29,7 @@ public enum HiveDriverStringProperty {
     COOKIE_NAME("cookie.name", "", "hive.server2.auth"),
     //HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE
     ZOOKEEPER_DISCOVERY_NAMESPACE("zookeeper.discovery.namespace", "", HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE.getDefaultValue()),
-    DATABASE_NAME("database", "", "default"),
-    PASSWORD("password","",""),
-    HOST("host","","")
+
     ;
 
 

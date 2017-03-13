@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.*;
 
-import static org.apache.hive.service.auth.HiveAuthFactory.HS2_PROXY_USER;
 import static org.apache.hive.service.cli.thrift.TCLIService.Client;
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_WITH_INFO_STATUS;
@@ -179,7 +178,7 @@ public class HiveServiceUtils {
 
     public static TOpenSessionResp openSession(Properties properties, Client client) throws TException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
-        String username = properties.getProperty(HiveDriverStringProperty.USERNAME.getName());
+        String username = properties.getProperty(HiveDriverStringProperty.USER.getName());
 
         if (username != null) {
             openSessionReq.setUsername(username);

@@ -41,7 +41,8 @@ public class HiveDriver extends AbstractDriver {
 
         try {
 
-            TTransport transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
+            //TTransport transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
+            TTransport transport = ThriftUtils.createHttpTransport(properties);
 
             ThriftUtils.openTransport(transport);
 
@@ -60,7 +61,7 @@ public class HiveDriver extends AbstractDriver {
 
             connection = new HiveConnection(properties, transport, thriftClient, sessionHandle, protocolVersion);
 
-        } catch (SaslException | TException e) {
+        } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);
         }
 
