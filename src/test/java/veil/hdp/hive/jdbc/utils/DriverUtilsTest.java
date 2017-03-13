@@ -43,7 +43,8 @@ public class DriverUtilsTest extends BaseJunitTest {
     @Test
     public void buildProperties() throws Exception {
 
-        String url =  "jdbc:hive2://host1:10001/test?statement.fetch.size=100&statement.max.rows=1";
+        //String url =  "jdbc:hive2://host1:10001/test?statement.fetch.size=100&statement.max.rows=1";
+        String url =  "jdbc:hive2://hive-large.hdp.local:2181/default?zookeeper.discovery.enabled=true&statement.max.rows=1";
 
         Properties suppliedProperties = new Properties();
         suppliedProperties.setProperty("username", "hive");

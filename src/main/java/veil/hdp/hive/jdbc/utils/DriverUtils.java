@@ -78,6 +78,11 @@ public class DriverUtils {
                     HiveDriverStringProperty.USERNAME.getDefaultValue(),
                     false,
                     null),
+            new HiveDriverPropertyInfo(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName(),
+                    HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getDescription(),
+                    Boolean.toString(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getDefaultValue()),
+                    false,
+                    null),
             new HiveDriverPropertyInfo(HiveDriverStringProperty.PASSWORD.getName(),
                     HiveDriverStringProperty.PASSWORD.getDescription(),
                     HiveDriverStringProperty.PASSWORD.getDefaultValue(),
@@ -153,7 +158,8 @@ public class DriverUtils {
             }
 
             if (!found) {
-                throw new SQLException("property [" + key + "] is not a valid property");
+                log.warn("property [{}] is not a valid", key);
+                //throw new SQLException("property [" + key + "] is not a valid property");
             }
 
         }
@@ -198,34 +204,16 @@ public class DriverUtils {
 
         properties.putAll(parseQueryParameters(uriQuery));
 
-        String host = null;
-        int port = -1;
-
         if (properties.containsKey(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName())) {
 
             String authority = uri.getAuthority();
 
-            String zooKeeperNamespace = properties.get(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName()) ;
-            String retry = properties.get(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName());
-
-            URI zookeeperUri = getHostFromZookeeper(authority,
-                    zooKeeperNamespace != null ? zooKeeperNamespace : HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getDefaultValue(),
-                    retry != null ? Integer.parseInt(retry) : HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue());
-
-            host = zookeeperUri.getHost();
-            port = zookeeperUri.getPort();
+            loadPropertiesFromZookeeper(authority,                    properties);
 
         } else {
-            host = uri.getHost();
-            port = uri.getPort();
+            properties.put(HiveDriverStringProperty.HOST.getName(), uri.getHost());
+            properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(uri.getPort() != -1 ? uri.getPort() : HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()));
         }
-
-        if (Strings.isNullOrEmpty(host)) {
-            throw new SQLException("host is invalid: host [" + host + "]");
-        }
-
-        properties.put(HiveDriverStringProperty.HOST.getName(), host);
-        properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(port != -1 ? port : HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()));
 
         return properties;
     }
@@ -257,7 +245,16 @@ public class DriverUtils {
         return url.replace(prefix, "").trim();
     }
 
-    private static URI getHostFromZookeeper(String authority, String zooKeeperNamespace, int retry) throws SQLException {
+    private static void loadPropertiesFromZookeeper(String authority, Map<String, String> properties) throws SQLException {
+
+        String zooKeeperNamespace = properties.containsKey(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName())
+                ? properties.get(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName())
+                : HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getDefaultValue();
+        int retry = properties.containsKey(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName())
+                ? Integer.parseInt(properties.get(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName()))
+                : HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue();
+
+        //hive.server2.authentication=NONE;hive.server2.transport.mode=binary;hive.server2.thrift.sasl.qop=auth;hive.server2.thrift.bind.host=hive-large.hdp.local;hive.server2.thrift.port=10000;hive.server2.use.SSL=false
 
         Random random = new Random();
 
@@ -271,7 +268,12 @@ public class DriverUtils {
 
             String hostData = new String(zooKeeperClient.getData().forPath("/" + zooKeeperNamespace + "/" + randomHost), Charset.forName("UTF-8"));
 
-           return URI.create(hostData);
+            Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
+
+            for (String key : config.keySet()) {
+                properties.put(key, config.get(key));
+            }
+
 
         } catch (Exception e) {
             throw new SQLException(e.getMessage(), e);

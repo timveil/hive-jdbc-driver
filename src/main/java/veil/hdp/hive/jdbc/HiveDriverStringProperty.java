@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.hadoop.hive.conf.HiveConf;
+
 public enum HiveDriverStringProperty {
     //HiveConf.ConfVars.HIVE_SERVER2_AUTHENTICATION
     AUTHENTICATION_TYPE("authentication.type", "", ""),
@@ -19,7 +21,7 @@ public enum HiveDriverStringProperty {
     // only applicable in http mode
     COOKIE_NAME("cookie.name", "", "hive.server2.auth"),
     //HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zookeeper.discovery.namespace", "", ""),
+    ZOOKEEPER_DISCOVERY_NAMESPACE("zookeeper.discovery.namespace", "", HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE.getDefaultValue()),
     DATABASE_NAME("database", "", "default"),
     PASSWORD("password","",""),
     HOST("host","","")

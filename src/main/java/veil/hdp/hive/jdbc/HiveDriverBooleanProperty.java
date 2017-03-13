@@ -21,7 +21,7 @@ public enum HiveDriverBooleanProperty {
         return name;
     }
 
-    public boolean isDefaultValue() {
+    public boolean getDefaultValue() {
         return defaultValue;
     }
 
