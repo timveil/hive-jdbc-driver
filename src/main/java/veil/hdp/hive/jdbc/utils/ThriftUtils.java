@@ -52,8 +52,8 @@ public class ThriftUtils {
     }
 
     public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SaslException {
-        // no support for no-sasl
-        // no support for delegation tokens or ssl yet
+        // todo: no support for no-sasl
+        // todo: no support for delegation tokens or ssl yet
 
         String user = properties.getProperty(HiveDriverStringProperty.USER.getName());
         String password = properties.getProperty(HiveDriverStringProperty.PASSWORD.getName());
@@ -62,7 +62,7 @@ public class ThriftUtils {
 
         TTransport socketTransport = HiveAuthFactory.getSocketTransport(host, port, loginTimeoutMilliseconds);
 
-        // hack: password can't be empty.  must always specify a non-null, non-empty string
+        // todo: hack: password can't be empty.  must always specify a non-null, non-empty string
         return PlainSaslHelper.getPlainTransport(user, password, socketTransport);
 
     }
