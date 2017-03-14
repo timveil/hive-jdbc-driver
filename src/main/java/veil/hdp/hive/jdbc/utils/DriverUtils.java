@@ -10,10 +10,7 @@ import org.apache.curator.retry.RetryOneTime;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverBooleanProperty;
-import veil.hdp.hive.jdbc.HiveDriverIntProperty;
-import veil.hdp.hive.jdbc.HiveDriverPropertyInfo;
-import veil.hdp.hive.jdbc.HiveDriverStringProperty;
+import veil.hdp.hive.jdbc.*;
 
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -87,7 +84,12 @@ public class DriverUtils {
                     HiveDriverStringProperty.PASSWORD.getDescription(),
                     HiveDriverStringProperty.PASSWORD.getDefaultValue(),
                     false,
-                    null)
+                    null),
+            new HiveDriverPropertyInfo(HiveDriverStringProperty.TRANSPORT_MODE.getName(),
+                    HiveDriverStringProperty.TRANSPORT_MODE.getDescription(),
+                    HiveDriverStringProperty.TRANSPORT_MODE.getDefaultValue(),
+                    false,
+                    new String[] {TransportMode.binary.toString(), TransportMode.http.toString()})
 
     };
 

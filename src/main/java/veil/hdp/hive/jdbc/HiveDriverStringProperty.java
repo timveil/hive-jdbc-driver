@@ -7,13 +7,14 @@ public enum HiveDriverStringProperty {
     DATABASE_NAME("database", "", "default"),
     USER("user","", ""),
     PASSWORD("password","",""),
+    //HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE: transport mode must match whats on the server.  should only be used to determine what kind of client to create, this isn't somthing that is "set" on the server.
+    TRANSPORT_MODE("transport.mode", "", TransportMode.binary.toString()),
 
     // i think these need to be prefixed (like jdbc.) these should not be confused with actual hive conf parameters even thought they may result in the same value
 
     //HiveConf.ConfVars.HIVE_SERVER2_AUTHENTICATION
     AUTHENTICATION_TYPE("authentication.type", "", ""),
-    //HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE: transport mode must match whats on the server.  should only be used to determine what kind of client to create, this isn't somthing that is "set" on the server.
-    TRANSPORT_MODE("transport.mode", "", ""),
+
     KERBEROS_PRINCIPAL("kerberos.principal","", ""),
     //https://community.hortonworks.com/questions/22154/hive-sasl-qop-setting-on-client-and-server.html
     // only applicable for kerberos

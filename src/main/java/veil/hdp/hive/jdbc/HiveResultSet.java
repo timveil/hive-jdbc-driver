@@ -12,7 +12,6 @@ import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 import veil.hdp.hive.jdbc.utils.ResultSetUtils;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.*;
 import java.util.Iterator;
 

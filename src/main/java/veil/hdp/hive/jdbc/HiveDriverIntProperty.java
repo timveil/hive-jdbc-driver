@@ -19,7 +19,7 @@ public enum HiveDriverIntProperty {
     private int defaultValue;
     private String description;
 
-    private HiveDriverIntProperty(String name, String description, int defaultValue) {
+    HiveDriverIntProperty(String name, String description, int defaultValue) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.description = description;

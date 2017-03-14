@@ -18,7 +18,7 @@ public class TestHarness extends BaseJunitTest {
 
         //forName("org.apache.hive.jdbc.HiveDriver");
 
-        Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10001/default", "hive", "dummy");
+        Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10001/default?transport.mode=http", "hive", null);
 
         Statement statement = connection.createStatement();
         boolean execute = statement.execute("select * from test_table");

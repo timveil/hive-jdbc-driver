@@ -3,16 +3,7 @@ package veil.hdp.hive.jdbc.utils;
 import org.apache.hive.service.auth.HiveAuthFactory;
 import org.apache.hive.service.auth.PlainSaslHelper;
 import org.apache.hive.service.cli.thrift.TCLIService;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpVersion;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.HttpContext;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
@@ -23,7 +14,6 @@ import veil.hdp.hive.jdbc.HiveDriverIntProperty;
 import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import javax.security.sasl.SaslException;
-import java.io.IOException;
 import java.util.Properties;
 
 
@@ -51,24 +41,12 @@ public class ThriftUtils {
         return new TCLIService.Client(new TBinaryProtocol(transport));
     }
 
-    // lets move all http stuff to different class
-    public static TTransport createHttpTransport(Properties properties) throws TTransportException {
-        String user = properties.getProperty(HiveDriverStringProperty.USER.getName());
-        String password = properties.getProperty(HiveDriverStringProperty.PASSWORD.getName());
+
+    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient client) throws TTransportException {
         String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
         int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
 
-        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-        clientBuilder.addInterceptorFirst(new HttpRequestInterceptor() {
-            @Override
-            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                request.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(user, password), request, context));
-            }
-        });
-
-        //todo: don't think this client is being properly closed
-        CloseableHttpClient client = clientBuilder.build();
-
+        //todo still hardcoding http path and scheme
         return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
 
     }

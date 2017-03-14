@@ -1,17 +1,25 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
+import org.apache.hive.service.cli.thrift.TOpenSessionResp;
 import org.apache.hive.service.cli.thrift.TProtocolVersion;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.utils.HiveConfiguration;
 import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
+import veil.hdp.hive.jdbc.utils.HttpUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
-import java.sql.*;
+import javax.security.sasl.SaslException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -19,21 +27,20 @@ public class HiveConnection extends AbstractConnection {
 
     // constructor
     private final Properties properties;
-    private final TTransport transport;
-    private final TCLIService.Client client;
-    private final TSessionHandle sessionHandle;
-    private final TProtocolVersion protocolVersion;
+
+    // private
+    private TTransport transport;
+    private TCLIService.Client client;
+    private TSessionHandle sessionHandle;
+    private TProtocolVersion protocolVersion;
+
+    private CloseableHttpClient httpClient = null;
 
     // public getter & setter
     private boolean closed;
 
-    HiveConnection(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+    HiveConnection(Properties properties) {
         this.properties = properties;
-        this.transport = transport;
-        this.client = client;
-        this.sessionHandle = sessionHandle;
-        this.protocolVersion = protocolVersion;
-
         closed = false;
     }
 
@@ -57,6 +64,48 @@ public class HiveConnection extends AbstractConnection {
         return protocolVersion;
     }
 
+    void connect() throws SQLException {
+
+
+        try {
+
+            TransportMode transportMode = properties.containsKey(HiveDriverStringProperty.TRANSPORT_MODE.getName())
+                    ? TransportMode.valueOf(properties.getProperty(HiveDriverStringProperty.TRANSPORT_MODE.getName()))
+                    : TransportMode.valueOf(HiveDriverStringProperty.TRANSPORT_MODE.getDefaultValue());
+
+            if (transportMode.equals(TransportMode.binary)) {
+                transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
+            } else {
+
+                httpClient = HttpUtils.buildClient(properties);
+
+                transport = ThriftUtils.createHttpTransport(properties, httpClient);
+            }
+
+
+            ThriftUtils.openTransport(transport);
+
+            client = ThriftUtils.createClient(transport);
+
+            TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, client);
+            Map<String, String> configuration = tOpenSessionResp.getConfiguration();
+
+            if (log.isDebugEnabled()) {
+                log.debug("configuration for session returned by thrift {}", configuration);
+            }
+
+            protocolVersion = tOpenSessionResp.getServerProtocolVersion();
+
+            sessionHandle = tOpenSessionResp.getSessionHandle();
+
+            closed = false;
+
+        } catch (TException | SaslException e) {
+            throw new SQLException(e.getMessage(), "", e);
+        }
+
+    }
+
     @Override
     public void close() throws SQLException {
 
@@ -68,6 +117,13 @@ public class HiveConnection extends AbstractConnection {
 
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);
+            HttpUtils.closeClient(httpClient);
+
+            client = null;
+            sessionHandle = null;
+            transport = null;
+            protocolVersion = null;
+            httpClient = null;
 
             closed = true;
         }
@@ -142,6 +198,17 @@ public class HiveConnection extends AbstractConnection {
         super.setTransactionIsolation(level);
     }
     */
+
+
+    private int getLoginTimeout() {
+        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
+
+        if (timeOut > Integer.MAX_VALUE) {
+            timeOut = Integer.MAX_VALUE;
+        }
+
+        return (int) timeOut;
+    }
 
     @Override
     public String toString() {
