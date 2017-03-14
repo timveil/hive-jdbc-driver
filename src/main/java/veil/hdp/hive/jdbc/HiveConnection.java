@@ -48,10 +48,6 @@ public class HiveConnection extends AbstractConnection {
         return properties;
     }
 
-    TTransport getTransport() {
-        return transport;
-    }
-
     TCLIService.Client getClient() {
         return client;
     }
