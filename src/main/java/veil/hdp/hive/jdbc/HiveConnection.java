@@ -14,6 +14,7 @@ import veil.hdp.hive.jdbc.utils.HttpUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import javax.security.sasl.SaslException;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,6 +39,9 @@ public class HiveConnection extends AbstractConnection {
 
     // public getter & setter
     private boolean closed;
+
+    // todo: what does this value actually do
+    private boolean autoCommitEnabled;
 
     HiveConnection(Properties properties) {
         this.properties = properties;
@@ -136,23 +140,30 @@ public class HiveConnection extends AbstractConnection {
         return new HiveStatement(this);
     }
 
-
-    /*
+    @Override
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return new HiveDatabaseMetaData(this);
+    }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return super.getAutoCommit();
+        return autoCommitEnabled;
     }
+
+    @Override
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        this.autoCommitEnabled = autoCommit;
+    }
+
+    /*
+
 
     @Override
     public String getCatalog() throws SQLException {
         return super.getCatalog();
     }
 
-    @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
-        return super.getMetaData();
-    }
+
 
     @Override
     public String getSchema() throws SQLException {
@@ -172,11 +183,6 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return super.prepareStatement(sql);
-    }
-
-    @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
-        super.setAutoCommit(autoCommit);
     }
 
     @Override

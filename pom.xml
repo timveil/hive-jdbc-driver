@@ -169,7 +169,7 @@
         </dependency>
 
         <!-- this adds almost 6mb to the jar -->
-       <dependency>
+<!--       <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-metastore</artifactId>
             <version>${hive.version}</version>
@@ -179,7 +179,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
 <!--        <dependency>
             <groupId>org.apache.hive</groupId>

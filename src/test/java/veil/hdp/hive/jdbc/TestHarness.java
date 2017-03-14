@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc;
 
 
 import org.junit.Test;
+import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 
 import java.sql.*;
 
@@ -20,6 +21,10 @@ public class TestHarness extends BaseJunitTest {
 
         Connection connection = getConnection("jdbc:hive2://hive-large.hdp.local:10001/default?transport.mode=http", "hive", null);
 
+        HiveServiceUtils.printInfo(((HiveConnection)connection).getClient(), ((HiveConnection)connection).getSessionHandle());
+
+     /*   System.out.println(b);
+
         Statement statement = connection.createStatement();
         boolean execute = statement.execute("select * from test_table");
 
@@ -33,19 +38,19 @@ public class TestHarness extends BaseJunitTest {
        HiveStatement hiveStatement = (HiveStatement) statement;
 
         //out.println("yarn guid [" + hiveStatement.getYarnATSGuid() + "]");
-/*
+*//*
 
         List<String> logs = hiveStatement.getLogs();
 
         for (String log : logs) {
             System.out.println("log: [" + log + "]");
         }
-*/
+*//*
 
 
         rs.close();
         statement.close();
-        connection.close();
+        connection.close();*/
 
 
     }

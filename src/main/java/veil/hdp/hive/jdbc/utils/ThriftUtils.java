@@ -63,7 +63,7 @@ public class ThriftUtils {
         TTransport socketTransport = HiveAuthFactory.getSocketTransport(host, port, loginTimeoutMilliseconds);
 
         // todo: hack: password can't be empty.  must always specify a non-null, non-empty string
-        return PlainSaslHelper.getPlainTransport(user, password, socketTransport);
+        return PlainSaslHelper.getPlainTransport(user, password == null ? "" : password, socketTransport);
 
     }
 

@@ -230,4 +230,40 @@ public class HiveServiceUtils {
 
         return metadataResp.getSchema();
     }
+
+    public static void printInfo(Client client , TSessionHandle sessionHandle) {
+
+     for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
+
+         String value = null;
+
+         try {
+             TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
+
+             value = serverInfo.getInfoValue().getStringValue();
+
+         } catch (Exception e) {
+
+         }
+
+         log.debug("Key {} Value {}", tGetInfoType.toString(), value);
+     }
+
+    }
+
+
+    public static TGetInfoResp getServerInfo(Client client , TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
+        TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
+        TGetInfoResp resp = client.GetInfo(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+
+        return resp;
+    }
 }
