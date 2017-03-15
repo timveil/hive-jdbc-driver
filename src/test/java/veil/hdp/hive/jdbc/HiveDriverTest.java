@@ -6,11 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Properties;
 
 import static java.lang.Class.forName;
-import static java.sql.DriverManager.getConnection;
 
 public class HiveDriverTest extends BaseJunitTest {
 
