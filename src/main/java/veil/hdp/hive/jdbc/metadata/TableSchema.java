@@ -1,17 +1,28 @@
 package veil.hdp.hive.jdbc.metadata;
 
-import org.apache.hive.service.cli.ColumnDescriptor;
+import org.apache.hive.service.cli.thrift.TColumnDesc;
 import org.apache.hive.service.cli.thrift.TTableSchema;
 
-public class TableSchema extends org.apache.hive.service.cli.TableSchema {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TableSchema {
+
+    private final List<ColumnDescriptor> columns = new ArrayList<>();
 
     public TableSchema(TTableSchema tTableSchema) {
-        super(tTableSchema);
+        for (TColumnDesc tColumnDesc : tTableSchema.getColumns()) {
+            columns.add(new ColumnDescriptor(tColumnDesc));
+        }
     }
 
-    public ColumnDescriptor getColumnDescriptorForName(String columnName) {
+    public List<ColumnDescriptor> getColumns() {
+        return columns;
+    }
 
-        for (ColumnDescriptor columnDescriptor : getColumnDescriptors()) {
+    public ColumnDescriptor getColumn(String columnName) {
+
+        for (ColumnDescriptor columnDescriptor : getColumns()) {
 
             String normalizedName = getNormalizedName(columnDescriptor);
 
@@ -38,8 +49,8 @@ public class TableSchema extends org.apache.hive.service.cli.TableSchema {
 
         StringBuilder stringBuilder = new StringBuilder("\nTableSchema {\n");
 
-        for (ColumnDescriptor descriptor : getColumnDescriptors()) {
-            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", type: ").append(descriptor.getType()).append(", position: ").append(descriptor.getOrdinalPosition()).append("}\n");
+        for (ColumnDescriptor descriptor : getColumns()) {
+            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", type: ").append(descriptor.getType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
         stringBuilder.append("}");

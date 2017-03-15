@@ -61,7 +61,6 @@ public class HiveStatement extends AbstractStatement {
                 return false;
             }
 
-            // todo: factor this and use raw thrift to avoid dependency on hive-metastore jar
             TableSchema tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getClient(), statementHandle));
 
             if (log.isDebugEnabled()) {

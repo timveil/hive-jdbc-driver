@@ -2,9 +2,9 @@ package veil.hdp.hive.jdbc.utils;
 
 import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
-import org.apache.hive.service.cli.ColumnDescriptor;
 import org.apache.hive.service.cli.Type;
 import org.slf4j.Logger;
+import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.TableSchema;
 
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ public class ResultSetUtils {
         try {
             validateRow(row, columnIndex);
 
-            Type columnType = schema.getColumnDescriptorAt(columnIndex - 1).getType();
+            Type columnType = schema.getColumns().get(columnIndex - 1).getType();
 
             Object value = row[columnIndex - 1];
 
@@ -36,10 +36,10 @@ public class ResultSetUtils {
     }
 
     public static int findColumnIndex(TableSchema tableSchema, String columnLabel) throws SQLException {
-        ColumnDescriptor columnDescriptorForName = tableSchema.getColumnDescriptorForName(columnLabel);
+        ColumnDescriptor columnDescriptorForName = tableSchema.getColumn(columnLabel);
 
         if (columnDescriptorForName != null) {
-            return columnDescriptorForName.getOrdinalPosition();
+            return columnDescriptorForName.getPosition();
         }
 
         throw new SQLException("Could not find column for name " + columnLabel + " in TableSchema " + tableSchema);
