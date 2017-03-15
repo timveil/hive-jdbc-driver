@@ -2,6 +2,8 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.hadoop.hive.conf.HiveConf;
 
+// todo; factor out HiveConf.  that needs to be a server side concept only
+
 public enum HiveDriverStringProperty {
     HOST("host","",""),
     DATABASE_NAME("database", "", "default"),
