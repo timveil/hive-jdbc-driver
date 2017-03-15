@@ -1,19 +1,20 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.apache.hive.service.auth.HiveAuthFactory;
-import org.apache.hive.service.auth.PlainSaslHelper;
 import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.transport.THttpClient;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverIntProperty;
 import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.SaslException;
+import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -60,10 +61,25 @@ public class ThriftUtils {
         String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
         int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
 
-        TTransport socketTransport = HiveAuthFactory.getSocketTransport(host, port, loginTimeoutMilliseconds);
+        TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
 
-        // todo: hack: password can't be empty.  must always specify a non-null, non-empty string
-        return PlainSaslHelper.getPlainTransport(user, password == null ? "" : password, socketTransport);
+        return new TSaslClientTransport("PLAIN", null, null, null, new HashMap<>(),
+                callbacks -> {
+                    for (Callback callback : callbacks) {
+                        if (callback instanceof NameCallback) {
+                            NameCallback nameCallback = (NameCallback) callback;
+                            nameCallback.setName(user);
+                        } else if (callback instanceof PasswordCallback) {
+                            PasswordCallback passCallback = (PasswordCallback) callback;
+
+                            if (password != null) {
+                                passCallback.setPassword(password.toCharArray());
+                            }
+                        } else {
+                            throw new UnsupportedCallbackException(callback);
+                        }
+                    }
+                }, socketTransport);
 
     }
 
