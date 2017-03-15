@@ -6,56 +6,75 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Properties;
 
 import static java.lang.Class.forName;
 import static java.sql.DriverManager.getConnection;
 
 public class HiveDriverTest extends BaseJunitTest {
+
+    boolean connectBinary = true;
+
+    private HiveDriver hiveDriver = null;
+
     @Before
     public void setUp() throws Exception {
-
+        hiveDriver = new HiveDriver();
     }
 
     @After
     public void tearDown() throws Exception {
-
+        hiveDriver = null;
     }
 
     @Test
     public void connect() throws Exception {
+
+
         forName("veil.hdp.hive.jdbc.HiveDriver");
 
-        log.debug("********** attempting binary connection");
-
-        String url = "jdbc:hive2://hive.hdp.local:10000/default?transport.mode=binary";
-
         Connection connection = null;
+        String url = null;
 
-        try {
-            connection = getConnection(url, "hive", "dummy");
+        Properties properties = new Properties();
+        properties.setProperty("user", "hive");
 
-            Assert.assertNotNull(connection);
-        } finally {
 
-            if (connection != null) {
-                connection.close();
+        if (connectBinary) {
+
+            log.debug("********** attempting binary connection");
+
+            url = "jdbc:hive2://hive.hdp.local:10000/default";
+
+            try {
+                connection = hiveDriver.connect(url, properties);
+
+                Assert.assertNotNull(connection);
+            } finally {
+
+                if (connection != null) {
+                    connection.close();
+                }
             }
-        }
 
-        log.debug("********** attempting http connection");
+        } else {
 
-        url = "jdbc:hive2://hive.hdp.local:10001/default?transport.mode=http";
+            log.debug("********** attempting http connection");
 
-        try {
-            connection = getConnection(url, "hive", "dummy");
+            url = "jdbc:hive2://hive.hdp.local:10001/default?transport.mode=http";
 
-            Assert.assertNotNull(connection);
+            try {
+                connection = hiveDriver.connect(url, properties);
 
-            connection.close();
-        } finally {
+                Assert.assertNotNull(connection);
 
-            if (connection != null) {
                 connection.close();
+            } finally {
+
+                if (connection != null) {
+                    connection.close();
+                }
             }
         }
 
@@ -63,7 +82,17 @@ public class HiveDriverTest extends BaseJunitTest {
 
     @Test
     public void acceptsURL() throws Exception {
+        String url = "jdbc:hive2://foo";
 
+        boolean acceptsURL = hiveDriver.acceptsURL(url);
+
+        Assert.assertTrue(acceptsURL);
+
+        url = "jdbc:mysql://foo";
+
+        acceptsURL = hiveDriver.acceptsURL(url);
+
+        Assert.assertFalse(acceptsURL);
     }
 
 }
