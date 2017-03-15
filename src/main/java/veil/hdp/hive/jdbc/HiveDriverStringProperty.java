@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-// todo; factor out HiveConf.  that needs to be a server side concept only
+// todo: factor out HiveConf.  that needs to be a server side concept only
 
 public enum HiveDriverStringProperty {
     HOST("host","",""),

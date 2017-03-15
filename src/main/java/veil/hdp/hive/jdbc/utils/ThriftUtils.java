@@ -47,7 +47,7 @@ public class ThriftUtils {
         String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
         int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
 
-        //todo: still hard-coding http path and scheme
+        // todo: still hard-coding http path and scheme
         return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
 
     }
