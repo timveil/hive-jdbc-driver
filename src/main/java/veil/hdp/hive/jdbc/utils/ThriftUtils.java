@@ -47,7 +47,7 @@ public class ThriftUtils {
         String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
         int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
 
-        //todo still hardcoding http path and scheme
+        //todo: still hard-coding http path and scheme
         return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
 
     }
@@ -70,11 +70,15 @@ public class ThriftUtils {
                             NameCallback nameCallback = (NameCallback) callback;
                             nameCallback.setName(user);
                         } else if (callback instanceof PasswordCallback) {
-                            PasswordCallback passCallback = (PasswordCallback) callback;
+                            PasswordCallback passwordCallback = (PasswordCallback) callback;
 
                             if (password != null) {
-                                passCallback.setPassword(password.toCharArray());
+                                passwordCallback.setPassword(password.toCharArray());
+                            } else {
+                                // todo:hack: for some reason this can't be null or emtpy string; set default value
+                                passwordCallback.setPassword("anonymous".toCharArray());
                             }
+
                         } else {
                             throw new UnsupportedCallbackException(callback);
                         }

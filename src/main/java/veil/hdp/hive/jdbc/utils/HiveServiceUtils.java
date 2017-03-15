@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hive.service.cli.HiveSQLException;
 import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
@@ -40,7 +39,7 @@ public class HiveServiceUtils {
 
     public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
-        fetchReq.setFetchType((short)0);
+        fetchReq.setFetchType((short) 0);
         TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
 
         if (log.isDebugEnabled()) {
@@ -55,7 +54,7 @@ public class HiveServiceUtils {
         List<String> logs = new ArrayList<>();
 
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
-        tFetchResultsReq.setFetchType((short)1);
+        tFetchResultsReq.setFetchType((short) 1);
 
         try {
             TFetchResultsResp fetchResults = client.FetchResults(tFetchResultsReq);
@@ -72,7 +71,7 @@ public class HiveServiceUtils {
             }
 
         } catch (TException e) {
-           log.error("error fetching logs: {}", e.getMessage(), e);
+            log.error("error fetching logs: {}", e.getMessage(), e);
         }
 
 
@@ -207,9 +206,8 @@ public class HiveServiceUtils {
         Map<String, String> openSessionConfig = new HashMap<>();
 
         for (String property : properties.stringPropertyNames()) {
-            HiveConf.ConfVars confVar = HiveConf.getConfVars(property);
-
-            if (confVar != null) {
+            // no longer going to use HiveConf.ConfVars to validate properties.  it requires too many dependencies.  let server side deal with this.
+            if (property.startsWith("hive.")) {
                 openSessionConfig.put("set:hiveconf:" + property, properties.getProperty(property));
             }
         }
@@ -231,28 +229,28 @@ public class HiveServiceUtils {
         return metadataResp.getSchema();
     }
 
-    public static void printInfo(Client client , TSessionHandle sessionHandle) {
+    public static void printInfo(Client client, TSessionHandle sessionHandle) {
 
-     for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
+        for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
 
-         String value = null;
+            String value = null;
 
-         try {
-             TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
+            try {
+                TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
 
-             value = serverInfo.getInfoValue().getStringValue();
+                value = serverInfo.getInfoValue().getStringValue();
 
-         } catch (Exception e) {
+            } catch (Exception ignored) {
 
-         }
+            }
 
-         log.debug("Key {} Value {}", tGetInfoType.toString(), value);
-     }
+            log.debug("Key {} Value {}", tGetInfoType.toString(), value);
+        }
 
     }
 
 
-    public static TGetInfoResp getServerInfo(Client client , TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
+    public static TGetInfoResp getServerInfo(Client client, TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
         TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
         TGetInfoResp resp = client.GetInfo(req);
 
@@ -261,7 +259,6 @@ public class HiveServiceUtils {
         }
 
         verifySuccessWithInfo(resp.getStatus());
-
 
 
         return resp;

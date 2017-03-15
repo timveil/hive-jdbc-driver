@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.*;
@@ -146,17 +145,11 @@ public class DriverUtils {
                 }
             }
 
-            if (HiveConf.getConfVars(key) != null) {
+            if (key.startsWith("hive.")) {
 
+                // no longer going use HiveConf.ConfVars to validate properties.  too many dependencies
                 found = true;
 
-                String value = properties.get(key);
-
-                String result = HiveConf.getConfVars(key).validate(value);
-
-                if (result != null) {
-                    throw new SQLException(result);
-                }
             }
 
             if (!found) {

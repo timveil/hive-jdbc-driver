@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hadoop.hive.conf.HiveConf;
-
 // todo; factor out HiveConf.  that needs to be a server side concept only
 
 public enum HiveDriverStringProperty {
@@ -31,7 +29,7 @@ public enum HiveDriverStringProperty {
     // only applicable in http mode
     COOKIE_NAME("cookie.name", "", "hive.server2.auth"),
     //HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zookeeper.discovery.namespace", "", HiveConf.ConfVars.HIVE_SERVER2_ZOOKEEPER_NAMESPACE.getDefaultValue()),
+    ZOOKEEPER_DISCOVERY_NAMESPACE("zookeeper.discovery.namespace", "", "hiveserver2"),
 
     ;
 
