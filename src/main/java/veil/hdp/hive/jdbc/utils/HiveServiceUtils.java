@@ -128,7 +128,7 @@ public class HiveServiceUtils {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
-        // allows per statement configuration of session handle
+        //allows per statement configuration of session handle
         //executeStatementReq.setConfOverlay(null);
 
         TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
