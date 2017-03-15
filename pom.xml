@@ -114,6 +114,8 @@
             </exclusions>
         </dependency>
 
+
+        <!-- shims are a dependency of HiveConf; need to refactor this out -->
      <!--   <dependency>
             <groupId>org.apache.hive.shims</groupId>
             <artifactId>hive-shims-common</artifactId>
