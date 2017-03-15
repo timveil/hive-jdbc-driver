@@ -25,13 +25,39 @@ public class HiveDriverTest extends BaseJunitTest {
     public void connect() throws Exception {
         forName("veil.hdp.hive.jdbc.HiveDriver");
 
+        log.debug("********** attempting binary connection");
+
         String url = "jdbc:hive2://hive.hdp.local:10000/default?transport.mode=binary";
 
-        Connection connection = getConnection(url, "hive", "dummy");
+        Connection connection = null;
 
-        Assert.assertNotNull(connection);
+        try {
+            connection = getConnection(url, "hive", "dummy");
 
-        connection.close();
+            Assert.assertNotNull(connection);
+        } finally {
+
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+        log.debug("********** attempting http connection");
+
+        url = "jdbc:hive2://hive.hdp.local:10001/default?transport.mode=http";
+
+        try {
+            connection = getConnection(url, "hive", "dummy");
+
+            Assert.assertNotNull(connection);
+
+            connection.close();
+        } finally {
+
+            if (connection != null) {
+                connection.close();
+            }
+        }
 
     }
 
