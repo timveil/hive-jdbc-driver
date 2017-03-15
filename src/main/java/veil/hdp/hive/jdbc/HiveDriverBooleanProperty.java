@@ -7,9 +7,9 @@ public enum HiveDriverBooleanProperty {
     COOKIE_REPLAY_ENABLED("cookie.replay.enabled", "", true),
     ;
 
-    private String name;
-    private boolean defaultValue;
-    private String description;
+    private final String name;
+    private final boolean defaultValue;
+    private final String description;
 
     HiveDriverBooleanProperty(String name, String description, boolean defaultValue) {
         this.name = name;

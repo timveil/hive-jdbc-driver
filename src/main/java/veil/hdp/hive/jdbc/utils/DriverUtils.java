@@ -132,7 +132,7 @@ public class DriverUtils {
 
     }
 
-    private static void validateProperties(Map<String, String> properties) throws SQLException {
+    private static void validateProperties(Map<String, String> properties) {
 
         for (String key : properties.keySet()) {
 

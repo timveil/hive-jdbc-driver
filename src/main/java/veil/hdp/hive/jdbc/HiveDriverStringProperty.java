@@ -34,9 +34,9 @@ public enum HiveDriverStringProperty {
     ;
 
 
-    private String name;
-    private String defaultValue;
-    private String description;
+    private final String name;
+    private final String defaultValue;
+    private final String description;
 
     HiveDriverStringProperty(String name, String description, String defaultValue) {
         this.name = name;

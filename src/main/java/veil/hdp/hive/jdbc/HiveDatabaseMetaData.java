@@ -1,7 +1,6 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.GetInfoType;
-import org.apache.hive.service.cli.thrift.TGetInfoReq;
 import org.apache.hive.service.cli.thrift.TGetInfoResp;
 import org.apache.hive.service.cli.thrift.TGetInfoType;
 import org.apache.thrift.TException;

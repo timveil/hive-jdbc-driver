@@ -15,9 +15,9 @@ public enum HiveDriverIntProperty {
 
     ZOOKEEPER_DISCOVERY_RETRY("zookeeper.discovery.retry", "", 1000);
 
-    private String name;
-    private int defaultValue;
-    private String description;
+    private final String name;
+    private final int defaultValue;
+    private final String description;
 
     HiveDriverIntProperty(String name, String description, int defaultValue) {
         this.name = name;
