@@ -121,6 +121,7 @@ public class HiveServiceUtils {
         } catch (TException e) {
             log.warn(e.getMessage(), e);
         }
+
     }
 
     public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException {

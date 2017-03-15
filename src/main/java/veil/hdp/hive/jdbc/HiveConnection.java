@@ -155,13 +155,17 @@ public class HiveConnection extends AbstractConnection {
         this.autoCommitEnabled = autoCommit;
     }
 
-    /*
-
-
+    //todo
     @Override
     public String getCatalog() throws SQLException {
-        return super.getCatalog();
+        // not catalog name in Hive
+        return null;
     }
+
+
+
+    /*
+
 
 
 

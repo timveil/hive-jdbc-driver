@@ -14,6 +14,9 @@ public class HiveDriver implements Driver {
     static {
         try {
             java.sql.DriverManager.registerDriver(new HiveDriver());
+
+            log.debug("driver has been registered");
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -42,7 +45,7 @@ public class HiveDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return 0;
+        return 1;
     }
 
     @Override
