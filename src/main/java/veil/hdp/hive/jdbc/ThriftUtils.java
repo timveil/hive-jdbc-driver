@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -6,8 +6,6 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverIntProperty;
-import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;

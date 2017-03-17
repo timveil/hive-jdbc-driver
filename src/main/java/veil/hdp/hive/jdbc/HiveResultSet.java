@@ -3,13 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.TFetchOrientation;
+import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.hive.service.cli.thrift.TRowSet;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.metadata.TableSchema;
-import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
-import veil.hdp.hive.jdbc.utils.ResultSetUtils;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -22,6 +20,7 @@ public class HiveResultSet extends AbstractResultSet {
     // constructor
     private final HiveConnection connection;
     private final HiveStatement statement;
+    private final TOperationHandle statementHandle;
     private final TableSchema tableSchema;
 
     // private
@@ -38,12 +37,17 @@ public class HiveResultSet extends AbstractResultSet {
     private boolean closed;
 
 
-    HiveResultSet(HiveConnection connection, HiveStatement statement, TableSchema tableSchema) {
+    HiveResultSet(HiveConnection connection, HiveStatement statement, TOperationHandle statementHandle, TableSchema tableSchema) throws SQLException {
         this.connection = connection;
         this.statement = statement;
         this.tableSchema = tableSchema;
+        this.statementHandle = statementHandle;
+        this.fetchDirection = statement.getFetchDirection();
+        this.fetchSize = statement.getFetchSize();
 
-        this.fetchDirection = ResultSet.FETCH_FORWARD;
+        if (log.isDebugEnabled()) {
+            log.debug("HiveResultSet schema: {}", tableSchema);
+        }
     }
 
     @Override
@@ -56,7 +60,7 @@ public class HiveResultSet extends AbstractResultSet {
         try {
 
             if (rowSet == null || !rowSetIterator.hasNext()) {
-                TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statement.getStatementHandle(), TFetchOrientation.FETCH_NEXT, fetchSize);
+                TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
                 rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
                 rowSetIterator = rowSet.iterator();
             }
@@ -258,13 +262,13 @@ public class HiveResultSet extends AbstractResultSet {
         return getTimestamp(findColumn(columnLabel));
     }
 
-       /*
 
-       @Override
+    @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData(columnNames, columnTypes, columnAttributes);
+        return new HiveResultSetMetaData(tableSchema);
     }
 
+    /*
     @Override
     public byte getByte(int columnIndex) throws SQLException {
         return super.getByte(columnIndex);

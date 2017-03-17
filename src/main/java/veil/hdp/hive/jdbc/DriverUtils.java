@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 
 import com.google.common.base.Splitter;
@@ -9,7 +9,6 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.*;
 
 import java.net.URI;
 import java.nio.charset.Charset;

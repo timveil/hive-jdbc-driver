@@ -1,11 +1,9 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
 import org.apache.hive.service.cli.Type;
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-import veil.hdp.hive.jdbc.metadata.TableSchema;
 
 import java.math.BigDecimal;
 import java.sql.Date;

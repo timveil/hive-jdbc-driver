@@ -1,14 +1,8 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.common.HiveVersionAnnotation;
 import org.apache.hive.common.util.HiveVersionInfo;
-import org.apache.hive.service.cli.GetInfoType;
-import org.apache.hive.service.cli.thrift.TGetInfoResp;
-import org.apache.hive.service.cli.thrift.TGetInfoType;
-import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,86 +48,70 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return HiveVersionInfo.getVersion();
     }
 
-    /**
-     * @see HiveDatabaseMetaData getDatabaseProductVersion
-     * @return
-     * @throws SQLException
-     */
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
         return 0;
     }
 
-    /**
-     * @see HiveDatabaseMetaData getDatabaseProductVersion
-     * @return
-     * @throws SQLException
-     */
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
         return 0;
     }
 
+    // todo: i don't think this is right, need better way to determine.
     @Override
     public boolean supportsTransactions() throws SQLException {
-        String serverInfoAsString = getServerInfoAsString(GetInfoType.CLI_TXN_CAPABLE.toTGetInfoType());
-        return serverInfoAsString != null && Boolean.parseBoolean(serverInfoAsString);
+        return false;
     }
 
-
-    // todo
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        return null;
+        return HiveServiceUtils.getCatalogs(connection);
     }
 
-    // todo
     @Override
     public ResultSet getSchemas() throws SQLException {
-        return null;
+        return getSchemas(null, null);
     }
 
-    // todo
+    @Override
+    public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
+        return HiveServiceUtils.getSchemas(connection, catalog, schemaPattern);
+    }
+
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        return null;
+        return HiveServiceUtils.getTypeInfo(connection);
     }
 
-    // todo
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        return null;
+        return HiveServiceUtils.getTableTypes(connection);
     }
 
-    // todo
     @Override
     public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-        return null;
+        return HiveServiceUtils.getTables(connection, catalog, schemaPattern, tableNamePattern, types);
     }
 
-    // todo
+    // todo: move to constant
     @Override
     public String getCatalogSeparator() throws SQLException {
-        return null;
+        return String.valueOf('.');
     }
 
-    // todo
+    // todo: move to constant; need to research why this value
+    @Override
+    public String getCatalogTerm() throws SQLException {
+        return "instance";
+    }
+
+    // todo: move to constant
     @Override
     public String getSearchStringEscape() throws SQLException {
-        return null;
+        return String.valueOf('\\');
     }
 
-    private String getServerInfoAsString(TGetInfoType type) throws SQLException {
-        String info = null;
-        try {
-            TGetInfoResp serverInfo = HiveServiceUtils.getServerInfo(this.connection.getClient(), this.connection.getSessionHandle(), type);
 
-            info = serverInfo.getInfoValue().getStringValue();
-        } catch (TException e) {
-            log.debug(e.getMessage(), e);
-        }
-        return info;
-
-    }
 
 }

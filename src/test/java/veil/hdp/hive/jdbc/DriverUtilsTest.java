@@ -1,9 +1,8 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import veil.hdp.hive.jdbc.BaseJunitTest;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;

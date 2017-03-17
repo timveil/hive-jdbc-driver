@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.metadata;
+package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 import org.apache.hive.service.cli.thrift.TTableSchema;
@@ -24,9 +24,7 @@ public class TableSchema {
 
         for (ColumnDescriptor columnDescriptor : getColumns()) {
 
-            String normalizedName = getNormalizedName(columnDescriptor);
-
-            if (normalizedName.equalsIgnoreCase(columnName)) {
+            if (columnDescriptor.getNormalizedName().equalsIgnoreCase(columnName)) {
                 return columnDescriptor;
             }
         }
@@ -34,15 +32,18 @@ public class TableSchema {
         return null;
     }
 
-    public String getNormalizedName(ColumnDescriptor columnDescriptor) {
-        String name = columnDescriptor.getName();
+    public ColumnDescriptor getColumn(int position) {
 
-        if (name.contains(".")) {
-            name = name.substring(name.lastIndexOf(".") + 1);
+        for (ColumnDescriptor columnDescriptor : getColumns()) {
+            if (position == columnDescriptor.getPosition()) {
+                return columnDescriptor;
+            }
         }
 
-        return name.toLowerCase();
+        return null;
     }
+
+
 
     @Override
     public String toString() {
@@ -50,7 +51,7 @@ public class TableSchema {
         StringBuilder stringBuilder = new StringBuilder("\nTableSchema {\n");
 
         for (ColumnDescriptor descriptor : getColumns()) {
-            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", type: ").append(descriptor.getType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
+            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
         stringBuilder.append("}");

@@ -5,8 +5,6 @@ import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.metadata.TableSchema;
-import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -43,11 +41,6 @@ public class HiveStatement extends AbstractStatement {
         resultSet = null;
     }
 
-    TOperationHandle getStatementHandle() {
-        return statementHandle;
-    }
-
-
     @Override
     public boolean execute(String sql) throws SQLException {
 
@@ -61,15 +54,13 @@ public class HiveStatement extends AbstractStatement {
                 return false;
             }
 
-            TableSchema tableSchema = new TableSchema(HiveServiceUtils.getSchema(connection.getClient(), statementHandle));
+            TableSchema tableSchema = new TableSchema(HiveServiceUtils.getResultSetSchema(connection.getClient(), statementHandle));
 
             if (log.isDebugEnabled()) {
                 log.debug(tableSchema.toString());
             }
 
-            resultSet = new HiveResultSet(connection, this, tableSchema);
-            resultSet.setFetchSize(fetchSize);
-            resultSet.setFetchDirection(fetchDirection);
+            resultSet = new HiveResultSet(connection, this, statementHandle, tableSchema);
 
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);

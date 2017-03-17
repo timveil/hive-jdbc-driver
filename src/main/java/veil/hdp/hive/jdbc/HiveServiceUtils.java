@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.HiveSQLException;
 import org.apache.hive.service.cli.RowSet;
@@ -6,7 +6,6 @@ import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
@@ -218,7 +217,7 @@ public class HiveServiceUtils {
         return openSessionConfig;
     }
 
-    public static TTableSchema getSchema(Client client, TOperationHandle operationHandle) throws TException {
+    public static TTableSchema getResultSetSchema(Client client, TOperationHandle operationHandle) throws TException {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
         TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
@@ -250,10 +249,191 @@ public class HiveServiceUtils {
 
     }
 
-
+    // todo: this freaks out on the backend if type is not correct and results in failing subsequent calls.  should avoid this until fixed.
+    @Deprecated
     public static TGetInfoResp getServerInfo(Client client, TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
         TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
         TGetInfoResp resp = client.GetInfo(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+        return resp;
+    }
+
+    public static HiveResultSet getCatalogs(HiveConnection connection) throws SQLException {
+
+        HiveResultSet resultSet = null;
+
+        try {
+            TGetCatalogsResp response = HiveServiceUtils.getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+           log.error(e.getMessage(), e);
+        }
+
+
+        return resultSet;
+    }
+
+    public static HiveResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetSchemasResp response = HiveServiceUtils.getDatabaseSchemaResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern);
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
+    public static HiveResultSet getTypeInfo(HiveConnection connection) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetTypeInfoResp response = HiveServiceUtils.getTypeInfoResponse(connection.getClient(), connection.getSessionHandle());
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
+    public static HiveResultSet getTableTypes(HiveConnection connection) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetTableTypesResp response = HiveServiceUtils.getTableTypesResponse(connection.getClient(), connection.getSessionHandle());
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
+    public static HiveResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetTablesResp response = HiveServiceUtils.getTablesResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, types);
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
+    private static HiveResultSet buildResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
+
+        try {
+            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, new TableSchema(HiveServiceUtils.getResultSetSchema(connection.getClient(), operationHandle)));
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    private static TGetCatalogsResp getCatalogsResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+        TGetCatalogsReq req = new TGetCatalogsReq(sessionHandle);
+        TGetCatalogsResp resp = client.GetCatalogs(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+        return resp;
+    }
+
+    private static TGetTablesResp getTablesResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws TException, SQLException {
+        TGetTablesReq req = new TGetTablesReq(sessionHandle);
+
+        req.setTableName(tableNamePattern);
+
+        if (schemaPattern == null) {
+            schemaPattern = "%";
+        }
+
+        req.setSchemaName(schemaPattern);
+
+        if (types != null) {
+            req.setTableTypes(Arrays.asList(types));
+        }
+
+        TGetTablesResp resp = client.GetTables(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+        return resp;
+    }
+
+
+
+    private static TGetTypeInfoResp getTypeInfoResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+        TGetTypeInfoReq req = new TGetTypeInfoReq(sessionHandle);
+        TGetTypeInfoResp resp = client.GetTypeInfo(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+        return resp;
+    }
+
+    private static TGetTableTypesResp getTableTypesResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+        TGetTableTypesReq req = new TGetTableTypesReq(sessionHandle);
+        TGetTableTypesResp resp = client.GetTableTypes(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        verifySuccessWithInfo(resp.getStatus());
+
+
+        return resp;
+    }
+
+    private static TGetSchemasResp getDatabaseSchemaResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern) throws TException, SQLException {
+        TGetSchemasReq req = new TGetSchemasReq(sessionHandle);
+
+        if (catalog != null) {
+            req.setCatalogName(catalog);
+        }
+
+        if (schemaPattern == null) {
+            schemaPattern = "%";
+        }
+
+        req.setSchemaName(schemaPattern);
+
+        TGetSchemasResp resp = client.GetSchemas(req);
 
         if (log.isDebugEnabled()) {
             log.debug(resp.toString());

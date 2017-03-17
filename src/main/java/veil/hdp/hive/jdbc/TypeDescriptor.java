@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.metadata;
+package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.Type;
 import org.apache.hive.service.cli.thrift.TPrimitiveTypeEntry;

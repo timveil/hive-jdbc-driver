@@ -9,9 +9,6 @@ import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.utils.HiveServiceUtils;
-import veil.hdp.hive.jdbc.utils.HttpUtils;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import javax.security.sasl.SaslException;
 import java.sql.DatabaseMetaData;
@@ -163,15 +160,14 @@ public class HiveConnection extends AbstractConnection {
     }
 
 
-
-    /*
+/*
 
 
 
 
     @Override
-    public String getSchema() throws SQLException {
-        return super.getSchema();
+    public String getResultSetSchema() throws SQLException {
+        return super.getResultSetSchema();
     }
 
     @Override
@@ -198,6 +194,12 @@ public class HiveConnection extends AbstractConnection {
     public void setSchema(String schema) throws SQLException {
         super.setSchema(schema);
     }
+
+    @Override
+    public String getSchema() throws SQLException {
+        return super.getSchema();
+    }
+
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException {

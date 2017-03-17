@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc;
 
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -7,7 +7,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverStringProperty;
 
 import java.io.IOException;
 import java.util.Properties;
