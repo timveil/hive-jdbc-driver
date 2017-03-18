@@ -3,7 +3,6 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.swing.StringUIClientPropertyKey;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
