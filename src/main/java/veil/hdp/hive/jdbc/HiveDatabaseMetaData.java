@@ -94,6 +94,11 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return HiveServiceUtils.getTables(connection, catalog, schemaPattern, tableNamePattern, types);
     }
 
+    @Override
+    public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        return HiveServiceUtils.getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+    }
+
     // todo: move to constant
     @Override
     public String getCatalogSeparator() throws SQLException {

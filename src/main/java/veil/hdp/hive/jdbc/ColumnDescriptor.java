@@ -47,4 +47,15 @@ public class ColumnDescriptor {
 
         return name.toLowerCase();
     }
+
+    @Override
+    public String toString() {
+        return "ColumnDescriptor{" +
+                "name='" + name + '\'' +
+                ", normalizedName='" + normalizedName + '\'' +
+                ", comment='" + comment + '\'' +
+                ", type=" + type +
+                ", position=" + position +
+                '}';
+    }
 }

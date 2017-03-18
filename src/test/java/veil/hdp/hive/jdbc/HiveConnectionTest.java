@@ -89,6 +89,37 @@ public class HiveConnectionTest extends BaseJunitTest {
                 log.debug("TABLE_TYPE {}", tableTypes.getString("TABLE_TYPE"));
             }
         }
+
+
+        ResultSet columns = metaData.getColumns(null, null, null, null);
+
+        if (columns != null) {
+            while (columns.next()) {
+                log.debug("TABLE_CAT {}", columns.getString("TABLE_CAT"));
+                log.debug("TABLE_SCHEM {}", columns.getString("TABLE_SCHEM"));
+                log.debug("TABLE_NAME {}", columns.getString("TABLE_NAME"));
+                log.debug("COLUMN_NAME {}", columns.getString("COLUMN_NAME"));
+                log.debug("DATA_TYPE {}", columns.getInt("DATA_TYPE"));
+                log.debug("TYPE_NAME {}", columns.getString("TYPE_NAME"));
+                log.debug("COLUMN_SIZE {}", columns.getInt("COLUMN_SIZE"));
+                log.debug("BUFFER_LENGTH {}", columns.getByte("BUFFER_LENGTH"));
+                log.debug("DECIMAL_DIGITS {}", columns.getInt("DECIMAL_DIGITS"));
+                log.debug("NUM_PREC_RADIX {}", columns.getInt("NUM_PREC_RADIX"));
+                log.debug("NULLABLE {}", columns.getInt("NULLABLE"));
+                log.debug("REMARKS {}", columns.getString("REMARKS"));
+                log.debug("COLUMN_DEF {}", columns.getString("COLUMN_DEF"));
+                log.debug("SQL_DATA_TYPE {}", columns.getInt("SQL_DATA_TYPE"));
+                log.debug("SQL_DATETIME_SUB {}", columns.getInt("SQL_DATETIME_SUB"));
+                log.debug("CHAR_OCTET_LENGTH {}", columns.getInt("CHAR_OCTET_LENGTH"));
+                log.debug("ORDINAL_POSITION {}", columns.getInt("ORDINAL_POSITION"));
+                log.debug("IS_NULLABLE {}", columns.getBoolean("IS_NULLABLE"));
+                log.debug("SCOPE_CATALOG {}", columns.getString("SCOPE_CATALOG"));
+                log.debug("SCOPE_SCHEMA {}", columns.getString("SCOPE_SCHEMA"));
+                log.debug("SCOPE_TABLE {}", columns.getString("SCOPE_TABLE"));
+                log.debug("SOURCE_DATA_TYPE {}", columns.getShort("SOURCE_DATA_TYPE"));
+                log.debug("IS_AUTO_INCREMENT {}", columns.getBoolean("IS_AUTO_INCREMENT"));
+            }
+        }
     }
 
 

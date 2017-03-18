@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 public class SqlTypeMap {
@@ -16,10 +17,11 @@ public class SqlTypeMap {
 
             case Types.NUMERIC:
             case Types.DECIMAL:
-                result = java.math.BigDecimal.class;
+                result = BigDecimal.class;
                 break;
 
             case Types.BIT:
+            case Types.BOOLEAN:
                 result = Boolean.class;
                 break;
 

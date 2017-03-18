@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
-import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
 import org.apache.hive.service.cli.Type;
 import org.slf4j.Logger;
 
@@ -16,21 +14,36 @@ public class ResultSetUtils {
 
     private static final Logger log = getLogger(ResultSetUtils.class);
 
-    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
+    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex, Type targetType) throws SQLException {
 
         try {
             validateRow(row, columnIndex);
 
-            Type columnType = schema.getColumns().get(columnIndex - 1).getType();
+            ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
+
+            Type columnType = columnDescriptor.getType();
 
             Object value = row[columnIndex - 1];
 
-            return evaluate(columnType, value);
+            if (targetType == null) {
+                return value;
+            }
+
+            if (!columnType.equals(targetType)) {
+                log.warn("target type {} does not match column type {} with value {} for column {}", targetType, columnType, value, columnDescriptor);
+            }
+
+
+            return convert(value, columnType, targetType);
 
         } catch (Exception e) {
             throw new SQLException(e.getMessage(), e);
         }
 
+    }
+
+    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
+        return getColumnValue(schema, row, columnIndex, null);
     }
 
     public static int findColumnIndex(TableSchema tableSchema, String columnLabel) throws SQLException {
@@ -57,199 +70,295 @@ public class ResultSetUtils {
         }
     }
 
-    private static Object evaluate(Type type, Object value) {
+    private static Object convert(Object value, Type columnType, Type targetType) {
 
-        switch (type) {
-            case BINARY_TYPE:
-                return evaluateBinary(value);
-            case TIMESTAMP_TYPE:
-                return evaluateTimestamp(value);
-            case DECIMAL_TYPE:
-                return evaluateBigDecimal(value);
+        switch (targetType) {
+
+            case NULL_TYPE:
+                return null;
             case BOOLEAN_TYPE:
-                return evaluateBoolean(value);
+                return convertToBoolean(value, columnType);
+            case TINYINT_TYPE:
+                return convertToByte(value, columnType);
             case SMALLINT_TYPE:
-                return evaluateShort(value);
+                return convertToShort(value, columnType);
             case INT_TYPE:
-                return evaluateInt(value);
+                return convertToInt(value, columnType);
             case BIGINT_TYPE:
-                return evaluateLong(value);
+                return convertToLong(value, columnType);
             case FLOAT_TYPE:
-                return evaluateFloat(value);
+                return convertToFloat(value, columnType);
             case DOUBLE_TYPE:
-                return evaluateDouble(value);
+                return convertToDouble(value, columnType);
             case STRING_TYPE:
-                return evaluateString(value);
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return convertToString(value, columnType);
             case DATE_TYPE:
-                return evaluateDate(value);
+                return convertToDate(value, columnType);
+            case TIMESTAMP_TYPE:
+                return convertToTimestamp(value, columnType);
+            case DECIMAL_TYPE:
+                return convertToBigDecimal(value, columnType);
+            case ARRAY_TYPE:
+            case MAP_TYPE:
+            case STRUCT_TYPE:
+            case UNION_TYPE:
+            case USER_DEFINED_TYPE:
             case INTERVAL_YEAR_MONTH_TYPE:
-                return HiveIntervalYearMonth.valueOf((String) value);
             case INTERVAL_DAY_TIME_TYPE:
-                return HiveIntervalDayTime.valueOf((String) value);
-            default:
-
-                if (log.isDebugEnabled()) {
-                    log.debug("no special handling for type {}", type.getName());
-                }
-
-                return value;
+            case BINARY_TYPE:
+                log.warn("no conversion strategy for target type {} and value {}", targetType, value);
+                break;
         }
+
+        return value;
     }
 
-    private static byte[] evaluateBinary(Object obj) {
-        if (obj == null) {
+    private static BigDecimal convertToBigDecimal(Object value, Type columnType) {
+
+        if (value == null) {
             return null;
         }
 
-        if (obj instanceof String) {
-            return ((String) obj).getBytes();
+        switch (columnType) {
+            case DECIMAL_TYPE:
+                return (BigDecimal)value;
+            case DOUBLE_TYPE:
+                return BigDecimal.valueOf((Double)value);
+            case BIGINT_TYPE:
+                return BigDecimal.valueOf((Long)value);
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return new BigDecimal((String)value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to byte[]");
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
     }
 
-    private static Timestamp evaluateTimestamp(Object obj) {
-        if (obj == null) {
+    private static byte convertToByte(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case TINYINT_TYPE:
+                return ((Number) value).byteValue();
+            case SMALLINT_TYPE:
+                log.warn("may lose precision going from short to byte");
+                return ((Number) value).byteValue();
+            case INT_TYPE:
+                log.warn("may lose precision going from int to byte");
+                return ((Number) value).byteValue();
+            case BIGINT_TYPE:
+                log.warn("may lose precision going from long to byte");
+                return ((Number) value).byteValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Byte.parseByte((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
+    }
+
+    private static short convertToShort(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case TINYINT_TYPE:
+            case SMALLINT_TYPE:
+                return ((Number) value).shortValue();
+            case INT_TYPE:
+                log.warn("may lose precision going from int to short");
+                return ((Number) value).shortValue();
+            case BIGINT_TYPE:
+                log.warn("may lose precision going from long to short");
+                return ((Number) value).shortValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Short.parseShort((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
+    }
+
+    private static int convertToInt(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case TINYINT_TYPE:
+            case SMALLINT_TYPE:
+            case INT_TYPE:
+                return ((Number) value).intValue();
+            case BIGINT_TYPE:
+                log.warn("may lose precision going from long to int");
+                return ((Number) value).intValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Integer.parseInt((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
+    }
+
+    private static long convertToLong(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case TINYINT_TYPE:
+            case SMALLINT_TYPE:
+            case INT_TYPE:
+            case BIGINT_TYPE:
+                return ((Number) value).longValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Long.parseLong((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
+    }
+
+    private static float convertToFloat(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case FLOAT_TYPE:
+                return (Float)value;
+            case TINYINT_TYPE:
+            case SMALLINT_TYPE:
+            case INT_TYPE:
+            case BIGINT_TYPE:
+                return ((Number) value).floatValue();
+            case DOUBLE_TYPE:
+                log.warn("may lose precision going from double to float");
+                return ((Number) value).floatValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Float.parseFloat((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
+    }
+
+    private static double convertToDouble(Object value, Type columnType) {
+
+        if (value == null) {
+            return 0;
+        }
+
+        switch (columnType) {
+            case DOUBLE_TYPE:
+                return (Double)value;
+            case FLOAT_TYPE:
+            case TINYINT_TYPE:
+            case SMALLINT_TYPE:
+            case INT_TYPE:
+            case BIGINT_TYPE:
+                return ((Number) value).doubleValue();
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Double.parseDouble((String)value);
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
+    }
+
+    private static String convertToString(Object value, Type columnType) {
+
+        if (value == null) {
             return null;
         }
 
-        if (obj instanceof Timestamp) {
-            return (Timestamp) obj;
-        } else if (obj instanceof String) {
-            return Timestamp.valueOf((String) obj);
-        }
+        // todo: i think i can get better than this
+        return value.toString();
 
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to Timestamp");
     }
 
-    private static String evaluateString(Object obj) {
-        if (obj == null) {
+    private static Date convertToDate(Object value, Type columnType) {
+
+        if (value == null) {
             return null;
         }
 
-        if (obj instanceof byte[]) {
-            return new String((byte[]) obj);
-        } else if (String.class.isInstance(obj)) {
-            return (String) obj;
+        switch (columnType) {
+
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Date.valueOf((String)value);
+            case DATE_TYPE:
+                return (Date)value;
         }
 
-        return obj.toString();
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
     }
 
-    private static short evaluateShort(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
+    private static Timestamp convertToTimestamp(Object value, Type columnType) {
 
-        if (Number.class.isInstance(obj)) {
-            return ((Number) obj).shortValue();
-        } else if (String.class.isInstance(obj)) {
-            return Short.valueOf((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to short");
-    }
-
-    private static long evaluateLong(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
-
-        if (Number.class.isInstance(obj)) {
-            return ((Number) obj).longValue();
-        } else if (String.class.isInstance(obj)) {
-            return Long.valueOf((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to long");
-    }
-
-    private static int evaluateInt(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
-
-        if (Number.class.isInstance(obj)) {
-            return ((Number) obj).intValue();
-        } else if (String.class.isInstance(obj)) {
-            return Integer.valueOf((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to int");
-
-    }
-
-    private static float evaluateFloat(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
-
-        if (Number.class.isInstance(obj)) {
-            return ((Number) obj).floatValue();
-        } else if (String.class.isInstance(obj)) {
-            return Float.valueOf((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to float");
-
-    }
-
-    private static double evaluateDouble(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
-
-        if (Number.class.isInstance(obj)) {
-            return ((Number) obj).doubleValue();
-        } else if (String.class.isInstance(obj)) {
-            return Double.valueOf((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to double");
-
-    }
-
-    private static Date evaluateDate(Object obj) {
-        if (obj == null) {
+        if (value == null) {
             return null;
         }
 
-        if (obj instanceof Date) {
-            return (Date) obj;
-        } else if (obj instanceof String) {
-            return Date.valueOf((String) obj);
+        switch (columnType) {
+
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Timestamp.valueOf((String)value);
+            case TIMESTAMP_TYPE:
+                return (Timestamp)value;
         }
 
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to Date");
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
     }
 
-    private static BigDecimal evaluateBigDecimal(Object obj) {
-        if (obj == null) {
-            return null;
-        }
+    private static Boolean convertToBoolean(Object value, Type columnType) {
 
-        if (obj instanceof BigDecimal) {
-            return (BigDecimal) obj;
-        } else if (obj instanceof String) {
-            return new BigDecimal((String) obj);
-        }
-
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to BigDecimal");
-    }
-
-    private static Boolean evaluateBoolean(Object obj) {
-        if (obj == null) {
+        if (value == null) {
             return false;
         }
 
-        if (Boolean.class.isInstance(obj)) {
-            return (Boolean) obj;
-        } else if (Number.class.isInstance(obj)) {
-            return ((Number) obj).intValue() != 0;
-        } else if (String.class.isInstance(obj)) {
-            return !obj.equals("0");
+        switch (columnType) {
+
+            case BOOLEAN_TYPE:
+                return (Boolean) value;
+            case TINYINT_TYPE:
+                return ((Number) value).byteValue() == 1;
+            case SMALLINT_TYPE:
+                return ((Number) value).shortValue() == 1;
+            case INT_TYPE:
+                return ((Number) value).intValue() == 1;
+            case BIGINT_TYPE:
+                return ((Number) value).longValue() == 1;
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return value.equals("1")
+                        || ((String) value).equalsIgnoreCase("yes")
+                        || ((String) value).equalsIgnoreCase("true");
+
         }
 
-        throw new IllegalArgumentException("unable to convert [" + obj.toString() + "] to Boolean");
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Boolean from column type [" + columnType + "]");
     }
 }

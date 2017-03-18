@@ -348,6 +348,21 @@ public class HiveServiceUtils {
         return resultSet;
     }
 
+    public static HiveResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetColumnsResp response = getColumnsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, columnNamePattern);
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
     private static HiveResultSet buildResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
 
         try {
@@ -360,6 +375,25 @@ public class HiveServiceUtils {
     private static TGetCatalogsResp getCatalogsResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
         TGetCatalogsReq req = new TGetCatalogsReq(sessionHandle);
         TGetCatalogsResp resp = client.GetCatalogs(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        checkStatus(resp.getStatus());
+
+
+        return resp;
+    }
+
+    private static TGetColumnsResp getColumnsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws TException, SQLException {
+        TGetColumnsReq req = new TGetColumnsReq(sessionHandle);
+        req.setCatalogName(catalog);
+        req.setSchemaName(schemaPattern);
+        req.setTableName(tableNamePattern);
+        req.setColumnName(columnNamePattern);
+
+        TGetColumnsResp resp = client.GetColumns(req);
 
         if (log.isDebugEnabled()) {
             log.debug(resp.toString());
