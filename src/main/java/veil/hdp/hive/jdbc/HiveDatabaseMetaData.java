@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.swing.StringUIClientPropertyKey;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     private final HiveConnection connection;
 
-    public HiveDatabaseMetaData(HiveConnection connection) {
+    HiveDatabaseMetaData(HiveConnection connection) {
         this.connection = connection;
     }
 
@@ -106,10 +107,30 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return "instance";
     }
 
+    @Override
+    public String getSchemaTerm() throws SQLException {
+        return "database";
+    }
+
     // todo: move to constant
     @Override
     public String getSearchStringEscape() throws SQLException {
         return String.valueOf('\\');
+    }
+
+    @Override
+    public String getURL() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getUserName() throws SQLException {
+        return connection.getProperties().getProperty(HiveDriverStringProperty.USER.getName());
+    }
+
+    @Override
+    public String getIdentifierQuoteString() throws SQLException {
+        return " ";
     }
 
 
