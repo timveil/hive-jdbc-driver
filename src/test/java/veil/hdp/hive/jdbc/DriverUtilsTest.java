@@ -36,7 +36,10 @@ public class DriverUtilsTest extends BaseJunitTest {
 
         DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties);
 
-        System.out.println(driverPropertyInfos);
+        for (DriverPropertyInfo info : driverPropertyInfos) {
+            log.debug("info {}", info.toString());
+        }
+
     }
 
     @Test

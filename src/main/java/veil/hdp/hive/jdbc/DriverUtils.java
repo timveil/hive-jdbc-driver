@@ -106,15 +106,15 @@ public class DriverUtils {
     }
 
     public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
-        Properties config = buildProperties(url, suppliedProperties);
+        Properties properties = buildProperties(url, suppliedProperties);
 
-        DriverPropertyInfo[] properties = new DriverPropertyInfo[DRIVER_PROPERTIES.length];
+        DriverPropertyInfo[] driverPropertyInfoArray = new DriverPropertyInfo[DRIVER_PROPERTIES.length];
 
         for (int i = 0; i < DRIVER_PROPERTIES.length; i++) {
-            properties[i] = DRIVER_PROPERTIES[i].build(config);
+            driverPropertyInfoArray[i] = DRIVER_PROPERTIES[i].build(properties);
         }
 
-        return properties;
+        return driverPropertyInfoArray;
 
     }
 
@@ -152,7 +152,7 @@ public class DriverUtils {
             }
 
             if (!found) {
-                log.warn("property [{}] is not a valid", key);
+                log.warn("property [{}] is not valid", key);
                 //throw new SQLException("property [" + key + "] is not a valid property");
             }
 
@@ -243,6 +243,7 @@ public class DriverUtils {
         return url.replace(prefix, "").trim();
     }
 
+    // todo: need to figure out how to merge properties returned from zookeeper with provided properties
     private static void loadPropertiesFromZookeeper(String authority, Map<String, String> properties) throws SQLException {
 
         String zooKeeperNamespace = properties.containsKey(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName())
@@ -252,7 +253,21 @@ public class DriverUtils {
                 ? Integer.parseInt(properties.get(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName()))
                 : HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue();
 
-        //hive.server2.authentication=NONE;hive.server2.transport.mode=binary;hive.server2.thrift.sasl.qop=auth;hive.server2.thrift.bind.host=hive-large.hdp.local;hive.server2.thrift.port=10000;hive.server2.use.SSL=false
+        /*
+
+          example string returned from zookeeper
+
+          hive.server2.authentication=NONE;hive.server2.transport.mode=binary;hive.server2.thrift.sasl.qop=auth;hive.server2.thrift.bind.host=hive-large.hdp.local;hive.server2.thrift.port=10000;hive.server2.use.SSL=false
+
+          hive.server2.authentication=NONE
+          hive.server2.transport.mode=binary
+          hive.server2.thrift.sasl.qop=auth
+          hive.server2.thrift.bind.host=hive-large.hdp.local
+          hive.server2.thrift.port=10000
+          hive.server2.use.SSL=false
+
+         */
+
 
         Random random = new Random();
 

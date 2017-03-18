@@ -85,6 +85,9 @@ public class HiveConnection extends AbstractConnection {
             client = ThriftUtils.createClient(transport);
 
             TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, client);
+
+            HiveServiceUtils.verifySuccessWithInfo(tOpenSessionResp.getStatus());
+
             Map<String, String> configuration = tOpenSessionResp.getConfiguration();
 
             if (log.isDebugEnabled()) {
