@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.hive.service.cli.thrift.TGetInfoResp;
+import org.apache.hive.service.cli.thrift.TGetInfoType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,16 +29,6 @@ public class HiveServiceUtilsTest extends BaseJunitTest {
         if (connection != null) {
             connection.close();
         }
-    }
-
-    @Test
-    public void verifySuccessWithInfo() throws Exception {
-
-    }
-
-    @Test
-    public void verifySuccess() throws Exception {
-
     }
 
     @Test
@@ -85,12 +77,14 @@ public class HiveServiceUtilsTest extends BaseJunitTest {
 
     @Test
     public void printInfo() throws Exception {
-
+        HiveServiceUtils.printInfo(connection.getClient(), connection.getSessionHandle());
     }
 
     @Test
     public void getServerInfo() throws Exception {
+        TGetInfoResp serverInfo = HiveServiceUtils.getServerInfo(connection.getClient(), connection.getSessionHandle(), TGetInfoType.CLI_DBMS_NAME);
 
+        log.debug(serverInfo.getInfoValue().getStringValue());
     }
 
     @Test

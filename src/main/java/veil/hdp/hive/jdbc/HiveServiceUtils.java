@@ -86,7 +86,7 @@ public class HiveServiceUtils {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (SQLException  | TException e) {
+        } catch (SQLException | TException e) {
             log.warn(e.getMessage(), e);
         }
     }
@@ -103,7 +103,7 @@ public class HiveServiceUtils {
                 log.debug(cancelRequest.toString());
             }
 
-        } catch (SQLException  | TException e) {
+        } catch (SQLException | TException e) {
             log.warn(e.getMessage(), e);
         }
     }
@@ -120,7 +120,7 @@ public class HiveServiceUtils {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (SQLException  | TException e) {
+        } catch (SQLException | TException e) {
             log.warn(e.getMessage(), e);
         }
 
@@ -242,20 +242,14 @@ public class HiveServiceUtils {
         return metadataResp.getSchema();
     }
 
-    public static void printInfo(Client client, TSessionHandle sessionHandle) {
+    @Deprecated
+    public static void printInfo(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
 
         for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
 
-            String value = null;
+            TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
 
-            try {
-                TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
-
-                value = serverInfo.getInfoValue().getStringValue();
-
-            } catch (Exception ignored) {
-
-            }
+            String value = serverInfo.getInfoValue().getStringValue();
 
             log.debug("Key {} Value {}", tGetInfoType.toString(), value);
         }
@@ -263,6 +257,7 @@ public class HiveServiceUtils {
     }
 
     // todo: this freaks out on the backend if type is not correct and results in failing subsequent calls.  should avoid this until fixed.
+    // see: org.apache.hive.service.cli.session.HiveSessionImpl; don't know why it doesn't support more types
     @Deprecated
     public static TGetInfoResp getServerInfo(Client client, TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
         TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
@@ -286,7 +281,7 @@ public class HiveServiceUtils {
             TGetCatalogsResp response = getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
-           log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
 
@@ -402,7 +397,6 @@ public class HiveServiceUtils {
 
         return resp;
     }
-
 
 
     private static TGetTypeInfoResp getTypeInfoResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
