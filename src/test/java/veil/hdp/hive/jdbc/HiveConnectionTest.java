@@ -19,9 +19,9 @@ public class HiveConnectionTest extends BaseJunitTest {
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
-        properties.setProperty("hive.server2.transport.mode", "http:");
+        properties.setProperty("hive.server2.transport.mode", "http");
 
-        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
+        String url = "jdbc:hive2://hive-large.hdp.local:10000/default?transport.mode=binary";
 
         connection = new HiveDriver().connect(url, properties);
 

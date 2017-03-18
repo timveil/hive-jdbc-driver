@@ -20,26 +20,21 @@ public class HiveServiceUtils {
 
     private static final Logger log = getLogger(HiveServiceUtils.class);
 
-    public static void verifySuccessWithInfo(TStatus status) throws SQLException {
-        verifySuccess(status, true);
-    }
+    private static void checkStatus(TStatus status) throws SQLException {
 
-    public static void verifySuccess(TStatus status) throws SQLException {
-        verifySuccess(status, false);
-    }
-
-    private static void verifySuccess(TStatus status, boolean withInfo) throws SQLException {
-        if (status.getStatusCode() == SUCCESS_STATUS || (withInfo && status.getStatusCode() == SUCCESS_WITH_INFO_STATUS)) {
+        if (status.getStatusCode() == SUCCESS_STATUS || status.getStatusCode() == SUCCESS_WITH_INFO_STATUS) {
             return;
         }
 
         throw new HiveSQLException(status);
     }
 
-    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException {
+    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException, SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType((short) 0);
         TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
+
+        checkStatus(fetchResults.getStatus());
 
         if (log.isDebugEnabled()) {
             log.debug(fetchResults.toString());
@@ -58,6 +53,8 @@ public class HiveServiceUtils {
         try {
             TFetchResultsResp fetchResults = client.FetchResults(tFetchResultsReq);
 
+            checkStatus(fetchResults.getStatus());
+
 
             if (log.isDebugEnabled()) {
                 log.debug(fetchResults.toString());
@@ -69,7 +66,7 @@ public class HiveServiceUtils {
                 logs.add(String.valueOf(row[0]));
             }
 
-        } catch (TException e) {
+        } catch (SQLException | TException e) {
             log.error("error fetching logs: {}", e.getMessage(), e);
         }
 
@@ -81,13 +78,15 @@ public class HiveServiceUtils {
         TCloseOperationReq closeRequest = new TCloseOperationReq(operationHandle);
 
         try {
-            client.CloseOperation(closeRequest);
+            TCloseOperationResp resp = client.CloseOperation(closeRequest);
+
+            checkStatus(resp.getStatus());
 
             if (log.isDebugEnabled()) {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (TException e) {
+        } catch (SQLException  | TException e) {
             log.warn(e.getMessage(), e);
         }
     }
@@ -96,13 +95,15 @@ public class HiveServiceUtils {
         TCancelOperationReq cancelRequest = new TCancelOperationReq(operationHandle);
 
         try {
-            client.CancelOperation(cancelRequest);
+            TCancelOperationResp resp = client.CancelOperation(cancelRequest);
+
+            checkStatus(resp.getStatus());
 
             if (log.isDebugEnabled()) {
                 log.debug(cancelRequest.toString());
             }
 
-        } catch (TException e) {
+        } catch (SQLException  | TException e) {
             log.warn(e.getMessage(), e);
         }
     }
@@ -111,19 +112,21 @@ public class HiveServiceUtils {
         TCloseSessionReq closeRequest = new TCloseSessionReq(sessionHandle);
 
         try {
-            client.CloseSession(closeRequest);
+            TCloseSessionResp resp = client.CloseSession(closeRequest);
+
+            checkStatus(resp.getStatus());
 
             if (log.isDebugEnabled()) {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (TException e) {
+        } catch (SQLException  | TException e) {
             log.warn(e.getMessage(), e);
         }
 
     }
 
-    public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException {
+    public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException, SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
@@ -131,6 +134,8 @@ public class HiveServiceUtils {
         //executeStatementReq.setConfOverlay(null);
 
         TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
+
+        checkStatus(executeStatementResp.getStatus());
 
         if (log.isDebugEnabled()) {
             log.debug(executeStatementResp.toString());
@@ -148,6 +153,8 @@ public class HiveServiceUtils {
 
             TGetOperationStatusReq statusReq = new TGetOperationStatusReq(statementHandle);
             TGetOperationStatusResp statusResp = client.GetOperationStatus(statusReq);
+
+            checkStatus(statusResp.getStatus());
 
             if (statusResp.isSetOperationState()) {
 
@@ -175,7 +182,7 @@ public class HiveServiceUtils {
     }
 
 
-    public static TOpenSessionResp openSession(Properties properties, Client client) throws TException {
+    public static TOpenSessionResp openSession(Properties properties, Client client) throws TException, SQLException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
         String username = properties.getProperty(HiveDriverStringProperty.USER.getName());
 
@@ -197,7 +204,11 @@ public class HiveServiceUtils {
             log.debug(openSessionReq.toString());
         }
 
-        return client.OpenSession(openSessionReq);
+        TOpenSessionResp resp = client.OpenSession(openSessionReq);
+
+        checkStatus(resp.getStatus());
+
+        return resp;
 
     }
 
@@ -217,10 +228,12 @@ public class HiveServiceUtils {
         return openSessionConfig;
     }
 
-    public static TTableSchema getResultSetSchema(Client client, TOperationHandle operationHandle) throws TException {
+    public static TTableSchema getResultSetSchema(Client client, TOperationHandle operationHandle) throws TException, SQLException {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
         TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
+
+        checkStatus(metadataResp.getStatus());
 
         if (log.isDebugEnabled()) {
             log.debug(metadataResp.toString());
@@ -259,7 +272,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
@@ -270,7 +283,7 @@ public class HiveServiceUtils {
         HiveResultSet resultSet = null;
 
         try {
-            TGetCatalogsResp response = HiveServiceUtils.getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
+            TGetCatalogsResp response = getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
            log.error(e.getMessage(), e);
@@ -285,7 +298,7 @@ public class HiveServiceUtils {
         HiveResultSet resultSet;
 
         try {
-            TGetSchemasResp response = HiveServiceUtils.getDatabaseSchemaResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern);
+            TGetSchemasResp response = getDatabaseSchemaResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern);
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
             throw new SQLException(e);
@@ -300,7 +313,7 @@ public class HiveServiceUtils {
         HiveResultSet resultSet;
 
         try {
-            TGetTypeInfoResp response = HiveServiceUtils.getTypeInfoResponse(connection.getClient(), connection.getSessionHandle());
+            TGetTypeInfoResp response = getTypeInfoResponse(connection.getClient(), connection.getSessionHandle());
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
             throw new SQLException(e);
@@ -315,7 +328,7 @@ public class HiveServiceUtils {
         HiveResultSet resultSet;
 
         try {
-            TGetTableTypesResp response = HiveServiceUtils.getTableTypesResponse(connection.getClient(), connection.getSessionHandle());
+            TGetTableTypesResp response = getTableTypesResponse(connection.getClient(), connection.getSessionHandle());
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
             throw new SQLException(e);
@@ -330,7 +343,7 @@ public class HiveServiceUtils {
         HiveResultSet resultSet;
 
         try {
-            TGetTablesResp response = HiveServiceUtils.getTablesResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, types);
+            TGetTablesResp response = getTablesResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, types);
             resultSet = buildResultSet(connection, response.getOperationHandle());
         } catch (TException e) {
             throw new SQLException(e);
@@ -343,7 +356,7 @@ public class HiveServiceUtils {
     private static HiveResultSet buildResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
 
         try {
-            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, new TableSchema(HiveServiceUtils.getResultSetSchema(connection.getClient(), operationHandle)));
+            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, new TableSchema(getResultSetSchema(connection.getClient(), operationHandle)));
         } catch (TException e) {
             throw new SQLException(e);
         }
@@ -357,7 +370,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
@@ -384,7 +397,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
@@ -400,7 +413,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
@@ -414,7 +427,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
@@ -439,7 +452,7 @@ public class HiveServiceUtils {
             log.debug(resp.toString());
         }
 
-        verifySuccessWithInfo(resp.getStatus());
+        checkStatus(resp.getStatus());
 
 
         return resp;
