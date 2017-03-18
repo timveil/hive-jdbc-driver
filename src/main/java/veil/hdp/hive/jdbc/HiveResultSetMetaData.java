@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.JDBCType;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
@@ -101,5 +102,59 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     @Override
     public int getScale(int column) throws SQLException {
         return 0;
+    }
+
+    @Override
+    public boolean isSearchable(int column) throws SQLException {
+        return true;
+    }
+
+    @Override
+    public boolean isSigned(int column) throws SQLException {
+        int columnType = getColumnType(column);
+
+        JDBCType jdbcType = JDBCType.valueOf(columnType);
+
+        boolean signed = false;
+
+        switch (jdbcType) {
+            case SMALLINT:
+            case INTEGER:
+            case BIGINT:
+                signed = true;
+                break;
+        }
+
+        return signed;
+    }
+
+    // todo: need to research this more
+    @Override
+    public String getSchemaName(int column) throws SQLException {
+        return "";
+    }
+
+    // todo: need to research this more
+    @Override
+    public String getTableName(int column) throws SQLException {
+        return "";
+    }
+
+    // todo: need to research this more
+    @Override
+    public String getCatalogName(int column) throws SQLException {
+        return "";
+    }
+
+    // todo: need to research this more
+    @Override
+    public boolean isWritable(int column) throws SQLException {
+        return false;
+    }
+
+    // todo: need to research this more
+    @Override
+    public boolean isDefinitelyWritable(int column) throws SQLException {
+        return false;
     }
 }
