@@ -137,6 +137,9 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return " ";
     }
 
-
-
+    // todo:
+    @Override
+    public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+        return super.getPrimaryKeys(catalog, schema, table);
+    }
 }

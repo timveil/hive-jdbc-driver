@@ -32,6 +32,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
+        // todo: this should be a map of hive type to java, not sql type to java
         return SqlTypeMap.toClass(getColumnType(column)).toString();
     }
 

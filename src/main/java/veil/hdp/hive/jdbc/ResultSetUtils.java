@@ -25,14 +25,14 @@ public class ResultSetUtils {
 
             Object value = row[columnIndex - 1];
 
+            if (targetType != null && !columnType.equals(targetType)) {
+                log.warn("target type [{}] does not match column type [{}] with value [{}] for column [{}]", targetType, columnType, value, columnDescriptor.getNormalizedName());
+            }
+
             if (targetType == null) {
-                return value;
+                log.info("target type is null setting to column type [{}]", columnType);
+                targetType = columnType;
             }
-
-            if (!columnType.equals(targetType)) {
-                log.warn("target type {} does not match column type {} with value {} for column {}", targetType, columnType, value, columnDescriptor);
-            }
-
 
             return convert(value, columnType, targetType);
 
@@ -123,15 +123,15 @@ public class ResultSetUtils {
 
         switch (columnType) {
             case DECIMAL_TYPE:
-                return (BigDecimal)value;
+                return (BigDecimal) value;
             case DOUBLE_TYPE:
-                return BigDecimal.valueOf((Double)value);
+                return BigDecimal.valueOf((Double) value);
             case BIGINT_TYPE:
-                return BigDecimal.valueOf((Long)value);
+                return BigDecimal.valueOf((Long) value);
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return new BigDecimal((String)value);
+                return new BigDecimal((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
@@ -158,7 +158,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Byte.parseByte((String)value);
+                return Byte.parseByte((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
@@ -183,7 +183,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Short.parseShort((String)value);
+                return Short.parseShort((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
@@ -206,7 +206,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Integer.parseInt((String)value);
+                return Integer.parseInt((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
@@ -227,7 +227,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Long.parseLong((String)value);
+                return Long.parseLong((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
@@ -241,7 +241,7 @@ public class ResultSetUtils {
 
         switch (columnType) {
             case FLOAT_TYPE:
-                return (Float)value;
+                return (Float) value;
             case TINYINT_TYPE:
             case SMALLINT_TYPE:
             case INT_TYPE:
@@ -253,7 +253,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Float.parseFloat((String)value);
+                return Float.parseFloat((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
@@ -267,7 +267,7 @@ public class ResultSetUtils {
 
         switch (columnType) {
             case DOUBLE_TYPE:
-                return (Double)value;
+                return (Double) value;
             case FLOAT_TYPE:
             case TINYINT_TYPE:
             case SMALLINT_TYPE:
@@ -277,7 +277,7 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Double.parseDouble((String)value);
+                return Double.parseDouble((String) value);
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
@@ -305,9 +305,9 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Date.valueOf((String)value);
+                return Date.valueOf((String) value);
             case DATE_TYPE:
-                return (Date)value;
+                return (Date) value;
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
@@ -324,9 +324,9 @@ public class ResultSetUtils {
             case STRING_TYPE:
             case CHAR_TYPE:
             case VARCHAR_TYPE:
-                return Timestamp.valueOf((String)value);
+                return Timestamp.valueOf((String) value);
             case TIMESTAMP_TYPE:
-                return (Timestamp)value;
+                return (Timestamp) value;
         }
 
         throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
