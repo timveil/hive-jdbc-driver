@@ -27,11 +27,11 @@ public class ResultSetUtils {
             Object value = row[columnIndex - 1];
 
             if (targetType != null && !columnType.equals(targetType)) {
-                log.warn("target type [{}] does not match column type [{}] with value [{}] for column [{}]", targetType, columnType, value, columnDescriptor.getNormalizedName());
+                log.warn("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, columnDescriptor.getNormalizedName());
             }
 
             if (targetType == null) {
-                log.info("target type is null setting to column type [{}]", columnType);
+                log.info("target type is null. setting to column type [{}]", columnType);
                 targetType = columnType;
             }
 
@@ -75,8 +75,6 @@ public class ResultSetUtils {
 
         switch (targetType) {
 
-            case NULL_TYPE:
-                return null;
             case BOOLEAN_TYPE:
                 return convertToBoolean(value, columnType);
             case TINYINT_TYPE:
@@ -101,6 +99,7 @@ public class ResultSetUtils {
                 return convertToTimestamp(value, columnType);
             case DECIMAL_TYPE:
                 return convertToBigDecimal(value, columnType);
+            case NULL_TYPE:
             case ARRAY_TYPE:
             case MAP_TYPE:
             case STRUCT_TYPE:
@@ -328,6 +327,8 @@ public class ResultSetUtils {
             case STRUCT_TYPE:
                 break;
             case UNION_TYPE:
+                break;
+            case NULL_TYPE:
                 break;
             case USER_DEFINED_TYPE:
                 break;
