@@ -16,4 +16,4 @@ CREATE TABLE test_table (
 );
 
 insert into table test_table
- values(1,2,3,4,true,1.1,1.2,'test',null,1.3,'xxx',null,'c', null)
+ values(1,2,3,4,true,1.1,1.2,'test',null,1.3,'xxx',null,'c',null)
