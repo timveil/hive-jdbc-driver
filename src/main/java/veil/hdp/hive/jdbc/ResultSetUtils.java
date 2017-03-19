@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -108,8 +109,7 @@ public class ResultSetUtils {
             case INTERVAL_YEAR_MONTH_TYPE:
             case INTERVAL_DAY_TIME_TYPE:
             case BINARY_TYPE:
-                log.warn("no conversion strategy for target type {} and value {}", targetType, value);
-                break;
+                log.warn("no conversion strategy for target type [{}] and value [{}] value class is [{}].  method returns original value.", targetType, value, value.getClass());
         }
 
         return value;
@@ -289,8 +289,51 @@ public class ResultSetUtils {
             return null;
         }
 
-        // todo: i think i can get better than this
-        return value.toString();
+        switch (columnType) {
+
+            case BOOLEAN_TYPE:
+               return Boolean.toString((Boolean)value);
+            case TINYINT_TYPE:
+                return Byte.toString((Byte)value);
+            case SMALLINT_TYPE:
+                return Short.toString((Short)value);
+            case INT_TYPE:
+                return Integer.toString((Integer)value);
+            case BIGINT_TYPE:
+                return Long.toString((Long)value);
+            case FLOAT_TYPE:
+                return Float.toString((Float)value);
+            case DOUBLE_TYPE:
+                return Double.toString((Double)value);
+            case VARCHAR_TYPE:
+            case STRING_TYPE:
+            case CHAR_TYPE:
+                return value.toString();
+            case DATE_TYPE:
+                return value.toString();
+            case TIMESTAMP_TYPE:
+                return value.toString();
+            case DECIMAL_TYPE:
+                return value.toString();
+            case BINARY_TYPE:
+                return new String((byte[]) value);
+            case ARRAY_TYPE:
+                return Arrays.toString((Object[]) value);
+            case INTERVAL_YEAR_MONTH_TYPE:
+                break;
+            case INTERVAL_DAY_TIME_TYPE:
+                break;
+            case MAP_TYPE:
+                break;
+            case STRUCT_TYPE:
+                break;
+            case UNION_TYPE:
+                break;
+            case USER_DEFINED_TYPE:
+                break;
+        }
+
+        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to String from column type [" + columnType + "]");
 
     }
 
