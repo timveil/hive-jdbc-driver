@@ -56,6 +56,11 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public boolean next() throws SQLException {
 
+        // if a ResultSet is manually created then statementHandle is always null;
+        if (statementHandle == null) {
+            return false;
+        }
+
         if (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows()) {
             return false;
         }

@@ -48,12 +48,12 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        return schema.getColumn(column).getType().toJavaSQLType();
+        return schema.getColumn(column).getTypeDescriptor().getType().toJavaSQLType();
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        return schema.getColumn(column).getType().getName();
+        return schema.getColumn(column).getTypeDescriptor().getType().getName();
     }
 
     // todo: research this more; don't believe has this concept

@@ -8,12 +8,19 @@ import java.util.List;
 
 public class TableSchema {
 
-    private final List<ColumnDescriptor> columns = new ArrayList<>();
+    private final List<ColumnDescriptor> columns;
 
     public TableSchema(TTableSchema tTableSchema) {
+
+        columns = new ArrayList<>();
+
         for (TColumnDesc tColumnDesc : tTableSchema.getColumns()) {
             columns.add(new ColumnDescriptor(tColumnDesc));
         }
+    }
+
+    public TableSchema(List<ColumnDescriptor> columns) {
+        this.columns = columns;
     }
 
     public List<ColumnDescriptor> getColumns() {
@@ -51,7 +58,7 @@ public class TableSchema {
         StringBuilder stringBuilder = new StringBuilder("\nTableSchema {\n");
 
         for (ColumnDescriptor descriptor : getColumns()) {
-            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
+            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getTypeDescriptor()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
         stringBuilder.append("}");

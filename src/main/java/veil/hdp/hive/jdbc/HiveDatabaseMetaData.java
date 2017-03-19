@@ -48,11 +48,13 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return HiveVersionInfo.getVersion();
     }
 
+    // todo: split version
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
         return 0;
     }
 
+    // todo: split version
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
         return 0;
@@ -137,9 +139,59 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return " ";
     }
 
-    // todo:
+    // todo: as of hive 1.2.1 there are no primary keys
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-        return super.getPrimaryKeys(catalog, schema, table);
+        return HiveServiceUtils.getPrimaryKeys(connection, catalog, schema, table);
+    }
+
+    @Override
+    public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+        return HiveServiceUtils.getProcedures(connection, catalog, schemaPattern, procedureNamePattern);
+    }
+
+    @Override
+    public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
+        return HiveServiceUtils.getProcedureColumns(connection, catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+    }
+
+    @Override
+    public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) throws SQLException {
+        return HiveServiceUtils.getColumnPrivileges(connection, catalog, schema, table, columnNamePattern);
+    }
+
+    @Override
+    public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        return HiveServiceUtils.getTablePrivileges(connection, catalog, schemaPattern, tableNamePattern);
+    }
+
+    @Override
+    public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
+        return HiveServiceUtils.getBestRowIdentifier(connection, catalog, schema, table, scope, nullable);
+    }
+
+    @Override
+    public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
+        return HiveServiceUtils.getVersionColumns(connection, catalog, schema, table);
+    }
+
+    @Override
+    public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+        return HiveServiceUtils.getImportedKeys(connection, catalog, schema, table);
+    }
+
+    @Override
+    public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
+        return HiveServiceUtils.getExportedKeys(connection, catalog, schema, table);
+    }
+
+    @Override
+    public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+        return HiveServiceUtils.getCrossReference(connection, parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
+    }
+
+    @Override
+    public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+        return HiveServiceUtils.getIndexInfo(connection, catalog, schema, table, unique, approximate);
     }
 }

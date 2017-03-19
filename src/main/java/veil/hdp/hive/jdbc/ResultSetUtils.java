@@ -22,7 +22,7 @@ public class ResultSetUtils {
 
             ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
 
-            Type columnType = columnDescriptor.getType();
+            Type columnType = columnDescriptor.getTypeDescriptor().getType();
 
             Object value = row[columnIndex - 1];
 

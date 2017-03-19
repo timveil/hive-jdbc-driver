@@ -7,6 +7,7 @@ import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.*;
@@ -484,5 +485,49 @@ public class HiveServiceUtils {
 
 
         return resp;
+    }
+
+    public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PRIMARY_KEYS));
+    }
+
+    public static ResultSet getProcedureColumns(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PROCEDURE_COLUMNS));
+    }
+
+    public static ResultSet getProcedures(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PROCEDURES));
+    }
+
+    public static ResultSet getColumnPrivileges(HiveConnection connection, String catalog, String schema, String table, String columnNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.COLUMN_PRIVILEGES));
+    }
+
+    public static ResultSet getTablePrivileges(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.TABLE_PRIVILEGES));
+    }
+
+    public static ResultSet getBestRowIdentifier(HiveConnection connection, String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.BEST_ROW_IDENTIFIER));
+    }
+
+    public static ResultSet getVersionColumns(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.VERSION_COLUMNS));
+    }
+
+    public static ResultSet getImportedKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.IMPORTED_KEYS));
+    }
+
+    public static ResultSet getExportedKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.EXPORTED_KEYS));
+    }
+
+    public static ResultSet getCrossReference(HiveConnection connection, String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.CROSS_REFERENCE));
+    }
+
+    public static ResultSet getIndexInfo(HiveConnection connection, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.INDEX_INFO));
     }
 }
