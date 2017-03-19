@@ -32,6 +32,9 @@ public class HiveResultSet extends AbstractResultSet {
     // public getter & setter
     private int fetchSize;
     private int fetchDirection;
+    private int resultSetType;
+    private int resultSetConcurrency;
+    private int resultSetHoldability;
 
     // public getter only
     private int rowCount;
@@ -45,6 +48,9 @@ public class HiveResultSet extends AbstractResultSet {
         this.statementHandle = statementHandle;
         this.fetchDirection = statement.getFetchDirection();
         this.fetchSize = statement.getFetchSize();
+        this.resultSetType = statement.getResultSetType();
+        this.resultSetConcurrency = statement.getResultSetConcurrency();
+        this.resultSetHoldability = statement.getResultSetHoldability();
     }
 
     @Override
@@ -111,7 +117,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getType() throws SQLException {
-        return ResultSet.TYPE_FORWARD_ONLY;
+        return resultSetType;
     }
 
     @Override
@@ -151,7 +157,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getConcurrency() throws SQLException {
-        return ResultSet.CONCUR_READ_ONLY;
+        return resultSetConcurrency;
     }
 
     @Override
@@ -276,7 +282,12 @@ public class HiveResultSet extends AbstractResultSet {
         return getByte(findColumn(columnLabel));
     }
 
-/*
+    @Override
+    public int getHoldability() throws SQLException {
+        return resultSetHoldability;
+    }
+
+    /*
 
     @Override
     public InputStream getBinaryStream(int columnIndex) throws SQLException {

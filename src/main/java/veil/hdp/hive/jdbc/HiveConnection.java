@@ -156,12 +156,21 @@ public class HiveConnection extends AbstractConnection {
     //todo
     @Override
     public String getCatalog() throws SQLException {
-        // not catalog name in Hive
+        // no catalog name in Hive
         return null;
     }
 
+    @Override
+    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+        return new HiveStatement(this, resultSetType, resultSetConcurrency);
+    }
 
-/*
+    @Override
+    public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+        return new HiveStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    /*
 
 
 

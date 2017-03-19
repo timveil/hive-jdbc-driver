@@ -16,6 +16,9 @@ public class HiveStatement extends AbstractStatement {
 
     // constructor
     private final HiveConnection connection;
+    private final int resultSetType;
+    private final int resultSetConcurrency;
+    private final int resultSetHoldability;
 
     // private
     private TOperationHandle statementHandle;
@@ -31,12 +34,23 @@ public class HiveStatement extends AbstractStatement {
     private boolean closed;
 
     HiveStatement(HiveConnection connection) {
+        this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    }
+
+    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency) {
+        this(connection, resultSetType, resultSetConcurrency, ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    }
+
+    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
 
         this.queryTimeout = 0;
         this.maxRows = 0;
         this.fetchSize = 1000;
         this.fetchDirection = ResultSet.FETCH_FORWARD;
+        this.resultSetType = resultSetType;
+        this.resultSetConcurrency  = resultSetConcurrency;
+        this.resultSetHoldability  = resultSetHoldability;
 
         resultSet = null;
     }
@@ -131,7 +145,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getResultSetType() throws SQLException {
-        return ResultSet.TYPE_FORWARD_ONLY;
+        return resultSetType;
     }
 
     @Override
@@ -157,6 +171,16 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public boolean isPoolable() throws SQLException {
         return false;
+    }
+
+    @Override
+    public int getResultSetConcurrency() throws SQLException {
+        return resultSetConcurrency;
+    }
+
+    @Override
+    public int getResultSetHoldability() throws SQLException {
+        return resultSetHoldability;
     }
 
     @Override
@@ -189,4 +213,6 @@ public class HiveStatement extends AbstractStatement {
             statementHandle = null;
         }
     }
+
+
 }
