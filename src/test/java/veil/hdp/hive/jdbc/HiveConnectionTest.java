@@ -5,9 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.Properties;
 
 public class HiveConnectionTest extends BaseJunitTest {
@@ -35,6 +34,61 @@ public class HiveConnectionTest extends BaseJunitTest {
         }
     }
 
+    @Test
+    public void createStatement() throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("select * from test_table");
+
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        while (rs.next()) {
+
+            byte colTinyInt = rs.getByte("col_tinyint");
+            log.debug("colTinyInt [{}]", colTinyInt);
+
+            short colSmallInt = rs.getShort("col_smallint");
+            log.debug("colSmallInt [{}]", colSmallInt);
+
+            int colInt = rs.getInt("col_int");
+            log.debug("colInt [{}]", colInt);
+
+            long colBigint = rs.getLong("col_bigint");
+            log.debug("colBigint [{}]", colBigint);
+
+            boolean colBoolean = rs.getBoolean("col_boolean");
+            log.debug("colBoolean [{}]", colBoolean);
+
+            float colFloat = rs.getFloat("col_float");
+            log.debug("colFloat [{}]", colFloat);
+
+            double colDouble = rs.getDouble("col_double");
+            log.debug("colDouble [{}]", colDouble);
+
+            String colString = rs.getString("col_string");
+            log.debug("colString [{}]", colString);
+
+            Timestamp colTimestamp = rs.getTimestamp("col_timestamp");
+            log.debug("colTimestamp [{}]", colTimestamp);
+
+            BigDecimal colDecimal = rs.getBigDecimal("col_decimal");
+            log.debug("colDecimal [{}]", colDecimal);
+
+            String colVarchar = rs.getString("col_varchar");
+            log.debug("colVarchar [{}]", colVarchar);
+
+            Date colDate = rs.getDate("col_date");
+            log.debug("colDate [{}]", colDate);
+
+            String colChar = rs.getString("col_char");
+            log.debug("colChar [{}]", colChar);
+
+            Object colBinary = rs.getObject("col_binary");
+            log.debug("colBinary [{}]", colBinary);
+
+
+        }
+
+    }
 
     @Test
     public void getMetaData() throws Exception {

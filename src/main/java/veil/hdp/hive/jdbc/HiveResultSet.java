@@ -45,10 +45,6 @@ public class HiveResultSet extends AbstractResultSet {
         this.statementHandle = statementHandle;
         this.fetchDirection = statement.getFetchDirection();
         this.fetchSize = statement.getFetchSize();
-
-        if (log.isDebugEnabled()) {
-            log.debug("HiveResultSet schema: {}", tableSchema);
-        }
     }
 
     @Override

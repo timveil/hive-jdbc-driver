@@ -108,7 +108,7 @@ public class ResultSetUtils {
             case INTERVAL_YEAR_MONTH_TYPE:
             case INTERVAL_DAY_TIME_TYPE:
             case BINARY_TYPE:
-                log.warn("no conversion strategy for target type [{}] and value [{}] value class is [{}].  method returns original value.", targetType, value, value.getClass());
+                log.warn("no conversion strategy for target type [{}] and value [{}] value class is [{}].  method returns original value.", targetType, value, value != null ? value.getClass() : null);
         }
 
         return value;
@@ -133,7 +133,7 @@ public class ResultSetUtils {
                 return new BigDecimal((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
     }
 
     private static byte convertToByte(Object value, Type columnType) {
@@ -146,13 +146,13 @@ public class ResultSetUtils {
             case TINYINT_TYPE:
                 return ((Number) value).byteValue();
             case SMALLINT_TYPE:
-                log.warn("may lose precision going from short to byte");
+                log.warn("may lose precision going from short to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
             case INT_TYPE:
-                log.warn("may lose precision going from int to byte");
+                log.warn("may lose precision going from int to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
             case BIGINT_TYPE:
-                log.warn("may lose precision going from long to byte");
+                log.warn("may lose precision going from long to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
             case STRING_TYPE:
             case CHAR_TYPE:
@@ -160,7 +160,7 @@ public class ResultSetUtils {
                 return Byte.parseByte((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
     }
 
     private static short convertToShort(Object value, Type columnType) {
@@ -174,10 +174,10 @@ public class ResultSetUtils {
             case SMALLINT_TYPE:
                 return ((Number) value).shortValue();
             case INT_TYPE:
-                log.warn("may lose precision going from int to short");
+                log.warn("may lose precision going from int to short; value [{}]", value.toString());
                 return ((Number) value).shortValue();
             case BIGINT_TYPE:
-                log.warn("may lose precision going from long to short");
+                log.warn("may lose precision going from long to short; value [{}]", value.toString());
                 return ((Number) value).shortValue();
             case STRING_TYPE:
             case CHAR_TYPE:
@@ -185,7 +185,7 @@ public class ResultSetUtils {
                 return Short.parseShort((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
     }
 
     private static int convertToInt(Object value, Type columnType) {
@@ -200,7 +200,7 @@ public class ResultSetUtils {
             case INT_TYPE:
                 return ((Number) value).intValue();
             case BIGINT_TYPE:
-                log.warn("may lose precision going from long to int");
+                log.warn("may lose precision going from long to int; value [{}]", value.toString());
                 return ((Number) value).intValue();
             case STRING_TYPE:
             case CHAR_TYPE:
@@ -208,7 +208,7 @@ public class ResultSetUtils {
                 return Integer.parseInt((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
     }
 
     private static long convertToLong(Object value, Type columnType) {
@@ -229,7 +229,7 @@ public class ResultSetUtils {
                 return Long.parseLong((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
     }
 
     private static float convertToFloat(Object value, Type columnType) {
@@ -240,14 +240,13 @@ public class ResultSetUtils {
 
         switch (columnType) {
             case FLOAT_TYPE:
-                return (Float) value;
             case TINYINT_TYPE:
             case SMALLINT_TYPE:
             case INT_TYPE:
             case BIGINT_TYPE:
                 return ((Number) value).floatValue();
             case DOUBLE_TYPE:
-                log.warn("may lose precision going from double to float");
+                log.warn("may lose precision going from double to float; value [{}]", value.toString());
                 return ((Number) value).floatValue();
             case STRING_TYPE:
             case CHAR_TYPE:
@@ -255,7 +254,7 @@ public class ResultSetUtils {
                 return Float.parseFloat((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
     }
 
     private static double convertToDouble(Object value, Type columnType) {
@@ -266,7 +265,6 @@ public class ResultSetUtils {
 
         switch (columnType) {
             case DOUBLE_TYPE:
-                return (Double) value;
             case FLOAT_TYPE:
             case TINYINT_TYPE:
             case SMALLINT_TYPE:
@@ -279,7 +277,7 @@ public class ResultSetUtils {
                 return Double.parseDouble((String) value);
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
     }
 
     private static String convertToString(Object value, Type columnType) {
@@ -334,7 +332,7 @@ public class ResultSetUtils {
                 break;
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to String from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to String from column type [" + columnType + "]");
 
     }
 
@@ -354,7 +352,7 @@ public class ResultSetUtils {
                 return (Date) value;
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
     }
 
     private static Timestamp convertToTimestamp(Object value, Type columnType) {
@@ -373,7 +371,7 @@ public class ResultSetUtils {
                 return (Timestamp) value;
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
     }
 
     private static Boolean convertToBoolean(Object value, Type columnType) {
@@ -403,6 +401,6 @@ public class ResultSetUtils {
 
         }
 
-        throw new IllegalArgumentException("unable to convert [" + value.toString() + "] to Boolean from column type [" + columnType + "]");
+        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Boolean from column type [" + columnType + "]");
     }
 }
