@@ -33,14 +33,6 @@ public class HiveStatement extends AbstractStatement {
     // public getter only
     private boolean closed;
 
-    HiveStatement(HiveConnection connection) {
-        this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
-    }
-
-    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency) {
-        this(connection, resultSetType, resultSetConcurrency, ResultSet.CLOSE_CURSORS_AT_COMMIT);
-    }
-
     HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
 

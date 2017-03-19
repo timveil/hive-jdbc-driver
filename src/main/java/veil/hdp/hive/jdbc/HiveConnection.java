@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.sasl.SaslException;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +33,7 @@ public class HiveConnection extends AbstractConnection {
 
     // public getter & setter
     private boolean closed;
+    private int resultSetHoldability;
 
     // todo: what does this value actually do
     private boolean autoCommitEnabled;
@@ -43,6 +41,7 @@ public class HiveConnection extends AbstractConnection {
     HiveConnection(Properties properties) {
         this.properties = properties;
         closed = false;
+        this.resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
     }
 
     Properties getProperties() {
@@ -135,7 +134,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new HiveStatement(this);
+        return new HiveStatement(this, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, resultSetHoldability);
     }
 
     @Override
@@ -162,13 +161,25 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new HiveStatement(this, resultSetType, resultSetConcurrency);
+        return new HiveStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         return new HiveStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
+
+    @Override
+    public void setHoldability(int holdability) throws SQLException {
+        this.resultSetHoldability = holdability;
+    }
+
+    @Override
+    public int getHoldability() throws SQLException {
+        return this.resultSetHoldability;
+    }
+
+
 
     /*
 
