@@ -331,9 +331,7 @@ public class HiveResultSet extends AbstractResultSet {
 
         InputStream columnValue = ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
 
-        if (columnValue == null) {
-            lastColumnNull = true;
-        }
+        lastColumnNull = columnValue == null;
 
         return columnValue;
     }
