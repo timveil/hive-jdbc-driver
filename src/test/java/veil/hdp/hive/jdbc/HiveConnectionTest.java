@@ -18,9 +18,8 @@ public class HiveConnectionTest extends BaseJunitTest {
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
-        properties.setProperty("hive.server2.transport.mode", "http");
 
-        String url = "jdbc:hive2://hive-large.hdp.local:10000/default?transport.mode=binary";
+        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
 
         connection = new HiveDriver().connect(url, properties);
 
@@ -37,7 +36,7 @@ public class HiveConnectionTest extends BaseJunitTest {
     @Test
     public void createStatement() throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("select * from test_table");
+        ResultSet rs = statement.executeQuery("SELECT * FROM default.test_table");
 
         ResultSetMetaData metaData = rs.getMetaData();
 

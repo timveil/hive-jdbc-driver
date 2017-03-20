@@ -43,10 +43,6 @@ public class ResultSetUtils {
 
     }
 
-    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
-        return getColumnValue(schema, row, columnIndex, null);
-    }
-
     public static int findColumnIndex(TableSchema tableSchema, String columnLabel) throws SQLException {
         ColumnDescriptor columnDescriptorForName = tableSchema.getColumn(columnLabel);
 

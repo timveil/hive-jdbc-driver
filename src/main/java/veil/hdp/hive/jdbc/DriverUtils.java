@@ -87,7 +87,7 @@ public class DriverUtils {
                     HiveDriverStringProperty.TRANSPORT_MODE.getDescription(),
                     HiveDriverStringProperty.TRANSPORT_MODE.getDefaultValue(),
                     false,
-                    new String[] {TransportMode.binary.toString(), TransportMode.http.toString()})
+                    new String[]{TransportMode.binary.toString(), TransportMode.http.toString()})
 
     };
 
@@ -101,8 +101,25 @@ public class DriverUtils {
 
         validateProperties(urlMap);
 
-        return convertMapToProperties(urlMap);
+        Properties properties = convertMapToProperties(urlMap);
 
+        printProperties(properties);
+
+        return properties;
+
+    }
+
+    private static void printProperties(Properties properties) {
+        StringBuilder builder = new StringBuilder("\n******************************************\n");
+        builder.append("connection properties\n");
+        builder.append("******************************************\n");
+
+        for (String key : properties.stringPropertyNames()) {
+            builder.append("\t").append(key).append(" : ").append(properties.getProperty(key)).append("\n");
+        }
+        builder.append("******************************************\n");
+
+        log.debug(builder.toString());
     }
 
     public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
@@ -206,7 +223,7 @@ public class DriverUtils {
 
             String authority = uri.getAuthority();
 
-            loadPropertiesFromZookeeper(authority,                    properties);
+            loadPropertiesFromZookeeper(authority, properties);
 
         } else {
             properties.put(HiveDriverStringProperty.HOST.getName(), uri.getHost());

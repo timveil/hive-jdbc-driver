@@ -14,7 +14,7 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
+    public final CallableStatement prepareCall(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -34,12 +34,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void commit() throws SQLException {
+    public final void commit() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void rollback() throws SQLException {
+    public final void rollback() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+    public final CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -134,22 +134,22 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public Savepoint setSavepoint() throws SQLException {
+    public final Savepoint setSavepoint() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Savepoint setSavepoint(String name) throws SQLException {
+    public final Savepoint setSavepoint(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void rollback(Savepoint savepoint) throws SQLException {
+    public final void rollback(Savepoint savepoint) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+    public final void releaseSavepoint(Savepoint savepoint) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -164,7 +164,7 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+    public final CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -184,22 +184,22 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public Clob createClob() throws SQLException {
+    public final Clob createClob() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Blob createBlob() throws SQLException {
+    public final Blob createBlob() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public NClob createNClob() throws SQLException {
+    public final NClob createNClob() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public SQLXML createSQLXML() throws SQLException {
+    public final SQLXML createSQLXML() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -264,12 +264,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 }

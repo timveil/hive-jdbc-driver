@@ -138,7 +138,14 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("SCOPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 1));
+            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 3));
+            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("COLUMN_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 5));
+            add(new ColumnDescriptor("BUFFER_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 6));
+            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
+            add(new ColumnDescriptor("PSEUDO_COLUMN", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
         }
 
     };
@@ -154,7 +161,13 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
+            add(new ColumnDescriptor("GRANTOR", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("GRANTEE", null, new TypeDescriptor(Type.STRING_TYPE), 5));
+            add(new ColumnDescriptor("PRIVILEGE", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new ColumnDescriptor("IS_GRANTABLE", null, new TypeDescriptor(Type.STRING_TYPE), 7));
         }
 
     };
@@ -171,7 +184,14 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> VERSION_COLUMNS = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("SCOPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 1));
+            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 3));
+            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("COLUMN_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 5));
+            add(new ColumnDescriptor("BUFFER_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 6));
+            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
+            add(new ColumnDescriptor("PSEUDO_COLUMN", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
         }
 
     };
@@ -194,7 +214,20 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
+            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
+            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
+            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
+            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
+            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
+            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
+            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
+            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
+            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -217,7 +250,20 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> EXPORTED_KEYS = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
+            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
+            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
+            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
+            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
+            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
+            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
+            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
+            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
+            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -240,7 +286,20 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> CROSS_REFERENCE = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
+            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
+            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
+            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
+            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
+            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
+            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
+            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
+            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
+            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -262,7 +321,19 @@ public class ColumnDescriptors {
      */
     public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<ColumnDescriptor>() {
         {
-
+            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
+            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
+            add(new ColumnDescriptor("NON_UNIQUE", null, new TypeDescriptor(Type.BOOLEAN_TYPE), 4));
+            add(new ColumnDescriptor("INDEX_QUALIFIER", null, new TypeDescriptor(Type.STRING_TYPE), 5));
+            add(new ColumnDescriptor("INDEX_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new ColumnDescriptor("TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
+            add(new ColumnDescriptor("ORDINAL_POSITION", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
+            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 9));
+            add(new ColumnDescriptor("ASC_OR_DESC", null, new TypeDescriptor(Type.STRING_TYPE), 10));
+            add(new ColumnDescriptor("CARDINALITY", null, new TypeDescriptor(Type.BIGINT_TYPE), 11));
+            add(new ColumnDescriptor("PAGES", null, new TypeDescriptor(Type.BIGINT_TYPE), 12));
+            add(new ColumnDescriptor("FILTER_CONDITION", null, new TypeDescriptor(Type.STRING_TYPE), 13));
         }
 
     };
