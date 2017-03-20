@@ -194,4 +194,44 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
         return HiveServiceUtils.getIndexInfo(connection, catalog, schema, table, unique, approximate);
     }
+
+    @Override
+    public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
+        return HiveServiceUtils.getUDTs(connection, catalog, schemaPattern, typeNamePattern, types);
+    }
+
+    @Override
+    public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
+        return HiveServiceUtils.getSuperTypes(connection, catalog, schemaPattern, typeNamePattern);
+    }
+
+    @Override
+    public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        return HiveServiceUtils.getSuperTables(connection, catalog, schemaPattern, tableNamePattern);
+    }
+
+    @Override
+    public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
+        return HiveServiceUtils.getAttributes(connection, catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+    }
+
+    @Override
+    public ResultSet getClientInfoProperties() throws SQLException {
+        return HiveServiceUtils.getClientInfoProperties(connection);
+    }
+
+    @Override
+    public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
+        return HiveServiceUtils.getFunctions(connection, catalog, schemaPattern, functionNamePattern);
+    }
+
+    @Override
+    public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
+        return HiveServiceUtils.getFunctionColumns(connection, catalog, schemaPattern, functionNamePattern, columnNamePattern);
+    }
+
+    @Override
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        return HiveServiceUtils.getPseudoColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+    }
 }

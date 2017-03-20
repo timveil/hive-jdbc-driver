@@ -1,12 +1,16 @@
 package veil.hdp.hive.jdbc;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
 
 public class HiveConnectionTest extends BaseJunitTest {
@@ -36,7 +40,7 @@ public class HiveConnectionTest extends BaseJunitTest {
     @Test
     public void createStatement() throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM default.test_table");
+        ResultSet rs = statement.executeQuery("SELECT * FROM test_table");
 
         ResultSetMetaData metaData = rs.getMetaData();
 
@@ -81,9 +85,14 @@ public class HiveConnectionTest extends BaseJunitTest {
             String colChar = rs.getString("col_char");
             log.debug("colChar [{}]", colChar);
 
-            Object colBinary = rs.getObject("col_binary");
+            Object colBinary = rs.getBytes("col_binary");
             log.debug("colBinary [{}]", colBinary);
 
+            byte[] stringAsBytes = rs.getBytes("col_string");
+            log.debug("col_string as bytes [{}]", stringAsBytes);
+
+            InputStream stringAsStream = rs.getBinaryStream("col_string");
+            log.debug("col_string as InputStream [{}]", stringAsStream);
 
         }
 
@@ -95,85 +104,131 @@ public class HiveConnectionTest extends BaseJunitTest {
 
         Assert.assertNotNull(metaData);
 
-        log.debug("driver version: {}", metaData.getDriverVersion());
-        log.debug("database product version: {}", metaData.getDatabaseProductVersion());
-        log.debug("supports transactions: {}", metaData.supportsTransactions());
+        log.debug("driver version: [{}]", metaData.getDriverVersion());
+        log.debug("database product version: [{}]", metaData.getDatabaseProductVersion());
+        log.debug("supports transactions: [{}]", metaData.supportsTransactions());
+
+        log.debug("******************************** calling getCatalogs");
 
         ResultSet catalogs = metaData.getCatalogs();
 
-        metaData.supportsAlterTableWithAddColumn();
+        printResultSet(catalogs);
 
-        if (catalogs != null) {
-            while (catalogs.next()) {
-                log.debug("TABLE_CAT {}", catalogs.getString("TABLE_CAT"));
-            }
-        }
+        log.debug("******************************** calling getSchemas");
 
         ResultSet schemas = metaData.getSchemas();
 
-        if (schemas != null) {
-            while (schemas.next()) {
-                log.debug("TABLE_SCHEM {}", schemas.getString("TABLE_SCHEM"));
-                log.debug("TABLE_CATALOG {}", schemas.getString("TABLE_CATALOG"));
-            }
-        }
+        printResultSet(schemas);
+
+        log.debug("******************************** calling getTypeInfo");
 
         ResultSet typeInfo = metaData.getTypeInfo();
 
-        if (typeInfo != null) {
-            while (typeInfo.next()) {
-                log.debug("TYPE_NAME {}", typeInfo.getString("TYPE_NAME"));
-            }
-        }
+        printResultSet(typeInfo);
+
+        log.debug("******************************** calling getTables");
 
         ResultSet tables = metaData.getTables(null, null, null, null);
 
-        if (tables != null) {
-            while (tables.next()) {
-                log.debug("TABLE_NAME {}", tables.getString("TABLE_NAME"));
-            }
-        }
+        printResultSet(tables);
 
+        log.debug("******************************** calling getTableTypes");
 
         ResultSet tableTypes = metaData.getTableTypes();
 
-        if (tableTypes != null) {
-            while (tableTypes.next()) {
-                log.debug("TABLE_TYPE {}", tableTypes.getString("TABLE_TYPE"));
-            }
-        }
+        printResultSet(tableTypes);
 
+        log.debug("******************************** calling getFunctions");
 
-        ResultSet columns = metaData.getColumns(null, null, null, null);
+        ResultSet functions = metaData.getFunctions(null, null, "%");
 
-        if (columns != null) {
-            while (columns.next()) {
-                log.debug("TABLE_CAT {}", columns.getString("TABLE_CAT"));
-                log.debug("TABLE_SCHEM {}", columns.getString("TABLE_SCHEM"));
-                log.debug("TABLE_NAME {}", columns.getString("TABLE_NAME"));
-                log.debug("COLUMN_NAME {}", columns.getString("COLUMN_NAME"));
-                log.debug("DATA_TYPE {}", columns.getInt("DATA_TYPE"));
-                log.debug("TYPE_NAME {}", columns.getString("TYPE_NAME"));
-                log.debug("COLUMN_SIZE {}", columns.getInt("COLUMN_SIZE"));
-                log.debug("BUFFER_LENGTH {}", columns.getByte("BUFFER_LENGTH"));
-                log.debug("DECIMAL_DIGITS {}", columns.getInt("DECIMAL_DIGITS"));
-                log.debug("NUM_PREC_RADIX {}", columns.getInt("NUM_PREC_RADIX"));
-                log.debug("NULLABLE {}", columns.getInt("NULLABLE"));
-                log.debug("REMARKS {}", columns.getString("REMARKS"));
-                log.debug("COLUMN_DEF {}", columns.getString("COLUMN_DEF"));
-                log.debug("SQL_DATA_TYPE {}", columns.getInt("SQL_DATA_TYPE"));
-                log.debug("SQL_DATETIME_SUB {}", columns.getInt("SQL_DATETIME_SUB"));
-                log.debug("CHAR_OCTET_LENGTH {}", columns.getInt("CHAR_OCTET_LENGTH"));
-                log.debug("ORDINAL_POSITION {}", columns.getInt("ORDINAL_POSITION"));
-                log.debug("IS_NULLABLE {}", columns.getBoolean("IS_NULLABLE"));
-                log.debug("SCOPE_CATALOG {}", columns.getString("SCOPE_CATALOG"));
-                log.debug("SCOPE_SCHEMA {}", columns.getString("SCOPE_SCHEMA"));
-                log.debug("SCOPE_TABLE {}", columns.getString("SCOPE_TABLE"));
-                log.debug("SOURCE_DATA_TYPE {}", columns.getShort("SOURCE_DATA_TYPE"));
-                log.debug("IS_AUTO_INCREMENT {}", columns.getBoolean("IS_AUTO_INCREMENT"));
-            }
-        }
+        printResultSet(functions);
+
+        log.debug("******************************** calling getColumns");
+
+        ResultSet columns = metaData.getColumns(null, "default", "test_table", "%");
+
+        printResultSet(columns);
     }
 
+
+    private void printResultSetMetaData(ResultSetMetaData rsmd) {
+
+        log.debug("printing ResultSetMetaData metadata");
+
+        try {
+            int columnCount = rsmd.getColumnCount();
+
+            for (int i = 0; i < columnCount; i++) {
+
+                StringBuilder builder = new StringBuilder();
+                builder.append("table name [").append(rsmd.getTableName(i + 1)).append("], ");
+                builder.append("catalog name [").append(rsmd.getCatalogName(i + 1)).append("], ");
+                builder.append("column class name [").append(rsmd.getColumnClassName(i + 1)).append("], ");
+                builder.append("column display size [").append(rsmd.getColumnDisplaySize(i + 1)).append("], ");
+                builder.append("column label [").append(rsmd.getColumnLabel(i + 1)).append("], ");
+                builder.append("column name [").append(rsmd.getColumnName(i + 1)).append("], ");
+                builder.append("column type [").append(rsmd.getColumnType(i + 1)).append("], ");
+                builder.append("column type name [").append(rsmd.getColumnTypeName(i + 1)).append("], ");
+                builder.append("precision [").append(rsmd.getPrecision(i + 1)).append("], ");
+                builder.append("getScale [").append(rsmd.getScale(i + 1)).append("], ");
+                builder.append("isAutoIncrement [").append(rsmd.isAutoIncrement(i + 1)).append("], ");
+                builder.append("isCaseSensitive [").append(rsmd.isCaseSensitive(i + 1)).append("], ");
+                builder.append("isCurrency [").append(rsmd.isCurrency(i + 1)).append("], ");
+                builder.append("isDefinitelyWritable [").append(rsmd.isDefinitelyWritable(i + 1)).append("], ");
+                builder.append("isNullable [").append(rsmd.isNullable(i + 1)).append("], ");
+                builder.append("isReadOnly [").append(rsmd.isReadOnly(i + 1)).append("], ");
+                builder.append("isSearchable [").append(rsmd.isSearchable(i + 1)).append("], ");
+                builder.append("isSigned [").append(rsmd.isSigned(i + 1)).append("], ");
+                builder.append("isWritable [").append(rsmd.isWritable(i + 1)).append("]");
+
+                log.debug(builder.toString());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void printResultSet(ResultSet rs) {
+
+
+
+        try {
+            ResultSetMetaData metaData = rs.getMetaData();
+
+            printResultSetMetaData(metaData);
+
+            int columnCount = metaData.getColumnCount();
+
+
+            log.debug("printing ResultSet");
+
+            while (rs.next()) {
+
+                List<String> row = Lists.newArrayList();
+
+
+                for (int i = 0; i < columnCount; i++) {
+
+                    String columnName = metaData.getColumnName(i + 1);
+                    String columnValue = rs.getString(i + 1);
+
+                    row.add(columnName + " [" + columnValue + "]");
+
+                }
+
+
+                String join = Joiner.on(",").join(row);
+
+                log.debug(join);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

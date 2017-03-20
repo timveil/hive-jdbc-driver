@@ -111,12 +111,12 @@ public abstract class AbstractResultSetMetaData implements ResultSetMetaData {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 }

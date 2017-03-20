@@ -10,6 +10,7 @@ import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Iterator;
@@ -279,7 +280,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        return (Byte)getColumnValue(columnIndex, Type.TINYINT_TYPE);
+        return (Byte) getColumnValue(columnIndex, Type.TINYINT_TYPE);
     }
 
     @Override
@@ -297,7 +298,25 @@ public class HiveResultSet extends AbstractResultSet {
         return lastColumnNull;
     }
 
+    @Override
+    public byte[] getBytes(int columnIndex) throws SQLException {
+        return (byte[]) getColumnValue(columnIndex, Type.BINARY_TYPE);
+    }
 
+    @Override
+    public byte[] getBytes(String columnLabel) throws SQLException {
+        return getBytes(findColumn(columnLabel));
+    }
+
+    @Override
+    public InputStream getBinaryStream(int columnIndex) throws SQLException {
+        return getColumnValue(columnIndex);
+    }
+
+    @Override
+    public InputStream getBinaryStream(String columnLabel) throws SQLException {
+        return getBinaryStream(findColumn(columnLabel));
+    }
 
     private Object getColumnValue(int columnIndex, Type targetType) throws SQLException {
 
@@ -310,16 +329,14 @@ public class HiveResultSet extends AbstractResultSet {
         return columnValue;
     }
 
-    /*
+    private InputStream getColumnValue(int columnIndex) throws SQLException {
 
-    @Override
-    public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        return super.getBinaryStream(columnIndex);
-    }
+        InputStream columnValue = ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
 
-    @Override
-    public InputStream getBinaryStream(String columnLabel) throws SQLException {
-        return super.getBinaryStream(columnLabel);
+        if (columnValue == null) {
+            lastColumnNull = true;
+        }
+
+        return columnValue;
     }
-    */
 }

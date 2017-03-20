@@ -364,10 +364,29 @@ public class HiveServiceUtils {
         return resultSet;
     }
 
+    public static HiveResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
+
+        HiveResultSet resultSet;
+
+        try {
+            TGetFunctionsResp response = getFunctionsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, functionNamePattern);
+            resultSet = buildResultSet(connection, response.getOperationHandle());
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
+
+
+        return resultSet;
+    }
+
     private static HiveResultSet buildResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
 
         try {
-            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, new TableSchema(getResultSetSchema(connection.getClient(), operationHandle)));
+            TableSchema tableSchema = new TableSchema(getResultSetSchema(connection.getClient(), operationHandle));
+
+            log.debug(tableSchema.toString());
+
+            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, tableSchema);
         } catch (TException e) {
             throw new SQLException(e);
         }
@@ -391,8 +410,8 @@ public class HiveServiceUtils {
         TGetColumnsReq req = new TGetColumnsReq(sessionHandle);
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
-        req.setTableName(tableNamePattern);
-        req.setColumnName(columnNamePattern);
+        req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
+        req.setColumnName(columnNamePattern == null ? "%" : columnNamePattern);
 
         TGetColumnsResp resp = client.GetColumns(req);
 
@@ -406,16 +425,32 @@ public class HiveServiceUtils {
         return resp;
     }
 
+    private static TGetFunctionsResp getFunctionsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String functionNamePattern) throws TException, SQLException {
+        TGetFunctionsReq req = new TGetFunctionsReq();
+        req.setSessionHandle(sessionHandle);
+        req.setCatalogName(catalog);
+        req.setSchemaName(schemaPattern);
+        req.setFunctionName(functionNamePattern == null ? "%" : functionNamePattern);
+
+        TGetFunctionsResp resp = client.GetFunctions(req);
+
+        if (log.isDebugEnabled()) {
+            log.debug(resp.toString());
+        }
+
+        checkStatus(resp.getStatus());
+
+
+        return resp;
+    }
+
+
     private static TGetTablesResp getTablesResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws TException, SQLException {
         TGetTablesReq req = new TGetTablesReq(sessionHandle);
 
-        req.setTableName(tableNamePattern);
-
-        if (schemaPattern == null) {
-            schemaPattern = "%";
-        }
-
+        req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
+        req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
 
         if (types != null) {
             req.setTableTypes(Arrays.asList(types));
@@ -464,15 +499,7 @@ public class HiveServiceUtils {
 
     private static TGetSchemasResp getDatabaseSchemaResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern) throws TException, SQLException {
         TGetSchemasReq req = new TGetSchemasReq(sessionHandle);
-
-        if (catalog != null) {
-            req.setCatalogName(catalog);
-        }
-
-        if (schemaPattern == null) {
-            schemaPattern = "%";
-        }
-
+        req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
 
         TGetSchemasResp resp = client.GetSchemas(req);
@@ -529,5 +556,33 @@ public class HiveServiceUtils {
 
     public static ResultSet getIndexInfo(HiveConnection connection, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
         return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.INDEX_INFO));
+    }
+
+    public static ResultSet getUDTs(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.UDT));
+    }
+
+    public static ResultSet getSuperTypes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.SUPER_TYPES));
+    }
+
+    public static ResultSet getSuperTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.SUPER_TABLES));
+    }
+
+    public static ResultSet getAttributes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.ATTRIBUTES));
+    }
+
+    public static ResultSet getClientInfoProperties(HiveConnection connection) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.CLIENT_INFO_PROPERTIES));
+    }
+
+    public static ResultSet getFunctionColumns(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.FUNCTION_COLUMNS));
+    }
+
+    public static ResultSet getPseudoColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PSEUDO_COLUMNS));
     }
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -29,6 +30,7 @@ public class HiveStatement extends AbstractStatement {
     private int maxRows;
     private int fetchSize;
     private int fetchDirection;
+    private SQLWarning sqlWarning;
 
     // public getter only
     private boolean closed;
@@ -177,6 +179,22 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public int getResultSetHoldability() throws SQLException {
         return resultSetHoldability;
+    }
+
+    @Override
+    public int getUpdateCount() throws SQLException {
+        // todo: don't really understand the semantics here
+        return -1;
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return sqlWarning;
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        sqlWarning = null;
     }
 
     @Override

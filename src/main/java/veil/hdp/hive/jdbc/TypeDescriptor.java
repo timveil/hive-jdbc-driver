@@ -24,4 +24,11 @@ public class TypeDescriptor {
     public Type getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "TypeDescriptor{" +
+                "type=" + type +
+                '}';
+    }
 }

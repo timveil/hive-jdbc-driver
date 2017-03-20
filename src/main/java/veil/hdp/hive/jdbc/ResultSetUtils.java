@@ -3,7 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.Type;
 import org.slf4j.Logger;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,14 +24,15 @@ public class ResultSetUtils {
         try {
             validateRow(row, columnIndex);
 
+            Object value = row[columnIndex - 1];
+
             ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
 
             Type columnType = columnDescriptor.getTypeDescriptor().getType();
 
-            Object value = row[columnIndex - 1];
 
             if (targetType != null && !columnType.equals(targetType)) {
-                log.warn("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, columnDescriptor.getNormalizedName());
+                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, columnDescriptor.getNormalizedName());
             }
 
             if (targetType == null) {
@@ -36,6 +41,25 @@ public class ResultSetUtils {
             }
 
             return convert(value, columnType, targetType);
+
+        } catch (Exception e) {
+            throw new SQLException(e.getMessage(), e);
+        }
+
+    }
+
+    public static InputStream getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
+
+        try {
+            validateRow(row, columnIndex);
+
+            Object value = row[columnIndex - 1];
+
+            ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
+
+            Type columnType = columnDescriptor.getTypeDescriptor().getType();
+
+            return convertToInputStream(value, columnType);
 
         } catch (Exception e) {
             throw new SQLException(e.getMessage(), e);
@@ -67,7 +91,7 @@ public class ResultSetUtils {
         }
     }
 
-    private static Object convert(Object value, Type columnType, Type targetType) {
+    private static Object convert(Object value, Type columnType, Type targetType) throws UnsupportedEncodingException {
 
         switch (targetType) {
 
@@ -95,6 +119,8 @@ public class ResultSetUtils {
                 return convertToTimestamp(value, columnType);
             case DECIMAL_TYPE:
                 return convertToBigDecimal(value, columnType);
+            case BINARY_TYPE:
+                return convertToByteArray(value, columnType);
             case NULL_TYPE:
             case ARRAY_TYPE:
             case MAP_TYPE:
@@ -103,11 +129,39 @@ public class ResultSetUtils {
             case USER_DEFINED_TYPE:
             case INTERVAL_YEAR_MONTH_TYPE:
             case INTERVAL_DAY_TIME_TYPE:
-            case BINARY_TYPE:
                 log.warn("no conversion strategy for target type [{}] and value [{}] value class is [{}].  method returns original value.", targetType, value, value != null ? value.getClass() : null);
         }
 
         return value;
+    }
+
+
+    private static byte[] convertToByteArray(Object value, Type columnType) {
+
+        if (value == null) {
+            return null;
+        }
+
+        String stringRepresentation = convertToString(value, columnType);
+
+        return stringRepresentation.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static InputStream convertToInputStream(Object value, Type columnType) {
+
+        if (value == null) {
+            return null;
+        }
+
+        // todo: need to test whats actually happening here
+        if (value instanceof InputStream) {
+            return (InputStream) value;
+        } else if (value instanceof byte[]) {
+            return new ByteArrayInputStream((byte[]) value);
+        } else {
+            return new ByteArrayInputStream(convertToString(value, columnType).getBytes(StandardCharsets.UTF_8));
+        }
+
     }
 
     private static BigDecimal convertToBigDecimal(Object value, Type columnType) {
@@ -285,21 +339,23 @@ public class ResultSetUtils {
         switch (columnType) {
 
             case BOOLEAN_TYPE:
-               return Boolean.toString((Boolean)value);
+                return Boolean.toString((Boolean) value);
             case TINYINT_TYPE:
-                return Byte.toString((Byte)value);
+                return Byte.toString((Byte) value);
             case SMALLINT_TYPE:
-                return Short.toString((Short)value);
+                return Short.toString((Short) value);
             case INT_TYPE:
-                return Integer.toString((Integer)value);
+                return Integer.toString((Integer) value);
             case BIGINT_TYPE:
-                return Long.toString((Long)value);
+                return Long.toString((Long) value);
             case FLOAT_TYPE:
-                return Float.toString((Float)value);
+                return Float.toString((Float) value);
             case DOUBLE_TYPE:
-                return Double.toString((Double)value);
+                return Double.toString((Double) value);
             case VARCHAR_TYPE:
+                return value.toString();
             case STRING_TYPE:
+                return value.toString();
             case CHAR_TYPE:
                 return value.toString();
             case DATE_TYPE:
