@@ -585,4 +585,8 @@ public class HiveServiceUtils {
     public static ResultSet getPseudoColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PSEUDO_COLUMNS));
     }
+
+    public static ResultSet getGeneratedKeys(HiveConnection connection) throws SQLException {
+        return new HiveResultSet(connection, new HiveStatement(connection), null, new TableSchema(ColumnDescriptors.PSEUDO_COLUMNS));
+    }
 }

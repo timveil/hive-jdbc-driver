@@ -506,4 +506,10 @@ public class ColumnDescriptors {
             add(new ColumnDescriptor("IS_NULLABLE", null, new TypeDescriptor(Type.STRING_TYPE), 12));
         }
     };
+
+    public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<ColumnDescriptor>() {
+        {
+            add(new ColumnDescriptor("GENERATED_KEY", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+        }
+    };
 }
