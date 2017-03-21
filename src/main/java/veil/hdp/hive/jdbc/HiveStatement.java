@@ -291,10 +291,6 @@ public class HiveStatement extends AbstractStatement {
         return super.execute(sql, columnNames);
     }
 
-
-
-
-
     private void closeResultSet() throws SQLException {
         if (resultSet != null && !resultSet.isClosed()) {
             resultSet.close();
