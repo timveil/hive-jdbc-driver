@@ -29,22 +29,15 @@ public class HiveConnection extends AbstractConnection {
     private TCLIService.Client client;
     private TSessionHandle sessionHandle;
     private TProtocolVersion protocolVersion;
-
     private CloseableHttpClient httpClient = null;
 
     // public getter & setter
     private boolean closed;
-    private int resultSetHoldability;
-    private int transactionIsolation;
-
-    // todo: what does this value actually do
-    private boolean autoCommitEnabled;
+    private SQLWarning sqlWarning = null;
 
     HiveConnection(Properties properties) {
         this.properties = properties;
         closed = false;
-        this.resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
-        this.transactionIsolation = Connection.TRANSACTION_NONE;
     }
 
     Properties getProperties() {
@@ -137,7 +130,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new HiveStatement(this, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, resultSetHoldability);
+        return new HiveStatement(this, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, getHoldability());
     }
 
     @Override
@@ -147,42 +140,87 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return autoCommitEnabled;
+        return Boolean.TRUE;
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        this.autoCommitEnabled = autoCommit;
-    }
-
-    //todo
-    @Override
-    public String getCatalog() throws SQLException {
-        // no catalog name in Hive
-        return null;
+        // no-op; don't support setting this value
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new HiveStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
+        return new HiveStatement(this, resultSetType, resultSetConcurrency, getHoldability());
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new HiveStatement(this, resultSetType, resultSetConcurrency, resultSetHoldability);
+        return new HiveStatement(this, resultSetType, resultSetConcurrency, getHoldability());
     }
 
     @Override
     public void setHoldability(int holdability) throws SQLException {
-        this.resultSetHoldability = holdability;
+        // no-op; don't support setting this value
     }
 
     @Override
     public int getHoldability() throws SQLException {
-        return this.resultSetHoldability;
+        return ResultSet.CLOSE_CURSORS_AT_COMMIT;
     }
 
 
+    @Override
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        // no-op; connection does not use
+    }
+
+    @Override
+    public boolean isReadOnly() throws SQLException {
+        return Boolean.FALSE;
+    }
+
+
+    @Override
+    public String getCatalog() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void setCatalog(String catalog) throws SQLException {
+        // no-op; no catalog in hive
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return sqlWarning;
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        sqlWarning = null;
+    }
+
+
+    @Override
+    public void setTransactionIsolation(int level) throws SQLException {
+        // no-op; don't support transactions yet
+    }
+
+    @Override
+    public int getTransactionIsolation() throws SQLException {
+        return Connection.TRANSACTION_NONE;
+    }
+
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+        // no-op; need to better understand how this differs from DriverManager.getLoginTimeout()
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        return 0;
+    }
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -191,62 +229,10 @@ public class HiveConnection extends AbstractConnection {
         return super.prepareStatement(sql);
     }
 
-
-    @Override
-    public String nativeSQL(String sql) throws SQLException {
-        return super.nativeSQL(sql);
-    }
-
-    @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        super.setReadOnly(readOnly);
-    }
-
-    @Override
-    public boolean isReadOnly() throws SQLException {
-        return super.isReadOnly();
-    }
-
-    @Override
-    public void setCatalog(String catalog) throws SQLException {
-        super.setCatalog(catalog);
-    }
-
-    @Override
-    public void setTransactionIsolation(int level) throws SQLException {
-        super.setTransactionIsolation(level);
-    }
-
-    @Override
-    public int getTransactionIsolation() throws SQLException {
-        return transactionIsolation;
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        return super.getWarnings();
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        super.clearWarnings();
-    }
-
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         return super.prepareStatement(sql, resultSetType, resultSetConcurrency);
     }
-
-    @Override
-    public Map<String, Class<?>> getTypeMap() throws SQLException {
-        return super.getTypeMap();
-    }
-
-    @Override
-    public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-        super.setTypeMap(map);
-    }
-
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
@@ -269,39 +255,10 @@ public class HiveConnection extends AbstractConnection {
         return super.prepareStatement(sql, columnNames);
     }
 
+
     @Override
     public boolean isValid(int timeout) throws SQLException {
         return super.isValid(timeout);
-    }
-
-    @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
-        super.setClientInfo(name, value);
-    }
-
-    @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        super.setClientInfo(properties);
-    }
-
-    @Override
-    public String getClientInfo(String name) throws SQLException {
-        return super.getClientInfo(name);
-    }
-
-    @Override
-    public Properties getClientInfo() throws SQLException {
-        return super.getClientInfo();
-    }
-
-    @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        return super.createArrayOf(typeName, elements);
-    }
-
-    @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        return super.createStruct(typeName, attributes);
     }
 
     @Override
@@ -318,18 +275,6 @@ public class HiveConnection extends AbstractConnection {
     public void abort(Executor executor) throws SQLException {
         super.abort(executor);
     }
-
-    @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        super.setNetworkTimeout(executor, milliseconds);
-    }
-
-    @Override
-    public int getNetworkTimeout() throws SQLException {
-        return super.getNetworkTimeout();
-    }
-
-
 
     private int getLoginTimeout() {
         long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());

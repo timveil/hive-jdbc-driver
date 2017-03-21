@@ -19,7 +19,7 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public String nativeSQL(String sql) throws SQLException {
+    public final String nativeSQL(String sql) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -114,12 +114,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public Map<String, Class<?>> getTypeMap() throws SQLException {
+    public final Map<String, Class<?>> getTypeMap() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
+    public final void setTypeMap(Map<String, Class<?>> map) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -209,32 +209,32 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setClientInfo(String name, String value) throws SQLClientInfoException {
+    public final void setClientInfo(String name, String value) throws SQLClientInfoException {
         throw new SQLClientInfoException();
     }
 
     @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+    public final void setClientInfo(Properties properties) throws SQLClientInfoException {
         throw new SQLClientInfoException();
     }
 
     @Override
-    public String getClientInfo(String name) throws SQLException {
+    public final String getClientInfo(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Properties getClientInfo() throws SQLException {
+    public final Properties getClientInfo() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+    public final Array createArrayOf(String typeName, Object[] elements) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
+    public final Struct createStruct(String typeName, Object[] attributes) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
