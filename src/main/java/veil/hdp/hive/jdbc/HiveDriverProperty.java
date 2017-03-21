@@ -6,7 +6,7 @@ import java.util.Properties;
 public enum HiveDriverProperty {
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
-    USER("user", null, true, null, null),
+    USER("user", null, false, null, null),
     PASSWORD("password", null, false, null, null),
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
 

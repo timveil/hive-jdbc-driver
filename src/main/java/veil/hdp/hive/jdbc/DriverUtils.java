@@ -14,10 +14,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 public class DriverUtils {
 
@@ -70,7 +67,9 @@ public class DriverUtils {
         builder.append("connection properties\n");
         builder.append("******************************************\n");
 
-        for (String key : properties.stringPropertyNames()) {
+        Set<String> strings = properties.stringPropertyNames();
+
+        for (String key : strings) {
             builder.append("\t").append(key).append(" : ").append(properties.getProperty(key)).append("\n");
         }
         builder.append("******************************************\n");
@@ -94,31 +93,33 @@ public class DriverUtils {
     }
 
 
-    private static void validateProperties(Properties properties) {
+    private static void validateProperties(Properties properties) throws SQLException {
 
         for (String key : properties.stringPropertyNames()) {
 
-            boolean found = false;
+            boolean valid = false;
 
             for (HiveDriverProperty property : HiveDriverProperty.values()) {
                 if (property.getName().equalsIgnoreCase(key)) {
-                    found = true;
+                    valid = true;
                     break;
                 }
             }
 
             if (key.startsWith("hive.")) {
-
-                // no longer going use HiveConf.ConfVars to validate properties.  too many dependencies
-                found = true;
-
+                valid = true;
             }
 
-            if (!found) {
+            if (!valid) {
                 log.warn("property [{}] is not valid", key);
-                //throw new SQLException("property [" + key + "] is not a valid property");
             }
 
+        }
+
+        for (HiveDriverProperty property : HiveDriverProperty.values()) {
+            if (property.isRequired() && property.get(properties) == null ) {
+                throw new SQLException("property [" + property.getName() + "] is required");
+            }
         }
 
     }
