@@ -335,4 +335,6 @@ public class HiveResultSet extends AbstractResultSet {
 
         return columnValue;
     }
+
+
 }

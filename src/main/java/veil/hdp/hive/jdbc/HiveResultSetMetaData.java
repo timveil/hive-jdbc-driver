@@ -66,25 +66,25 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     // todo: research this more; don't believe has this concept
     @Override
     public boolean isAutoIncrement(int column) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     // todo: research this more; don't believe has this concept
     @Override
     public boolean isCurrency(int column) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     // todo: how does this work with acid
     @Override
     public boolean isReadOnly(int column) throws SQLException {
-        return true;
+        return Boolean.TRUE;
     }
 
     // todo: need to research this more
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     // todo
@@ -107,7 +107,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public boolean isSearchable(int column) throws SQLException {
-        return true;
+        return Boolean.TRUE;
     }
 
     @Override
@@ -150,14 +150,15 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     // todo: need to research this more
     @Override
     public boolean isWritable(int column) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     // todo: need to research this more
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
+    
 
 }
