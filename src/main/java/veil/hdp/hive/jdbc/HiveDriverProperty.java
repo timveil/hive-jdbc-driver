@@ -4,34 +4,36 @@ import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 
 public enum HiveDriverProperty {
-    HOST_NAME("host", null, true, ""),
-    DATABASE_NAME("database", "default", true, ""),
-    USER("user", null, true, ""),
-    PASSWORD("password", null, false, ""),
-    PORT_NUMBER("port", "10000", true, ""),
+    HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
+    DATABASE_NAME("database", "default", true, null, null),
+    USER("user", null, true, null, null),
+    PASSWORD("password", null, false, null, null),
+    PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
 
-    TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, "", TransportMode.binary.toString(), TransportMode.http.toString()),
+    TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),
 
-    ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, ""),
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, ""),
-    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, "");;
+    ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
+    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
+    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null);
 
     private String name;
     private String defaultValue;
     private boolean required;
     private String description;
+    private String hiveConfName;
     private String[] choices;
 
 
-    HiveDriverProperty(String name, String defaultValue, boolean required, String description) {
-        this(name, defaultValue, required, description, (String[]) null);
+    HiveDriverProperty(String name, String defaultValue, boolean required, String description, String hiveConfName) {
+        this(name, defaultValue, required, description, hiveConfName, (String[]) null);
     }
 
-    HiveDriverProperty(String name, String defaultValue, boolean required, String description, String... choices) {
+    HiveDriverProperty(String name, String defaultValue, boolean required, String description, String hiveConfName, String... choices) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.required = required;
         this.description = description;
+        this.hiveConfName = hiveConfName;
         this.choices = choices;
     }
 
@@ -53,6 +55,10 @@ public enum HiveDriverProperty {
 
     public String[] getChoices() {
         return choices;
+    }
+
+    public String getHiveConfName() {
+        return hiveConfName;
     }
 
     public void setDefaultValue(Properties properties) {
@@ -108,5 +114,15 @@ public enum HiveDriverProperty {
         propertyInfo.choices = choices;
 
         return propertyInfo;
+    }
+
+    public static HiveDriverProperty forAlias(String alias) {
+        for (HiveDriverProperty property : HiveDriverProperty.values()) {
+            if (property.getHiveConfName() != null && property.getHiveConfName().equalsIgnoreCase(alias)) {
+                return property;
+            }
+        }
+
+        return null;
     }
 }

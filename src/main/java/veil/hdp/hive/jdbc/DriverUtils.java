@@ -221,12 +221,18 @@ public class DriverUtils {
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
-            // todo: translate properties returned from ZK to HiveDriverProperties
             for (String key : config.keySet()) {
                 String value = Strings.emptyToNull(config.get(key));
 
                 if (value != null) {
-                    properties.setProperty(key, value);
+
+                    HiveDriverProperty hiveDriverProperty = HiveDriverProperty.forAlias(key);
+
+                    if (hiveDriverProperty != null) {
+                        hiveDriverProperty.set(properties, value);
+                    } else {
+                        properties.setProperty(key, value);
+                    }
                 }
             }
 
