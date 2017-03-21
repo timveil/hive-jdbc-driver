@@ -19,22 +19,22 @@ public class AbstractDataSource implements DataSource {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public PrintWriter getLogWriter() throws SQLException {
+    public final PrintWriter getLogWriter() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
+    public final void setLogWriter(PrintWriter out) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -49,7 +49,7 @@ public class AbstractDataSource implements DataSource {
     }
 
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    public final Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
     }
 }
