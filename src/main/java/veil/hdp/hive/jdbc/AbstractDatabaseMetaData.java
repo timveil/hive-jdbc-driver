@@ -5,12 +5,12 @@ import java.sql.*;
 public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean allTablesAreSelectable() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -25,27 +25,27 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean nullsAreSortedHigh() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean nullsAreSortedLow() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean nullsAreSortedAtStart() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean nullsAreSortedAtEnd() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -80,52 +80,52 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean usesLocalFiles() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean usesLocalFilePerTable() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMixedCaseIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesUpperCaseIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesLowerCaseIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesMixedCaseIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMixedCaseQuotedIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesUpperCaseQuotedIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesLowerCaseQuotedIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean storesMixedCaseQuotedIdentifiers() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -170,27 +170,27 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -200,107 +200,107 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsLimitedOuterJoins() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -320,7 +320,7 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean isCatalogAtStart() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -330,127 +330,127 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSchemasInDataManipulation() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSchemasInProcedureCalls() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSchemasInTableDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSchemasInIndexDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSchemasInPrivilegeDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCatalogsInDataManipulation() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCatalogsInProcedureCalls() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCatalogsInTableDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCatalogsInIndexDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCatalogsInPrivilegeDefinitions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsPositionedDelete() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsPositionedUpdate() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSelectForUpdate() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsStoredProcedures() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSubqueriesInComparisons() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSubqueriesInExists() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSubqueriesInIns() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsSubqueriesInQuantifieds() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsCorrelatedSubqueries() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsUnion() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsUnionAll() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossCommit() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOpenCursorsAcrossRollback() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossCommit() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsOpenStatementsAcrossRollback() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -530,7 +530,7 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean doesMaxRowSizeIncludeBlobs() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -565,7 +565,7 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsTransactions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -575,22 +575,22 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsDataDefinitionAndDataManipulationTransactions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsDataManipulationTransactionsOnly() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean dataDefinitionCausesTransactionCommit() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean dataDefinitionIgnoredInTransactions() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -680,7 +680,7 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsResultSetType(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -690,52 +690,52 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean ownUpdatesAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean ownDeletesAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean ownInsertsAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean othersUpdatesAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean othersDeletesAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean othersInsertsAreVisible(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean updatesAreDetected(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean deletesAreDetected(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean insertsAreDetected(int type) throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsBatchUpdates() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -750,22 +750,22 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsSavepoints() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsMultipleOpenResults() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -820,12 +820,12 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean locatorsUpdateCopy() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean supportsStatementPooling() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -840,12 +840,12 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
-        return false;
+        throw new SQLFeatureNotSupportedException();
     }
 
     @Override
@@ -870,16 +870,16 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        return false;
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 }
