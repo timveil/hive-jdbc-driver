@@ -900,6 +900,4 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return RowIdLifetime.ROWID_UNSUPPORTED;
     }
 
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
-
 }

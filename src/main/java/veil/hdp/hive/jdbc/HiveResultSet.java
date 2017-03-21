@@ -11,9 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.*;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Map;
 
 public class HiveResultSet extends AbstractResultSet {
 
@@ -317,6 +321,331 @@ public class HiveResultSet extends AbstractResultSet {
     public InputStream getBinaryStream(String columnLabel) throws SQLException {
         return getBinaryStream(findColumn(columnLabel));
     }
+
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+        return super.getBigDecimal(columnIndex, scale);
+    }
+
+    @Override
+    public Time getTime(int columnIndex) throws SQLException {
+        return super.getTime(columnIndex);
+    }
+
+    @Override
+    public InputStream getAsciiStream(int columnIndex) throws SQLException {
+        return super.getAsciiStream(columnIndex);
+    }
+
+    @Override
+    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+        return super.getUnicodeStream(columnIndex);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+        return super.getBigDecimal(columnLabel, scale);
+    }
+
+    @Override
+    public Time getTime(String columnLabel) throws SQLException {
+        return super.getTime(columnLabel);
+    }
+
+    @Override
+    public InputStream getAsciiStream(String columnLabel) throws SQLException {
+        return super.getAsciiStream(columnLabel);
+    }
+
+    @Override
+    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
+        return super.getUnicodeStream(columnLabel);
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return super.getWarnings();
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        super.clearWarnings();
+    }
+
+    @Override
+    public String getCursorName() throws SQLException {
+        return super.getCursorName();
+    }
+
+    @Override
+    public Reader getCharacterStream(int columnIndex) throws SQLException {
+        return super.getCharacterStream(columnIndex);
+    }
+
+    @Override
+    public Reader getCharacterStream(String columnLabel) throws SQLException {
+        return super.getCharacterStream(columnLabel);
+    }
+
+    @Override
+    public boolean isAfterLast() throws SQLException {
+        return super.isAfterLast();
+    }
+
+    @Override
+    public boolean isFirst() throws SQLException {
+        return super.isFirst();
+    }
+
+    @Override
+    public boolean isLast() throws SQLException {
+        return super.isLast();
+    }
+
+    @Override
+    public void beforeFirst() throws SQLException {
+        super.beforeFirst();
+    }
+
+    @Override
+    public void afterLast() throws SQLException {
+        super.afterLast();
+    }
+
+    @Override
+    public boolean first() throws SQLException {
+        return super.first();
+    }
+
+    @Override
+    public boolean last() throws SQLException {
+        return super.last();
+    }
+
+    @Override
+    public boolean absolute(int row) throws SQLException {
+        return super.absolute(row);
+    }
+
+    @Override
+    public boolean relative(int rows) throws SQLException {
+        return super.relative(rows);
+    }
+
+    @Override
+    public boolean previous() throws SQLException {
+        return super.previous();
+    }
+
+    @Override
+    public boolean rowUpdated() throws SQLException {
+        return super.rowUpdated();
+    }
+
+    @Override
+    public boolean rowInserted() throws SQLException {
+        return super.rowInserted();
+    }
+
+    @Override
+    public boolean rowDeleted() throws SQLException {
+        return super.rowDeleted();
+    }
+
+    @Override
+    public void insertRow() throws SQLException {
+        super.insertRow();
+    }
+
+    @Override
+    public void deleteRow() throws SQLException {
+        super.deleteRow();
+    }
+
+    @Override
+    public void refreshRow() throws SQLException {
+        super.refreshRow();
+    }
+
+    @Override
+    public void cancelRowUpdates() throws SQLException {
+        super.cancelRowUpdates();
+    }
+
+    @Override
+    public void moveToInsertRow() throws SQLException {
+        super.moveToInsertRow();
+    }
+
+    @Override
+    public void moveToCurrentRow() throws SQLException {
+        super.moveToCurrentRow();
+    }
+
+    @Override
+    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
+        return super.getObject(columnIndex, map);
+    }
+
+    @Override
+    public Ref getRef(int columnIndex) throws SQLException {
+        return super.getRef(columnIndex);
+    }
+
+    @Override
+    public Blob getBlob(int columnIndex) throws SQLException {
+        return super.getBlob(columnIndex);
+    }
+
+    @Override
+    public Clob getClob(int columnIndex) throws SQLException {
+        return super.getClob(columnIndex);
+    }
+
+    @Override
+    public Array getArray(int columnIndex) throws SQLException {
+        return super.getArray(columnIndex);
+    }
+
+    @Override
+    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
+        return super.getObject(columnLabel, map);
+    }
+
+    @Override
+    public Ref getRef(String columnLabel) throws SQLException {
+        return super.getRef(columnLabel);
+    }
+
+    @Override
+    public Blob getBlob(String columnLabel) throws SQLException {
+        return super.getBlob(columnLabel);
+    }
+
+    @Override
+    public Clob getClob(String columnLabel) throws SQLException {
+        return super.getClob(columnLabel);
+    }
+
+    @Override
+    public Array getArray(String columnLabel) throws SQLException {
+        return super.getArray(columnLabel);
+    }
+
+    @Override
+    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
+        return super.getDate(columnIndex, cal);
+    }
+
+    @Override
+    public Date getDate(String columnLabel, Calendar cal) throws SQLException {
+        return super.getDate(columnLabel, cal);
+    }
+
+    @Override
+    public Time getTime(int columnIndex, Calendar cal) throws SQLException {
+        return super.getTime(columnIndex, cal);
+    }
+
+    @Override
+    public Time getTime(String columnLabel, Calendar cal) throws SQLException {
+        return super.getTime(columnLabel, cal);
+    }
+
+    @Override
+    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
+        return super.getTimestamp(columnIndex, cal);
+    }
+
+    @Override
+    public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
+        return super.getTimestamp(columnLabel, cal);
+    }
+
+    @Override
+    public URL getURL(int columnIndex) throws SQLException {
+        return super.getURL(columnIndex);
+    }
+
+    @Override
+    public URL getURL(String columnLabel) throws SQLException {
+        return super.getURL(columnLabel);
+    }
+
+    @Override
+    public RowId getRowId(int columnIndex) throws SQLException {
+        return super.getRowId(columnIndex);
+    }
+
+    @Override
+    public RowId getRowId(String columnLabel) throws SQLException {
+        return super.getRowId(columnLabel);
+    }
+
+    @Override
+    public NClob getNClob(int columnIndex) throws SQLException {
+        return super.getNClob(columnIndex);
+    }
+
+    @Override
+    public NClob getNClob(String columnLabel) throws SQLException {
+        return super.getNClob(columnLabel);
+    }
+
+    @Override
+    public SQLXML getSQLXML(int columnIndex) throws SQLException {
+        return super.getSQLXML(columnIndex);
+    }
+
+    @Override
+    public SQLXML getSQLXML(String columnLabel) throws SQLException {
+        return super.getSQLXML(columnLabel);
+    }
+
+    @Override
+    public String getNString(int columnIndex) throws SQLException {
+        return super.getNString(columnIndex);
+    }
+
+    @Override
+    public String getNString(String columnLabel) throws SQLException {
+        return super.getNString(columnLabel);
+    }
+
+    @Override
+    public Reader getNCharacterStream(int columnIndex) throws SQLException {
+        return super.getNCharacterStream(columnIndex);
+    }
+
+    @Override
+    public Reader getNCharacterStream(String columnLabel) throws SQLException {
+        return super.getNCharacterStream(columnLabel);
+    }
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        return super.getObject(columnIndex, type);
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+        return super.getObject(columnLabel, type);
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return super.unwrap(iface);
+    }
+
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return super.isWrapperFor(iface);
+    }
+
+
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     private Object getColumnValue(int columnIndex, Type targetType) throws SQLException {
 
