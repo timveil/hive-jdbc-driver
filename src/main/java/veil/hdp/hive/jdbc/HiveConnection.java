@@ -61,9 +61,7 @@ public class HiveConnection extends AbstractConnection {
 
         try {
 
-            TransportMode transportMode = properties.containsKey(HiveDriverStringProperty.TRANSPORT_MODE.getName())
-                    ? TransportMode.valueOf(properties.getProperty(HiveDriverStringProperty.TRANSPORT_MODE.getName()))
-                    : TransportMode.valueOf(HiveDriverStringProperty.TRANSPORT_MODE.getDefaultValue());
+            TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
 
             if (transportMode.equals(TransportMode.binary)) {
                 transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());

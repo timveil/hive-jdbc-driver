@@ -29,15 +29,15 @@ public class DriverUtilsTest extends BaseJunitTest {
     @Test
     public void buildDriverPropertyInfo() throws Exception {
 
-        String url =  "jdbc:hive2://host:10000/test?statement.fetch.size=100";
+        String url =  "jdbc:hive2://somehost:10000/test?transportMode=http&whoknows=me";
 
         Properties suppliedProperties = new Properties();
-        suppliedProperties.setProperty("username", "hive");
+        suppliedProperties.setProperty("user", "hive");
 
         DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties);
 
         for (DriverPropertyInfo info : driverPropertyInfos) {
-            log.debug("info {}", info.toString());
+            log.debug("info.name [{}], info.value [{}]", info.name, info.value);
         }
 
     }
@@ -46,10 +46,10 @@ public class DriverUtilsTest extends BaseJunitTest {
     public void buildProperties() throws Exception {
 
         //String url =  "jdbc:hive2://host1:10001/test?statement.fetch.size=100&statement.max.rows=1";
-        String url =  "jdbc:hive2://hive-large.hdp.local:2181/default?zookeeper.discovery.enabled=true&statement.max.rows=1";
+        String url =  "jdbc:hive2://hive.hdp.local:2181/default?zkEnabled=true&whoknows=me";
 
         Properties suppliedProperties = new Properties();
-        suppliedProperties.setProperty("username", "hive");
+        suppliedProperties.setProperty("user", "hive");
 
         Properties properties = DriverUtils.buildProperties(url, suppliedProperties);
 

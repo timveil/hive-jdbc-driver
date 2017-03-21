@@ -16,8 +16,8 @@ public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     public static CloseableHttpClient buildClient(Properties properties) {
-        String user = properties.getProperty(HiveDriverStringProperty.USER.getName());
-        String password = properties.getProperty(HiveDriverStringProperty.PASSWORD.getName());
+        String user = HiveDriverProperty.USER.get(properties);
+        String password = HiveDriverProperty.PASSWORD.get(properties);
 
 
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();

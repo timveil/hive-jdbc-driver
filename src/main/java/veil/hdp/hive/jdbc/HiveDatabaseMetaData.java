@@ -147,7 +147,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getUserName() throws SQLException {
-        return connection.getProperties().getProperty(HiveDriverStringProperty.USER.getName());
+        return HiveDriverProperty.USER.get(connection.getProperties());
     }
 
     @Override

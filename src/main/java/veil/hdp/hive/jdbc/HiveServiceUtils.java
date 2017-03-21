@@ -185,11 +185,11 @@ public class HiveServiceUtils {
 
     public static TOpenSessionResp openSession(Properties properties, Client client) throws TException, SQLException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
-        String username = properties.getProperty(HiveDriverStringProperty.USER.getName());
+        String username = HiveDriverProperty.USER.get(properties);
 
         if (username != null) {
             openSessionReq.setUsername(username);
-            openSessionReq.setPassword(properties.getProperty(HiveDriverStringProperty.PASSWORD.getName()));
+            openSessionReq.setPassword(HiveDriverProperty.PASSWORD.get(properties));
         }
 
         // set properties for session
@@ -224,7 +224,7 @@ public class HiveServiceUtils {
             }
         }
 
-        openSessionConfig.put("use:database", properties.getProperty(HiveDriverStringProperty.DATABASE_NAME.getName()));
+        openSessionConfig.put("use:database", HiveDriverProperty.DATABASE_NAME.get(properties));
 
         return openSessionConfig;
     }

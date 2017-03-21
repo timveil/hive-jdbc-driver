@@ -32,81 +32,37 @@ public class DriverUtils {
         return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 
-    private static final HiveDriverPropertyInfo[] DRIVER_PROPERTIES = {
-            new HiveDriverPropertyInfo(HiveDriverStringProperty.DATABASE_NAME.getName(),
-                    HiveDriverStringProperty.DATABASE_NAME.getDescription(),
-                    HiveDriverStringProperty.DATABASE_NAME.getDefaultValue(),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverStringProperty.HOST.getName(),
-                    HiveDriverStringProperty.HOST.getDescription(),
-                    HiveDriverStringProperty.HOST.getDefaultValue(),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.PORT_NUMBER.getName(),
-                    HiveDriverIntProperty.PORT_NUMBER.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName(),
-                    HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.STATEMENT_QUERY_TIMEOUT.getName(),
-                    HiveDriverIntProperty.STATEMENT_QUERY_TIMEOUT.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.STATEMENT_QUERY_TIMEOUT.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.STATEMENT_MAX_ROWS.getName(),
-                    HiveDriverIntProperty.STATEMENT_MAX_ROWS.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.STATEMENT_MAX_ROWS.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverIntProperty.STATEMENT_FETCH_SIZE.getName(),
-                    HiveDriverIntProperty.STATEMENT_FETCH_SIZE.getDescription(),
-                    Integer.toString(HiveDriverIntProperty.STATEMENT_FETCH_SIZE.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverStringProperty.USER.getName(),
-                    HiveDriverStringProperty.USER.getDescription(),
-                    HiveDriverStringProperty.USER.getDefaultValue(),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName(),
-                    HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getDescription(),
-                    Boolean.toString(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getDefaultValue()),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverStringProperty.PASSWORD.getName(),
-                    HiveDriverStringProperty.PASSWORD.getDescription(),
-                    HiveDriverStringProperty.PASSWORD.getDefaultValue(),
-                    false,
-                    null),
-            new HiveDriverPropertyInfo(HiveDriverStringProperty.TRANSPORT_MODE.getName(),
-                    HiveDriverStringProperty.TRANSPORT_MODE.getDescription(),
-                    HiveDriverStringProperty.TRANSPORT_MODE.getDefaultValue(),
-                    false,
-                    new String[]{TransportMode.binary.toString(), TransportMode.http.toString()})
-
-    };
-
 
     public static Properties buildProperties(String url, Properties suppliedProperties) throws SQLException {
 
-        Map<String, String> urlMap = normalize(parseUrl(url));
-        Map<String, String> suppliedMap = normalize(convertPropertiesToMap(suppliedProperties));
+        Properties properties = new Properties();
 
-        urlMap.putAll(suppliedMap);
+        loadDefaultProperties(properties);
 
-        validateProperties(urlMap);
+        parseUrl(url, properties);
 
-        Properties properties = convertMapToProperties(urlMap);
+        for (String key : suppliedProperties.stringPropertyNames()) {
+
+            String value = Strings.emptyToNull(suppliedProperties.getProperty(key));
+
+            if (value != null) {
+                properties.setProperty(key, value);
+            }
+
+        }
+
+        validateProperties(properties);
 
         printProperties(properties);
 
         return properties;
 
+    }
+
+    private static void loadDefaultProperties(Properties properties) {
+        for (HiveDriverProperty property : HiveDriverProperty.values()) {
+            property.setDefaultValue(properties);
+        }
     }
 
     private static void printProperties(Properties properties) {
@@ -125,10 +81,12 @@ public class DriverUtils {
     public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
         Properties properties = buildProperties(url, suppliedProperties);
 
-        DriverPropertyInfo[] driverPropertyInfoArray = new DriverPropertyInfo[DRIVER_PROPERTIES.length];
+        HiveDriverProperty[] driverProperties = HiveDriverProperty.values();
 
-        for (int i = 0; i < DRIVER_PROPERTIES.length; i++) {
-            driverPropertyInfoArray[i] = DRIVER_PROPERTIES[i].build(properties);
+        DriverPropertyInfo[] driverPropertyInfoArray = new DriverPropertyInfo[driverProperties.length];
+
+        for (int i = 0; i < driverPropertyInfoArray.length; i++) {
+            driverPropertyInfoArray[i] = driverProperties[i].toDriverPropertyInfo(properties);
         }
 
         return driverPropertyInfoArray;
@@ -136,26 +94,14 @@ public class DriverUtils {
     }
 
 
-    private static Map<String, String> normalize(Map<String, String> properties) {
+    private static void validateProperties(Properties properties) {
 
-        Map<String, String> normalized = Maps.newHashMap();
-
-        for (String key : properties.keySet()) {
-            normalized.put(key.toLowerCase(), Strings.emptyToNull(properties.get(key)));
-        }
-
-        return normalized;
-
-    }
-
-    private static void validateProperties(Map<String, String> properties) {
-
-        for (String key : properties.keySet()) {
+        for (String key : properties.stringPropertyNames()) {
 
             boolean found = false;
 
-            for (HiveDriverPropertyInfo DRIVER_PROPERTY : DRIVER_PROPERTIES) {
-                if (DRIVER_PROPERTY.getName().equals(key)) {
+            for (HiveDriverProperty property : HiveDriverProperty.values()) {
+                if (property.getName().equalsIgnoreCase(key)) {
                     found = true;
                     break;
                 }
@@ -177,63 +123,37 @@ public class DriverUtils {
 
     }
 
-    private static Properties convertMapToProperties(Map<String, String> map) {
 
-        Properties properties = new Properties();
-
-        for (String key : map.keySet()) {
-            String value = map.get(key);
-
-            if (value != null) {
-                properties.setProperty(key, value);
-            }
-        }
-
-        return properties;
-
-    }
-
-    private static Map<String, String> convertPropertiesToMap(Properties properties) {
-        Map<String, String> map = Maps.newHashMap();
-
-        if (properties != null) {
-            for (String property : properties.stringPropertyNames()) {
-                map.put(property, properties.getProperty(property));
-            }
-        }
-
-        return map;
-    }
-
-    private static Map<String, String> parseUrl(String url) throws SQLException {
-
-        Map<String, String> properties = Maps.newHashMap();
+    private static void parseUrl(String url, Properties properties) throws SQLException {
 
         URI uri = URI.create(stripPrefix(JDBC_PART, url));
 
         String databaseName = Strings.emptyToNull(getDatabaseName(uri));
 
-        properties.put(HiveDriverStringProperty.DATABASE_NAME.getName(), databaseName != null ? databaseName : HiveDriverStringProperty.DATABASE_NAME.getDefaultValue());
+        HiveDriverProperty.DATABASE_NAME.set(properties, databaseName);
 
         String uriQuery = uri.getQuery();
 
-        properties.putAll(parseQueryParameters(uriQuery));
+        parseQueryParameters(uriQuery, properties);
 
-        if (properties.containsKey(HiveDriverBooleanProperty.ZOOKEEPER_DISCOVERY_ENABLED.getName())) {
+        if (HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.getBoolean(properties)) {
 
             String authority = uri.getAuthority();
 
             loadPropertiesFromZookeeper(authority, properties);
 
         } else {
-            properties.put(HiveDriverStringProperty.HOST.getName(), uri.getHost());
-            properties.put(HiveDriverIntProperty.PORT_NUMBER.getName(), Integer.toString(uri.getPort() != -1 ? uri.getPort() : HiveDriverIntProperty.PORT_NUMBER.getDefaultValue()));
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+
+            if (uri.getPort() != -1) {
+                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
+            }
+
         }
 
-        return properties;
     }
 
-    private static Map<String, String> parseQueryParameters(String path) {
+    private static void parseQueryParameters(String path, Properties properties) {
 
         Map<String, String> parameters = Maps.newHashMap();
 
@@ -241,7 +161,13 @@ public class DriverUtils {
             parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
         }
 
-        return parameters;
+        for (String key : parameters.keySet()) {
+            String value = Strings.nullToEmpty(parameters.get(key));
+
+            if (value != null) {
+                properties.setProperty(key, value);
+            }
+        }
 
     }
 
@@ -260,15 +186,10 @@ public class DriverUtils {
         return url.replace(prefix, "").trim();
     }
 
-    // todo: need to figure out how to merge properties returned from zookeeper with provided properties
-    private static void loadPropertiesFromZookeeper(String authority, Map<String, String> properties) throws SQLException {
+    private static void loadPropertiesFromZookeeper(String authority, Properties properties) throws SQLException {
 
-        String zooKeeperNamespace = properties.containsKey(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName())
-                ? properties.get(HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getName())
-                : HiveDriverStringProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.getDefaultValue();
-        int retry = properties.containsKey(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName())
-                ? Integer.parseInt(properties.get(HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getName()))
-                : HiveDriverIntProperty.ZOOKEEPER_DISCOVERY_RETRY.getDefaultValue();
+        String zooKeeperNamespace = HiveDriverProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.get(properties);
+        int retry = HiveDriverProperty.ZOOKEEPER_DISCOVERY_RETRY.getInt(properties);
 
         /*
 
@@ -300,8 +221,13 @@ public class DriverUtils {
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
+            // todo: translate properties returned from ZK to HiveDriverProperties
             for (String key : config.keySet()) {
-                properties.put(key, config.get(key));
+                String value = Strings.emptyToNull(config.get(key));
+
+                if (value != null) {
+                    properties.setProperty(key, value);
+                }
             }
 
 

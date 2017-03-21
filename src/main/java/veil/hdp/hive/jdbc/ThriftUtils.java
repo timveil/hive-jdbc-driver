@@ -42,8 +42,8 @@ public class ThriftUtils {
 
 
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient client) throws TTransportException {
-        String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
-        int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
+        String host = HiveDriverProperty.HOST_NAME.get(properties);
+        int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
 
         // todo: still hard-coding http path and scheme
         return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
@@ -54,10 +54,10 @@ public class ThriftUtils {
         // todo: no support for no-sasl
         // todo: no support for delegation tokens or ssl yet
 
-        String user = properties.getProperty(HiveDriverStringProperty.USER.getName());
-        String password = properties.getProperty(HiveDriverStringProperty.PASSWORD.getName());
-        String host = properties.getProperty(HiveDriverStringProperty.HOST.getName());
-        int port = Integer.parseInt(properties.getProperty(HiveDriverIntProperty.PORT_NUMBER.getName()));
+        String user = HiveDriverProperty.USER.get(properties);
+        String password = HiveDriverProperty.PASSWORD.get(properties);
+        String host = HiveDriverProperty.HOST_NAME.get(properties);
+        int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
 
         TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
 
