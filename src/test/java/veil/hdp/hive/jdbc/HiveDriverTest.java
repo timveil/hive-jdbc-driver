@@ -60,7 +60,7 @@ public class HiveDriverTest extends BaseJunitTest {
 
             log.debug("********** attempting http connection");
 
-            url = "jdbc:hive2://hive.hdp.local:10001/default?transport.mode=http";
+            url = "jdbc:hive2://hive.hdp.local:10001/default?transportMode=http";
 
             try {
                 connection = hiveDriver.connect(url, properties);

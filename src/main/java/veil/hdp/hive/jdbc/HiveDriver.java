@@ -12,9 +12,11 @@ public class HiveDriver implements Driver {
 
     static {
         try {
-            java.sql.DriverManager.registerDriver(new HiveDriver());
+            HiveDriver driver = new HiveDriver();
 
-            log.debug("driver has been registered");
+            DriverManager.registerDriver(driver);
+
+            log.debug("driver [{}] has been registered.", driver.getClass().getName());
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -70,7 +72,6 @@ public class HiveDriver implements Driver {
 
         return DriverUtils.acceptURL(url);
     }
-
 
 
 }
