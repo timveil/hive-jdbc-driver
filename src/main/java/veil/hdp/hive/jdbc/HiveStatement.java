@@ -222,17 +222,17 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public boolean getMoreResults() throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override
     public boolean getMoreResults(int current) throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override
     public boolean isPoolable() throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override
@@ -249,7 +249,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public boolean isCloseOnCompletion() throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
 

@@ -56,7 +56,7 @@ public class HiveDriver implements Driver {
 
     @Override
     public boolean jdbcCompliant() {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override

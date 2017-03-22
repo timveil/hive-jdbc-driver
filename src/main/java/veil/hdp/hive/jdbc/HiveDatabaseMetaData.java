@@ -78,7 +78,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     // todo: i don't think this is right, need better way to determine.
     @Override
     public boolean supportsTransactions() throws SQLException {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override
