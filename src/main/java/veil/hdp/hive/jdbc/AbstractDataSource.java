@@ -9,16 +9,6 @@ import java.util.logging.Logger;
 
 public class AbstractDataSource implements DataSource {
     @Override
-    public Connection getConnection() throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public Connection getConnection(String username, String password) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
@@ -39,17 +29,27 @@ public class AbstractDataSource implements DataSource {
     }
 
     @Override
+    public final Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public Connection getConnection(String username, String password) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
     public int getLoginTimeout() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public final Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException();
     }
 }

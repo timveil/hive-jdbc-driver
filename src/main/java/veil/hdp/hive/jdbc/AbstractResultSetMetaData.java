@@ -6,6 +6,16 @@ import java.sql.SQLFeatureNotSupportedException;
 
 public abstract class AbstractResultSetMetaData implements ResultSetMetaData {
     @Override
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
     public int getColumnCount() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
@@ -107,16 +117,6 @@ public abstract class AbstractResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public final <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 }

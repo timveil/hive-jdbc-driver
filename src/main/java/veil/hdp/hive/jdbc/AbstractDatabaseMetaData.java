@@ -4,6 +4,16 @@ import java.sql.*;
 
 public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
     @Override
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
     public boolean allProceduresAreCallable() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
@@ -870,16 +880,6 @@ public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public final <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
-    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 }
