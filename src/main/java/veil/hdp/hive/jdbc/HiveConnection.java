@@ -269,6 +269,8 @@ public class HiveConnection extends AbstractConnection {
         return super.getSchema();
     }
 
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+
     @Override
     public void abort(Executor executor) throws SQLException {
         super.abort(executor);

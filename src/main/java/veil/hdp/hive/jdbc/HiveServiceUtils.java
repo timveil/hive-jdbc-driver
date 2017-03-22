@@ -30,18 +30,24 @@ public class HiveServiceUtils {
         throw new HiveSQLException(status);
     }
 
-    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws TException, SQLException {
+    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType((short) 0);
-        TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
 
-        checkStatus(fetchResults.getStatus());
+        try {
+            TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
 
-        if (log.isDebugEnabled()) {
-            log.debug(fetchResults.toString());
+            checkStatus(fetchResults.getStatus());
+
+            if (log.isDebugEnabled()) {
+                log.debug(fetchResults.toString());
+            }
+
+            return fetchResults.getResults();
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        return fetchResults.getResults();
     }
 
     public static List<String> fetchLogs(Client client, TOperationHandle operationHandle, TProtocolVersion protocolVersion) {
@@ -127,63 +133,73 @@ public class HiveServiceUtils {
 
     }
 
-    public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws TException, SQLException {
+    public static TOperationHandle executeSql(Client client, TSessionHandle sessionHandle, long queryTimeout, String sql) throws SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
-        //allows per statement configuration of session handle
+        //todo: allows per statement configuration of session handle
         //executeStatementReq.setConfOverlay(null);
 
-        TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
+        try {
+            TExecuteStatementResp executeStatementResp = client.ExecuteStatement(executeStatementReq);
 
-        checkStatus(executeStatementResp.getStatus());
+            checkStatus(executeStatementResp.getStatus());
 
-        if (log.isDebugEnabled()) {
-            log.debug(executeStatementResp.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(executeStatementResp.toString());
+            }
+
+            return executeStatementResp.getOperationHandle();
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        return executeStatementResp.getOperationHandle();
-
 
     }
 
-    public static void waitForStatementToComplete(Client client, TOperationHandle statementHandle) throws TException, SQLException {
+    public static void waitForStatementToComplete(Client client, TOperationHandle statementHandle) throws SQLException {
         boolean isComplete = false;
 
         while (!isComplete) {
 
             TGetOperationStatusReq statusReq = new TGetOperationStatusReq(statementHandle);
-            TGetOperationStatusResp statusResp = client.GetOperationStatus(statusReq);
 
-            checkStatus(statusResp.getStatus());
+            try {
+                TGetOperationStatusResp statusResp = client.GetOperationStatus(statusReq);
 
-            if (statusResp.isSetOperationState()) {
+                checkStatus(statusResp.getStatus());
 
-                switch (statusResp.getOperationState()) {
-                    case CLOSED_STATE:
-                    case FINISHED_STATE:
-                        isComplete = true;
-                        break;
-                    case CANCELED_STATE:
-                        throw new SQLException("Query was cancelled", "01000");
-                    case TIMEDOUT_STATE:
-                        throw new SQLTimeoutException("Query timed out");
-                    case ERROR_STATE:
-                        throw new SQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
-                    case UKNOWN_STATE:
-                        throw new SQLException("Unknown query", "HY000");
-                    case INITIALIZED_STATE:
-                    case PENDING_STATE:
-                    case RUNNING_STATE:
-                        break;
+                if (statusResp.isSetOperationState()) {
+
+                    switch (statusResp.getOperationState()) {
+                        case CLOSED_STATE:
+                        case FINISHED_STATE:
+                            isComplete = true;
+                            break;
+                        case CANCELED_STATE:
+                            throw new SQLException("Query was cancelled", "01000");
+                        case TIMEDOUT_STATE:
+                            throw new SQLTimeoutException("Query timed out");
+                        case ERROR_STATE:
+                            throw new SQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
+                        case UKNOWN_STATE:
+                            throw new SQLException("Unknown query", "HY000");
+                        case INITIALIZED_STATE:
+                        case PENDING_STATE:
+                        case RUNNING_STATE:
+                            break;
+                    }
                 }
+
+            } catch (TException e) {
+                throw new SQLException(e);
             }
 
         }
     }
 
 
-    public static TOpenSessionResp openSession(Properties properties, Client client) throws TException, SQLException {
+    public static TOpenSessionResp openSession(Properties properties, Client client) throws SQLException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
         String username = HiveDriverProperty.USER.get(properties);
 
@@ -205,11 +221,15 @@ public class HiveServiceUtils {
             log.debug(openSessionReq.toString());
         }
 
-        TOpenSessionResp resp = client.OpenSession(openSessionReq);
+        try {
+            TOpenSessionResp resp = client.OpenSession(openSessionReq);
 
-        checkStatus(resp.getStatus());
+            checkStatus(resp.getStatus());
 
-        return resp;
+            return resp;
+        } catch (TException e) {
+            throw new SQLException(e);
+        }
 
     }
 
@@ -229,22 +249,28 @@ public class HiveServiceUtils {
         return openSessionConfig;
     }
 
-    public static TTableSchema getResultSetSchema(Client client, TOperationHandle operationHandle) throws TException, SQLException {
+    public static TTableSchema getResultSetSchema(Client client, TOperationHandle operationHandle) throws SQLException {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
-        TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
 
-        checkStatus(metadataResp.getStatus());
+        try {
+            TGetResultSetMetadataResp metadataResp = client.GetResultSetMetadata(metadataReq);
 
-        if (log.isDebugEnabled()) {
-            log.debug(metadataResp.toString());
+            checkStatus(metadataResp.getStatus());
+
+            if (log.isDebugEnabled()) {
+                log.debug(metadataResp.toString());
+            }
+
+            return metadataResp.getSchema();
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        return metadataResp.getSchema();
     }
 
     @Deprecated
-    public static void printInfo(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+    public static void printInfo(Client client, TSessionHandle sessionHandle) throws SQLException {
 
         for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
 
@@ -260,192 +286,141 @@ public class HiveServiceUtils {
     // todo: this freaks out on the backend if type is not correct and results in failing subsequent calls.  should avoid this until fixed.
     // see: org.apache.hive.service.cli.session.HiveSessionImpl; don't know why it doesn't support more types
     @Deprecated
-    public static TGetInfoResp getServerInfo(Client client, TSessionHandle sessionHandle, TGetInfoType type) throws TException, SQLException {
+    public static TGetInfoResp getServerInfo(Client client, TSessionHandle sessionHandle, TGetInfoType type) throws SQLException {
         TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
-        TGetInfoResp resp = client.GetInfo(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+        try {
+            TGetInfoResp resp = client.GetInfo(req);
+
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
     public static HiveResultSet getCatalogs(HiveConnection connection) throws SQLException {
-
-        HiveResultSet resultSet = null;
-
-        try {
-            TGetCatalogsResp response = getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            log.error(e.getMessage(), e);
-        }
-
-
-        return resultSet;
+        TGetCatalogsResp response = getCatalogsResponse(connection.getClient(), connection.getSessionHandle());
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetSchemasResp response = getDatabaseSchemaResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern);
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetSchemasResp response = getDatabaseSchemaResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern);
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getTypeInfo(HiveConnection connection) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetTypeInfoResp response = getTypeInfoResponse(connection.getClient(), connection.getSessionHandle());
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetTypeInfoResp response = getTypeInfoResponse(connection.getClient(), connection.getSessionHandle());
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getTableTypes(HiveConnection connection) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetTableTypesResp response = getTableTypesResponse(connection.getClient(), connection.getSessionHandle());
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetTableTypesResp response = getTableTypesResponse(connection.getClient(), connection.getSessionHandle());
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetTablesResp response = getTablesResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, types);
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetTablesResp response = getTablesResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, types);
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetColumnsResp response = getColumnsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, columnNamePattern);
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetColumnsResp response = getColumnsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     public static HiveResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
-
-        HiveResultSet resultSet;
-
-        try {
-            TGetFunctionsResp response = getFunctionsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, functionNamePattern);
-            resultSet = buildResultSet(connection, response.getOperationHandle());
-        } catch (TException e) {
-            throw new SQLException(e);
-        }
-
-
-        return resultSet;
+        TGetFunctionsResp response = getFunctionsResponse(connection.getClient(), connection.getSessionHandle(), catalog, schemaPattern, functionNamePattern);
+        return buildResultSet(connection, response.getOperationHandle());
     }
 
     private static HiveResultSet buildResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
 
+        Schema schema = new Schema(getResultSetSchema(connection.getClient(), operationHandle));
+
+        log.debug(schema.toString());
+
+        return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, schema);
+
+    }
+
+    private static TGetCatalogsResp getCatalogsResponse(Client client, TSessionHandle sessionHandle) throws SQLException {
+        TGetCatalogsReq req = new TGetCatalogsReq(sessionHandle);
+
         try {
-            Schema schema = new Schema(getResultSetSchema(connection.getClient(), operationHandle));
+            TGetCatalogsResp resp = client.GetCatalogs(req);
 
-            log.debug(schema.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
 
-            return new HiveResultSet(connection, new HiveStatement(connection), operationHandle, schema);
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
         } catch (TException e) {
             throw new SQLException(e);
         }
     }
 
-    private static TGetCatalogsResp getCatalogsResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
-        TGetCatalogsReq req = new TGetCatalogsReq(sessionHandle);
-        TGetCatalogsResp resp = client.GetCatalogs(req);
-
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
-        }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
-    }
-
-    private static TGetColumnsResp getColumnsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws TException, SQLException {
+    private static TGetColumnsResp getColumnsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         TGetColumnsReq req = new TGetColumnsReq(sessionHandle);
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
         req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
         req.setColumnName(columnNamePattern == null ? "%" : columnNamePattern);
 
-        TGetColumnsResp resp = client.GetColumns(req);
+        try {
+            TGetColumnsResp resp = client.GetColumns(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
-    private static TGetFunctionsResp getFunctionsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String functionNamePattern) throws TException, SQLException {
+    private static TGetFunctionsResp getFunctionsResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
         TGetFunctionsReq req = new TGetFunctionsReq();
         req.setSessionHandle(sessionHandle);
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
         req.setFunctionName(functionNamePattern == null ? "%" : functionNamePattern);
 
-        TGetFunctionsResp resp = client.GetFunctions(req);
+        try {
+            TGetFunctionsResp resp = client.GetFunctions(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
 
-    private static TGetTablesResp getTablesResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws TException, SQLException {
+    private static TGetTablesResp getTablesResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
         TGetTablesReq req = new TGetTablesReq(sessionHandle);
 
         req.setCatalogName(catalog);
@@ -456,62 +431,84 @@ public class HiveServiceUtils {
             req.setTableTypes(Arrays.asList(types));
         }
 
-        TGetTablesResp resp = client.GetTables(req);
+        try {
+            TGetTablesResp resp = client.GetTables(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
 
-    private static TGetTypeInfoResp getTypeInfoResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+    private static TGetTypeInfoResp getTypeInfoResponse(Client client, TSessionHandle sessionHandle) throws SQLException {
         TGetTypeInfoReq req = new TGetTypeInfoReq(sessionHandle);
-        TGetTypeInfoResp resp = client.GetTypeInfo(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+        try {
+            TGetTypeInfoResp resp = client.GetTypeInfo(req);
+
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
-    private static TGetTableTypesResp getTableTypesResponse(Client client, TSessionHandle sessionHandle) throws TException, SQLException {
+    private static TGetTableTypesResp getTableTypesResponse(Client client, TSessionHandle sessionHandle) throws SQLException {
         TGetTableTypesReq req = new TGetTableTypesReq(sessionHandle);
-        TGetTableTypesResp resp = client.GetTableTypes(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+        try {
+            TGetTableTypesResp resp = client.GetTableTypes(req);
+
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
-    private static TGetSchemasResp getDatabaseSchemaResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern) throws TException, SQLException {
+    private static TGetSchemasResp getDatabaseSchemaResponse(Client client, TSessionHandle sessionHandle, String catalog, String schemaPattern) throws SQLException {
         TGetSchemasReq req = new TGetSchemasReq(sessionHandle);
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
 
-        TGetSchemasResp resp = client.GetSchemas(req);
+        try {
+            TGetSchemasResp resp = client.GetSchemas(req);
 
-        if (log.isDebugEnabled()) {
-            log.debug(resp.toString());
+            if (log.isDebugEnabled()) {
+                log.debug(resp.toString());
+            }
+
+            checkStatus(resp.getStatus());
+
+
+            return resp;
+
+        } catch (TException e) {
+            throw new SQLException(e);
         }
-
-        checkStatus(resp.getStatus());
-
-
-        return resp;
     }
 
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {

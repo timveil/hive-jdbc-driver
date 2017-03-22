@@ -6,7 +6,6 @@ import org.apache.hive.service.cli.Type;
 import org.apache.hive.service.cli.thrift.TFetchOrientation;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.hive.service.cli.thrift.TRowSet;
-import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,25 +71,20 @@ public class HiveResultSet extends AbstractResultSet {
             return false;
         }
 
-        try {
 
-            if (rowSet == null || !rowSetIterator.hasNext()) {
-                TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
-                rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
-                rowSetIterator = rowSet.iterator();
-            }
-
-            if (rowSetIterator.hasNext()) {
-                row = rowSetIterator.next();
-            } else {
-                return false;
-            }
-
-            rowCount++;
-
-        } catch (TException e) {
-            throw new SQLException(e.getMessage(), e);
+        if (rowSet == null || !rowSetIterator.hasNext()) {
+            TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
+            rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
+            rowSetIterator = rowSet.iterator();
         }
+
+        if (rowSetIterator.hasNext()) {
+            row = rowSetIterator.next();
+        } else {
+            return false;
+        }
+
+        rowCount++;
 
         return true;
     }
