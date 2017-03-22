@@ -24,12 +24,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    public boolean getAutoCommit() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean getAutoCommit() throws SQLException {
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -59,17 +59,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
     public boolean isReadOnly() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void setCatalog(String catalog) throws SQLException {
+    public void setReadOnly(boolean readOnly) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -79,12 +74,17 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setTransactionIsolation(int level) throws SQLException {
+    public void setCatalog(String catalog) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public int getTransactionIsolation() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public void setTransactionIsolation(int level) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -124,12 +124,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
+    public int getHoldability() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public int getHoldability() throws SQLException {
+    public void setHoldability(int holdability) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -214,11 +214,6 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public final void setClientInfo(Properties properties) throws SQLClientInfoException {
-        throw new SQLClientInfoException();
-    }
-
-    @Override
     public final String getClientInfo(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
@@ -226,6 +221,11 @@ public abstract class AbstractConnection implements Connection {
     @Override
     public final Properties getClientInfo() throws SQLException {
         throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public final void setClientInfo(Properties properties) throws SQLClientInfoException {
+        throw new SQLClientInfoException();
     }
 
     @Override
@@ -239,12 +239,12 @@ public abstract class AbstractConnection implements Connection {
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
+    public String getSchema() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public String getSchema() throws SQLException {
+    public void setSchema(String schema) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
