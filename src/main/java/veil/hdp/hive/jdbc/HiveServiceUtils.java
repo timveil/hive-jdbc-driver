@@ -177,13 +177,13 @@ public class HiveServiceUtils {
                             isComplete = true;
                             break;
                         case CANCELED_STATE:
-                            throw new SQLException("Query was cancelled", "01000");
+                            throw new SQLException("The operation was canceled by a client");
                         case TIMEDOUT_STATE:
-                            throw new SQLTimeoutException("Query timed out");
+                            throw new SQLTimeoutException("The operation timed out");
                         case ERROR_STATE:
                             throw new SQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
                         case UKNOWN_STATE:
-                            throw new SQLException("Unknown query", "HY000");
+                            throw new SQLException("The operation is in an unrecognized state");
                         case INITIALIZED_STATE:
                         case PENDING_STATE:
                         case RUNNING_STATE:
