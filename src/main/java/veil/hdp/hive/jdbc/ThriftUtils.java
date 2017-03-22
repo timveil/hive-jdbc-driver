@@ -73,7 +73,7 @@ public class ThriftUtils {
                             if (password != null) {
                                 passwordCallback.setPassword(password.toCharArray());
                             } else {
-                                // todo:hack: for some reason this can't be null or emtpy string; set default value
+                                // todo:hack: for some reason this can't be null or empty string; set default value
                                 passwordCallback.setPassword("anonymous".toCharArray());
                             }
 

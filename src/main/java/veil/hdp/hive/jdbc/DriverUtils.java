@@ -127,7 +127,7 @@ public class DriverUtils {
 
     private static void parseUrl(String url, Properties properties) throws SQLException {
 
-        URI uri = URI.create(stripPrefix(JDBC_PART, url));
+        URI uri = URI.create(stripPrefix(url));
 
         String databaseName = Strings.emptyToNull(getDatabaseName(uri));
 
@@ -183,8 +183,8 @@ public class DriverUtils {
     }
 
 
-    private static String stripPrefix(String prefix, String url) {
-        return url.replace(prefix, "").trim();
+    private static String stripPrefix(String url) {
+        return url.replace(DriverUtils.JDBC_PART, "").trim();
     }
 
     private static void loadPropertiesFromZookeeper(String authority, Properties properties) throws SQLException {

@@ -13,10 +13,10 @@ public class Column {
     private final int position;
 
 
-    public Column(String name, String comment, ColumnType columnType, int position) {
+    public Column(String name, ColumnType columnType, int position) {
         this.name = name;
         this.normalizedName = normalizeName(name);
-        this.comment = comment;
+        this.comment = null;
         this.columnType = columnType;
         this.position = position;
     }
