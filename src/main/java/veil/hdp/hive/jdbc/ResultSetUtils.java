@@ -91,7 +91,7 @@ public class ResultSetUtils {
         }
     }
 
-    private static Object convert(Object value, Type columnType, Type targetType) throws UnsupportedEncodingException {
+    private static Object convert(Object value, Type columnType, Type targetType) {
 
         switch (targetType) {
 

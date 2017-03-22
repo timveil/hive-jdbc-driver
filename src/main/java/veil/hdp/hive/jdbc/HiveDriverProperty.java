@@ -16,12 +16,12 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null);
 
-    private String name;
-    private String defaultValue;
-    private boolean required;
-    private String description;
-    private String hiveConfName;
-    private String[] choices;
+    private final String name;
+    private final String defaultValue;
+    private final boolean required;
+    private final String description;
+    private final String hiveConfName;
+    private final String[] choices;
 
 
     HiveDriverProperty(String name, String defaultValue, boolean required, String description, String hiveConfName) {
