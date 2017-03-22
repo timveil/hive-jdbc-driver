@@ -49,6 +49,15 @@ public class HiveConnectionTest extends BaseJunitTest {
         connection.setSchema("default");
     }
 
+    @Test
+    public void isValid() throws SQLException {
+        log.debug("is valid {}", connection.isValid(1));
+
+        connection.close();
+
+        log.debug("is valid {}", connection.isValid(1));
+    }
+
 
     @Test
     public void createStatement() throws SQLException {

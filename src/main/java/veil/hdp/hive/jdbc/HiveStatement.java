@@ -67,7 +67,7 @@ public class HiveStatement extends AbstractStatement {
                 log.debug(schema.toString());
             }
 
-            resultSet = new HiveResultSet(connection, this, statementHandle, schema);
+            resultSet = new HiveResultSet(this, statementHandle, schema);
 
             return true;
 

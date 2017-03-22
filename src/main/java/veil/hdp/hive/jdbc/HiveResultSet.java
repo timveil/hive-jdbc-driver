@@ -47,8 +47,8 @@ public class HiveResultSet extends AbstractResultSet {
     private boolean lastColumnNull;
 
 
-    HiveResultSet(HiveConnection connection, HiveStatement statement, TOperationHandle statementHandle, Schema schema) throws SQLException {
-        this.connection = connection;
+    HiveResultSet(HiveStatement statement, TOperationHandle statementHandle, Schema schema) throws SQLException {
+        this.connection = (HiveConnection)statement.getConnection();
         this.statement = statement;
         this.schema = schema;
         this.statementHandle = statementHandle;
