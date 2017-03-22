@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -20,49 +21,39 @@ public class ResultSetUtils {
 
     public static Object getColumnValue(Schema schema, Object[] row, int columnIndex, Type targetType) throws SQLException {
 
-        try {
-            validateRow(row, columnIndex);
+        validateRow(row, columnIndex);
 
-            Object value = row[columnIndex - 1];
+        Object value = row[columnIndex - 1];
 
-            Column column = schema.getColumns().get(columnIndex - 1);
+        Column column = schema.getColumns().get(columnIndex - 1);
 
-            Type columnType = column.getColumnType().getHiveType();
+        Type columnType = column.getColumnType().getHiveType();
 
-            if (targetType != null && !columnType.equals(targetType)) {
-                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
-            }
-
-            if (targetType == null) {
-                log.info("target type is null. setting to column type [{}]", columnType);
-                targetType = columnType;
-            }
-
-            return convert(value, columnType, targetType);
-
-        } catch (Exception e) {
-            throw new SQLException(e.getMessage(), e);
+        if (targetType != null && !columnType.equals(targetType)) {
+            log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
         }
+
+        if (targetType == null) {
+            log.info("target type is null. setting to column type [{}]", columnType);
+            targetType = columnType;
+        }
+
+        return convert(value, columnType, targetType);
+
 
     }
 
     public static InputStream getColumnValue(Schema schema, Object[] row, int columnIndex) throws SQLException {
 
-        try {
-            validateRow(row, columnIndex);
+        validateRow(row, columnIndex);
 
-            Object value = row[columnIndex - 1];
+        Object value = row[columnIndex - 1];
 
-            Column column = schema.getColumns().get(columnIndex - 1);
+        Column column = schema.getColumns().get(columnIndex - 1);
 
-            Type columnType = column.getColumnType().getHiveType();
+        Type columnType = column.getColumnType().getHiveType();
 
-            return convertToInputStream(value, columnType);
-
-        } catch (Exception e) {
-            throw new SQLException(e.getMessage(), e);
-        }
-
+        return convertToInputStream(value, columnType);
     }
 
     public static int findColumnIndex(Schema schema, String columnLabel) throws SQLException {
@@ -75,21 +66,21 @@ public class ResultSetUtils {
         throw new SQLException("Could not find column for name " + columnLabel + " in Schema " + schema);
     }
 
-    private static void validateRow(Object[] row, int columnIndex) {
+    private static void validateRow(Object[] row, int columnIndex) throws SQLException {
         if (row == null) {
-            throw new IllegalArgumentException("row is null");
+            throw new SQLException("row is null");
         }
 
         if (row.length == 0) {
-            throw new IllegalArgumentException("row length is zero");
+            throw new SQLException("row length is zero");
         }
 
         if (columnIndex > row.length) {
-            throw new IllegalArgumentException("invalid columnIndex [" + columnIndex + "] for row length [" + row.length + "]");
+            throw new SQLException("invalid columnIndex [" + columnIndex + "] for row length [" + row.length + "]");
         }
     }
 
-    private static Object convert(Object value, Type columnType, Type targetType) {
+    private static Object convert(Object value, Type columnType, Type targetType) throws SQLDataException {
 
         switch (targetType) {
 
@@ -134,7 +125,7 @@ public class ResultSetUtils {
     }
 
 
-    private static byte[] convertToByteArray(Object value, Type columnType) {
+    private static byte[] convertToByteArray(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -145,7 +136,7 @@ public class ResultSetUtils {
         return stringRepresentation.getBytes(StandardCharsets.UTF_8);
     }
 
-    private static InputStream convertToInputStream(Object value, Type columnType) {
+    private static InputStream convertToInputStream(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -162,7 +153,7 @@ public class ResultSetUtils {
 
     }
 
-    private static BigDecimal convertToBigDecimal(Object value, Type columnType) {
+    private static BigDecimal convertToBigDecimal(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -181,10 +172,10 @@ public class ResultSetUtils {
                 return new BigDecimal((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
     }
 
-    private static byte convertToByte(Object value, Type columnType) {
+    private static byte convertToByte(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -208,10 +199,10 @@ public class ResultSetUtils {
                 return Byte.parseByte((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
     }
 
-    private static short convertToShort(Object value, Type columnType) {
+    private static short convertToShort(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -233,10 +224,10 @@ public class ResultSetUtils {
                 return Short.parseShort((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
     }
 
-    private static int convertToInt(Object value, Type columnType) {
+    private static int convertToInt(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -256,10 +247,10 @@ public class ResultSetUtils {
                 return Integer.parseInt((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
     }
 
-    private static long convertToLong(Object value, Type columnType) {
+    private static long convertToLong(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -277,10 +268,10 @@ public class ResultSetUtils {
                 return Long.parseLong((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
     }
 
-    private static float convertToFloat(Object value, Type columnType) {
+    private static float convertToFloat(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -302,10 +293,10 @@ public class ResultSetUtils {
                 return Float.parseFloat((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
     }
 
-    private static double convertToDouble(Object value, Type columnType) {
+    private static double convertToDouble(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
@@ -325,10 +316,10 @@ public class ResultSetUtils {
                 return Double.parseDouble((String) value);
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
     }
 
-    private static String convertToString(Object value, Type columnType) {
+    private static String convertToString(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -382,11 +373,11 @@ public class ResultSetUtils {
                 break;
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to String from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to String from column type [" + columnType + "]");
 
     }
 
-    private static Date convertToDate(Object value, Type columnType) {
+    private static Date convertToDate(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -402,10 +393,10 @@ public class ResultSetUtils {
                 return (Date) value;
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
     }
 
-    private static Timestamp convertToTimestamp(Object value, Type columnType) {
+    private static Timestamp convertToTimestamp(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -421,10 +412,10 @@ public class ResultSetUtils {
                 return (Timestamp) value;
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
     }
 
-    private static Boolean convertToBoolean(Object value, Type columnType) {
+    private static Boolean convertToBoolean(Object value, Type columnType) throws SQLDataException {
 
         if (value == null) {
             return false;
@@ -451,6 +442,6 @@ public class ResultSetUtils {
 
         }
 
-        throw new IllegalArgumentException("no strategy to convert [" + value.toString() + "] to Boolean from column type [" + columnType + "]");
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Boolean from column type [" + columnType + "]");
     }
 }

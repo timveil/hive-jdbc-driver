@@ -12,6 +12,7 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.SaslException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -20,10 +21,14 @@ public class ThriftUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftUtils.class);
 
-    public static void openTransport(TTransport transport) throws TTransportException {
+    public static void openTransport(TTransport transport) throws SQLException {
 
         if (!transport.isOpen()) {
-            transport.open();
+            try {
+                transport.open();
+            } catch (TTransportException e) {
+                throw new HiveThriftException(e);
+            }
         }
 
     }
@@ -41,16 +46,20 @@ public class ThriftUtils {
     }
 
 
-    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient client) throws TTransportException {
+    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient client) throws SQLException {
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
 
         // todo: still hard-coding http path and scheme
-        return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
+        try {
+            return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
+        } catch (TTransportException e) {
+            throw new HiveThriftException(e);
+        }
 
     }
 
-    public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SaslException {
+    public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
         // todo: no support for no-sasl
         // todo: no support for delegation tokens or ssl yet
 
@@ -61,27 +70,31 @@ public class ThriftUtils {
 
         TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
 
-        return new TSaslClientTransport("PLAIN", null, null, null, new HashMap<>(),
-                callbacks -> {
-                    for (Callback callback : callbacks) {
-                        if (callback instanceof NameCallback) {
-                            NameCallback nameCallback = (NameCallback) callback;
-                            nameCallback.setName(user);
-                        } else if (callback instanceof PasswordCallback) {
-                            PasswordCallback passwordCallback = (PasswordCallback) callback;
+        try {
+            return new TSaslClientTransport("PLAIN", null, null, null, new HashMap<>(),
+                    callbacks -> {
+                        for (Callback callback : callbacks) {
+                            if (callback instanceof NameCallback) {
+                                NameCallback nameCallback = (NameCallback) callback;
+                                nameCallback.setName(user);
+                            } else if (callback instanceof PasswordCallback) {
+                                PasswordCallback passwordCallback = (PasswordCallback) callback;
 
-                            if (password != null) {
-                                passwordCallback.setPassword(password.toCharArray());
+                                if (password != null) {
+                                    passwordCallback.setPassword(password.toCharArray());
+                                } else {
+                                    // todo:hack: for some reason this can't be null or empty string; set default value
+                                    passwordCallback.setPassword("anonymous".toCharArray());
+                                }
+
                             } else {
-                                // todo:hack: for some reason this can't be null or empty string; set default value
-                                passwordCallback.setPassword("anonymous".toCharArray());
+                                throw new UnsupportedCallbackException(callback);
                             }
-
-                        } else {
-                            throw new UnsupportedCallbackException(callback);
                         }
-                    }
-                }, socketTransport);
+                    }, socketTransport);
+        } catch (SaslException e) {
+            throw new SQLException(e);
+        }
 
     }
 

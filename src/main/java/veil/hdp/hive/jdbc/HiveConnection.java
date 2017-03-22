@@ -5,12 +5,10 @@ import org.apache.hive.service.cli.thrift.TOpenSessionResp;
 import org.apache.hive.service.cli.thrift.TProtocolVersion;
 import org.apache.hive.service.cli.thrift.TSessionHandle;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.sasl.SaslException;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -59,41 +57,36 @@ public class HiveConnection extends AbstractConnection {
     void connect() throws SQLException {
 
 
-        try {
+        TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
 
-            TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
+        if (transportMode.equals(TransportMode.binary)) {
+            transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
+        } else {
 
-            if (transportMode.equals(TransportMode.binary)) {
-                transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
-            } else {
+            httpClient = HttpUtils.buildClient(properties);
 
-                httpClient = HttpUtils.buildClient(properties);
-
-                transport = ThriftUtils.createHttpTransport(properties, httpClient);
-            }
-
-
-            ThriftUtils.openTransport(transport);
-
-            client = ThriftUtils.createClient(transport);
-
-            TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, client);
-
-            Map<String, String> configuration = tOpenSessionResp.getConfiguration();
-
-            if (log.isDebugEnabled()) {
-                log.debug("configuration for session returned by thrift {}", configuration);
-            }
-
-            protocolVersion = tOpenSessionResp.getServerProtocolVersion();
-
-            sessionHandle = tOpenSessionResp.getSessionHandle();
-
-            closed = false;
-
-        } catch (TException | SaslException e) {
-            throw new SQLException(e.getMessage(), "", e);
+            transport = ThriftUtils.createHttpTransport(properties, httpClient);
         }
+
+
+        ThriftUtils.openTransport(transport);
+
+        client = ThriftUtils.createClient(transport);
+
+        TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, client);
+
+        Map<String, String> configuration = tOpenSessionResp.getConfiguration();
+
+        if (log.isDebugEnabled()) {
+            log.debug("configuration for session returned by thrift {}", configuration);
+        }
+
+        protocolVersion = tOpenSessionResp.getServerProtocolVersion();
+
+        sessionHandle = tOpenSessionResp.getSessionHandle();
+
+        closed = false;
+
 
     }
 
@@ -157,19 +150,13 @@ public class HiveConnection extends AbstractConnection {
     }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
-        // no-op; don't support setting this value
-    }
-
-    @Override
     public int getHoldability() throws SQLException {
         return ResultSet.CLOSE_CURSORS_AT_COMMIT;
     }
 
-
     @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        // no-op; connection does not use
+    public void setHoldability(int holdability) throws SQLException {
+        // no-op; don't support setting this value
     }
 
     @Override
@@ -177,6 +164,10 @@ public class HiveConnection extends AbstractConnection {
         return Boolean.FALSE;
     }
 
+    @Override
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        // no-op; connection does not use
+    }
 
     @Override
     public String getCatalog() throws SQLException {
@@ -198,17 +189,15 @@ public class HiveConnection extends AbstractConnection {
         sqlWarning = null;
     }
 
-
-    @Override
-    public void setTransactionIsolation(int level) throws SQLException {
-        // no-op; don't support transactions yet
-    }
-
     @Override
     public int getTransactionIsolation() throws SQLException {
         return Connection.TRANSACTION_NONE;
     }
 
+    @Override
+    public void setTransactionIsolation(int level) throws SQLException {
+        // no-op; don't support transactions yet
+    }
 
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
@@ -260,13 +249,13 @@ public class HiveConnection extends AbstractConnection {
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
-        super.setSchema(schema);
+    public String getSchema() throws SQLException {
+        return super.getSchema();
     }
 
     @Override
-    public String getSchema() throws SQLException {
-        return super.getSchema();
+    public void setSchema(String schema) throws SQLException {
+        super.setSchema(schema);
     }
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------

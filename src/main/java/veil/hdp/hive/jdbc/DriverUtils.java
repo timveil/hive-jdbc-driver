@@ -239,7 +239,7 @@ public class DriverUtils {
 
 
         } catch (Exception e) {
-            throw new SQLException(e.getMessage(), e);
+            throw new SQLException(e);
         }
     }
 

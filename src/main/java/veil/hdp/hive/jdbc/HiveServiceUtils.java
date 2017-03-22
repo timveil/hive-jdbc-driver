@@ -46,7 +46,7 @@ public class HiveServiceUtils {
             return fetchResults.getResults();
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -152,7 +152,7 @@ public class HiveServiceUtils {
             return executeStatementResp.getOperationHandle();
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
 
     }
@@ -228,7 +228,7 @@ public class HiveServiceUtils {
 
             return resp;
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
 
     }
@@ -265,7 +265,7 @@ public class HiveServiceUtils {
             return metadataResp.getSchema();
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -289,7 +289,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -354,7 +354,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -378,7 +378,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -402,7 +402,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -431,7 +431,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -452,7 +452,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -472,7 +472,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
@@ -494,7 +494,7 @@ public class HiveServiceUtils {
             return resp;
 
         } catch (TException e) {
-            throw new SQLException(e);
+            throw new HiveThriftException(e);
         }
     }
 
