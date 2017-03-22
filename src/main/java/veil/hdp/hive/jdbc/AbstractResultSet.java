@@ -65,7 +65,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+    public final BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -95,7 +95,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+    public final InputStream getUnicodeStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+    public final BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -175,7 +175,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
+    public final InputStream getUnicodeStream(String columnLabel) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -955,12 +955,12 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 

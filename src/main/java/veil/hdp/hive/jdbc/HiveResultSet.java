@@ -40,6 +40,7 @@ public class HiveResultSet extends AbstractResultSet {
     private int resultSetType;
     private int resultSetConcurrency;
     private int resultSetHoldability;
+    private SQLWarning sqlWarning = null;
 
     // public getter only
     private int rowCount;
@@ -322,12 +323,19 @@ public class HiveResultSet extends AbstractResultSet {
         return getBinaryStream(findColumn(columnLabel));
     }
 
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return sqlWarning;
+    }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        return super.getBigDecimal(columnIndex, scale);
+    public void clearWarnings() throws SQLException {
+        sqlWarning = null;
     }
+
+
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
@@ -340,16 +348,6 @@ public class HiveResultSet extends AbstractResultSet {
     }
 
     @Override
-    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        return super.getUnicodeStream(columnIndex);
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        return super.getBigDecimal(columnLabel, scale);
-    }
-
-    @Override
     public Time getTime(String columnLabel) throws SQLException {
         return super.getTime(columnLabel);
     }
@@ -359,20 +357,6 @@ public class HiveResultSet extends AbstractResultSet {
         return super.getAsciiStream(columnLabel);
     }
 
-    @Override
-    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
-        return super.getUnicodeStream(columnLabel);
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        return super.getWarnings();
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        super.clearWarnings();
-    }
 
     @Override
     public String getCursorName() throws SQLException {
@@ -632,16 +616,6 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
         return super.getObject(columnLabel, type);
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return super.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return super.isWrapperFor(iface);
     }
 
 
