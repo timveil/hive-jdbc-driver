@@ -22,7 +22,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return connection;
     }
 
-
     @Override
     public String getDriverName() throws SQLException {
         return HiveDriver.class.getName();
@@ -155,7 +154,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return " ";
     }
 
-    // todo: as of hive 1.2.1 there are no primary keys
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
         return HiveServiceUtils.getPrimaryKeys(connection, catalog, schema, table);
