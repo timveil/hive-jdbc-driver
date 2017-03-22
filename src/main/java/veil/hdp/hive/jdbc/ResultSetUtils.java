@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
@@ -19,20 +18,19 @@ public class ResultSetUtils {
 
     private static final Logger log = getLogger(ResultSetUtils.class);
 
-    public static Object getColumnValue(TableSchema schema, Object[] row, int columnIndex, Type targetType) throws SQLException {
+    public static Object getColumnValue(Schema schema, Object[] row, int columnIndex, Type targetType) throws SQLException {
 
         try {
             validateRow(row, columnIndex);
 
             Object value = row[columnIndex - 1];
 
-            ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
+            Column column = schema.getColumns().get(columnIndex - 1);
 
-            Type columnType = columnDescriptor.getTypeDescriptor().getType();
-
+            Type columnType = column.getColumnType().getHiveType();
 
             if (targetType != null && !columnType.equals(targetType)) {
-                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, columnDescriptor.getNormalizedName());
+                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
             }
 
             if (targetType == null) {
@@ -48,16 +46,16 @@ public class ResultSetUtils {
 
     }
 
-    public static InputStream getColumnValue(TableSchema schema, Object[] row, int columnIndex) throws SQLException {
+    public static InputStream getColumnValue(Schema schema, Object[] row, int columnIndex) throws SQLException {
 
         try {
             validateRow(row, columnIndex);
 
             Object value = row[columnIndex - 1];
 
-            ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
+            Column column = schema.getColumns().get(columnIndex - 1);
 
-            Type columnType = columnDescriptor.getTypeDescriptor().getType();
+            Type columnType = column.getColumnType().getHiveType();
 
             return convertToInputStream(value, columnType);
 
@@ -67,14 +65,14 @@ public class ResultSetUtils {
 
     }
 
-    public static int findColumnIndex(TableSchema tableSchema, String columnLabel) throws SQLException {
-        ColumnDescriptor columnDescriptorForName = tableSchema.getColumn(columnLabel);
+    public static int findColumnIndex(Schema schema, String columnLabel) throws SQLException {
+        Column column = schema.getColumn(columnLabel);
 
-        if (columnDescriptorForName != null) {
-            return columnDescriptorForName.getPosition();
+        if (column != null) {
+            return column.getPosition();
         }
 
-        throw new SQLException("Could not find column for name " + columnLabel + " in TableSchema " + tableSchema);
+        throw new SQLException("Could not find column for name " + columnLabel + " in Schema " + schema);
     }
 
     private static void validateRow(Object[] row, int columnIndex) {

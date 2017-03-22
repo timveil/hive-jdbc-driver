@@ -27,7 +27,7 @@ public class HiveResultSet extends AbstractResultSet {
     private final HiveConnection connection;
     private final HiveStatement statement;
     private final TOperationHandle statementHandle;
-    private final TableSchema tableSchema;
+    private final Schema schema;
 
     // private
     private RowSet rowSet;
@@ -47,10 +47,10 @@ public class HiveResultSet extends AbstractResultSet {
     private boolean lastColumnNull;
 
 
-    HiveResultSet(HiveConnection connection, HiveStatement statement, TOperationHandle statementHandle, TableSchema tableSchema) throws SQLException {
+    HiveResultSet(HiveConnection connection, HiveStatement statement, TOperationHandle statementHandle, Schema schema) throws SQLException {
         this.connection = connection;
         this.statement = statement;
-        this.tableSchema = tableSchema;
+        this.schema = schema;
         this.statementHandle = statementHandle;
         this.fetchDirection = statement.getFetchDirection();
         this.fetchSize = statement.getFetchSize();
@@ -143,7 +143,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        return ResultSetUtils.findColumnIndex(tableSchema, columnLabel);
+        return ResultSetUtils.findColumnIndex(schema, columnLabel);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData(tableSchema);
+        return new HiveResultSetMetaData(schema);
     }
 
     @Override
@@ -649,7 +649,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Object getColumnValue(int columnIndex, Type targetType) throws SQLException {
 
-        Object columnValue = ResultSetUtils.getColumnValue(tableSchema, row, columnIndex, targetType);
+        Object columnValue = ResultSetUtils.getColumnValue(schema, row, columnIndex, targetType);
 
         lastColumnNull = columnValue == null;
 
@@ -658,7 +658,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private InputStream getColumnValue(int columnIndex) throws SQLException {
 
-        InputStream columnValue = ResultSetUtils.getColumnValue(tableSchema, row, columnIndex);
+        InputStream columnValue = ResultSetUtils.getColumnValue(schema, row, columnIndex);
 
         lastColumnNull = columnValue == null;
 

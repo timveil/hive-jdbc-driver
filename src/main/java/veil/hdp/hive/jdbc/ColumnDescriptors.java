@@ -16,14 +16,14 @@ public class ColumnDescriptors {
         KEY_SEQ short => sequence number within primary key( a value of 1 represents the first column of the primary key, a value of 2 would represent the second column within the primary key).
         PK_NAME String => primary key name (may be null)
      */
-    public static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> PRIMARY_KEYS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("KEY_SEQ", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("PK_NAME", null, new ColumnType(Type.STRING_TYPE), 6));
         }
 
     };
@@ -39,17 +39,17 @@ public class ColumnDescriptors {
         PROCEDURE_TYPE short => kind of procedure:
         SPECIFIC_NAME String => The name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> PROCEDURES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("PROCEDURE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("PROCEDURE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("PROCEDURE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("RESERVED", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("RESERVED", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("RESERVED", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("PROCEDURE_TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
-            add(new ColumnDescriptor("SPECIFIC_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 9));
+            add(new Column("PROCEDURE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("PROCEDURE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("PROCEDURE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("RESERVED", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("RESERVED", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("RESERVED", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("PROCEDURE_TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 8));
+            add(new Column("SPECIFIC_NAME", null, new ColumnType(Type.STRING_TYPE), 9));
         }
 
     };
@@ -76,28 +76,28 @@ public class ColumnDescriptors {
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
         SPECIFIC_NAME String => the name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> PROCEDURE_COLUMNS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("PROCEDURE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("PROCEDURE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("PROCEDURE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("COLUMN_TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 5));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 6));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("PRECISION", null, new TypeDescriptor(Type.INT_TYPE), 8));
-            add(new ColumnDescriptor("LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 9));
-            add(new ColumnDescriptor("SCALE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
-            add(new ColumnDescriptor("RADIX", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
-            add(new ColumnDescriptor("NULLABLE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 12));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 13));
-            add(new ColumnDescriptor("COLUMN_DEF", null, new TypeDescriptor(Type.STRING_TYPE), 14));
-            add(new ColumnDescriptor("SQL_DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 15));
-            add(new ColumnDescriptor("SQL_DATETIME_SUB", null, new TypeDescriptor(Type.INT_TYPE), 16));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 17));
-            add(new ColumnDescriptor("ORDINAL_POSITION", null, new TypeDescriptor(Type.INT_TYPE), 18));
-            add(new ColumnDescriptor("IS_NULLABLE", null, new TypeDescriptor(Type.STRING_TYPE), 19));
-            add(new ColumnDescriptor("SPECIFIC_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 20));
+            add(new Column("PROCEDURE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("PROCEDURE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("PROCEDURE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("COLUMN_TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 5));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 6));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("PRECISION", null, new ColumnType(Type.INT_TYPE), 8));
+            add(new Column("LENGTH", null, new ColumnType(Type.INT_TYPE), 9));
+            add(new Column("SCALE", null, new ColumnType(Type.SMALLINT_TYPE), 10));
+            add(new Column("RADIX", null, new ColumnType(Type.SMALLINT_TYPE), 11));
+            add(new Column("NULLABLE", null, new ColumnType(Type.SMALLINT_TYPE), 12));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 13));
+            add(new Column("COLUMN_DEF", null, new ColumnType(Type.STRING_TYPE), 14));
+            add(new Column("SQL_DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 15));
+            add(new Column("SQL_DATETIME_SUB", null, new ColumnType(Type.INT_TYPE), 16));
+            add(new Column("CHAR_OCTET_LENGTH", null, new ColumnType(Type.INT_TYPE), 17));
+            add(new Column("ORDINAL_POSITION", null, new ColumnType(Type.INT_TYPE), 18));
+            add(new Column("IS_NULLABLE", null, new ColumnType(Type.STRING_TYPE), 19));
+            add(new Column("SPECIFIC_NAME", null, new ColumnType(Type.STRING_TYPE), 20));
         }
 
     };
@@ -112,16 +112,16 @@ public class ColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> COLUMN_PRIVILEGES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("GRANTOR", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("GRANTEE", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("PRIVILEGE", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("IS_GRANTABLE", null, new TypeDescriptor(Type.STRING_TYPE), 8));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("GRANTOR", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("GRANTEE", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("PRIVILEGE", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("IS_GRANTABLE", null, new ColumnType(Type.STRING_TYPE), 8));
         }
 
     };
@@ -136,16 +136,16 @@ public class ColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => is this a pseudo column like an Oracle ROWID
      */
-    public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> BEST_ROW_IDENTIFIER = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("SCOPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 1));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 3));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("COLUMN_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("BUFFER_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 6));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
-            add(new ColumnDescriptor("PSEUDO_COLUMN", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
+            add(new Column("SCOPE", null, new ColumnType(Type.SMALLINT_TYPE), 1));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 3));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("COLUMN_SIZE", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("BUFFER_LENGTH", null, new ColumnType(Type.INT_TYPE), 6));
+            add(new Column("DECIMAL_DIGITS", null, new ColumnType(Type.SMALLINT_TYPE), 7));
+            add(new Column("PSEUDO_COLUMN", null, new ColumnType(Type.SMALLINT_TYPE), 8));
         }
 
     };
@@ -159,15 +159,15 @@ public class ColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> TABLE_PRIVILEGES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("GRANTOR", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("GRANTEE", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("PRIVILEGE", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("IS_GRANTABLE", null, new TypeDescriptor(Type.STRING_TYPE), 7));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("GRANTOR", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("GRANTEE", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("PRIVILEGE", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("IS_GRANTABLE", null, new ColumnType(Type.STRING_TYPE), 7));
         }
 
     };
@@ -182,16 +182,16 @@ public class ColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => whether this is pseudo column like an Oracle ROWID
      */
-    public static final List<ColumnDescriptor> VERSION_COLUMNS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> VERSION_COLUMNS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("SCOPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 1));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 3));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("COLUMN_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("BUFFER_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 6));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
-            add(new ColumnDescriptor("PSEUDO_COLUMN", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
+            add(new Column("SCOPE", null, new ColumnType(Type.SMALLINT_TYPE), 1));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 3));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("COLUMN_SIZE", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("BUFFER_LENGTH", null, new ColumnType(Type.INT_TYPE), 6));
+            add(new Column("DECIMAL_DIGITS", null, new ColumnType(Type.SMALLINT_TYPE), 7));
+            add(new Column("PSEUDO_COLUMN", null, new ColumnType(Type.SMALLINT_TYPE), 8));
         }
 
     };
@@ -212,22 +212,22 @@ public class ColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> IMPORTED_KEYS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
-            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
-            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
-            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
-            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
-            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
-            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
+            add(new Column("PKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("PKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("PKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("PKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("FKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("FKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("FKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("FKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 8));
+            add(new Column("KEY_SEQ", null, new ColumnType(Type.SMALLINT_TYPE), 9));
+            add(new Column("UPDATE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 10));
+            add(new Column("DELETE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 11));
+            add(new Column("FK_NAME", null, new ColumnType(Type.STRING_TYPE), 12));
+            add(new Column("PK_NAME", null, new ColumnType(Type.STRING_TYPE), 13));
+            add(new Column("DEFERRABILITY", null, new ColumnType(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -248,22 +248,22 @@ public class ColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> EXPORTED_KEYS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> EXPORTED_KEYS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
-            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
-            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
-            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
-            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
-            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
-            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
+            add(new Column("PKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("PKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("PKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("PKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("FKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("FKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("FKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("FKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 8));
+            add(new Column("KEY_SEQ", null, new ColumnType(Type.SMALLINT_TYPE), 9));
+            add(new Column("UPDATE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 10));
+            add(new Column("DELETE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 11));
+            add(new Column("FK_NAME", null, new ColumnType(Type.STRING_TYPE), 12));
+            add(new Column("PK_NAME", null, new ColumnType(Type.STRING_TYPE), 13));
+            add(new Column("DEFERRABILITY", null, new ColumnType(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -284,22 +284,22 @@ public class ColumnDescriptors {
         PK_NAME String => parent key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> CROSS_REFERENCE = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> CROSS_REFERENCE = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("PKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("PKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("PKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("PKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("FKTABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("FKTABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("FKTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 7));
-            add(new ColumnDescriptor("FKCOLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 8));
-            add(new ColumnDescriptor("KEY_SEQ", null, new TypeDescriptor(Type.SMALLINT_TYPE), 9));
-            add(new ColumnDescriptor("UPDATE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 10));
-            add(new ColumnDescriptor("DELETE_RULE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 11));
-            add(new ColumnDescriptor("FK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 12));
-            add(new ColumnDescriptor("PK_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 13));
-            add(new ColumnDescriptor("DEFERRABILITY", null, new TypeDescriptor(Type.SMALLINT_TYPE), 14));
+            add(new Column("PKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("PKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("PKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("PKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("FKTABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("FKTABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("FKTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("FKCOLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 8));
+            add(new Column("KEY_SEQ", null, new ColumnType(Type.SMALLINT_TYPE), 9));
+            add(new Column("UPDATE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 10));
+            add(new Column("DELETE_RULE", null, new ColumnType(Type.SMALLINT_TYPE), 11));
+            add(new Column("FK_NAME", null, new ColumnType(Type.STRING_TYPE), 12));
+            add(new Column("PK_NAME", null, new ColumnType(Type.STRING_TYPE), 13));
+            add(new Column("DEFERRABILITY", null, new ColumnType(Type.SMALLINT_TYPE), 14));
         }
 
     };
@@ -319,21 +319,21 @@ public class ColumnDescriptors {
         PAGES long => When TYPE is tableIndexStatisic then this is the number of pages used for the table, otherwise it is the number of pages used for the current index.
         FILTER_CONDITION String => Filter condition, if any. (may be null)
      */
-    public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> INDEX_INFO = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("NON_UNIQUE", null, new TypeDescriptor(Type.BOOLEAN_TYPE), 4));
-            add(new ColumnDescriptor("INDEX_QUALIFIER", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("INDEX_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
-            add(new ColumnDescriptor("ORDINAL_POSITION", null, new TypeDescriptor(Type.SMALLINT_TYPE), 8));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 9));
-            add(new ColumnDescriptor("ASC_OR_DESC", null, new TypeDescriptor(Type.STRING_TYPE), 10));
-            add(new ColumnDescriptor("CARDINALITY", null, new TypeDescriptor(Type.BIGINT_TYPE), 11));
-            add(new ColumnDescriptor("PAGES", null, new TypeDescriptor(Type.BIGINT_TYPE), 12));
-            add(new ColumnDescriptor("FILTER_CONDITION", null, new TypeDescriptor(Type.STRING_TYPE), 13));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("NON_UNIQUE", null, new ColumnType(Type.BOOLEAN_TYPE), 4));
+            add(new Column("INDEX_QUALIFIER", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("INDEX_NAME", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 7));
+            add(new Column("ORDINAL_POSITION", null, new ColumnType(Type.SMALLINT_TYPE), 8));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 9));
+            add(new Column("ASC_OR_DESC", null, new ColumnType(Type.STRING_TYPE), 10));
+            add(new Column("CARDINALITY", null, new ColumnType(Type.BIGINT_TYPE), 11));
+            add(new Column("PAGES", null, new ColumnType(Type.BIGINT_TYPE), 12));
+            add(new Column("FILTER_CONDITION", null, new ColumnType(Type.STRING_TYPE), 13));
         }
 
     };
@@ -347,15 +347,15 @@ public class ColumnDescriptors {
         REMARKS String => explanatory comment on the type
         BASE_TYPE short => type code of the source type of a DISTINCT type or the type
      */
-    public static final List<ColumnDescriptor> UDT = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> UDT = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("CLASS_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("BASE_TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 7));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TYPE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("CLASS_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("BASE_TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 7));
         }
     };
 
@@ -367,14 +367,14 @@ public class ColumnDescriptors {
         SUPERTYPE_SCHEM String => the direct super type's schema (may be null)
         SUPERTYPE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> SUPER_TYPES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("SUPERTYPE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("SUPERTYPE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 5));
-            add(new ColumnDescriptor("SUPERTYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TYPE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("SUPERTYPE_CAT", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("SUPERTYPE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 5));
+            add(new Column("SUPERTYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 6));
         }
     };
 
@@ -384,12 +384,12 @@ public class ColumnDescriptors {
         TABLE_NAME String => type name
         SUPERTABLE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> SUPER_TABLES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("SUPERTABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TYPE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("SUPERTABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
         }
     };
 
@@ -416,29 +416,29 @@ public class ColumnDescriptors {
         SCOPE_TABLE String => table name that is the scope of a reference attribute (null if the DATA_TYPE isn't REF)
         SOURCE_DATA_TYPE short => source type of a distinct type or user-generated Ref type,SQL type from java.sql.Types (null if DATA_TYPE isn't DISTINCT or user-generated REF)
      */
-    public static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> ATTRIBUTES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TYPE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("ATTR_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("ATTR_TYPE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
-            add(new ColumnDescriptor("ATTR_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 7));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.INT_TYPE), 8));
-            add(new ColumnDescriptor("NUM_PREC_RADIX", null, new TypeDescriptor(Type.INT_TYPE), 9));
-            add(new ColumnDescriptor("NULLABLE", null, new TypeDescriptor(Type.INT_TYPE), 10));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 11));
-            add(new ColumnDescriptor("ATTR_DEF", null, new TypeDescriptor(Type.STRING_TYPE), 12));
-            add(new ColumnDescriptor("SQL_DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 13));
-            add(new ColumnDescriptor("SQL_DATETIME_SUB", null, new TypeDescriptor(Type.INT_TYPE), 14));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 15));
-            add(new ColumnDescriptor("ORDINAL_POSITION", null, new TypeDescriptor(Type.INT_TYPE), 16));
-            add(new ColumnDescriptor("IS_NULLABLE", null, new TypeDescriptor(Type.STRING_TYPE), 17));
-            add(new ColumnDescriptor("SCOPE_CATALOG", null, new TypeDescriptor(Type.STRING_TYPE), 18));
-            add(new ColumnDescriptor("SCOPE_SCHEMA", null, new TypeDescriptor(Type.STRING_TYPE), 19));
-            add(new ColumnDescriptor("SCOPE_TABLE", null, new TypeDescriptor(Type.STRING_TYPE), 20));
-            add(new ColumnDescriptor("SOURCE_DATA_TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 21));
+            add(new Column("TYPE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TYPE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("ATTR_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("ATTR_TYPE_NAME", null, new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("ATTR_SIZE", null, new ColumnType(Type.INT_TYPE), 7));
+            add(new Column("DECIMAL_DIGITS", null, new ColumnType(Type.INT_TYPE), 8));
+            add(new Column("NUM_PREC_RADIX", null, new ColumnType(Type.INT_TYPE), 9));
+            add(new Column("NULLABLE", null, new ColumnType(Type.INT_TYPE), 10));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 11));
+            add(new Column("ATTR_DEF", null, new ColumnType(Type.STRING_TYPE), 12));
+            add(new Column("SQL_DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 13));
+            add(new Column("SQL_DATETIME_SUB", null, new ColumnType(Type.INT_TYPE), 14));
+            add(new Column("CHAR_OCTET_LENGTH", null, new ColumnType(Type.INT_TYPE), 15));
+            add(new Column("ORDINAL_POSITION", null, new ColumnType(Type.INT_TYPE), 16));
+            add(new Column("IS_NULLABLE", null, new ColumnType(Type.STRING_TYPE), 17));
+            add(new Column("SCOPE_CATALOG", null, new ColumnType(Type.STRING_TYPE), 18));
+            add(new Column("SCOPE_SCHEMA", null, new ColumnType(Type.STRING_TYPE), 19));
+            add(new Column("SCOPE_TABLE", null, new ColumnType(Type.STRING_TYPE), 20));
+            add(new Column("SOURCE_DATA_TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 21));
         }
     };
 
@@ -448,12 +448,12 @@ public class ColumnDescriptors {
         DEFAULT_VALUE String=> The default value of the property
         DESCRIPTION String=> A description of the property. This will typically contain information as to where this property is stored in the database.
      */
-    public static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> CLIENT_INFO_PROPERTIES = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("NAME", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("MAX_LEN", null, new TypeDescriptor(Type.INT_TYPE), 2));
-            add(new ColumnDescriptor("DEFAULT_VALUE", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("DESCRIPTION", null, new TypeDescriptor(Type.STRING_TYPE), 4));
+            add(new Column("NAME", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("MAX_LEN", null, new ColumnType(Type.INT_TYPE), 2));
+            add(new Column("DEFAULT_VALUE", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("DESCRIPTION", null, new ColumnType(Type.STRING_TYPE), 4));
         }
     };
 
@@ -465,14 +465,14 @@ public class ColumnDescriptors {
         FUNCTION_TYPE short => kind of function:
         SPECIFIC_NAME String => the name which uniquely identifies this function within its schema. This is a user specified, or DBMS generated, name that may be different then the FUNCTION_NAME for example with overload functions
      */
-    public static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> FUNCTION_COLUMNS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("FUNCTION_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("FUNCTION_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("FUNCTION_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("FUNCTION_TYPE", null, new TypeDescriptor(Type.SMALLINT_TYPE), 5));
-            add(new ColumnDescriptor("SPECIFIC_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 6));
+            add(new Column("FUNCTION_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("FUNCTION_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("FUNCTION_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("FUNCTION_TYPE", null, new ColumnType(Type.SMALLINT_TYPE), 5));
+            add(new Column("SPECIFIC_NAME", null, new ColumnType(Type.STRING_TYPE), 6));
         }
     };
 
@@ -490,26 +490,26 @@ public class ColumnDescriptors {
         CHAR_OCTET_LENGTH int => for char types the maximum number of bytes in the column
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
      */
-    public static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> PSEUDO_COLUMNS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("TABLE_CAT", null, new TypeDescriptor(Type.STRING_TYPE), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", null, new TypeDescriptor(Type.STRING_TYPE), 2));
-            add(new ColumnDescriptor("TABLE_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", null, new TypeDescriptor(Type.STRING_TYPE), 4));
-            add(new ColumnDescriptor("DATA_TYPE", null, new TypeDescriptor(Type.INT_TYPE), 5));
-            add(new ColumnDescriptor("COLUMN_SIZE", null, new TypeDescriptor(Type.INT_TYPE), 6));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", null, new TypeDescriptor(Type.INT_TYPE), 7));
-            add(new ColumnDescriptor("NUM_PREC_RADIX", null, new TypeDescriptor(Type.INT_TYPE), 8));
-            add(new ColumnDescriptor("COLUMN_USAGE", null, new TypeDescriptor(Type.STRING_TYPE), 9));
-            add(new ColumnDescriptor("REMARKS", null, new TypeDescriptor(Type.STRING_TYPE), 10));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", null, new TypeDescriptor(Type.INT_TYPE), 11));
-            add(new ColumnDescriptor("IS_NULLABLE", null, new TypeDescriptor(Type.STRING_TYPE), 12));
+            add(new Column("TABLE_CAT", null, new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("TABLE_SCHEM", null, new ColumnType(Type.STRING_TYPE), 2));
+            add(new Column("TABLE_NAME", null, new ColumnType(Type.STRING_TYPE), 3));
+            add(new Column("COLUMN_NAME", null, new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("DATA_TYPE", null, new ColumnType(Type.INT_TYPE), 5));
+            add(new Column("COLUMN_SIZE", null, new ColumnType(Type.INT_TYPE), 6));
+            add(new Column("DECIMAL_DIGITS", null, new ColumnType(Type.INT_TYPE), 7));
+            add(new Column("NUM_PREC_RADIX", null, new ColumnType(Type.INT_TYPE), 8));
+            add(new Column("COLUMN_USAGE", null, new ColumnType(Type.STRING_TYPE), 9));
+            add(new Column("REMARKS", null, new ColumnType(Type.STRING_TYPE), 10));
+            add(new Column("CHAR_OCTET_LENGTH", null, new ColumnType(Type.INT_TYPE), 11));
+            add(new Column("IS_NULLABLE", null, new ColumnType(Type.STRING_TYPE), 12));
         }
     };
 
-    public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<ColumnDescriptor>() {
+    public static final List<Column> GENERATED_KEYS = new ArrayList<Column>() {
         {
-            add(new ColumnDescriptor("GENERATED_KEY", null, new TypeDescriptor(Type.STRING_TYPE), 1));
+            add(new Column("GENERATED_KEY", null, new ColumnType(Type.STRING_TYPE), 1));
         }
     };
 }

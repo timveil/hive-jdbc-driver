@@ -64,13 +64,13 @@ public class HiveStatement extends AbstractStatement {
                 return false;
             }
 
-            TableSchema tableSchema = new TableSchema(HiveServiceUtils.getResultSetSchema(connection.getClient(), statementHandle));
+            Schema schema = new Schema(HiveServiceUtils.getResultSetSchema(connection.getClient(), statementHandle));
 
             if (log.isDebugEnabled()) {
-                log.debug(tableSchema.toString());
+                log.debug(schema.toString());
             }
 
-            resultSet = new HiveResultSet(connection, this, statementHandle, tableSchema);
+            resultSet = new HiveResultSet(connection, this, statementHandle, schema);
 
         } catch (TException e) {
             throw new SQLException(e.getMessage(), "", e);

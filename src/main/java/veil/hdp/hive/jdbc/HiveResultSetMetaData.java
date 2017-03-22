@@ -12,12 +12,12 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     private final Logger log = LoggerFactory.getLogger(HiveResultSetMetaData.class);
 
     // constructor
-    private final TableSchema schema;
+    private final Schema schema;
 
     private int columnCount;
 
 
-    HiveResultSetMetaData(TableSchema schema) {
+    HiveResultSetMetaData(Schema schema) {
         this.schema = schema;
 
         if (schema.getColumns() != null) {
@@ -48,12 +48,12 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        return schema.getColumn(column).getTypeDescriptor().getType().toJavaSQLType();
+        return schema.getColumn(column).getColumnType().getHiveType().toJavaSQLType();
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        return schema.getColumn(column).getTypeDescriptor().getType().getName();
+        return schema.getColumn(column).getColumnType().getHiveType().getName();
     }
 
     // todo: research this more; don't believe has this concept

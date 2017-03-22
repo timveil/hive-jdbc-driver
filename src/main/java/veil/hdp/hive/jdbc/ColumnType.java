@@ -7,28 +7,28 @@ import org.apache.hive.service.cli.thrift.TTypeEntry;
 
 import java.util.List;
 
-public class TypeDescriptor {
+public class ColumnType {
 
-    private final Type type;
+    private final Type hiveType;
 
-    public TypeDescriptor(Type type) {
-        this.type = type;
+    public ColumnType(Type hiveType) {
+        this.hiveType = hiveType;
     }
 
-    public TypeDescriptor(TTypeDesc tTypeDesc) {
+    public ColumnType(TTypeDesc tTypeDesc) {
         List<TTypeEntry> tTypeEntries = tTypeDesc.getTypes();
         TPrimitiveTypeEntry top = tTypeEntries.get(0).getPrimitiveEntry();
-        this.type = Type.getType(top.getType());
+        this.hiveType = Type.getType(top.getType());
     }
 
-    public Type getType() {
-        return type;
+    public Type getHiveType() {
+        return hiveType;
     }
 
     @Override
     public String toString() {
-        return "TypeDescriptor{" +
-                "type=" + type +
+        return "ColumnType{" +
+                "hiveType=" + hiveType +
                 '}';
     }
 }
