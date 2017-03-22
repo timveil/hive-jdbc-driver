@@ -15,10 +15,11 @@ public class ColumnType {
         this.hiveType = hiveType;
     }
 
-    public ColumnType(TTypeDesc tTypeDesc) {
-        List<TTypeEntry> tTypeEntries = tTypeDesc.getTypes();
-        TPrimitiveTypeEntry top = tTypeEntries.get(0).getPrimitiveEntry();
-        this.hiveType = Type.getType(top.getType());
+    public ColumnType(TTypeDesc typeDesc) {
+        List<TTypeEntry> typeEntries = typeDesc.getTypes();
+        TPrimitiveTypeEntry primitiveTypeEntry = typeEntries.get(0).getPrimitiveEntry();
+
+        this.hiveType = Type.getType(primitiveTypeEntry.getType());
     }
 
     public Type getHiveType() {

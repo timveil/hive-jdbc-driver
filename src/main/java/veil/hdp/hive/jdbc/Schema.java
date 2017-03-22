@@ -10,12 +10,12 @@ public class Schema {
 
     private final List<Column> columns;
 
-    public Schema(TTableSchema tTableSchema) {
+    public Schema(TTableSchema tableSchema) {
 
         columns = new ArrayList<>();
 
-        for (TColumnDesc tColumnDesc : tTableSchema.getColumns()) {
-            columns.add(new Column(tColumnDesc));
+        for (TColumnDesc columnDesc : tableSchema.getColumns()) {
+            columns.add(new Column(columnDesc));
         }
     }
 

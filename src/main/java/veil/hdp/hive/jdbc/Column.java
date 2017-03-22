@@ -21,12 +21,12 @@ public class Column {
         this.position = position;
     }
 
-    public Column(TColumnDesc tColumnDesc) {
-        name = tColumnDesc.getColumnName();
-        normalizedName = normalizeName(tColumnDesc.getColumnName());
-        comment = tColumnDesc.getComment();
-        columnType = new ColumnType(tColumnDesc.getTypeDesc());
-        position = tColumnDesc.getPosition();
+    public Column(TColumnDesc columnDesc) {
+        name = columnDesc.getColumnName();
+        normalizedName = normalizeName(columnDesc.getColumnName());
+        comment = columnDesc.getComment();
+        columnType = new ColumnType(columnDesc.getTypeDesc());
+        position = columnDesc.getPosition();
     }
 
     public String getName() {
