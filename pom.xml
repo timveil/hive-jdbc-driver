@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>veil.hdp.hive</groupId>
-    <artifactId>jdbc</artifactId>
+    <artifactId>hive-jdbc</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
