@@ -76,11 +76,6 @@ public class HiveServiceUtilsTest extends BaseJunitTest {
     }
 
     @Test
-    public void printInfo() throws Exception {
-        HiveServiceUtils.printInfo(connection.getClient(), connection.getSessionHandle());
-    }
-
-    @Test
     public void getServerInfo() throws Exception {
         TGetInfoResp serverInfo = HiveServiceUtils.getServerInfo(connection.getClient(), connection.getSessionHandle(), TGetInfoType.CLI_DBMS_NAME);
 

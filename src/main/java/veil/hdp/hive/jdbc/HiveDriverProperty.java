@@ -4,6 +4,8 @@ import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 
 public enum HiveDriverProperty {
+
+    // required by JDBC Spec
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
     USER("user", null, false, null, null),
@@ -12,6 +14,7 @@ public enum HiveDriverProperty {
 
     TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),
 
+    // zookeeper discovery related
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null);

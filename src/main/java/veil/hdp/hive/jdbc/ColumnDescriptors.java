@@ -182,19 +182,7 @@ public class ColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => whether this is pseudo column like an Oracle ROWID
      */
-    public static final List<Column> VERSION_COLUMNS = new ArrayList<Column>() {
-        {
-            add(new Column("SCOPE", new ColumnType(Type.SMALLINT_TYPE), 1));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 3));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("COLUMN_SIZE", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("BUFFER_LENGTH", new ColumnType(Type.INT_TYPE), 6));
-            add(new Column("DECIMAL_DIGITS", new ColumnType(Type.SMALLINT_TYPE), 7));
-            add(new Column("PSEUDO_COLUMN", new ColumnType(Type.SMALLINT_TYPE), 8));
-        }
-
-    };
+    public static final List<Column> VERSION_COLUMNS = BEST_ROW_IDENTIFIER;
 
     /*
         PKTABLE_CAT String => primary key table catalog being imported (may be null)
@@ -248,25 +236,7 @@ public class ColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<Column> EXPORTED_KEYS = new ArrayList<Column>() {
-        {
-            add(new Column("PKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("PKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("PKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("PKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("FKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("FKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("FKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("FKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 8));
-            add(new Column("KEY_SEQ", new ColumnType(Type.SMALLINT_TYPE), 9));
-            add(new Column("UPDATE_RULE", new ColumnType(Type.SMALLINT_TYPE), 10));
-            add(new Column("DELETE_RULE", new ColumnType(Type.SMALLINT_TYPE), 11));
-            add(new Column("FK_NAME", new ColumnType(Type.STRING_TYPE), 12));
-            add(new Column("PK_NAME", new ColumnType(Type.STRING_TYPE), 13));
-            add(new Column("DEFERRABILITY", new ColumnType(Type.SMALLINT_TYPE), 14));
-        }
-
-    };
+    public static final List<Column> EXPORTED_KEYS = IMPORTED_KEYS;
 
     /*
         PKTABLE_CAT String => parent key table catalog (may be null)
@@ -284,25 +254,7 @@ public class ColumnDescriptors {
         PK_NAME String => parent key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<Column> CROSS_REFERENCE = new ArrayList<Column>() {
-        {
-            add(new Column("PKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("PKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("PKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("PKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("FKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("FKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("FKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("FKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 8));
-            add(new Column("KEY_SEQ", new ColumnType(Type.SMALLINT_TYPE), 9));
-            add(new Column("UPDATE_RULE", new ColumnType(Type.SMALLINT_TYPE), 10));
-            add(new Column("DELETE_RULE", new ColumnType(Type.SMALLINT_TYPE), 11));
-            add(new Column("FK_NAME", new ColumnType(Type.STRING_TYPE), 12));
-            add(new Column("PK_NAME", new ColumnType(Type.STRING_TYPE), 13));
-            add(new Column("DEFERRABILITY", new ColumnType(Type.SMALLINT_TYPE), 14));
-        }
-
-    };
+    public static final List<Column> CROSS_REFERENCE = IMPORTED_KEYS;
 
     /*
         TABLE_CAT String => table catalog (may be null)

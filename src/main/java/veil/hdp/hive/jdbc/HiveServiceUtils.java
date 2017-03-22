@@ -269,19 +269,6 @@ public class HiveServiceUtils {
         }
     }
 
-    @Deprecated
-    public static void printInfo(Client client, TSessionHandle sessionHandle) throws SQLException {
-
-        for (TGetInfoType tGetInfoType : TGetInfoType.values()) {
-
-            TGetInfoResp serverInfo = getServerInfo(client, sessionHandle, tGetInfoType);
-
-            String value = serverInfo.getInfoValue().getStringValue();
-
-            log.debug("Key {} Value {}", tGetInfoType.toString(), value);
-        }
-
-    }
 
     // todo: this freaks out on the backend if type is not correct and results in failing subsequent calls.  should avoid this until fixed.
     // see: org.apache.hive.service.cli.session.HiveSessionImpl; don't know why it doesn't support more types
