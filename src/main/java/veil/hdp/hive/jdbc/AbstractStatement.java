@@ -89,22 +89,22 @@ public abstract class AbstractStatement implements Statement {
     }
 
     @Override
-    public void setFetchDirection(int direction) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
     public int getFetchDirection() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void setFetchSize(int rows) throws SQLException {
+    public void setFetchDirection(int direction) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public int getFetchSize() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public void setFetchSize(int rows) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -189,12 +189,12 @@ public abstract class AbstractStatement implements Statement {
     }
 
     @Override
-    public void setPoolable(boolean poolable) throws SQLException {
+    public boolean isPoolable() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public boolean isPoolable() throws SQLException {
+    public void setPoolable(boolean poolable) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 

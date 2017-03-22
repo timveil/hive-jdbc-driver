@@ -39,12 +39,12 @@ public class AbstractDataSource implements DataSource {
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
+    public int getLoginTimeout() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
+    public void setLoginTimeout(int seconds) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 

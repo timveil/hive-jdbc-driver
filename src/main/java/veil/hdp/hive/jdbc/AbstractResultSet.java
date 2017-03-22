@@ -300,22 +300,22 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public void setFetchDirection(int direction) throws SQLException {
-        throw new SQLFeatureNotSupportedException();
-    }
-
-    @Override
     public int getFetchDirection() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public void setFetchSize(int rows) throws SQLException {
+    public void setFetchDirection(int direction) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public int getFetchSize() throws SQLException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    @Override
+    public void setFetchSize(int rows) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
