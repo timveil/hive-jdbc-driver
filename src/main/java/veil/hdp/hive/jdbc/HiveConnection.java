@@ -209,6 +209,17 @@ public class HiveConnection extends AbstractConnection {
         return 0;
     }
 
+    @Override
+    public String getSchema() throws SQLException {
+        return HiveServiceUtils.getSchema(this);
+    }
+
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        HiveServiceUtils.setSchema(this, schema);
+    }
+
+
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -248,15 +259,6 @@ public class HiveConnection extends AbstractConnection {
         return super.isValid(timeout);
     }
 
-    @Override
-    public String getSchema() throws SQLException {
-        return super.getSchema();
-    }
-
-    @Override
-    public void setSchema(String schema) throws SQLException {
-        super.setSchema(schema);
-    }
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
+import java.sql.Statement;
 import java.util.*;
 
 import static org.apache.hive.service.cli.thrift.TCLIService.Client;
@@ -27,6 +28,7 @@ public class HiveServiceUtils {
             return;
         }
 
+        // todo: convert this to local HiveThriftException and convert strings to stack trace
         throw new HiveSQLException(status);
     }
 
@@ -572,5 +574,25 @@ public class HiveServiceUtils {
 
     public static ResultSet getGeneratedKeys(HiveConnection connection) throws SQLException {
         return new HiveResultSet(connection, new HiveStatement(connection), null, new Schema(ColumnDescriptors.PSEUDO_COLUMNS));
+    }
+
+    public static String getSchema(HiveConnection connection) throws SQLException {
+
+        String schema = null;
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT current_database()")) {
+            if (resultSet.next()) {
+                schema = resultSet.getString(1);
+            }
+        }
+
+        return schema;
+    }
+
+    public static void setSchema(HiveConnection connection, String schema) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("USE " + schema);
+        }
     }
 }

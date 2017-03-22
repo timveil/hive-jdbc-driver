@@ -38,6 +38,19 @@ public class HiveConnectionTest extends BaseJunitTest {
     }
 
     @Test
+    public void getSchema() throws SQLException {
+        String schema = connection.getSchema();
+
+        log.debug("schema [{}]", schema);
+    }
+
+    @Test
+    public void setSchema() throws SQLException {
+        connection.setSchema("default");
+    }
+
+
+    @Test
     public void createStatement() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM test_table");
