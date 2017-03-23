@@ -7,10 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -413,6 +410,28 @@ public class ResultSetUtils {
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
+    }
+
+    private static Time convertToTime(Object value, Type columnType) throws SQLDataException {
+
+        if (value == null) {
+            return null;
+        }
+
+        switch (columnType) {
+
+            case STRING_TYPE:
+            case CHAR_TYPE:
+            case VARCHAR_TYPE:
+                return Time.valueOf((String) value);
+            case BIGINT_TYPE:
+            case INT_TYPE:
+                return new Time((Long)value);
+            case TIMESTAMP_TYPE:
+                return new Time(((Timestamp) value).getTime());
+        }
+
+        throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Time from column type [" + columnType + "]");
     }
 
     private static Boolean convertToBoolean(Object value, Type columnType) throws SQLDataException {
