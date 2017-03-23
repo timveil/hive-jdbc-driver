@@ -14,10 +14,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveConnection extends AbstractConnection {
 
     private static final Logger log = LoggerFactory.getLogger(HiveConnection.class);
+
+    private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
     // constructor
     private final Properties properties;
@@ -30,12 +33,11 @@ public class HiveConnection extends AbstractConnection {
     private CloseableHttpClient httpClient = null;
 
     // public getter & setter
-    private boolean closed;
+    private final AtomicBoolean closed = new AtomicBoolean(true);
     private SQLWarning sqlWarning = null;
 
     HiveConnection(Properties properties) {
         this.properties = properties;
-        closed = false;
     }
 
     Properties getProperties() {
@@ -85,7 +87,7 @@ public class HiveConnection extends AbstractConnection {
 
         sessionHandle = tOpenSessionResp.getSessionHandle();
 
-        closed = false;
+        closed.set(false);
 
 
     }
@@ -97,20 +99,17 @@ public class HiveConnection extends AbstractConnection {
             log.debug("attempting to close {}", this.getClass().getName());
         }
 
-        if (!isClosed()) {
-
+        if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);
             HttpUtils.closeClient(httpClient);
-
-            closed = true;
         }
 
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return closed;
+        return closed.get();
     }
 
     @Override
@@ -257,11 +256,20 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public void abort(Executor executor) throws SQLException {
-        super.abort(executor);
+
+        if (closed.get()) {
+            return;
+        }
+
+        SQL_PERMISSION_ABORT.checkGuard(this);
+
+        AbortCommand command = new AbortCommand();
+        if (executor != null) {
+            executor.execute(command);
+        } else {
+            command.run();
+        }
     }
-
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
-
 
     private int getLoginTimeout() {
         long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
@@ -273,6 +281,8 @@ public class HiveConnection extends AbstractConnection {
         return (int) timeOut;
     }
 
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+
     @Override
     public String toString() {
         return "HiveConnection{" +
@@ -283,5 +293,16 @@ public class HiveConnection extends AbstractConnection {
                 ", protocolVersion=" + protocolVersion +
                 ", closed=" + closed +
                 '}';
+    }
+
+    public class AbortCommand implements Runnable {
+        public void run() {
+            try {
+                log.debug("attempting to close from abort command");
+                close();
+            } catch (SQLException e) {
+                log.error("error closing during abort: sql state [" + e.getSQLState() + "]", e);
+            }
+        }
     }
 }

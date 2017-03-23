@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
 
 public class HiveConnectionTest extends BaseJunitTest {
 
@@ -33,6 +34,8 @@ public class HiveConnectionTest extends BaseJunitTest {
     public void tearDown() throws Exception {
 
         if (connection != null) {
+
+            log.debug("attempting to close from tear down");
             connection.close();
         }
     }
@@ -47,6 +50,11 @@ public class HiveConnectionTest extends BaseJunitTest {
     @Test
     public void setSchema() throws SQLException {
         connection.setSchema("default");
+    }
+
+    @Test
+    public void abort() throws SQLException {
+        connection.abort(Executors.newSingleThreadExecutor());
     }
 
     @Test

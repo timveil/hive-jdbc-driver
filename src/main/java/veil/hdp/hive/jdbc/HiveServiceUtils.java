@@ -5,6 +5,7 @@ import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 
 import java.sql.ResultSet;
@@ -75,8 +76,12 @@ public class HiveServiceUtils {
                 logs.add(String.valueOf(row[0]));
             }
 
-        } catch (SQLException | TException e) {
-            log.error("error fetching logs: {}", e.getMessage(), e);
+        } catch (TTransportException e) {
+            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+        } catch (TException e) {
+            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+        } catch (SQLException e) {
+            log.warn("sql exception: message [" + e.getMessage() + "]", e);
         }
 
 
@@ -95,8 +100,12 @@ public class HiveServiceUtils {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (SQLException | TException e) {
-            log.warn(e.getMessage(), e);
+        } catch (TTransportException e) {
+            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+        } catch (TException e) {
+            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+        } catch (SQLException e) {
+            log.warn("sql exception: message [" + e.getMessage() + "]", e);
         }
     }
 
@@ -112,8 +121,12 @@ public class HiveServiceUtils {
                 log.debug(cancelRequest.toString());
             }
 
-        } catch (SQLException | TException e) {
-            log.warn(e.getMessage(), e);
+        } catch (TTransportException e) {
+            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+        } catch (TException e) {
+            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+        } catch (SQLException e) {
+            log.warn("sql exception: message [" + e.getMessage() + "]", e);
         }
     }
 
@@ -129,8 +142,12 @@ public class HiveServiceUtils {
                 log.debug(closeRequest.toString());
             }
 
-        } catch (SQLException | TException e) {
-            log.warn(e.getMessage(), e);
+        } catch (TTransportException e) {
+            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+        } catch (TException e) {
+            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+        } catch (SQLException e) {
+            log.warn("sql exception: message [" + e.getMessage() + "]", e);
         }
 
     }
@@ -194,7 +211,7 @@ public class HiveServiceUtils {
                 }
 
             } catch (TException e) {
-                throw new SQLException(e);
+                throw new HiveThriftException(e);
             }
 
         }
