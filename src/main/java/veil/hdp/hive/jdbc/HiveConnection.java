@@ -94,12 +94,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public void close() throws SQLException {
-
-        if (log.isDebugEnabled()) {
-            log.debug("attempting to close {}", this.getClass().getName());
-        }
-
         if (closed.compareAndSet(false, true)) {
+
+            if (log.isDebugEnabled()) {
+                log.debug("attempting to close {}", this.getClass().getName());
+            }
+
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);
             HttpUtils.closeClient(httpClient);

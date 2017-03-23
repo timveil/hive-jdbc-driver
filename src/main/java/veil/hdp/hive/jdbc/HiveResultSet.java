@@ -17,6 +17,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveResultSet extends AbstractResultSet {
 
@@ -43,7 +44,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter only
     private int rowCount;
-    private boolean closed;
+    private final AtomicBoolean closed = new AtomicBoolean(true);
     private boolean lastColumnNull;
 
 
@@ -91,13 +92,12 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean isClosed() {
-        return closed;
+        return closed.get();
     }
 
     @Override
     public void close() throws SQLException {
-
-        if (!closed) {
+        if (closed.compareAndSet(false, true)) {
 
             if (log.isDebugEnabled()) {
                 log.debug("attempting to close {}", this.getClass().getName());
@@ -106,8 +106,6 @@ public class HiveResultSet extends AbstractResultSet {
             rowSet = null;
             rowSetIterator = null;
             row = null;
-
-            closed = true;
         }
     }
 

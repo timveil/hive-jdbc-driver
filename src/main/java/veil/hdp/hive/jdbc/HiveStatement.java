@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -32,7 +33,7 @@ public class HiveStatement extends AbstractStatement {
     private SQLWarning sqlWarning;
 
     // public getter only
-    private boolean closed;
+    private final AtomicBoolean closed = new AtomicBoolean(true);
 
     HiveStatement(HiveConnection connection) {
         this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
@@ -159,7 +160,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public boolean isClosed() throws SQLException {
-        return closed;
+        return closed.get();
     }
 
     @Override
@@ -189,18 +190,14 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void close() throws SQLException {
-
-        if (!closed) {
+        if (closed.compareAndSet(false, true)) {
 
             if (log.isDebugEnabled()) {
                 log.debug("attempting to close {}", this.getClass().getName());
             }
 
             closeStatementHandle();
-
             closeResultSet();
-
-            closed = true;
         }
     }
 
