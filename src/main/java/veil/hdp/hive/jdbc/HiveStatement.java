@@ -55,6 +55,9 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public boolean execute(String sql) throws SQLException {
 
+        // todo: use Executors and Futures here!
+        // http://winterbe.com/posts/2015/04/07/java8-concurrency-tutorial-thread-executor-examples/
+
         closeStatementHandle();
 
         statementHandle = HiveServiceUtils.executeSql(connection.getClient(), connection.getSessionHandle(), queryTimeout, sql);

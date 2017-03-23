@@ -192,6 +192,7 @@ public class HiveServiceUtils {
 
                     switch (statusResp.getOperationState()) {
                         case CLOSED_STATE:
+                            throw new SQLException("The operation was closed by a client");
                         case FINISHED_STATE:
                             isComplete = true;
                             break;

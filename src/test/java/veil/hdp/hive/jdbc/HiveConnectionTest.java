@@ -69,61 +69,60 @@ public class HiveConnectionTest extends BaseJunitTest {
 
     @Test
     public void createStatement() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM test_table");
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
 
-        ResultSetMetaData metaData = rs.getMetaData();
+            while (rs.next()) {
 
-        while (rs.next()) {
+                byte colTinyInt = rs.getByte("col_tinyint");
+                log.debug("colTinyInt [{}]", colTinyInt);
 
-            byte colTinyInt = rs.getByte("col_tinyint");
-            log.debug("colTinyInt [{}]", colTinyInt);
+                short colSmallInt = rs.getShort("col_smallint");
+                log.debug("colSmallInt [{}]", colSmallInt);
 
-            short colSmallInt = rs.getShort("col_smallint");
-            log.debug("colSmallInt [{}]", colSmallInt);
+                int colInt = rs.getInt("col_int");
+                log.debug("colInt [{}]", colInt);
 
-            int colInt = rs.getInt("col_int");
-            log.debug("colInt [{}]", colInt);
+                long colBigint = rs.getLong("col_bigint");
+                log.debug("colBigint [{}]", colBigint);
 
-            long colBigint = rs.getLong("col_bigint");
-            log.debug("colBigint [{}]", colBigint);
+                boolean colBoolean = rs.getBoolean("col_boolean");
+                log.debug("colBoolean [{}]", colBoolean);
 
-            boolean colBoolean = rs.getBoolean("col_boolean");
-            log.debug("colBoolean [{}]", colBoolean);
+                float colFloat = rs.getFloat("col_float");
+                log.debug("colFloat [{}]", colFloat);
 
-            float colFloat = rs.getFloat("col_float");
-            log.debug("colFloat [{}]", colFloat);
+                double colDouble = rs.getDouble("col_double");
+                log.debug("colDouble [{}]", colDouble);
 
-            double colDouble = rs.getDouble("col_double");
-            log.debug("colDouble [{}]", colDouble);
+                String colString = rs.getString("col_string");
+                log.debug("colString [{}]", colString);
 
-            String colString = rs.getString("col_string");
-            log.debug("colString [{}]", colString);
+                Timestamp colTimestamp = rs.getTimestamp("col_timestamp");
+                log.debug("colTimestamp [{}]", colTimestamp);
 
-            Timestamp colTimestamp = rs.getTimestamp("col_timestamp");
-            log.debug("colTimestamp [{}]", colTimestamp);
+                BigDecimal colDecimal = rs.getBigDecimal("col_decimal");
+                log.debug("colDecimal [{}]", colDecimal);
 
-            BigDecimal colDecimal = rs.getBigDecimal("col_decimal");
-            log.debug("colDecimal [{}]", colDecimal);
+                String colVarchar = rs.getString("col_varchar");
+                log.debug("colVarchar [{}]", colVarchar);
 
-            String colVarchar = rs.getString("col_varchar");
-            log.debug("colVarchar [{}]", colVarchar);
+                Date colDate = rs.getDate("col_date");
+                log.debug("colDate [{}]", colDate);
 
-            Date colDate = rs.getDate("col_date");
-            log.debug("colDate [{}]", colDate);
+                String colChar = rs.getString("col_char");
+                log.debug("colChar [{}]", colChar);
 
-            String colChar = rs.getString("col_char");
-            log.debug("colChar [{}]", colChar);
+                Object colBinary = rs.getBytes("col_binary");
+                log.debug("colBinary [{}]", colBinary);
 
-            Object colBinary = rs.getBytes("col_binary");
-            log.debug("colBinary [{}]", colBinary);
+                byte[] stringAsBytes = rs.getBytes("col_string");
+                log.debug("col_string as bytes [{}]", stringAsBytes);
 
-            byte[] stringAsBytes = rs.getBytes("col_string");
-            log.debug("col_string as bytes [{}]", stringAsBytes);
+                InputStream stringAsStream = rs.getBinaryStream("col_string");
+                log.debug("col_string as InputStream [{}]", stringAsStream);
 
-            InputStream stringAsStream = rs.getBinaryStream("col_string");
-            log.debug("col_string as InputStream [{}]", stringAsStream);
-
+            }
         }
 
     }
@@ -222,7 +221,6 @@ public class HiveConnectionTest extends BaseJunitTest {
     }
 
     private void printResultSet(ResultSet rs) {
-
 
 
         try {
