@@ -24,16 +24,14 @@ public class HiveConnection extends AbstractConnection {
 
     // constructor
     private final Properties properties;
-
+    // public getter & setter
+    private final AtomicBoolean closed = new AtomicBoolean(true);
     // private
     private TTransport transport;
     private TCLIService.Client client;
     private TSessionHandle sessionHandle;
     private TProtocolVersion protocolVersion;
     private CloseableHttpClient httpClient = null;
-
-    // public getter & setter
-    private final AtomicBoolean closed = new AtomicBoolean(true);
     private SQLWarning sqlWarning = null;
 
     HiveConnection(Properties properties) {
@@ -221,6 +219,23 @@ public class HiveConnection extends AbstractConnection {
         return HiveServiceUtils.isValid(this, timeout);
     }
 
+    @Override
+    public void abort(Executor executor) throws SQLException {
+
+        if (closed.get()) {
+            return;
+        }
+
+        SQL_PERMISSION_ABORT.checkGuard(this);
+
+        AbortCommand command = new AbortCommand();
+        if (executor != null) {
+            executor.execute(command);
+        } else {
+            command.run();
+        }
+    }
+
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -254,22 +269,8 @@ public class HiveConnection extends AbstractConnection {
         return super.prepareStatement(sql, columnNames);
     }
 
-    @Override
-    public void abort(Executor executor) throws SQLException {
 
-        if (closed.get()) {
-            return;
-        }
-
-        SQL_PERMISSION_ABORT.checkGuard(this);
-
-        AbortCommand command = new AbortCommand();
-        if (executor != null) {
-            executor.execute(command);
-        } else {
-            command.run();
-        }
-    }
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     private int getLoginTimeout() {
         long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
@@ -281,7 +282,6 @@ public class HiveConnection extends AbstractConnection {
         return (int) timeOut;
     }
 
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
