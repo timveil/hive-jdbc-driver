@@ -339,33 +339,6 @@ public class HiveResultSet extends AbstractResultSet {
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-    @Override
-    public InputStream getAsciiStream(int columnIndex) throws SQLException {
-        return super.getAsciiStream(columnIndex);
-    }
-
-    @Override
-    public InputStream getAsciiStream(String columnLabel) throws SQLException {
-        return super.getAsciiStream(columnLabel);
-    }
-
-
-    @Override
-    public String getCursorName() throws SQLException {
-        return super.getCursorName();
-    }
-
-    @Override
-    public Reader getCharacterStream(int columnIndex) throws SQLException {
-        return super.getCharacterStream(columnIndex);
-    }
-
-    @Override
-    public Reader getCharacterStream(String columnLabel) throws SQLException {
-        return super.getCharacterStream(columnLabel);
-    }
-
     @Override
     public boolean isAfterLast() throws SQLException {
         return super.isAfterLast();

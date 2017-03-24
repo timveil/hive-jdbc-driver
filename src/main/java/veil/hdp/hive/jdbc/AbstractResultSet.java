@@ -550,7 +550,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public InputStream getAsciiStream(int columnIndex) throws SQLException {
+    public final InputStream getAsciiStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -620,7 +620,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public InputStream getAsciiStream(String columnLabel) throws SQLException {
+    public final InputStream getAsciiStream(String columnLabel) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -640,7 +640,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public String getCursorName() throws SQLException {
+    public final String getCursorName() throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
@@ -665,12 +665,12 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public Reader getCharacterStream(int columnIndex) throws SQLException {
+    public final Reader getCharacterStream(int columnIndex) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
-    public Reader getCharacterStream(String columnLabel) throws SQLException {
+    public final Reader getCharacterStream(String columnLabel) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }
 
