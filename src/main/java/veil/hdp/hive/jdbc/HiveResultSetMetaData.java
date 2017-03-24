@@ -32,8 +32,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        // todo: this should be a map of hive type to java, not sql type to java
-        return SqlTypeMap.toClass(getColumnType(column)).getName();
+        return schema.getColumn(column).getColumnType().getHiveType().getJavaType().getName();
     }
 
     @Override
@@ -56,104 +55,81 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         return schema.getColumn(column).getColumnType().getHiveType().getName();
     }
 
-    // todo: research this more; don't believe has this concept
     @Override
     public int isNullable(int column) throws SQLException {
         return ResultSetMetaData.columnNullable;
     }
 
-
-    // todo: research this more; don't believe has this concept
     @Override
     public boolean isAutoIncrement(int column) throws SQLException {
         return Boolean.FALSE;
     }
 
-    // todo: research this more; don't believe has this concept
     @Override
     public boolean isCurrency(int column) throws SQLException {
         return Boolean.FALSE;
     }
 
-    // todo: how does this work with acid
     @Override
     public boolean isReadOnly(int column) throws SQLException {
         return Boolean.TRUE;
     }
 
-    // todo: need to research this more
     @Override
     public boolean isCaseSensitive(int column) throws SQLException {
-        return Boolean.FALSE;
+        return schema.getColumn(column).getColumnType().getHiveType().isCaseSensitive();
     }
 
-    // todo
+
     @Override
     public int getPrecision(int column) throws SQLException {
-        return 0;
+        return schema.getColumn(column).getColumnType().getHiveType().getPrecision();
     }
 
-    // todo
+    // todo; why do i really care about this?
     @Override
     public int getColumnDisplaySize(int column) throws SQLException {
         return 0;
     }
 
-    // todo
     @Override
     public int getScale(int column) throws SQLException {
-        return 0;
+        return schema.getColumn(column).getColumnType().getHiveType().getScale();
     }
 
     @Override
     public boolean isSearchable(int column) throws SQLException {
-        return Boolean.TRUE;
+        return schema.getColumn(column).getColumnType().getHiveType().isSearchable();
     }
 
     @Override
     public boolean isSigned(int column) throws SQLException {
-        int columnType = getColumnType(column);
-
-        JDBCType jdbcType = JDBCType.valueOf(columnType);
-
-        boolean signed = false;
-
-        switch (jdbcType) {
-            case SMALLINT:
-            case INTEGER:
-            case BIGINT:
-                signed = true;
-                break;
-        }
-
-        return signed;
+        return schema.getColumn(column).getColumnType().getHiveType().isSigned();
     }
 
-    // todo: need to research this more
+    // todo: need to research this more; where would i get this from
     @Override
     public String getSchemaName(int column) throws SQLException {
         return "";
     }
 
-    // todo: need to research this more
+    // todo: need to research this more; where would i get this from
     @Override
     public String getTableName(int column) throws SQLException {
         return "";
     }
 
-    // todo: need to research this more
+    // todo: need to research this more; where would i get this from
     @Override
     public String getCatalogName(int column) throws SQLException {
         return "";
     }
 
-    // todo: need to research this more
     @Override
     public boolean isWritable(int column) throws SQLException {
         return Boolean.FALSE;
     }
 
-    // todo: need to research this more
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
         return Boolean.FALSE;
