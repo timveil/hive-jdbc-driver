@@ -23,6 +23,9 @@ public class HiveServiceUtils {
 
     private static final Logger log = getLogger(HiveServiceUtils.class);
 
+    private static final short FETCH_TYPE_QUERY = 0;
+    private static final short FETCH_TYPE_LOG = 1;
+
     private static void checkStatus(TStatus status) throws SQLException {
 
         if (status.getStatusCode() == SUCCESS_STATUS || status.getStatusCode() == SUCCESS_WITH_INFO_STATUS) {
@@ -35,7 +38,7 @@ public class HiveServiceUtils {
 
     public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
-        fetchReq.setFetchType((short) 0);
+        fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
         try {
             TFetchResultsResp fetchResults = client.FetchResults(fetchReq);
@@ -58,7 +61,7 @@ public class HiveServiceUtils {
         List<String> logs = new ArrayList<>();
 
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
-        tFetchResultsReq.setFetchType((short) 1);
+        tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
 
         try {
             TFetchResultsResp fetchResults = client.FetchResults(tFetchResultsReq);
