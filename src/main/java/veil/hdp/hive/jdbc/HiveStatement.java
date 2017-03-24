@@ -61,6 +61,7 @@ public class HiveStatement extends AbstractStatement {
         closeStatementHandle();
 
         statementHandle = HiveServiceUtils.executeSql(connection.getClient(), connection.getSessionHandle(), queryTimeout, sql);
+
         HiveServiceUtils.waitForStatementToComplete(connection.getClient(), statementHandle);
 
         if (statementHandle.isHasResultSet()) {
