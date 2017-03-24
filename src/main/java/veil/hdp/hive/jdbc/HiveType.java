@@ -84,6 +84,6 @@ public enum HiveType {
             }
         }
 
-        throw new IllegalArgumentException("Unrecognized Thrift TTypeId value: " + tTypeId);
+        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + "]");
     }
 }
