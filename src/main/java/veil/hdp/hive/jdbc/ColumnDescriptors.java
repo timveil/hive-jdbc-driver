@@ -1,8 +1,6 @@
 package veil.hdp.hive.jdbc;
 
 
-import org.apache.hive.service.cli.Type;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +16,12 @@ public class ColumnDescriptors {
      */
     public static final List<Column> PRIMARY_KEYS = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("KEY_SEQ", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("PK_NAME", new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("KEY_SEQ", new ColumnType(HiveType.INTEGER), 5));
+            add(new Column("PK_NAME", new ColumnType(HiveType.STRING), 6));
         }
 
     };
@@ -41,15 +39,15 @@ public class ColumnDescriptors {
      */
     public static final List<Column> PROCEDURES = new ArrayList<Column>() {
         {
-            add(new Column("PROCEDURE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("PROCEDURE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("PROCEDURE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("RESERVED", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("RESERVED", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("RESERVED", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("PROCEDURE_TYPE", new ColumnType(Type.SMALLINT_TYPE), 8));
-            add(new Column("SPECIFIC_NAME", new ColumnType(Type.STRING_TYPE), 9));
+            add(new Column("PROCEDURE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("PROCEDURE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("PROCEDURE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("RESERVED", new ColumnType(HiveType.STRING), 4));
+            add(new Column("RESERVED", new ColumnType(HiveType.STRING), 5));
+            add(new Column("RESERVED", new ColumnType(HiveType.STRING), 6));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 7));
+            add(new Column("PROCEDURE_TYPE", new ColumnType(HiveType.SMALL_INT), 8));
+            add(new Column("SPECIFIC_NAME", new ColumnType(HiveType.STRING), 9));
         }
 
     };
@@ -78,26 +76,26 @@ public class ColumnDescriptors {
      */
     public static final List<Column> PROCEDURE_COLUMNS = new ArrayList<Column>() {
         {
-            add(new Column("PROCEDURE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("PROCEDURE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("PROCEDURE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("COLUMN_TYPE", new ColumnType(Type.SMALLINT_TYPE), 5));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 6));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("PRECISION", new ColumnType(Type.INT_TYPE), 8));
-            add(new Column("LENGTH", new ColumnType(Type.INT_TYPE), 9));
-            add(new Column("SCALE", new ColumnType(Type.SMALLINT_TYPE), 10));
-            add(new Column("RADIX", new ColumnType(Type.SMALLINT_TYPE), 11));
-            add(new Column("NULLABLE", new ColumnType(Type.SMALLINT_TYPE), 12));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 13));
-            add(new Column("COLUMN_DEF", new ColumnType(Type.STRING_TYPE), 14));
-            add(new Column("SQL_DATA_TYPE", new ColumnType(Type.INT_TYPE), 15));
-            add(new Column("SQL_DATETIME_SUB", new ColumnType(Type.INT_TYPE), 16));
-            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(Type.INT_TYPE), 17));
-            add(new Column("ORDINAL_POSITION", new ColumnType(Type.INT_TYPE), 18));
-            add(new Column("IS_NULLABLE", new ColumnType(Type.STRING_TYPE), 19));
-            add(new Column("SPECIFIC_NAME", new ColumnType(Type.STRING_TYPE), 20));
+            add(new Column("PROCEDURE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("PROCEDURE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("PROCEDURE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("COLUMN_TYPE", new ColumnType(HiveType.SMALL_INT), 5));
+            add(new Column("DATA_TYPE", new ColumnType(HiveType.INTEGER), 6));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 7));
+            add(new Column("PRECISION", new ColumnType(HiveType.INTEGER), 8));
+            add(new Column("LENGTH", new ColumnType(HiveType.INTEGER), 9));
+            add(new Column("SCALE", new ColumnType(HiveType.SMALL_INT), 10));
+            add(new Column("RADIX", new ColumnType(HiveType.SMALL_INT), 11));
+            add(new Column("NULLABLE", new ColumnType(HiveType.SMALL_INT), 12));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 13));
+            add(new Column("COLUMN_DEF", new ColumnType(HiveType.STRING), 14));
+            add(new Column("SQL_DATA_TYPE", new ColumnType(HiveType.INTEGER), 15));
+            add(new Column("SQL_DATETIME_SUB", new ColumnType(HiveType.INTEGER), 16));
+            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(HiveType.INTEGER), 17));
+            add(new Column("ORDINAL_POSITION", new ColumnType(HiveType.INTEGER), 18));
+            add(new Column("IS_NULLABLE", new ColumnType(HiveType.STRING), 19));
+            add(new Column("SPECIFIC_NAME", new ColumnType(HiveType.STRING), 20));
         }
 
     };
@@ -114,14 +112,14 @@ public class ColumnDescriptors {
      */
     public static final List<Column> COLUMN_PRIVILEGES = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("GRANTOR", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("GRANTEE", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("PRIVILEGE", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("IS_GRANTABLE", new ColumnType(Type.STRING_TYPE), 8));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("GRANTOR", new ColumnType(HiveType.STRING), 5));
+            add(new Column("GRANTEE", new ColumnType(HiveType.STRING), 6));
+            add(new Column("PRIVILEGE", new ColumnType(HiveType.STRING), 7));
+            add(new Column("IS_GRANTABLE", new ColumnType(HiveType.STRING), 8));
         }
 
     };
@@ -138,14 +136,14 @@ public class ColumnDescriptors {
      */
     public static final List<Column> BEST_ROW_IDENTIFIER = new ArrayList<Column>() {
         {
-            add(new Column("SCOPE", new ColumnType(Type.SMALLINT_TYPE), 1));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 3));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("COLUMN_SIZE", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("BUFFER_LENGTH", new ColumnType(Type.INT_TYPE), 6));
-            add(new Column("DECIMAL_DIGITS", new ColumnType(Type.SMALLINT_TYPE), 7));
-            add(new Column("PSEUDO_COLUMN", new ColumnType(Type.SMALLINT_TYPE), 8));
+            add(new Column("SCOPE", new ColumnType(HiveType.SMALL_INT), 1));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 2));
+            add(new Column("DATA_TYPE", new ColumnType(HiveType.INTEGER), 3));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("COLUMN_SIZE", new ColumnType(HiveType.INTEGER), 5));
+            add(new Column("BUFFER_LENGTH", new ColumnType(HiveType.INTEGER), 6));
+            add(new Column("DECIMAL_DIGITS", new ColumnType(HiveType.SMALL_INT), 7));
+            add(new Column("PSEUDO_COLUMN", new ColumnType(HiveType.SMALL_INT), 8));
         }
 
     };
@@ -161,13 +159,13 @@ public class ColumnDescriptors {
      */
     public static final List<Column> TABLE_PRIVILEGES = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("GRANTOR", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("GRANTEE", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("PRIVILEGE", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("IS_GRANTABLE", new ColumnType(Type.STRING_TYPE), 7));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("GRANTOR", new ColumnType(HiveType.STRING), 4));
+            add(new Column("GRANTEE", new ColumnType(HiveType.STRING), 5));
+            add(new Column("PRIVILEGE", new ColumnType(HiveType.STRING), 6));
+            add(new Column("IS_GRANTABLE", new ColumnType(HiveType.STRING), 7));
         }
 
     };
@@ -202,20 +200,20 @@ public class ColumnDescriptors {
      */
     public static final List<Column> IMPORTED_KEYS = new ArrayList<Column>() {
         {
-            add(new Column("PKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("PKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("PKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("PKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("FKTABLE_CAT", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("FKTABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("FKTABLE_NAME", new ColumnType(Type.STRING_TYPE), 7));
-            add(new Column("FKCOLUMN_NAME", new ColumnType(Type.STRING_TYPE), 8));
-            add(new Column("KEY_SEQ", new ColumnType(Type.SMALLINT_TYPE), 9));
-            add(new Column("UPDATE_RULE", new ColumnType(Type.SMALLINT_TYPE), 10));
-            add(new Column("DELETE_RULE", new ColumnType(Type.SMALLINT_TYPE), 11));
-            add(new Column("FK_NAME", new ColumnType(Type.STRING_TYPE), 12));
-            add(new Column("PK_NAME", new ColumnType(Type.STRING_TYPE), 13));
-            add(new Column("DEFERRABILITY", new ColumnType(Type.SMALLINT_TYPE), 14));
+            add(new Column("PKTABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("PKTABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("PKTABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("PKCOLUMN_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("FKTABLE_CAT", new ColumnType(HiveType.STRING), 5));
+            add(new Column("FKTABLE_SCHEM", new ColumnType(HiveType.STRING), 6));
+            add(new Column("FKTABLE_NAME", new ColumnType(HiveType.STRING), 7));
+            add(new Column("FKCOLUMN_NAME", new ColumnType(HiveType.STRING), 8));
+            add(new Column("KEY_SEQ", new ColumnType(HiveType.SMALL_INT), 9));
+            add(new Column("UPDATE_RULE", new ColumnType(HiveType.SMALL_INT), 10));
+            add(new Column("DELETE_RULE", new ColumnType(HiveType.SMALL_INT), 11));
+            add(new Column("FK_NAME", new ColumnType(HiveType.STRING), 12));
+            add(new Column("PK_NAME", new ColumnType(HiveType.STRING), 13));
+            add(new Column("DEFERRABILITY", new ColumnType(HiveType.SMALL_INT), 14));
         }
 
     };
@@ -273,19 +271,19 @@ public class ColumnDescriptors {
      */
     public static final List<Column> INDEX_INFO = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("NON_UNIQUE", new ColumnType(Type.BOOLEAN_TYPE), 4));
-            add(new Column("INDEX_QUALIFIER", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("INDEX_NAME", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("TYPE", new ColumnType(Type.SMALLINT_TYPE), 7));
-            add(new Column("ORDINAL_POSITION", new ColumnType(Type.SMALLINT_TYPE), 8));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 9));
-            add(new Column("ASC_OR_DESC", new ColumnType(Type.STRING_TYPE), 10));
-            add(new Column("CARDINALITY", new ColumnType(Type.BIGINT_TYPE), 11));
-            add(new Column("PAGES", new ColumnType(Type.BIGINT_TYPE), 12));
-            add(new Column("FILTER_CONDITION", new ColumnType(Type.STRING_TYPE), 13));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("NON_UNIQUE", new ColumnType(HiveType.BOOLEAN), 4));
+            add(new Column("INDEX_QUALIFIER", new ColumnType(HiveType.STRING), 5));
+            add(new Column("INDEX_NAME", new ColumnType(HiveType.STRING), 6));
+            add(new Column("TYPE", new ColumnType(HiveType.SMALL_INT), 7));
+            add(new Column("ORDINAL_POSITION", new ColumnType(HiveType.SMALL_INT), 8));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 9));
+            add(new Column("ASC_OR_DESC", new ColumnType(HiveType.STRING), 10));
+            add(new Column("CARDINALITY", new ColumnType(HiveType.BIG_INT), 11));
+            add(new Column("PAGES", new ColumnType(HiveType.BIG_INT), 12));
+            add(new Column("FILTER_CONDITION", new ColumnType(HiveType.STRING), 13));
         }
 
     };
@@ -301,13 +299,13 @@ public class ColumnDescriptors {
      */
     public static final List<Column> UDT = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TYPE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("CLASS_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("BASE_TYPE", new ColumnType(Type.SMALLINT_TYPE), 7));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TYPE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("CLASS_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("DATA_TYPE", new ColumnType(HiveType.INTEGER), 5));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 6));
+            add(new Column("BASE_TYPE", new ColumnType(HiveType.SMALL_INT), 7));
         }
     };
 
@@ -321,12 +319,12 @@ public class ColumnDescriptors {
      */
     public static final List<Column> SUPER_TYPES = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TYPE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("SUPERTYPE_CAT", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("SUPERTYPE_SCHEM", new ColumnType(Type.STRING_TYPE), 5));
-            add(new Column("SUPERTYPE_NAME", new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TYPE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("SUPERTYPE_CAT", new ColumnType(HiveType.STRING), 4));
+            add(new Column("SUPERTYPE_SCHEM", new ColumnType(HiveType.STRING), 5));
+            add(new Column("SUPERTYPE_NAME", new ColumnType(HiveType.STRING), 6));
         }
     };
 
@@ -338,10 +336,10 @@ public class ColumnDescriptors {
      */
     public static final List<Column> SUPER_TABLES = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TYPE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("SUPERTABLE_NAME", new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TYPE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("SUPERTABLE_NAME", new ColumnType(HiveType.STRING), 4));
         }
     };
 
@@ -370,27 +368,27 @@ public class ColumnDescriptors {
      */
     public static final List<Column> ATTRIBUTES = new ArrayList<Column>() {
         {
-            add(new Column("TYPE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TYPE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TYPE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("ATTR_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("ATTR_TYPE_NAME", new ColumnType(Type.STRING_TYPE), 6));
-            add(new Column("ATTR_SIZE", new ColumnType(Type.INT_TYPE), 7));
-            add(new Column("DECIMAL_DIGITS", new ColumnType(Type.INT_TYPE), 8));
-            add(new Column("NUM_PREC_RADIX", new ColumnType(Type.INT_TYPE), 9));
-            add(new Column("NULLABLE", new ColumnType(Type.INT_TYPE), 10));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 11));
-            add(new Column("ATTR_DEF", new ColumnType(Type.STRING_TYPE), 12));
-            add(new Column("SQL_DATA_TYPE", new ColumnType(Type.INT_TYPE), 13));
-            add(new Column("SQL_DATETIME_SUB", new ColumnType(Type.INT_TYPE), 14));
-            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(Type.INT_TYPE), 15));
-            add(new Column("ORDINAL_POSITION", new ColumnType(Type.INT_TYPE), 16));
-            add(new Column("IS_NULLABLE", new ColumnType(Type.STRING_TYPE), 17));
-            add(new Column("SCOPE_CATALOG", new ColumnType(Type.STRING_TYPE), 18));
-            add(new Column("SCOPE_SCHEMA", new ColumnType(Type.STRING_TYPE), 19));
-            add(new Column("SCOPE_TABLE", new ColumnType(Type.STRING_TYPE), 20));
-            add(new Column("SOURCE_DATA_TYPE", new ColumnType(Type.SMALLINT_TYPE), 21));
+            add(new Column("TYPE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TYPE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TYPE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("ATTR_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("DATA_TYPE", new ColumnType(HiveType.INTEGER), 5));
+            add(new Column("ATTR_TYPE_NAME", new ColumnType(HiveType.STRING), 6));
+            add(new Column("ATTR_SIZE", new ColumnType(HiveType.INTEGER), 7));
+            add(new Column("DECIMAL_DIGITS", new ColumnType(HiveType.INTEGER), 8));
+            add(new Column("NUM_PREC_RADIX", new ColumnType(HiveType.INTEGER), 9));
+            add(new Column("NULLABLE", new ColumnType(HiveType.INTEGER), 10));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 11));
+            add(new Column("ATTR_DEF", new ColumnType(HiveType.STRING), 12));
+            add(new Column("SQL_DATA_TYPE", new ColumnType(HiveType.INTEGER), 13));
+            add(new Column("SQL_DATETIME_SUB", new ColumnType(HiveType.INTEGER), 14));
+            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(HiveType.INTEGER), 15));
+            add(new Column("ORDINAL_POSITION", new ColumnType(HiveType.INTEGER), 16));
+            add(new Column("IS_NULLABLE", new ColumnType(HiveType.STRING), 17));
+            add(new Column("SCOPE_CATALOG", new ColumnType(HiveType.STRING), 18));
+            add(new Column("SCOPE_SCHEMA", new ColumnType(HiveType.STRING), 19));
+            add(new Column("SCOPE_TABLE", new ColumnType(HiveType.STRING), 20));
+            add(new Column("SOURCE_DATA_TYPE", new ColumnType(HiveType.SMALL_INT), 21));
         }
     };
 
@@ -402,10 +400,10 @@ public class ColumnDescriptors {
      */
     public static final List<Column> CLIENT_INFO_PROPERTIES = new ArrayList<Column>() {
         {
-            add(new Column("NAME", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("MAX_LEN", new ColumnType(Type.INT_TYPE), 2));
-            add(new Column("DEFAULT_VALUE", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("DESCRIPTION", new ColumnType(Type.STRING_TYPE), 4));
+            add(new Column("NAME", new ColumnType(HiveType.STRING), 1));
+            add(new Column("MAX_LEN", new ColumnType(HiveType.INTEGER), 2));
+            add(new Column("DEFAULT_VALUE", new ColumnType(HiveType.STRING), 3));
+            add(new Column("DESCRIPTION", new ColumnType(HiveType.STRING), 4));
         }
     };
 
@@ -419,12 +417,12 @@ public class ColumnDescriptors {
      */
     public static final List<Column> FUNCTION_COLUMNS = new ArrayList<Column>() {
         {
-            add(new Column("FUNCTION_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("FUNCTION_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("FUNCTION_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("FUNCTION_TYPE", new ColumnType(Type.SMALLINT_TYPE), 5));
-            add(new Column("SPECIFIC_NAME", new ColumnType(Type.STRING_TYPE), 6));
+            add(new Column("FUNCTION_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("FUNCTION_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("FUNCTION_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 4));
+            add(new Column("FUNCTION_TYPE", new ColumnType(HiveType.SMALL_INT), 5));
+            add(new Column("SPECIFIC_NAME", new ColumnType(HiveType.STRING), 6));
         }
     };
 
@@ -444,24 +442,24 @@ public class ColumnDescriptors {
      */
     public static final List<Column> PSEUDO_COLUMNS = new ArrayList<Column>() {
         {
-            add(new Column("TABLE_CAT", new ColumnType(Type.STRING_TYPE), 1));
-            add(new Column("TABLE_SCHEM", new ColumnType(Type.STRING_TYPE), 2));
-            add(new Column("TABLE_NAME", new ColumnType(Type.STRING_TYPE), 3));
-            add(new Column("COLUMN_NAME", new ColumnType(Type.STRING_TYPE), 4));
-            add(new Column("DATA_TYPE", new ColumnType(Type.INT_TYPE), 5));
-            add(new Column("COLUMN_SIZE", new ColumnType(Type.INT_TYPE), 6));
-            add(new Column("DECIMAL_DIGITS", new ColumnType(Type.INT_TYPE), 7));
-            add(new Column("NUM_PREC_RADIX", new ColumnType(Type.INT_TYPE), 8));
-            add(new Column("COLUMN_USAGE", new ColumnType(Type.STRING_TYPE), 9));
-            add(new Column("REMARKS", new ColumnType(Type.STRING_TYPE), 10));
-            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(Type.INT_TYPE), 11));
-            add(new Column("IS_NULLABLE", new ColumnType(Type.STRING_TYPE), 12));
+            add(new Column("TABLE_CAT", new ColumnType(HiveType.STRING), 1));
+            add(new Column("TABLE_SCHEM", new ColumnType(HiveType.STRING), 2));
+            add(new Column("TABLE_NAME", new ColumnType(HiveType.STRING), 3));
+            add(new Column("COLUMN_NAME", new ColumnType(HiveType.STRING), 4));
+            add(new Column("DATA_TYPE", new ColumnType(HiveType.INTEGER), 5));
+            add(new Column("COLUMN_SIZE", new ColumnType(HiveType.INTEGER), 6));
+            add(new Column("DECIMAL_DIGITS", new ColumnType(HiveType.INTEGER), 7));
+            add(new Column("NUM_PREC_RADIX", new ColumnType(HiveType.INTEGER), 8));
+            add(new Column("COLUMN_USAGE", new ColumnType(HiveType.STRING), 9));
+            add(new Column("REMARKS", new ColumnType(HiveType.STRING), 10));
+            add(new Column("CHAR_OCTET_LENGTH", new ColumnType(HiveType.INTEGER), 11));
+            add(new Column("IS_NULLABLE", new ColumnType(HiveType.STRING), 12));
         }
     };
 
     public static final List<Column> GENERATED_KEYS = new ArrayList<Column>() {
         {
-            add(new Column("GENERATED_KEY", new ColumnType(Type.STRING_TYPE), 1));
+            add(new Column("GENERATED_KEY", new ColumnType(HiveType.STRING), 1));
         }
     };
 }

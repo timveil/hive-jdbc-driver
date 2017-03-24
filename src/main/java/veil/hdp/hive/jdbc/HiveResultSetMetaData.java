@@ -48,7 +48,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        return schema.getColumn(column).getColumnType().getHiveType().toJavaSQLType();
+        return schema.getColumn(column).getColumnType().getHiveType().getJdbcType().getVendorTypeNumber();
     }
 
     @Override

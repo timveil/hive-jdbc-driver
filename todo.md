@@ -15,7 +15,7 @@ old properties before refactor:
     DATABASE_NAME("database", "", "default"),
     USER("user","", ""),
     PASSWORD("password","",""),
-    //HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE: transport mode must match whats on the server.  should only be used to determine what kind of client to create, this isn't somthing that is "set" on the server.
+    //HiveConf.ConfVars.HIVE_SERVER2_TRANSPORT_MODE: transport mode must match whats on the server.  should only be used to determine what kind of client to create, this isn't something that is "set" on the server.
     TRANSPORT_MODE("transport.mode", "", TransportMode.binary.toString()),
 
     // todo: i think these need to be prefixed (like jdbc.) these should not be confused with actual hive conf parameters even thought they may result in the same value

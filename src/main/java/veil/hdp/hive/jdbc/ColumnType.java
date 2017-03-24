@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.Type;
 import org.apache.hive.service.cli.thrift.TPrimitiveTypeEntry;
 import org.apache.hive.service.cli.thrift.TTypeDesc;
 import org.apache.hive.service.cli.thrift.TTypeEntry;
@@ -9,9 +8,9 @@ import java.util.List;
 
 public class ColumnType {
 
-    private final Type hiveType;
+    private final HiveType hiveType;
 
-    public ColumnType(Type hiveType) {
+    public ColumnType(HiveType hiveType) {
         this.hiveType = hiveType;
     }
 
@@ -19,10 +18,10 @@ public class ColumnType {
         List<TTypeEntry> typeEntries = typeDesc.getTypes();
         TPrimitiveTypeEntry primitiveTypeEntry = typeEntries.get(0).getPrimitiveEntry();
 
-        this.hiveType = Type.getType(primitiveTypeEntry.getType());
+        this.hiveType = HiveType.valueOf(primitiveTypeEntry.getType());
     }
 
-    public Type getHiveType() {
+    public HiveType getHiveType() {
         return hiveType;
     }
 

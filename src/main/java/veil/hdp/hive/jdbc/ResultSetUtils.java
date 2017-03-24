@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.Type;
 import org.slf4j.Logger;
 
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,7 @@ public class ResultSetUtils {
 
     private static final Logger log = getLogger(ResultSetUtils.class);
 
-    public static Object getColumnValue(Schema schema, Object[] row, int columnIndex, Type targetType) throws SQLException {
+    public static Object getColumnValue(Schema schema, Object[] row, int columnIndex, HiveType targetType) throws SQLException {
 
         validateRow(row, columnIndex);
 
@@ -24,7 +23,7 @@ public class ResultSetUtils {
 
         Column column = schema.getColumns().get(columnIndex - 1);
 
-        Type columnType = column.getColumnType().getHiveType();
+        HiveType columnType = column.getColumnType().getHiveType();
 
         if (targetType != null && !columnType.equals(targetType)) {
             log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
@@ -40,7 +39,7 @@ public class ResultSetUtils {
 
     }
 
-    public static InputStream getColumnValue(Schema schema, Object[] row, int columnIndex) throws SQLException {
+    public static InputStream getColumnValueAsStream(Schema schema, Object[] row, int columnIndex) throws SQLException {
 
         validateRow(row, columnIndex);
 
@@ -48,9 +47,22 @@ public class ResultSetUtils {
 
         Column column = schema.getColumns().get(columnIndex - 1);
 
-        Type columnType = column.getColumnType().getHiveType();
+        HiveType columnType = column.getColumnType().getHiveType();
 
         return convertToInputStream(value, columnType);
+    }
+
+    public static Time getColumnValueAsTime(Schema schema, Object[] row, int columnIndex) throws SQLException {
+
+        validateRow(row, columnIndex);
+
+        Object value = row[columnIndex - 1];
+
+        Column column = schema.getColumns().get(columnIndex - 1);
+
+        HiveType columnType = column.getColumnType().getHiveType();
+
+        return convertToTime(value, columnType);
     }
 
     public static int findColumnIndex(Schema schema, String columnLabel) throws SQLException {
@@ -77,44 +89,42 @@ public class ResultSetUtils {
         }
     }
 
-    private static Object convert(Object value, Type columnType, Type targetType) throws SQLDataException {
+    private static Object convert(Object value, HiveType columnType, HiveType targetType) throws SQLDataException {
 
         switch (targetType) {
 
-            case BOOLEAN_TYPE:
+            case BOOLEAN:
                 return convertToBoolean(value, columnType);
-            case TINYINT_TYPE:
+            case TINY_INT:
                 return convertToByte(value, columnType);
-            case SMALLINT_TYPE:
+            case SMALL_INT:
                 return convertToShort(value, columnType);
-            case INT_TYPE:
+            case INTEGER:
                 return convertToInt(value, columnType);
-            case BIGINT_TYPE:
+            case BIG_INT:
                 return convertToLong(value, columnType);
-            case FLOAT_TYPE:
+            case FLOAT:
                 return convertToFloat(value, columnType);
-            case DOUBLE_TYPE:
+            case DOUBLE:
                 return convertToDouble(value, columnType);
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return convertToString(value, columnType);
-            case DATE_TYPE:
+            case DATE:
                 return convertToDate(value, columnType);
-            case TIMESTAMP_TYPE:
+            case TIMESTAMP:
                 return convertToTimestamp(value, columnType);
-            case DECIMAL_TYPE:
+            case DECIMAL:
                 return convertToBigDecimal(value, columnType);
-            case BINARY_TYPE:
+            case BINARY:
                 return convertToByteArray(value, columnType);
-            case NULL_TYPE:
-            case ARRAY_TYPE:
-            case MAP_TYPE:
-            case STRUCT_TYPE:
-            case UNION_TYPE:
-            case USER_DEFINED_TYPE:
-            case INTERVAL_YEAR_MONTH_TYPE:
-            case INTERVAL_DAY_TIME_TYPE:
+            case VOID:
+            case ARRAY:
+            case MAP:
+            case STRUCT:
+            case INTERVAL_DAY_TIME:
+            case INTERVAL_YEAR_MONTH:
                 log.warn("no conversion strategy for target type [{}] and value [{}] value class is [{}].  method returns original value.", targetType, value, value != null ? value.getClass() : null);
         }
 
@@ -122,7 +132,7 @@ public class ResultSetUtils {
     }
 
 
-    private static byte[] convertToByteArray(Object value, Type columnType) throws SQLDataException {
+    private static byte[] convertToByteArray(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -133,7 +143,7 @@ public class ResultSetUtils {
         return stringRepresentation.getBytes(StandardCharsets.UTF_8);
     }
 
-    private static InputStream convertToInputStream(Object value, Type columnType) throws SQLDataException {
+    private static InputStream convertToInputStream(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -150,173 +160,173 @@ public class ResultSetUtils {
 
     }
 
-    private static BigDecimal convertToBigDecimal(Object value, Type columnType) throws SQLDataException {
+    private static BigDecimal convertToBigDecimal(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
         }
 
         switch (columnType) {
-            case DECIMAL_TYPE:
+            case DECIMAL:
                 return (BigDecimal) value;
-            case DOUBLE_TYPE:
+            case DOUBLE:
                 return BigDecimal.valueOf((Double) value);
-            case BIGINT_TYPE:
+            case BIG_INT:
                 return BigDecimal.valueOf((Long) value);
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return new BigDecimal((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to BigDecimal from column type [" + columnType + "]");
     }
 
-    private static byte convertToByte(Object value, Type columnType) throws SQLDataException {
+    private static byte convertToByte(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case TINYINT_TYPE:
+            case TINY_INT:
                 return ((Number) value).byteValue();
-            case SMALLINT_TYPE:
+            case SMALL_INT:
                 log.warn("may lose precision going from short to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
-            case INT_TYPE:
+            case INTEGER:
                 log.warn("may lose precision going from int to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
-            case BIGINT_TYPE:
+            case BIG_INT:
                 log.warn("may lose precision going from long to byte; value [{}]", value.toString());
                 return ((Number) value).byteValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Byte.parseByte((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Byte from column type [" + columnType + "]");
     }
 
-    private static short convertToShort(Object value, Type columnType) throws SQLDataException {
+    private static short convertToShort(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case TINYINT_TYPE:
-            case SMALLINT_TYPE:
+            case TINY_INT:
+            case SMALL_INT:
                 return ((Number) value).shortValue();
-            case INT_TYPE:
+            case INTEGER:
                 log.warn("may lose precision going from int to short; value [{}]", value.toString());
                 return ((Number) value).shortValue();
-            case BIGINT_TYPE:
+            case BIG_INT:
                 log.warn("may lose precision going from long to short; value [{}]", value.toString());
                 return ((Number) value).shortValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Short.parseShort((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Short from column type [" + columnType + "]");
     }
 
-    private static int convertToInt(Object value, Type columnType) throws SQLDataException {
+    private static int convertToInt(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case TINYINT_TYPE:
-            case SMALLINT_TYPE:
-            case INT_TYPE:
+            case TINY_INT:
+            case SMALL_INT:
+            case INTEGER:
                 return ((Number) value).intValue();
-            case BIGINT_TYPE:
+            case BIG_INT:
                 log.warn("may lose precision going from long to int; value [{}]", value.toString());
                 return ((Number) value).intValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Integer.parseInt((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Integer from column type [" + columnType + "]");
     }
 
-    private static long convertToLong(Object value, Type columnType) throws SQLDataException {
+    private static long convertToLong(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case TINYINT_TYPE:
-            case SMALLINT_TYPE:
-            case INT_TYPE:
-            case BIGINT_TYPE:
+            case TINY_INT:
+            case SMALL_INT:
+            case INTEGER:
+            case BIG_INT:
                 return ((Number) value).longValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Long.parseLong((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Long from column type [" + columnType + "]");
     }
 
-    private static float convertToFloat(Object value, Type columnType) throws SQLDataException {
+    private static float convertToFloat(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case FLOAT_TYPE:
-            case TINYINT_TYPE:
-            case SMALLINT_TYPE:
-            case INT_TYPE:
-            case BIGINT_TYPE:
+            case FLOAT:
+            case TINY_INT:
+            case SMALL_INT:
+            case INTEGER:
+            case BIG_INT:
                 return ((Number) value).floatValue();
-            case DOUBLE_TYPE:
+            case DOUBLE:
                 log.warn("may lose precision going from double to float; value [{}]", value.toString());
                 return ((Number) value).floatValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Float.parseFloat((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Float from column type [" + columnType + "]");
     }
 
-    private static double convertToDouble(Object value, Type columnType) throws SQLDataException {
+    private static double convertToDouble(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return 0;
         }
 
         switch (columnType) {
-            case DOUBLE_TYPE:
-            case FLOAT_TYPE:
-            case TINYINT_TYPE:
-            case SMALLINT_TYPE:
-            case INT_TYPE:
-            case BIGINT_TYPE:
+            case DOUBLE:
+            case FLOAT:
+            case TINY_INT:
+            case SMALL_INT:
+            case INTEGER:
+            case BIG_INT:
                 return ((Number) value).doubleValue();
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Double.parseDouble((String) value);
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Double from column type [" + columnType + "]");
     }
 
-    private static String convertToString(Object value, Type columnType) throws SQLDataException {
+    private static String convertToString(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -324,49 +334,45 @@ public class ResultSetUtils {
 
         switch (columnType) {
 
-            case BOOLEAN_TYPE:
+            case BOOLEAN:
                 return Boolean.toString((Boolean) value);
-            case TINYINT_TYPE:
+            case TINY_INT:
                 return Byte.toString((Byte) value);
-            case SMALLINT_TYPE:
+            case SMALL_INT:
                 return Short.toString((Short) value);
-            case INT_TYPE:
+            case INTEGER:
                 return Integer.toString((Integer) value);
-            case BIGINT_TYPE:
+            case BIG_INT:
                 return Long.toString((Long) value);
-            case FLOAT_TYPE:
+            case FLOAT:
                 return Float.toString((Float) value);
-            case DOUBLE_TYPE:
+            case DOUBLE:
                 return Double.toString((Double) value);
-            case VARCHAR_TYPE:
+            case VARCHAR:
                 return value.toString();
-            case STRING_TYPE:
+            case STRING:
                 return value.toString();
-            case CHAR_TYPE:
+            case CHAR:
                 return value.toString();
-            case DATE_TYPE:
+            case DATE:
                 return value.toString();
-            case TIMESTAMP_TYPE:
+            case TIMESTAMP:
                 return value.toString();
-            case DECIMAL_TYPE:
+            case DECIMAL:
                 return value.toString();
-            case BINARY_TYPE:
+            case BINARY:
                 return new String((byte[]) value);
-            case ARRAY_TYPE:
+            case ARRAY:
                 return Arrays.toString((Object[]) value);
-            case INTERVAL_YEAR_MONTH_TYPE:
+            case INTERVAL_DAY_TIME:
                 break;
-            case INTERVAL_DAY_TIME_TYPE:
+            case INTERVAL_YEAR_MONTH:
                 break;
-            case MAP_TYPE:
+            case MAP:
                 break;
-            case STRUCT_TYPE:
+            case STRUCT:
                 break;
-            case UNION_TYPE:
-                break;
-            case NULL_TYPE:
-                break;
-            case USER_DEFINED_TYPE:
+            case VOID:
                 break;
         }
 
@@ -374,7 +380,7 @@ public class ResultSetUtils {
 
     }
 
-    private static Date convertToDate(Object value, Type columnType) throws SQLDataException {
+    private static Date convertToDate(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -382,18 +388,18 @@ public class ResultSetUtils {
 
         switch (columnType) {
 
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Date.valueOf((String) value);
-            case DATE_TYPE:
+            case DATE:
                 return (Date) value;
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Date from column type [" + columnType + "]");
     }
 
-    private static Timestamp convertToTimestamp(Object value, Type columnType) throws SQLDataException {
+    private static Timestamp convertToTimestamp(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -401,18 +407,18 @@ public class ResultSetUtils {
 
         switch (columnType) {
 
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Timestamp.valueOf((String) value);
-            case TIMESTAMP_TYPE:
+            case TIMESTAMP:
                 return (Timestamp) value;
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Timestamp from column type [" + columnType + "]");
     }
 
-    private static Time convertToTime(Object value, Type columnType) throws SQLDataException {
+    private static Time convertToTime(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return null;
@@ -420,21 +426,21 @@ public class ResultSetUtils {
 
         switch (columnType) {
 
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return Time.valueOf((String) value);
-            case BIGINT_TYPE:
-            case INT_TYPE:
+            case BIG_INT:
+            case INTEGER:
                 return new Time((Long)value);
-            case TIMESTAMP_TYPE:
+            case TIMESTAMP:
                 return new Time(((Timestamp) value).getTime());
         }
 
         throw new SQLDataException("no strategy to convert [" + value.toString() + "] to Time from column type [" + columnType + "]");
     }
 
-    private static Boolean convertToBoolean(Object value, Type columnType) throws SQLDataException {
+    private static Boolean convertToBoolean(Object value, HiveType columnType) throws SQLDataException {
 
         if (value == null) {
             return false;
@@ -442,19 +448,19 @@ public class ResultSetUtils {
 
         switch (columnType) {
 
-            case BOOLEAN_TYPE:
+            case BOOLEAN:
                 return (Boolean) value;
-            case TINYINT_TYPE:
+            case TINY_INT:
                 return ((Number) value).byteValue() == 1;
-            case SMALLINT_TYPE:
+            case SMALL_INT:
                 return ((Number) value).shortValue() == 1;
-            case INT_TYPE:
+            case INTEGER:
                 return ((Number) value).intValue() == 1;
-            case BIGINT_TYPE:
+            case BIG_INT:
                 return ((Number) value).longValue() == 1;
-            case STRING_TYPE:
-            case CHAR_TYPE:
-            case VARCHAR_TYPE:
+            case STRING:
+            case CHAR:
+            case VARCHAR:
                 return value.equals("1")
                         || ((String) value).equalsIgnoreCase("yes")
                         || ((String) value).equalsIgnoreCase("true");

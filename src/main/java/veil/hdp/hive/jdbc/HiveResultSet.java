@@ -2,7 +2,6 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.RowSet;
 import org.apache.hive.service.cli.RowSetFactory;
-import org.apache.hive.service.cli.Type;
 import org.apache.hive.service.cli.thrift.TFetchOrientation;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.apache.hive.service.cli.thrift.TRowSet;
@@ -141,7 +140,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        return (BigDecimal) getColumnValue(columnIndex, Type.DECIMAL_TYPE);
+        return (BigDecimal) getColumnValue(columnIndex, HiveType.DECIMAL);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        return (Boolean) getColumnValue(columnIndex, Type.BOOLEAN_TYPE);
+        return (Boolean) getColumnValue(columnIndex, HiveType.BOOLEAN);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
-        return (Date) getColumnValue(columnIndex, Type.DATE_TYPE);
+        return (Date) getColumnValue(columnIndex, HiveType.DATE);
     }
 
     @Override
@@ -176,7 +175,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        return (Double) getColumnValue(columnIndex, Type.DOUBLE_TYPE);
+        return (Double) getColumnValue(columnIndex, HiveType.DOUBLE);
     }
 
     @Override
@@ -196,7 +195,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        return (Float) getColumnValue(columnIndex, Type.FLOAT_TYPE);
+        return (Float) getColumnValue(columnIndex, HiveType.FLOAT);
     }
 
     @Override
@@ -206,7 +205,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
-        return (Integer) getColumnValue(columnIndex, Type.INT_TYPE);
+        return (Integer) getColumnValue(columnIndex, HiveType.INTEGER);
     }
 
     @Override
@@ -216,7 +215,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
-        return (Long) getColumnValue(columnIndex, Type.BIGINT_TYPE);
+        return (Long) getColumnValue(columnIndex, HiveType.BIG_INT);
     }
 
     @Override
@@ -236,7 +235,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
-        return (Short) getColumnValue(columnIndex, Type.SMALLINT_TYPE);
+        return (Short) getColumnValue(columnIndex, HiveType.SMALL_INT);
     }
 
     @Override
@@ -251,7 +250,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public String getString(int columnIndex) throws SQLException {
-        return (String) getColumnValue(columnIndex, Type.STRING_TYPE);
+        return (String) getColumnValue(columnIndex, HiveType.STRING);
     }
 
     @Override
@@ -261,7 +260,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        return (Timestamp) getColumnValue(columnIndex, Type.TIMESTAMP_TYPE);
+        return (Timestamp) getColumnValue(columnIndex, HiveType.TIMESTAMP);
     }
 
     @Override
@@ -277,7 +276,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        return (Byte) getColumnValue(columnIndex, Type.TINYINT_TYPE);
+        return (Byte) getColumnValue(columnIndex, HiveType.TINY_INT);
     }
 
     @Override
@@ -297,7 +296,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
-        return (byte[]) getColumnValue(columnIndex, Type.BINARY_TYPE);
+        return (byte[]) getColumnValue(columnIndex, HiveType.BINARY);
     }
 
     @Override
@@ -307,7 +306,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        return getColumnValue(columnIndex);
+        return getValueAsStream(columnIndex);
     }
 
     @Override
@@ -325,23 +324,25 @@ public class HiveResultSet extends AbstractResultSet {
         sqlWarning = null;
     }
 
+    @Override
+    public Time getTime(int columnIndex) throws SQLException {
+        return getValueAsTime(columnIndex);
+    }
+
+
+    @Override
+    public Time getTime(String columnLabel) throws SQLException {
+        return getTime(findColumn(columnLabel));
+    }
+
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
 
-    @Override
-    public Time getTime(int columnIndex) throws SQLException {
-        return super.getTime(columnIndex);
-    }
 
     @Override
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
         return super.getAsciiStream(columnIndex);
-    }
-
-    @Override
-    public Time getTime(String columnLabel) throws SQLException {
-        return super.getTime(columnLabel);
     }
 
     @Override
@@ -613,7 +614,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
-    private Object getColumnValue(int columnIndex, Type targetType) throws SQLException {
+    private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
 
         Object columnValue = ResultSetUtils.getColumnValue(schema, row, columnIndex, targetType);
 
@@ -622,9 +623,18 @@ public class HiveResultSet extends AbstractResultSet {
         return columnValue;
     }
 
-    private InputStream getColumnValue(int columnIndex) throws SQLException {
+    private InputStream getValueAsStream(int columnIndex) throws SQLException {
 
-        InputStream columnValue = ResultSetUtils.getColumnValue(schema, row, columnIndex);
+        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, row, columnIndex);
+
+        lastColumnNull = columnValue == null;
+
+        return columnValue;
+    }
+
+    private Time getValueAsTime(int columnIndex) throws SQLException {
+
+        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, row, columnIndex);
 
         lastColumnNull = columnValue == null;
 
