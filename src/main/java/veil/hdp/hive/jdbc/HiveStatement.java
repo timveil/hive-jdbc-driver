@@ -20,20 +20,17 @@ public class HiveStatement extends AbstractStatement {
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
-
+    // public getter only
+    private final AtomicBoolean closed = new AtomicBoolean(true);
     // private
     private TOperationHandle statementHandle;
     private ResultSet resultSet;
     private double modifiedRowCount = 0;
-
     // public getter & setter
     private int queryTimeout;
     private int maxRows;
     private int fetchSize;
     private SQLWarning sqlWarning;
-
-    // public getter only
-    private final AtomicBoolean closed = new AtomicBoolean(true);
 
     HiveStatement(HiveConnection connection) {
         this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
@@ -133,13 +130,13 @@ public class HiveStatement extends AbstractStatement {
     }
 
     @Override
-    public void setFetchSize(int rows) throws SQLException {
-        this.fetchSize = rows;
+    public int getFetchSize() throws SQLException {
+        return fetchSize;
     }
 
     @Override
-    public int getFetchSize() throws SQLException {
-        return fetchSize;
+    public void setFetchSize(int rows) throws SQLException {
+        this.fetchSize = rows;
     }
 
     @Override

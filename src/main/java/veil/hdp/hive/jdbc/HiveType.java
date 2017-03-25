@@ -66,6 +66,17 @@ public enum HiveType {
         this.scale = scale;
     }
 
+    public static HiveType valueOf(TTypeId tTypeId) {
+        for (HiveType hiveType : values()) {
+            TTypeId thriftType = hiveType.getThriftType();
+            if (thriftType != null && thriftType.equals(tTypeId)) {
+                return hiveType;
+            }
+        }
+
+        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + "]");
+    }
+
     public String getName() {
         return name;
     }
@@ -104,17 +115,5 @@ public enum HiveType {
 
     public boolean isSearchable() {
         return !complex;
-    }
-
-
-    public static HiveType valueOf(TTypeId tTypeId) {
-        for (HiveType hiveType : values()) {
-            TTypeId thriftType = hiveType.getThriftType();
-            if (thriftType != null && thriftType.equals(tTypeId)) {
-                return hiveType;
-            }
-        }
-
-        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + "]");
     }
 }

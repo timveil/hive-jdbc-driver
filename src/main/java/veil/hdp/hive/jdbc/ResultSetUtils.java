@@ -432,7 +432,7 @@ public class ResultSetUtils {
                 return Time.valueOf((String) value);
             case BIG_INT:
             case INTEGER:
-                return new Time((Long)value);
+                return new Time((Long) value);
             case TIMESTAMP:
                 return new Time(((Timestamp) value).getTime());
         }

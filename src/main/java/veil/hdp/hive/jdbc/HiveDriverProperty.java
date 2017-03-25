@@ -40,12 +40,28 @@ public enum HiveDriverProperty {
         this.choices = choices;
     }
 
+    public static HiveDriverProperty forAlias(String alias) {
+        for (HiveDriverProperty property : HiveDriverProperty.values()) {
+            if (property.getHiveConfName() != null && property.getHiveConfName().equalsIgnoreCase(alias)) {
+                return property;
+            }
+        }
+
+        return null;
+    }
+
     public String getName() {
         return name;
     }
 
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    public void setDefaultValue(Properties properties) {
+        if (defaultValue != null) {
+            properties.setProperty(name, defaultValue);
+        }
     }
 
     public boolean isRequired() {
@@ -62,12 +78,6 @@ public enum HiveDriverProperty {
 
     public String getHiveConfName() {
         return hiveConfName;
-    }
-
-    public void setDefaultValue(Properties properties) {
-        if (defaultValue != null) {
-            properties.setProperty(name, defaultValue);
-        }
     }
 
     public void set(Properties properties, String value) {
@@ -117,15 +127,5 @@ public enum HiveDriverProperty {
         propertyInfo.choices = choices;
 
         return propertyInfo;
-    }
-
-    public static HiveDriverProperty forAlias(String alias) {
-        for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.getHiveConfName() != null && property.getHiveConfName().equalsIgnoreCase(alias)) {
-                return property;
-            }
-        }
-
-        return null;
     }
 }

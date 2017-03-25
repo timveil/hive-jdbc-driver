@@ -3,7 +3,6 @@ package veil.hdp.hive.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.JDBCType;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
@@ -135,6 +134,5 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         return Boolean.FALSE;
     }
 
-    
 
 }

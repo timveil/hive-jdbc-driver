@@ -117,7 +117,7 @@ public class DriverUtils {
         }
 
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.isRequired() && property.get(properties) == null ) {
+            if (property.isRequired() && property.get(properties) == null) {
                 throw new SQLException("property [" + property.getName() + "] is required");
             }
         }
