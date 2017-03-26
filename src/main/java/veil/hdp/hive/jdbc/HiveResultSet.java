@@ -66,8 +66,8 @@ public class HiveResultSet extends AbstractResultSet {
 
 
         if (rowSet == null || !rowSetIterator.hasNext()) {
-            TRowSet results = HiveServiceUtils.fetchResults(connection.getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
-            rowSet = RowSetFactory.create(results, connection.getProtocolVersion());
+            TRowSet results = HiveServiceUtils.fetchResults(connection.getThriftSession().getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
+            rowSet = RowSetFactory.create(results, connection.getThriftSession().getProtocolVersion());
             rowSetIterator = rowSet.iterator();
         }
 

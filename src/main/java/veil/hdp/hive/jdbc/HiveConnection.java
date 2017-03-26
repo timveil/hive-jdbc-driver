@@ -1,20 +1,12 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.TCLIService;
-import org.apache.hive.service.cli.thrift.TOpenSessionResp;
-import org.apache.hive.service.cli.thrift.TProtocolVersion;
-import org.apache.hive.service.cli.thrift.TSessionHandle;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -22,97 +14,36 @@ public class HiveConnection extends AbstractConnection {
 
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
-    // constructor
-    private final Properties properties;
-    // public getter & setter
-    private final AtomicBoolean closed = new AtomicBoolean(true);
-    // private
-    private TTransport transport;
-    private TCLIService.Client client;
-    private TSessionHandle sessionHandle;
-    private TProtocolVersion protocolVersion;
-    private CloseableHttpClient httpClient = null;
+    private final ThriftSession thriftSession;
+
     private SQLWarning sqlWarning = null;
 
-    HiveConnection(Properties properties) {
-        this.properties = properties;
+    private HiveConnection(ThriftSession thriftSession) {
+        this.thriftSession = thriftSession;
     }
 
-    Properties getProperties() {
-        return properties;
-    }
-
-    TCLIService.Client getClient() {
-        return client;
-    }
-
-    TSessionHandle getSessionHandle() {
-        return sessionHandle;
-    }
-
-    TProtocolVersion getProtocolVersion() {
-        return protocolVersion;
-    }
-
-    void connect() throws SQLException {
-
-
-        TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
-
-        if (transportMode.equals(TransportMode.binary)) {
-            transport = ThriftUtils.createBinaryTransport(properties, getLoginTimeout());
-        } else {
-
-            httpClient = HttpUtils.buildClient(properties);
-
-            transport = ThriftUtils.createHttpTransport(properties, httpClient);
-        }
-
-
-        ThriftUtils.openTransport(transport);
-
-        client = ThriftUtils.createClient(transport);
-
-        TOpenSessionResp tOpenSessionResp = HiveServiceUtils.openSession(properties, client);
-
-        Map<String, String> configuration = tOpenSessionResp.getConfiguration();
-
-        if (log.isDebugEnabled()) {
-            log.debug("configuration for session returned by thrift {}", configuration);
-        }
-
-        protocolVersion = tOpenSessionResp.getServerProtocolVersion();
-
-        sessionHandle = tOpenSessionResp.getSessionHandle();
-
-        closed.set(false);
-
-
+    public ThriftSession getThriftSession() {
+        return thriftSession;
     }
 
     @Override
     public void close() throws SQLException {
-        if (closed.compareAndSet(false, true)) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("attempting to close {}", this.getClass().getName());
-            }
-
-            HiveServiceUtils.closeSession(client, sessionHandle);
-            ThriftUtils.closeTransport(transport);
-            HttpUtils.closeClient(httpClient);
-        }
-
+        thriftSession.close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return closed.get();
+        return thriftSession.isClosed();
     }
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new HiveStatement(this, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, getHoldability());
+        return new HiveStatement.Builder()
+                .connection(this)
+                .type(ResultSet.TYPE_FORWARD_ONLY)
+                .concurrency(ResultSet.CONCUR_READ_ONLY)
+                .holdability(getHoldability())
+                .build();
     }
 
     @Override
@@ -132,12 +63,22 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new HiveStatement(this, resultSetType, resultSetConcurrency, getHoldability());
+        return new HiveStatement.Builder()
+                .connection(this)
+                .type(resultSetType)
+                .concurrency(resultSetConcurrency)
+                .holdability(getHoldability())
+                .build();
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new HiveStatement(this, resultSetType, resultSetConcurrency, getHoldability());
+        return new HiveStatement.Builder()
+                .connection(this)
+                .type(resultSetType)
+                .concurrency(resultSetConcurrency)
+                .holdability(resultSetHoldability)
+                .build();
     }
 
     @Override
@@ -222,7 +163,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void abort(Executor executor) throws SQLException {
 
-        if (closed.get()) {
+        if (thriftSession.isClosed()) {
             return;
         }
 
@@ -236,13 +177,13 @@ public class HiveConnection extends AbstractConnection {
         }
     }
 
-
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
-
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return super.prepareStatement(sql);
     }
+
+
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
@@ -269,30 +210,44 @@ public class HiveConnection extends AbstractConnection {
         return super.prepareStatement(sql, columnNames);
     }
 
-
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
-
-    private int getLoginTimeout() {
-        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
-
-        if (timeOut > Integer.MAX_VALUE) {
-            timeOut = Integer.MAX_VALUE;
-        }
-
-        return (int) timeOut;
-    }
 
 
     @Override
     public String toString() {
         return "HiveConnection{" +
-                "properties=" + properties +
-                ", transport=" + transport +
-                ", client=" + client +
-                ", sessionHandle=" + sessionHandle +
-                ", protocolVersion=" + protocolVersion +
-                ", closed=" + closed +
+                "thriftSession=" + thriftSession +
                 '}';
+    }
+
+    public static class Builder {
+
+        private Properties properties;
+
+        public HiveConnection.Builder properties(Properties properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        public HiveConnection build() throws SQLException {
+            ThriftSession thriftSession = new ThriftSession.Builder()
+                    .properties(properties)
+                    .timeout(getLoginTimeout())
+                    .build();
+
+            return new HiveConnection(thriftSession);
+        }
+
+        private int getLoginTimeout() {
+            long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
+
+            if (timeOut > Integer.MAX_VALUE) {
+                timeOut = Integer.MAX_VALUE;
+            }
+
+            return (int) timeOut;
+        }
+
     }
 
     public class AbortCommand implements Runnable {

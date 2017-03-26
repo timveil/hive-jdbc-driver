@@ -1,7 +1,6 @@
 package veil.hdp.hive.jdbc;
 
 
-import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -20,23 +18,18 @@ public class HiveStatement extends AbstractStatement {
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
-    // public getter only
-    private final AtomicBoolean closed = new AtomicBoolean(true);
+
     // private
-    private TOperationHandle statementHandle;
-    private ResultSet resultSet;
-    private double modifiedRowCount = 0;
+    private ThriftOperation thriftOperation;
+
     // public getter & setter
     private int queryTimeout;
     private int maxRows;
     private int fetchSize;
     private SQLWarning sqlWarning;
 
-    HiveStatement(HiveConnection connection) {
-        this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
-    }
 
-    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    private HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
 
         this.queryTimeout = 0;
@@ -46,57 +39,42 @@ public class HiveStatement extends AbstractStatement {
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
 
-        resultSet = null;
+    }
+
+    private void performThriftOperation(String sql) throws SQLException {
+        thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
     }
 
     @Override
     public boolean execute(String sql) throws SQLException {
+        performThriftOperation(sql);
 
-        // todo: use Executors and Futures here!
-        // http://winterbe.com/posts/2015/04/07/java8-concurrency-tutorial-thread-executor-examples/
-
-        closeStatementHandle();
-
-        statementHandle = HiveServiceUtils.executeSql(connection.getClient(), connection.getSessionHandle(), queryTimeout, sql);
-
-        HiveServiceUtils.waitForStatementToComplete(connection.getClient(), statementHandle);
-
-        if (statementHandle.isHasResultSet()) {
-
-            Schema schema = new Schema(HiveServiceUtils.getResultSetSchema(connection.getClient(), statementHandle));
-
-            if (log.isDebugEnabled()) {
-                log.debug(schema.toString());
-            }
-
-            resultSet = new HiveResultSet(this, statementHandle, schema);
-
-            return true;
-
-        } else {
-            modifiedRowCount = statementHandle.getModifiedRowCount();
-
-            return false;
-        }
-
+        return thriftOperation.hasResultSet();
 
     }
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        if (!execute(sql)) {
+
+        performThriftOperation(sql);
+
+        if (!thriftOperation.hasResultSet()) {
             throw new SQLException("The query did not generate a result set!");
         }
-        return resultSet;
+
+        return thriftOperation.getResultSet();
     }
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
-        if (execute(sql)) {
-            log.warn("The following sql generated a result set when an update was called, something seems amiss.  sql [{}]", sql);
+
+        performThriftOperation(sql);
+
+        if (thriftOperation.hasResultSet()) {
+            throw new SQLException("The query generated a result set when an updated was expected");
         }
 
-        return new Double(modifiedRowCount).intValue();
+        return thriftOperation.getModifiedRowCount();
     }
 
     @Override
@@ -141,7 +119,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return resultSet;
+        return thriftOperation.getResultSet();
     }
 
     @Override
@@ -151,17 +129,17 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return this.connection;
+        return connection;
     }
 
     @Override
     public void cancel() throws SQLException {
-        HiveServiceUtils.cancelOperation(connection.getClient(), statementHandle);
+        thriftOperation.cancel();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return closed.get();
+        return thriftOperation.isClosed();
     }
 
     @Override
@@ -176,7 +154,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        return resultSet != null ? -1 : new Double(modifiedRowCount).intValue();
+        return thriftOperation.getModifiedRowCount();
     }
 
     @Override
@@ -191,17 +169,8 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void close() throws SQLException {
-        if (closed.compareAndSet(false, true)) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("attempting to close {}", this.getClass().getName());
-            }
-
-            closeStatementHandle();
-            closeResultSet();
-        }
+        thriftOperation.close();
     }
-
 
     @Override
     public int getMaxFieldSize() throws SQLException {
@@ -239,7 +208,6 @@ public class HiveStatement extends AbstractStatement {
         // todo: should consider pooling statements
     }
 
-
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
         return HiveServiceUtils.getGeneratedKeys(connection);
@@ -250,25 +218,41 @@ public class HiveStatement extends AbstractStatement {
         return Boolean.FALSE;
     }
 
-
     @Override
     public void closeOnCompletion() throws SQLException {
         // no-op; don't support setting this value
     }
 
-    private void closeResultSet() throws SQLException {
-        if (resultSet != null && !resultSet.isClosed()) {
-            resultSet.close();
-            resultSet = null;
+    public static class Builder {
+
+        private HiveConnection connection;
+        private int resultSetType;
+        private int resultSetConcurrency;
+        private int resultSetHoldability;
+
+        public HiveStatement.Builder connection(HiveConnection connection) {
+            this.connection = connection;
+            return this;
+        }
+        public HiveStatement.Builder type(int resultSetType) {
+            this.resultSetType = resultSetType;
+            return this;
+        }
+
+        public HiveStatement.Builder concurrency(int resultSetConcurrency) {
+            this.resultSetConcurrency = resultSetConcurrency;
+            return this;
+        }
+
+        public HiveStatement.Builder holdability(int resultSetHoldability) {
+            this.resultSetHoldability = resultSetHoldability;
+            return this;
+        }
+
+
+        public HiveStatement build() throws SQLException {
+            return new HiveStatement(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
     }
-
-    private void closeStatementHandle() {
-        if (statementHandle != null) {
-            HiveServiceUtils.closeOperation(connection.getClient(), statementHandle);
-            statementHandle = null;
-        }
-    }
-
 
 }
