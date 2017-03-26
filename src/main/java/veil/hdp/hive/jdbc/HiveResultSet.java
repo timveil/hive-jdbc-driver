@@ -19,7 +19,6 @@ public class HiveResultSet extends AbstractResultSet {
     private static final Logger log = LoggerFactory.getLogger(HiveResultSet.class);
 
     // constructor
-    private final HiveConnection connection;
     private final HiveStatement statement;
     private final TOperationHandle statementHandle;
     private final Schema schema;
@@ -40,8 +39,7 @@ public class HiveResultSet extends AbstractResultSet {
     private boolean lastColumnNull;
 
 
-    HiveResultSet(HiveStatement statement, TOperationHandle statementHandle, Schema schema) throws SQLException {
-        this.connection = (HiveConnection) statement.getConnection();
+    private HiveResultSet(HiveStatement statement, TOperationHandle statementHandle, Schema schema) throws SQLException {
         this.statement = statement;
         this.schema = schema;
         this.statementHandle = statementHandle;
@@ -66,8 +64,8 @@ public class HiveResultSet extends AbstractResultSet {
 
 
         if (rowSet == null || !rowSetIterator.hasNext()) {
-            TRowSet results = HiveServiceUtils.fetchResults(connection.getThriftSession().getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
-            rowSet = RowSetFactory.create(results, connection.getThriftSession().getProtocolVersion());
+            TRowSet results = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
+            rowSet = RowSetFactory.create(results, statement.getConnection().getThriftSession().getProtocolVersion());
             rowSetIterator = rowSet.iterator();
         }
 
@@ -237,7 +235,7 @@ public class HiveResultSet extends AbstractResultSet {
     }
 
     @Override
-    public Statement getStatement() throws SQLException {
+    public HiveStatement getStatement() throws SQLException {
         return this.statement;
     }
 
@@ -260,7 +258,6 @@ public class HiveResultSet extends AbstractResultSet {
     public Timestamp getTimestamp(String columnLabel) throws SQLException {
         return getTimestamp(findColumn(columnLabel));
     }
-
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
@@ -322,7 +319,6 @@ public class HiveResultSet extends AbstractResultSet {
         return getValueAsTime(columnIndex);
     }
 
-
     @Override
     public Time getTime(String columnLabel) throws SQLException {
         return getTime(findColumn(columnLabel));
@@ -353,6 +349,51 @@ public class HiveResultSet extends AbstractResultSet {
         lastColumnNull = columnValue == null;
 
         return columnValue;
+    }
+
+    public static class Builder {
+
+        private ThriftOperation thriftOperation;
+        private TOperationHandle handle;
+        private HiveStatement statement;
+        private Schema schema;
+
+        public HiveResultSet.Builder operation(ThriftOperation thriftOperation) {
+            this.thriftOperation = thriftOperation;
+            return this;
+        }
+
+        public HiveResultSet.Builder handle(TOperationHandle operation) {
+            this.handle = handle;
+            return this;
+        }
+
+        public HiveResultSet.Builder statement(HiveStatement statement) {
+            this.statement = statement;
+            return this;
+        }
+
+        public HiveResultSet.Builder schema(Schema schema) {
+            this.schema = schema;
+            return this;
+        }
+
+        public HiveResultSet build() throws SQLException {
+
+            if (schema == null) {
+                schema = new Schema(HiveServiceUtils.getResultSetSchema(thriftOperation.getClient(), thriftOperation.getOperationHandle()));
+            }
+
+            TOperationHandle oh;
+
+            if (thriftOperation != null) {
+                oh = thriftOperation.getOperationHandle();
+            } else {
+                oh = handle;
+            }
+
+            return new HiveResultSet(statement, oh, schema);
+        }
     }
 
 

@@ -4,7 +4,6 @@ package veil.hdp.hive.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -21,6 +20,8 @@ public class HiveStatement extends AbstractStatement {
 
     // private
     private ThriftOperation thriftOperation;
+
+    private ResultSet resultSet;
 
     // public getter & setter
     private int queryTimeout;
@@ -43,6 +44,9 @@ public class HiveStatement extends AbstractStatement {
 
     private void performThriftOperation(String sql) throws SQLException {
         thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
+
+        resultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
+
     }
 
     @Override
@@ -62,7 +66,7 @@ public class HiveStatement extends AbstractStatement {
             throw new SQLException("The query did not generate a result set!");
         }
 
-        return thriftOperation.getResultSet();
+        return resultSet;
     }
 
     @Override
@@ -74,7 +78,7 @@ public class HiveStatement extends AbstractStatement {
             throw new SQLException("The query generated a result set when an updated was expected");
         }
 
-        return thriftOperation.getModifiedRowCount();
+        return thriftOperation.getModifiedCount();
     }
 
     @Override
@@ -119,7 +123,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return thriftOperation.getResultSet();
+        return resultSet;
     }
 
     @Override
@@ -128,7 +132,7 @@ public class HiveStatement extends AbstractStatement {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public HiveConnection getConnection() throws SQLException {
         return connection;
     }
 
@@ -154,7 +158,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        return thriftOperation.getModifiedRowCount();
+        return thriftOperation.getModifiedCount();
     }
 
     @Override
@@ -170,6 +174,10 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void close() throws SQLException {
         thriftOperation.close();
+
+        if (resultSet != null) {
+            resultSet.close();
+        }
     }
 
     @Override
@@ -234,6 +242,7 @@ public class HiveStatement extends AbstractStatement {
             this.connection = connection;
             return this;
         }
+
         public HiveStatement.Builder type(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;

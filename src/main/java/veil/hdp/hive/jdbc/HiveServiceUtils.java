@@ -357,7 +357,7 @@ public class HiveServiceUtils {
 
         log.debug(schema.toString());
 
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), operationHandle, schema);
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).handle(operationHandle).schema(schema).build();
 
     }
 
@@ -522,79 +522,79 @@ public class HiveServiceUtils {
     }
 
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.PRIMARY_KEYS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.PRIMARY_KEYS)).build();
     }
 
     public static ResultSet getProcedureColumns(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.PROCEDURE_COLUMNS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.PROCEDURE_COLUMNS)).build();
     }
 
     public static ResultSet getProcedures(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.PROCEDURES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.PROCEDURES)).build();
     }
 
     public static ResultSet getColumnPrivileges(HiveConnection connection, String catalog, String schema, String table, String columnNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.COLUMN_PRIVILEGES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.COLUMN_PRIVILEGES)).build();
     }
 
     public static ResultSet getTablePrivileges(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.TABLE_PRIVILEGES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.TABLE_PRIVILEGES)).build();
     }
 
     public static ResultSet getBestRowIdentifier(HiveConnection connection, String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.BEST_ROW_IDENTIFIER));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.BEST_ROW_IDENTIFIER)).build();
     }
 
     public static ResultSet getVersionColumns(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.VERSION_COLUMNS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.VERSION_COLUMNS)).build();
     }
 
     public static ResultSet getImportedKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.IMPORTED_KEYS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.IMPORTED_KEYS)).build();
     }
 
     public static ResultSet getExportedKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.EXPORTED_KEYS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema( new Schema(ColumnDescriptors.EXPORTED_KEYS)).build();
     }
 
     public static ResultSet getCrossReference(HiveConnection connection, String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.CROSS_REFERENCE));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.CROSS_REFERENCE)).build();
     }
 
     public static ResultSet getIndexInfo(HiveConnection connection, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.INDEX_INFO));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.INDEX_INFO)).build();
     }
 
     public static ResultSet getUDTs(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.UDT));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.UDT)).build();
     }
 
     public static ResultSet getSuperTypes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.SUPER_TYPES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.SUPER_TYPES)).build();
     }
 
     public static ResultSet getSuperTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.SUPER_TABLES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.SUPER_TABLES)).build();
     }
 
     public static ResultSet getAttributes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.ATTRIBUTES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.ATTRIBUTES)).build();
     }
 
     public static ResultSet getClientInfoProperties(HiveConnection connection) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.CLIENT_INFO_PROPERTIES));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema( new Schema(ColumnDescriptors.CLIENT_INFO_PROPERTIES)).build();
     }
 
     public static ResultSet getFunctionColumns(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.FUNCTION_COLUMNS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.FUNCTION_COLUMNS)).build();
     }
 
     public static ResultSet getPseudoColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.PSEUDO_COLUMNS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.PSEUDO_COLUMNS)).build();
     }
 
     public static ResultSet getGeneratedKeys(HiveConnection connection) throws SQLException {
-        return new HiveResultSet(new HiveStatement.Builder().connection(connection).build(), null, new Schema(ColumnDescriptors.PSEUDO_COLUMNS));
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.PSEUDO_COLUMNS)).build();
     }
 
     public static String getSchema(HiveConnection connection) throws SQLException {
