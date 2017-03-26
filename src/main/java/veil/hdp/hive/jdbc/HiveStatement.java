@@ -259,7 +259,7 @@ public class HiveStatement extends AbstractStatement {
         }
 
 
-        public HiveStatement build() throws SQLException {
+        public HiveStatement build() {
             return new HiveStatement(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
     }

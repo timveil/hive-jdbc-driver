@@ -49,13 +49,13 @@ public class ThriftOperation {
         return -1;
     }
 
-    public void close() throws SQLException {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeOperation(client, operationHandle);
         }
     }
 
-    public void cancel() throws SQLException {
+    public void cancel() {
         if (!closed.get()) {
             HiveServiceUtils.cancelOperation(client, operationHandle);
         }
