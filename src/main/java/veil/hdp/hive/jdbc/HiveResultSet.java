@@ -366,6 +366,7 @@ public class HiveResultSet extends AbstractResultSet {
             builder.maxRows(statement.getMaxRows());
 
             if (oh != null) {
+                //todo: this probably won't work when we need to fetch additional results; should probably move into HiveResults instead
                 TRowSet tRowSet = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), oh, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
                 builder.rowSet(tRowSet);
             }
