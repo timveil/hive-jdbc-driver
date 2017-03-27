@@ -6,11 +6,9 @@ import org.apache.hive.service.cli.thrift.TRowSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveResultSet extends AbstractResultSet {
@@ -19,11 +17,11 @@ public class HiveResultSet extends AbstractResultSet {
 
     // constructor
     private final HiveStatement statement;
-    private final TOperationHandle statementHandle;
     private final Schema schema;
     private final HiveResults hiveResults;
-    private final AtomicBoolean closed = new AtomicBoolean(true);
 
+    // atomic
+    private final AtomicBoolean closed = new AtomicBoolean(true);
 
     // public getter & setter
     private int fetchSize;
@@ -37,10 +35,9 @@ public class HiveResultSet extends AbstractResultSet {
     private boolean lastColumnNull;
 
 
-    private HiveResultSet(HiveStatement statement, TOperationHandle statementHandle, Schema schema, HiveResults hiveResults) throws SQLException {
+    private HiveResultSet(HiveStatement statement, Schema schema, HiveResults hiveResults) throws SQLException {
         this.statement = statement;
         this.schema = schema;
-        this.statementHandle = statementHandle;
         this.hiveResults = hiveResults;
         this.fetchDirection = statement.getFetchDirection();
         this.fetchSize = statement.getFetchSize();
@@ -365,12 +362,18 @@ public class HiveResultSet extends AbstractResultSet {
                 oh = handle;
             }
 
+            HiveResults.Builder builder = new HiveResults.Builder();
+            builder.maxRows(statement.getMaxRows());
 
-            TRowSet tRowSet = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), oh, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
+            if (oh != null) {
+                TRowSet tRowSet = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), oh, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
+                builder.rowSet(tRowSet);
+            }
 
-            HiveResults results = new HiveResults(tRowSet, statement.getMaxRows());
+            HiveResults results = builder.build();
 
-            return new HiveResultSet(statement, oh, schema, results);
+
+            return new HiveResultSet(statement, schema, results);
         }
     }
 
