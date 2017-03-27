@@ -25,7 +25,7 @@ public class HiveDriver implements Driver {
 
 
     private Connection connect(Properties properties) throws SQLException {
-       return new HiveConnection.Builder().properties(properties).build();
+        return new HiveConnection.Builder().properties(properties).build();
     }
 
     public Connection connect(String url, Properties info) throws SQLException {

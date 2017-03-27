@@ -21,7 +21,7 @@ public class HiveServiceUtilsTest extends BaseJunitTest {
 
         String url = "jdbc:hive2://hive-large.hdp.local:10000/default?transport.mode=binary";
 
-        connection = (HiveConnection)new HiveDriver().connect(url, properties);
+        connection = (HiveConnection) new HiveDriver().connect(url, properties);
     }
 
     @After

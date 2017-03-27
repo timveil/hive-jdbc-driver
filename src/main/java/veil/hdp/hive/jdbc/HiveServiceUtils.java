@@ -554,7 +554,7 @@ public class HiveServiceUtils {
     }
 
     public static ResultSet getExportedKeys(HiveConnection connection, String catalog, String schema, String table) throws SQLException {
-        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema( new Schema(ColumnDescriptors.EXPORTED_KEYS)).build();
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.EXPORTED_KEYS)).build();
     }
 
     public static ResultSet getCrossReference(HiveConnection connection, String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
@@ -582,7 +582,7 @@ public class HiveServiceUtils {
     }
 
     public static ResultSet getClientInfoProperties(HiveConnection connection) throws SQLException {
-        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema( new Schema(ColumnDescriptors.CLIENT_INFO_PROPERTIES)).build();
+        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).schema(new Schema(ColumnDescriptors.CLIENT_INFO_PROPERTIES)).build();
     }
 
     public static ResultSet getFunctionColumns(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {

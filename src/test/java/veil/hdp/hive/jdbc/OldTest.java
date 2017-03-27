@@ -11,7 +11,7 @@ public class OldTest extends BaseJunitTest {
     @Test
     public void oldDriver() throws ClassNotFoundException, SQLException {
 
-            Class.forName("org.apache.hive.jdbc.HiveDriver");
+        Class.forName("org.apache.hive.jdbc.HiveDriver");
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");

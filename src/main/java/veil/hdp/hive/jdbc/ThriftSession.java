@@ -9,7 +9,6 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -64,7 +63,7 @@ public class ThriftSession implements AutoCloseable {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);

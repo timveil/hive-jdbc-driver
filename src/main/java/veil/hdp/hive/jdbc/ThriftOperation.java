@@ -5,7 +5,6 @@ import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -51,7 +50,7 @@ public class ThriftOperation implements AutoCloseable {
     }
 
     @Override
-    public void close()  {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeOperation(client, operationHandle);
         }

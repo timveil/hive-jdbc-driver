@@ -19,6 +19,58 @@ public class HiveResults implements AutoCloseable {
     // should this be atomic?
     private int cursor = 0;
 
+    private HiveResults(List<ColumnData> columns, int maxRows, int columnCount, int rowCount) {
+
+        this.columns = columns;
+        this.columnCount = columnCount;
+        this.rowCount = rowCount;
+        this.maxRows = maxRows;
+
+        this.currentRow = new Object[columnCount];
+    }
+
+    private boolean hasNext() {
+
+        if (maxRows > 0 && rowCount >= maxRows) {
+            return false;
+        }
+
+        return cursor < rowCount;
+
+    }
+
+    public boolean next() {
+
+        if (hasNext()) {
+            buildCurrentRow();
+            cursor++;
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+    public int getCursor() {
+        return cursor;
+    }
+
+    private void buildCurrentRow() {
+        for (int i = 0; i < columnCount; i++) {
+            currentRow[i] = columns.get(i).getValue(cursor);
+        }
+    }
+
+    public Object[] getCurrentRow() {
+        return currentRow;
+    }
+
+    @Override
+    public void close() {
+
+    }
+
     public static class Builder {
 
         private TRowSet rowSet;
@@ -67,60 +119,6 @@ public class HiveResults implements AutoCloseable {
 
             return new HiveResults(columns, maxRows, columns.size(), columns.isEmpty() ? 0 : columns.get(0).getRowCount());
         }
-    }
-
-    private HiveResults(List<ColumnData> columns, int maxRows, int columnCount, int rowCount) {
-
-        this.columns = columns;
-        this.columnCount = columnCount;
-        this.rowCount = rowCount;
-        this.maxRows = maxRows;
-
-        this.currentRow = new Object[columnCount];
-    }
-
-
-    private boolean hasNext() {
-
-        if (maxRows > 0 && rowCount >= maxRows) {
-            return false;
-        }
-
-        return cursor < rowCount;
-
-    }
-
-    public boolean next() {
-
-        if (hasNext()) {
-            buildCurrentRow();
-            cursor++;
-            return true;
-        } else {
-            return false;
-        }
-
-
-    }
-
-    public int getCursor() {
-        return cursor;
-    }
-
-    private void buildCurrentRow() {
-        for (int i = 0; i < columnCount; i++) {
-            currentRow[i] = columns.get(i).getValue(cursor);
-        }
-    }
-
-
-    public Object[] getCurrentRow() {
-        return currentRow;
-    }
-
-    @Override
-    public void close() {
-
     }
 
 }
