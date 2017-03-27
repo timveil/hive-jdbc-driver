@@ -6,6 +6,7 @@ import org.apache.hive.service.cli.thrift.TRowSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -23,9 +24,6 @@ public class HiveResultSet extends AbstractResultSet {
     private final HiveResults hiveResults;
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
-    // private
-    private Iterator<Object[]> rowSetIterator;
-    private Object[] row;
 
     // public getter & setter
     private int fetchSize;
@@ -36,7 +34,6 @@ public class HiveResultSet extends AbstractResultSet {
     private SQLWarning sqlWarning = null;
 
     // public getter only
-    private int rowCount;
     private boolean lastColumnNull;
 
 
@@ -54,37 +51,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean next() throws SQLException {
-
         return hiveResults.next();
-
-        // if a ResultSet is manually created then statementHandle is always null;
-       /* if (statementHandle == null) {
-            return false;
-        }
-
-        if (statement.getMaxRows() > 0 && rowCount >= statement.getMaxRows()) {
-            return false;
-        }
-
-
-        if (rowSet == null || !rowSetIterator.hasNext()) {
-            TRowSet results = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), statementHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
-
-            rowSet = new HiveResults(results);
-            rowSetIterator = rowSet.iterator();
-
-            log.debug("test");
-        }
-
-        if (rowSetIterator.hasNext()) {
-            row = rowSetIterator.next();
-        } else {
-            return false;
-        }
-
-        rowCount++;
-
-        return true;*/
     }
 
     @Override
@@ -100,9 +67,8 @@ public class HiveResultSet extends AbstractResultSet {
                 log.debug("attempting to close {}", this.getClass().getName());
             }
 
-            rowSet = null;
-            rowSetIterator = null;
-            row = null;
+            hiveResults.close();
+
         }
     }
 
@@ -123,12 +89,12 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean isBeforeFirst() throws SQLException {
-        return rowCount == 0;
+        return getRow() == 0;
     }
 
     @Override
     public int getRow() throws SQLException {
-        return rowCount;
+        return hiveResults.getCursor();
     }
 
     @Override
@@ -333,7 +299,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
 
-        Object columnValue = ResultSetUtils.getColumnValue(schema, row, columnIndex, targetType);
+        Object columnValue = ResultSetUtils.getColumnValue(schema, hiveResults.getCurrentRow(), columnIndex, targetType);
 
         lastColumnNull = columnValue == null;
 
@@ -342,7 +308,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private InputStream getValueAsStream(int columnIndex) throws SQLException {
 
-        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, row, columnIndex);
+        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, hiveResults.getCurrentRow(), columnIndex);
 
         lastColumnNull = columnValue == null;
 
@@ -351,7 +317,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Time getValueAsTime(int columnIndex) throws SQLException {
 
-        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, row, columnIndex);
+        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, hiveResults.getCurrentRow(), columnIndex);
 
         lastColumnNull = columnValue == null;
 
@@ -402,7 +368,7 @@ public class HiveResultSet extends AbstractResultSet {
 
             TRowSet tRowSet = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), oh, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
 
-            HiveResults results = new HiveResults(tRowSet);
+            HiveResults results = new HiveResults(tRowSet, statement.getMaxRows());
 
             return new HiveResultSet(statement, oh, schema, results);
         }

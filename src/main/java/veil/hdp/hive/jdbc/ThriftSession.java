@@ -9,12 +9,13 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftSession {
+public class ThriftSession implements AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
@@ -62,8 +63,8 @@ public class ThriftSession {
         return properties;
     }
 
-
-    public void close() {
+    @Override
+    public void close()  {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);

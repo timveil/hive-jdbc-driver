@@ -4,18 +4,23 @@ import org.apache.hive.service.cli.thrift.TColumn;
 import org.apache.hive.service.cli.thrift.TRowSet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class HiveResults implements Iterable<Object[]> {
+public class HiveResults implements AutoCloseable {
     private final List<ColumnData> columns = new ArrayList<>();
+
+    // make these final
     private int rowCount = 0;
     private int columnCount = 0;
+    private int maxRows = 0;
 
+    // should this be atomic?
     private int cursor = 0;
 
 
-    public HiveResults(TRowSet tRowSet) {
+    public HiveResults(TRowSet tRowSet, int maxRows) {
+
+        this.maxRows = maxRows;
 
         if (tRowSet.isSetColumns()) {
 
@@ -50,41 +55,46 @@ public class HiveResults implements Iterable<Object[]> {
         this.rowCount = columns.isEmpty() ? 0 : columns.get(0).getRowCount();
     }
 
+    public boolean hasNext() {
+
+        if (maxRows > 0 && rowCount >= maxRows) {
+            return false;
+        }
+
+        return cursor < rowCount;
+
+    }
+
     public boolean next() {
 
+        if (hasNext()) {
+            cursor++;
+            return true;
+        } else {
+            return false;
+        }
 
 
+    }
+
+    public int getCursor() {
+        return cursor;
     }
 
     public Object[] getCurrentRow() {
 
+        Object[] row = new Object[columnCount];
+
+        for (int i = 0; i < columnCount; i++) {
+            row[i] = columns.get(i).getValue(cursor - 1);
+        }
+
+        return row;
     }
 
     @Override
-    public Iterator<Object[]> iterator() {
-        return new Iterator<Object[]>() {
+    public void close() {
 
-            private int index;
-            private final Object[] row = new Object[columnCount];
-
-            @Override
-            public boolean hasNext() {
-                return index < rowCount;
-            }
-
-            @Override
-            public Object[] next() {
-                for (int i = 0; i < columnCount; i++) {
-                    row[i] = columns.get(i).getValue(index);
-                }
-                index++;
-                return row;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
-            }
-        };
     }
+
 }
