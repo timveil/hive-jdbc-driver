@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftSession implements AutoCloseable {
+public class ThriftSession implements Closeable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
@@ -63,7 +63,7 @@ public class ThriftSession implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);

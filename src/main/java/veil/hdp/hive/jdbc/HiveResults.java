@@ -3,10 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.thrift.TColumn;
 import org.apache.hive.service.cli.thrift.TRowSet;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HiveResults implements AutoCloseable {
+public class HiveResults implements Closeable {
 
     // constructor
     private final List<ColumnData> columns;
@@ -67,7 +68,7 @@ public class HiveResults implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public void close() throws SQLException {
 
     }
 
