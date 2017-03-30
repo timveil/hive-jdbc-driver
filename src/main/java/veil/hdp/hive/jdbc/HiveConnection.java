@@ -177,13 +177,13 @@ public class HiveConnection extends AbstractConnection {
         }
     }
 
+    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
+
+
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return super.prepareStatement(sql);
     }
-
-
-    // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
