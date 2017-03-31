@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -19,9 +20,8 @@ public class HiveStatement extends AbstractStatement {
     private final int resultSetHoldability;
 
     // private
-    private ThriftOperation thriftOperation;
-
-    private ResultSet resultSet;
+    private final AtomicReference<ThriftOperation> currentOperation = new AtomicReference<>();
+    private final AtomicReference<ResultSet> currentResultSet = new AtomicReference<>();
 
     // public getter & setter
     private int queryTimeout;
@@ -43,9 +43,13 @@ public class HiveStatement extends AbstractStatement {
     }
 
     private void performThriftOperation(String sql) throws SQLException {
-        thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
+        ThriftOperation thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
 
-        resultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
+        currentOperation.set(thriftOperation);
+
+        ResultSet resultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
+
+        currentResultSet.set(resultSet);
 
     }
 
@@ -53,7 +57,9 @@ public class HiveStatement extends AbstractStatement {
     public boolean execute(String sql) throws SQLException {
         performThriftOperation(sql);
 
-        return thriftOperation.hasResultSet();
+        ThriftOperation operation = currentOperation.get();
+
+        return operation.hasResultSet();
 
     }
 
@@ -62,11 +68,13 @@ public class HiveStatement extends AbstractStatement {
 
         performThriftOperation(sql);
 
-        if (!thriftOperation.hasResultSet()) {
+        ThriftOperation operation = currentOperation.get();
+
+        if (!operation.hasResultSet()) {
             throw new SQLException("The query did not generate a result set!");
         }
 
-        return resultSet;
+        return currentResultSet.get();
     }
 
     @Override
@@ -74,11 +82,13 @@ public class HiveStatement extends AbstractStatement {
 
         performThriftOperation(sql);
 
-        if (thriftOperation.hasResultSet()) {
+        ThriftOperation operation = currentOperation.get();
+
+        if (operation.hasResultSet()) {
             throw new SQLException("The query generated a result set when an updated was expected");
         }
 
-        return thriftOperation.getModifiedCount();
+        return operation.getModifiedCount();
     }
 
     @Override
@@ -123,7 +133,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return resultSet;
+        return currentResultSet.get();
     }
 
     @Override
@@ -138,12 +148,19 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void cancel() throws SQLException {
-        thriftOperation.cancel();
+        ThriftOperation operation = currentOperation.get();
+
+        if (operation != null) {
+            operation.cancel();
+        }
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return thriftOperation.isClosed();
+        ThriftOperation operation = currentOperation.get();
+
+        return operation == null || operation.isClosed();
+
     }
 
     @Override
@@ -158,7 +175,13 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        return thriftOperation.getModifiedCount();
+        ThriftOperation operation = currentOperation.get();
+
+        if (operation != null) {
+            return operation.getModifiedCount();
+        }
+
+        return -1;
     }
 
     @Override
@@ -173,7 +196,14 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void close() throws SQLException {
-        thriftOperation.close();
+
+        ThriftOperation operation = currentOperation.get();
+
+        if (operation != null) {
+            operation.close();
+        }
+
+        ResultSet resultSet = currentResultSet.get();
 
         if (resultSet != null) {
             resultSet.close();

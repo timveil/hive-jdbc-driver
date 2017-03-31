@@ -1,8 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.HiveSQLException;
-import org.apache.hive.service.cli.RowSet;
-import org.apache.hive.service.cli.RowSetFactory;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
@@ -12,7 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.apache.hive.service.cli.thrift.TCLIService.Client;
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
@@ -33,7 +33,8 @@ public class HiveServiceUtils {
         }
 
         // todo: convert this to local HiveThriftException and convert strings to stack trace
-        throw new HiveSQLException(status);
+        //throw new HiveSQLException(status);
+        throw new HiveThriftException(status);
     }
 
     public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
@@ -56,7 +57,7 @@ public class HiveServiceUtils {
         }
     }
 
-    public static List<String> fetchLogs(Client client, TOperationHandle operationHandle, TProtocolVersion protocolVersion) {
+    /*public static List<String> fetchLogs(Client client, TOperationHandle operationHandle, TProtocolVersion protocolVersion) {
 
         List<String> logs = new ArrayList<>();
 
@@ -89,7 +90,7 @@ public class HiveServiceUtils {
 
 
         return logs;
-    }
+    }*/
 
     public static void closeOperation(Client client, TOperationHandle operationHandle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(operationHandle);
