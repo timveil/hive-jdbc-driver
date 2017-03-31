@@ -43,11 +43,14 @@ public class HiveStatement extends AbstractStatement {
     }
 
     private void performThriftOperation(String sql) throws SQLException {
+
         ThriftOperation thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
 
         currentOperation.set(thriftOperation);
 
-        currentResultSet.set(new HiveResultSet.Builder().statement(this).operation(thriftOperation).build());
+        HiveResultSet hiveResultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
+
+        currentResultSet.set(hiveResultSet);
 
     }
 
@@ -257,6 +260,20 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void closeOnCompletion() throws SQLException {
         // no-op; don't support setting this value
+    }
+
+    @Override
+    public String toString() {
+        return "HiveStatement{" +
+                "connection=" + connection +
+                ", resultSetType=" + resultSetType +
+                ", resultSetConcurrency=" + resultSetConcurrency +
+                ", resultSetHoldability=" + resultSetHoldability +
+                ", queryTimeout=" + queryTimeout +
+                ", maxRows=" + maxRows +
+                ", fetchSize=" + fetchSize +
+                ", sqlWarning=" + sqlWarning +
+                '}';
     }
 
     public static class Builder {

@@ -321,6 +321,22 @@ public class HiveResultSet extends AbstractResultSet {
         return columnValue;
     }
 
+    @Override
+    public String toString() {
+        return "HiveResultSet{" +
+                "statement=" + statement +
+                ", schema=" + schema +
+                ", hiveResults=" + hiveResults +
+                ", fetchSize=" + fetchSize +
+                ", fetchDirection=" + fetchDirection +
+                ", resultSetType=" + resultSetType +
+                ", resultSetConcurrency=" + resultSetConcurrency +
+                ", resultSetHoldability=" + resultSetHoldability +
+                ", sqlWarning=" + sqlWarning +
+                ", lastColumnNull=" + lastColumnNull +
+                '}';
+    }
+
     public static class Builder {
 
         private ThriftOperation thriftOperation;

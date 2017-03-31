@@ -5,6 +5,7 @@ import org.apache.hive.service.cli.thrift.TRowSet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HiveResults implements Closeable {
@@ -70,6 +71,17 @@ public class HiveResults implements Closeable {
     @Override
     public void close() throws SQLException {
 
+    }
+
+    @Override
+    public String toString() {
+        return "HiveResults{" +
+                "maxRows=" + maxRows +
+                ", columnCount=" + columnCount +
+                ", rowCount=" + rowCount +
+                ", currentRow=" + Arrays.toString(currentRow) +
+                ", cursor=" + cursor +
+                '}';
     }
 
     public static class Builder {

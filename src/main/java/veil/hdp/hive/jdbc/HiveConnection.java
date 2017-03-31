@@ -177,6 +177,7 @@ public class HiveConnection extends AbstractConnection {
         }
     }
 
+
     // --------------------- TODO --------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -217,6 +218,7 @@ public class HiveConnection extends AbstractConnection {
     public String toString() {
         return "HiveConnection{" +
                 "thriftSession=" + thriftSession +
+                ", sqlWarning=" + sqlWarning +
                 '}';
     }
 

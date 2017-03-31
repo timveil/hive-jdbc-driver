@@ -62,6 +62,15 @@ public class ThriftOperation implements Closeable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ThriftOperation{" +
+                "client=" + client +
+                ", operationHandle=" + operationHandle +
+                ", closed=" + closed +
+                '}';
+    }
+
     public static class Builder {
 
         private String sql;
