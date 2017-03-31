@@ -47,9 +47,7 @@ public class HiveStatement extends AbstractStatement {
 
         currentOperation.set(thriftOperation);
 
-        ResultSet resultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
-
-        currentResultSet.set(resultSet);
+        currentResultSet.set(new HiveResultSet.Builder().statement(this).operation(thriftOperation).build());
 
     }
 
