@@ -102,12 +102,12 @@ public class ThriftSession implements SQLCloseable {
 
             TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
 
-            TTransport transport = null;
+            TTransport transport;
 
             if (transportMode.equals(TransportMode.binary)) {
                 transport = ThriftUtils.createBinaryTransport(properties, loginTimeout);
             } else {
-
+                // todo: figure out how to close this
                 CloseableHttpClient client = HttpUtils.buildClient(properties);
                 transport = ThriftUtils.createHttpTransport(properties, client);
 
