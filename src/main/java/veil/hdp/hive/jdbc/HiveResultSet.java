@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveResultSet extends AbstractResultSet {
 
@@ -15,8 +16,8 @@ public class HiveResultSet extends AbstractResultSet {
 
     // constructor
     private final HiveStatement statement;
-    private final Schema schema;
-    private final HiveResults hiveResults;
+    private final AtomicReference<Schema> currentSchema = new AtomicReference<>();
+    private final AtomicReference<HiveResults> currentResults = new AtomicReference<>();
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -32,21 +33,26 @@ public class HiveResultSet extends AbstractResultSet {
 
 
     private HiveResultSet(HiveStatement statement, Schema schema, HiveResults hiveResults) throws SQLException {
-        this.statement = statement;
-        this.schema = schema;
-        this.hiveResults = hiveResults;
         this.fetchDirection = statement.getFetchDirection();
         this.fetchSize = statement.getFetchSize();
         this.resultSetType = statement.getResultSetType();
         this.resultSetConcurrency = statement.getResultSetConcurrency();
         this.resultSetHoldability = statement.getResultSetHoldability();
+        this.statement = statement;
+
+        currentSchema.set(schema);
+        currentResults.set(hiveResults);
+
 
         closed.set(false);
     }
 
     @Override
     public boolean next() throws SQLException {
-        return hiveResults.next();
+        HiveResults hiveResults = currentResults.get();
+
+        return hiveResults != null && hiveResults.next();
+
     }
 
     @Override
@@ -62,7 +68,20 @@ public class HiveResultSet extends AbstractResultSet {
                 log.debug("attempting to close {}", this.getClass().getName());
             }
 
-            hiveResults.close();
+            HiveResults hiveResults = currentResults.get();
+
+            if (hiveResults != null) {
+                hiveResults.close();
+                currentResults.set(null);
+            }
+
+            Schema schema = currentSchema.get();
+
+            if (schema != null) {
+                schema.clear();
+                currentSchema.set(null);
+            }
+
 
         }
     }
@@ -89,12 +108,12 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getRow() throws SQLException {
-        return hiveResults.getRowIndex();
+        return currentResults.get() != null ? currentResults.get().getRowIndex() : 0;
     }
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        return ResultSetUtils.findColumnIndex(schema, columnLabel);
+        return ResultSetUtils.findColumnIndex(currentSchema.get(), columnLabel);
     }
 
     @Override
@@ -204,7 +223,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public HiveStatement getStatement() throws SQLException {
-        return this.statement;
+        return statement;
     }
 
     @Override
@@ -229,7 +248,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData(schema);
+        return new HiveResultSetMetaData(currentSchema.get());
     }
 
     @Override
@@ -294,7 +313,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
 
-        Object columnValue = ResultSetUtils.getColumnValue(schema, hiveResults.getCurrentRow(), columnIndex, targetType);
+        Object columnValue = ResultSetUtils.getColumnValue(currentSchema.get(), currentResults.get().getCurrentRow(), columnIndex, targetType);
 
         lastColumnNull.set(columnValue == null);
 
@@ -303,7 +322,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private InputStream getValueAsStream(int columnIndex) throws SQLException {
 
-        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, hiveResults.getCurrentRow(), columnIndex);
+        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(currentSchema.get(), currentResults.get().getCurrentRow(), columnIndex);
 
         lastColumnNull.set(columnValue == null);
 
@@ -312,7 +331,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Time getValueAsTime(int columnIndex) throws SQLException {
 
-        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, hiveResults.getCurrentRow(), columnIndex);
+        Time columnValue = ResultSetUtils.getColumnValueAsTime(currentSchema.get(), currentResults.get().getCurrentRow(), columnIndex);
 
         lastColumnNull.set(columnValue == null);
 
@@ -322,9 +341,9 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public String toString() {
         return "HiveResultSet{" +
-                "statement=" + statement +
-                ", schema=" + schema +
-                ", hiveResults=" + hiveResults +
+                "currentStatement=" + statement +
+                ", currentSchema=" + currentSchema +
+                ", currentResults=" + currentResults +
                 ", fetchSize=" + fetchSize +
                 ", fetchDirection=" + fetchDirection +
                 ", resultSetType=" + resultSetType +

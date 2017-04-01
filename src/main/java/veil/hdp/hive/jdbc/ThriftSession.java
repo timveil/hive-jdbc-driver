@@ -18,10 +18,11 @@ public class ThriftSession implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
-    private final TTransport transport;
-    private final TCLIService.Client client;
-    private final TSessionHandle sessionHandle;
-    private final TProtocolVersion protocolVersion;
+    private final AtomicReference<TTransport> currentTransport = new AtomicReference<>();
+    private final AtomicReference<TCLIService.Client> currentClient = new AtomicReference<>();
+    private final AtomicReference<TSessionHandle> currentSession = new AtomicReference<>();
+    private final AtomicReference<TProtocolVersion> currentProtocol = new AtomicReference<>();
+
     private final Properties properties;
 
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -30,28 +31,28 @@ public class ThriftSession implements SQLCloseable {
 
     private ThriftSession(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
         this.properties = properties;
-        this.transport = transport;
-        this.client = client;
-        this.sessionHandle = sessionHandle;
-        this.protocolVersion = protocolVersion;
+        currentTransport.set(transport);
+        currentClient.set(client);
+        currentSession.set(sessionHandle);
+        currentProtocol.set(protocolVersion);
 
         closed.set(false);
     }
 
     public TTransport getTransport() {
-        return transport;
+        return currentTransport.get();
     }
 
     public TCLIService.Client getClient() {
-        return client;
+        return currentClient.get();
     }
 
     public TSessionHandle getSessionHandle() {
-        return sessionHandle;
+        return currentSession.get();
     }
 
     public TProtocolVersion getProtocolVersion() {
-        return protocolVersion;
+        return currentProtocol.get();
     }
 
     public boolean isClosed() {
@@ -71,18 +72,23 @@ public class ThriftSession implements SQLCloseable {
                 log.debug("attempting to close {}", this.getClass().getName());
             }
 
-            HiveServiceUtils.closeSession(client, sessionHandle);
-            ThriftUtils.closeTransport(transport);
+            HiveServiceUtils.closeSession(currentClient.get(), currentSession.get());
+            ThriftUtils.closeTransport(currentTransport.get());
+
+            currentProtocol.set(null);
+            currentClient.set(null);
+            currentSession.set(null);
+            currentTransport.set(null);
         }
     }
 
     @Override
     public String toString() {
         return "ThriftSession{" +
-                "transport=" + transport +
-                ", client=" + client +
-                ", sessionHandle=" + sessionHandle +
-                ", protocolVersion=" + protocolVersion +
+                "currentTransport=" + currentTransport +
+                ", currentClient=" + currentClient +
+                ", currentSession=" + currentSession +
+                ", currentProtocol=" + currentProtocol +
                 ", properties=" + properties +
                 '}';
     }
@@ -117,7 +123,6 @@ public class ThriftSession implements SQLCloseable {
                 transport = ThriftUtils.createHttpTransport(properties, client);
 
             }
-
 
             ThriftUtils.openTransport(transport);
 

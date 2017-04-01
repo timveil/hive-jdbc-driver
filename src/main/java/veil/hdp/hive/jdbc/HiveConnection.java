@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -14,26 +15,36 @@ public class HiveConnection extends AbstractConnection {
 
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
-    private final ThriftSession thriftSession;
+    private final AtomicReference<ThriftSession> currentSession = new AtomicReference<>();
 
     private SQLWarning sqlWarning = null;
 
     private HiveConnection(ThriftSession thriftSession) {
-        this.thriftSession = thriftSession;
+        currentSession.set(thriftSession);
     }
 
     public ThriftSession getThriftSession() {
-        return thriftSession;
+        return currentSession.get();
     }
 
     @Override
     public void close() throws SQLException {
-        thriftSession.close();
+        ThriftSession session = currentSession.get();
+
+        if (session != null) {
+            session.close();
+
+            currentSession.set(null);
+        }
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return thriftSession.isClosed();
+
+        ThriftSession session = currentSession.get();
+
+        return session == null || session.isClosed();
+
     }
 
     @Override
@@ -163,8 +174,10 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void abort(Executor executor) throws SQLException {
 
-        if (thriftSession.isClosed()) {
-            return;
+        ThriftSession session = currentSession.get();
+
+        if (session != null && session.isClosed()) {
+           return;
         }
 
         SQL_PERMISSION_ABORT.checkGuard(this);
@@ -181,7 +194,6 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public String toString() {
         return "HiveConnection{" +
-                "thriftSession=" + thriftSession +
                 ", sqlWarning=" + sqlWarning +
                 '}';
     }

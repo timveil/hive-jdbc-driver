@@ -2,11 +2,15 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 import org.apache.hive.service.cli.thrift.TTableSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Schema {
+
+    private static final Logger log = LoggerFactory.getLogger(Schema.class);
 
     private final List<Column> columns;
 
@@ -50,6 +54,14 @@ public class Schema {
         return null;
     }
 
+    public void clear() {
+        if (columns != null && !columns.isEmpty()) {
+
+            log.debug("clearing columns collection");
+
+            columns.clear();
+        }
+    }
 
     @Override
     public String toString() {

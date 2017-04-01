@@ -167,6 +167,9 @@ public class HiveResults implements SQLCloseable {
                     throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", column));
                 }
             }
+
+            tColumns = null;
+            rowSet = null;
         }
 
         return columns;

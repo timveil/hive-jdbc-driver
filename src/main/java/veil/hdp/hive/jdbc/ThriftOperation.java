@@ -7,20 +7,21 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ThriftOperation implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
     private final TCLIService.Client client;
-    private final TOperationHandle operationHandle;
+    private final AtomicReference<TOperationHandle> currentOperation = new AtomicReference<>();
 
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
     private ThriftOperation(TCLIService.Client client, TOperationHandle operationHandle) {
 
         this.client = client;
-        this.operationHandle = operationHandle;
+        currentOperation.set(operationHandle);
 
         closed.set(false);
     }
@@ -30,7 +31,7 @@ public class ThriftOperation implements SQLCloseable {
     }
 
     public TOperationHandle getOperationHandle() {
-        return operationHandle;
+        return currentOperation.get();
     }
 
     public boolean isClosed() {
@@ -38,10 +39,11 @@ public class ThriftOperation implements SQLCloseable {
     }
 
     public boolean hasResultSet() {
-        return operationHandle.isHasResultSet();
+        return currentOperation.get().isHasResultSet();
     }
 
     public int getModifiedCount() {
+        TOperationHandle operationHandle = currentOperation.get();
         if (operationHandle.isSetModifiedRowCount()) {
             return new Double(operationHandle.getModifiedRowCount()).intValue();
         }
@@ -56,13 +58,15 @@ public class ThriftOperation implements SQLCloseable {
                 log.debug("attempting to close {}", this.getClass().getName());
             }
 
-            HiveServiceUtils.closeOperation(client, operationHandle);
+            HiveServiceUtils.closeOperation(client, currentOperation.get());
+
+            currentOperation.set(null);
         }
     }
 
     public void cancel() {
         if (!closed.get()) {
-            HiveServiceUtils.cancelOperation(client, operationHandle);
+            HiveServiceUtils.cancelOperation(client, currentOperation.get());
         }
     }
 
@@ -70,7 +74,6 @@ public class ThriftOperation implements SQLCloseable {
     public String toString() {
         return "ThriftOperation{" +
                 "client=" + client +
-                ", operationHandle=" + operationHandle +
                 ", closed=" + closed +
                 '}';
     }
