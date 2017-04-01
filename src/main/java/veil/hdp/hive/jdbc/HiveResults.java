@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveResults implements SQLCloseable {
@@ -45,22 +44,28 @@ public class HiveResults implements SQLCloseable {
     private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
 
 
-    private HiveResults(TOperationHandle operation, HiveStatement statement) throws SQLException {
+    private HiveResults(TOperationHandle operation, HiveStatement statement) {
         this.operation = operation;
         this.statement = statement;
     }
 
+
+    @Override
+    public void close() throws SQLException {
+        fetchedData.set(null);
+        currentRow.set(null);
+    }
+
+
     public boolean next() throws SQLException {
 
+        // total rows have exceeded max rows
         if (statement.getMaxRows() > 0 && totalRowsIndex.get() >= statement.getMaxRows()) {
-
-            log.warn("!!!!!!!!!!!!!!!!!! fetched rows exceeds max row limit; returning false !!!!!!!!!!!!!!!!!!");
-
             return false;
         }
 
+        // fetch more records if necessary
         if (fetchMore.compareAndSet(true, false)) {
-            log.debug("fetching data");
 
             fetchedRowsIndex.set(0);
 
@@ -79,26 +84,15 @@ public class HiveResults implements SQLCloseable {
 
         }
 
-        log.debug("BEFORE: fetchedRowsIndex {}, fetchedRowCount {}, totalRowsIndex {}", fetchedRowsIndex.get(), fetchedRowCount.get(), totalRowsIndex.get());
-
+        // if there are no fetched records then return false;
         if (fetchedRowCount.get() == 0) {
-
-            log.debug("@@@@@@@@@@@@@@@@@@@@@@@ returning false; no rows @@@@@@@@@@@@@@@@@@@@@@@");
-
             return false;
         }
 
-
-        // there are more rows in this fetch block
+        // if there are more rows in this fetch block, then set current row and update counters
         if (fetchedRowsIndex.get() < fetchedRowCount.get()) {
             setCurrentRow();
         }
-
-        // can we do a hasmore/fetchmore variable so i don't have to query again
-
-        log.debug("AFTER: fetchedRowsIndex {}, fetchedRowCount {}, totalRowsIndex {}", fetchedRowsIndex.get(), fetchedRowCount.get(), totalRowsIndex.get());
-
-        log.debug("current row: [{}]", getCurrentRow());
 
         return true;
 
@@ -125,12 +119,16 @@ public class HiveResults implements SQLCloseable {
             row[i] = columns.get(i).getValue(fetchedRowsIndex.get());
         }
 
+        // set current row
         currentRow.set(row);
 
+        // update total rows
         totalRowsIndex.incrementAndGet();
 
+        // update fetched rows
         int newIndex = fetchedRowsIndex.incrementAndGet();
 
+        // determine if we need to fetch more
         if (newIndex < fetchedRowCount.get()) {
             fetchMore.set(false);
         } else {
@@ -139,12 +137,6 @@ public class HiveResults implements SQLCloseable {
 
 
     }
-
-    @Override
-    public void close() throws SQLException {
-
-    }
-
 
     private List<ColumnData> getColumnData(TRowSet rowSet) {
         List<ColumnData> columns = new ArrayList<>();
@@ -172,7 +164,7 @@ public class HiveResults implements SQLCloseable {
                 } else if (column.isSetStringVal()) {
                     columns.add(new ColumnData<>(HiveType.STRING, column.getStringVal().getValues(), column.getStringVal().getNulls()));
                 } else {
-                    throw new IllegalStateException("invalid union object");
+                    throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", column));
                 }
             }
         }

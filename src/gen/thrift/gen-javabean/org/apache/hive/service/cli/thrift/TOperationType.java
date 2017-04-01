@@ -7,10 +7,6 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TOperationType implements org.apache.thrift.TEnum {
   EXECUTE_STATEMENT(0),
   GET_TYPE_INFO(1),

@@ -7,10 +7,6 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TFetchOrientation implements org.apache.thrift.TEnum {
   FETCH_NEXT(0),
   FETCH_PRIOR(1),
