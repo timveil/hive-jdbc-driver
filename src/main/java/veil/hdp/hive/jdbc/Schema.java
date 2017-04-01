@@ -57,7 +57,9 @@ public class Schema {
     public void clear() {
         if (columns != null && !columns.isEmpty()) {
 
-            log.debug("clearing columns collection");
+            if (log.isTraceEnabled()) {
+                log.trace("clearing columns collection");
+            }
 
             columns.clear();
         }

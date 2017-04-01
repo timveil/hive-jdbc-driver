@@ -16,7 +16,9 @@ public class HiveDriver implements Driver {
 
             DriverManager.registerDriver(driver);
 
-            log.debug("driver [{}] has been registered.", driver.getClass().getName());
+            if (log.isInfoEnabled()) {
+                log.info("driver [{}] has been registered.", driver.getClass().getName());
+            }
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

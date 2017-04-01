@@ -63,8 +63,8 @@ public class HiveResultSet extends AbstractResultSet {
     public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
 
-            if (log.isDebugEnabled()) {
-                log.debug("attempting to close {}", this.getClass().getName());
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
             }
 
             HiveResults hiveResults = currentResults.get();

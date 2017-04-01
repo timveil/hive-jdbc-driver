@@ -26,11 +26,15 @@ public class ResultSetUtils {
         HiveType columnType = column.getColumnType().getHiveType();
 
         if (targetType != null && !columnType.equals(targetType)) {
-            log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
+            if (log.isTraceEnabled()) {
+                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
+            }
         }
 
         if (targetType == null) {
-            log.info("target type is null. setting to column type [{}]", columnType);
+            if (log.isTraceEnabled()) {
+                log.trace("target type is null. setting to column type [{}]", columnType);
+            }
             targetType = columnType;
         }
 

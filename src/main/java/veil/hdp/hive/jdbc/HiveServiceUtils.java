@@ -46,8 +46,8 @@ public class HiveServiceUtils {
 
             checkStatus(fetchResults.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(fetchResults.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(fetchResults.toString());
             }
 
             return fetchResults;
@@ -100,8 +100,8 @@ public class HiveServiceUtils {
 
             checkStatus(resp.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(closeRequest.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(closeRequest.toString());
             }
 
         } catch (TTransportException e) {
@@ -121,8 +121,8 @@ public class HiveServiceUtils {
 
             checkStatus(resp.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(cancelRequest.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(cancelRequest.toString());
             }
 
         } catch (TTransportException e) {
@@ -142,8 +142,8 @@ public class HiveServiceUtils {
 
             checkStatus(resp.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(closeRequest.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(closeRequest.toString());
             }
 
         } catch (TTransportException e) {
@@ -168,8 +168,8 @@ public class HiveServiceUtils {
 
             checkStatus(executeStatementResp.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(executeStatementResp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(executeStatementResp.toString());
             }
 
             return executeStatementResp.getOperationHandle();
@@ -235,14 +235,14 @@ public class HiveServiceUtils {
         // set properties for session
         Map<String, String> configuration = buildSessionConfig(properties);
 
-        if (log.isDebugEnabled()) {
-            log.debug("configuration for session provided to thrift {}", configuration);
+        if (log.isTraceEnabled()) {
+            log.trace("configuration for session provided to thrift {}", configuration);
         }
 
         openSessionReq.setConfiguration(configuration);
 
-        if (log.isDebugEnabled()) {
-            log.debug(openSessionReq.toString());
+        if (log.isTraceEnabled()) {
+            log.trace(openSessionReq.toString());
         }
 
         try {
@@ -282,8 +282,8 @@ public class HiveServiceUtils {
 
             checkStatus(metadataResp.getStatus());
 
-            if (log.isDebugEnabled()) {
-                log.debug(metadataResp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(metadataResp.toString());
             }
 
             return metadataResp.getSchema();
@@ -303,8 +303,8 @@ public class HiveServiceUtils {
         try {
             TGetInfoResp resp = client.GetInfo(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -356,7 +356,9 @@ public class HiveServiceUtils {
 
         Schema schema = new Schema(getResultSetSchema(connection.getThriftSession().getClient(), operationHandle));
 
-        log.debug(schema.toString());
+        if (log.isTraceEnabled()) {
+            log.trace(schema.toString());
+        }
 
         return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).handle(operationHandle).schema(schema).build();
 
@@ -368,8 +370,8 @@ public class HiveServiceUtils {
         try {
             TGetCatalogsResp resp = client.GetCatalogs(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -392,8 +394,8 @@ public class HiveServiceUtils {
         try {
             TGetColumnsResp resp = client.GetColumns(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -416,8 +418,8 @@ public class HiveServiceUtils {
         try {
             TGetFunctionsResp resp = client.GetFunctions(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -445,8 +447,8 @@ public class HiveServiceUtils {
         try {
             TGetTablesResp resp = client.GetTables(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -466,8 +468,8 @@ public class HiveServiceUtils {
         try {
             TGetTypeInfoResp resp = client.GetTypeInfo(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -486,8 +488,8 @@ public class HiveServiceUtils {
         try {
             TGetTableTypesResp resp = client.GetTableTypes(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());
@@ -508,8 +510,8 @@ public class HiveServiceUtils {
         try {
             TGetSchemasResp resp = client.GetSchemas(req);
 
-            if (log.isDebugEnabled()) {
-                log.debug(resp.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(resp.toString());
             }
 
             checkStatus(resp.getStatus());

@@ -54,8 +54,8 @@ public class ThriftOperation implements SQLCloseable {
     @Override
     public void close() {
         if (closed.compareAndSet(false, true)) {
-            if (log.isDebugEnabled()) {
-                log.debug("attempting to close {}", this.getClass().getName());
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
             }
 
             HiveServiceUtils.closeOperation(client, currentOperation.get());

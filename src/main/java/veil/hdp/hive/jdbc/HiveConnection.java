@@ -177,7 +177,7 @@ public class HiveConnection extends AbstractConnection {
         ThriftSession session = currentSession.get();
 
         if (session != null && session.isClosed()) {
-           return;
+            return;
         }
 
         SQL_PERMISSION_ABORT.checkGuard(this);
@@ -231,7 +231,9 @@ public class HiveConnection extends AbstractConnection {
     public class AbortCommand implements Runnable {
         public void run() {
             try {
-                log.debug("attempting to close from abort command");
+                if (log.isTraceEnabled()) {
+                    log.trace("attempting to close from abort command");
+                }
                 close();
             } catch (SQLException e) {
                 log.error("error closing during abort: sql state [" + e.getSQLState() + "]", e);
