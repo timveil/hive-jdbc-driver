@@ -51,7 +51,7 @@ public class HiveResults implements SQLCloseable {
 
 
     @Override
-    public void close() throws SQLException {
+    public void close() {
         fetchedData.set(null);
         currentRow.set(null);
     }
@@ -188,7 +188,7 @@ public class HiveResults implements SQLCloseable {
             return this;
         }
 
-        public HiveResults build() throws SQLException {
+        public HiveResults build() {
             return new HiveResults(operation, statement);
         }
 

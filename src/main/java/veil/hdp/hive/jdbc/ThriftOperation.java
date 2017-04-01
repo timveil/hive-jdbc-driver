@@ -50,7 +50,7 @@ public class ThriftOperation implements SQLCloseable {
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
             HiveServiceUtils.closeOperation(client, operationHandle);
         }
