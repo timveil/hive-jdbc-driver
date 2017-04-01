@@ -43,7 +43,6 @@ public class HiveResultSet extends AbstractResultSet {
         currentSchema.set(schema);
         currentResults.set(hiveResults);
 
-
         closed.set(false);
     }
 
