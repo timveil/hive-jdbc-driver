@@ -9,10 +9,10 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ThriftSession implements SQLCloseable {
 
@@ -25,6 +25,7 @@ public class ThriftSession implements SQLCloseable {
     private final Properties properties;
 
     private final AtomicBoolean closed = new AtomicBoolean(true);
+    private final AtomicReference<CloseableHttpClient> httpClient = new AtomicReference<>();
 
 
     private ThriftSession(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
@@ -107,12 +108,9 @@ public class ThriftSession implements SQLCloseable {
                 transport = ThriftUtils.createBinaryTransport(properties, loginTimeout);
             } else {
 
-                // todo: does this really need to be closed here
-                try (CloseableHttpClient httpClient = HttpUtils.buildClient(properties)) {
-                    transport = ThriftUtils.createHttpTransport(properties, httpClient);
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
+                CloseableHttpClient client = HttpUtils.buildClient(properties);
+                transport = ThriftUtils.createHttpTransport(properties, client);
+
             }
 
 

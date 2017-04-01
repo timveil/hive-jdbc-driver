@@ -46,13 +46,13 @@ public class ThriftUtils {
     }
 
 
-    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient client) throws SQLException {
+    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) throws SQLException {
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
 
         // todo: still hard-coding http path and scheme
         try {
-            return new THttpClient("http://" + host + ":" + port + "/cliservice", client);
+            return new THttpClient("http://" + host + ":" + port + "/cliservice", httpClient);
         } catch (TTransportException e) {
             throw new HiveThriftException(e);
         }
