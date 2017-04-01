@@ -202,13 +202,16 @@ public class HiveStatement extends AbstractStatement {
 
         if (operation != null) {
             operation.close();
+            currentOperation.set(null);
         }
 
         ResultSet resultSet = currentResultSet.get();
 
         if (resultSet != null) {
             resultSet.close();
+            currentResultSet.set(null);
         }
+
     }
 
     @Override

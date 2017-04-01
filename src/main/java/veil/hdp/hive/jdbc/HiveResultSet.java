@@ -40,6 +40,8 @@ public class HiveResultSet extends AbstractResultSet {
         this.resultSetType = statement.getResultSetType();
         this.resultSetConcurrency = statement.getResultSetConcurrency();
         this.resultSetHoldability = statement.getResultSetHoldability();
+
+        closed.set(false);
     }
 
     @Override

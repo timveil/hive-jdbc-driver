@@ -66,6 +66,11 @@ public class ThriftSession implements SQLCloseable {
     @Override
     public void close() {
         if (closed.compareAndSet(false, true)) {
+
+            if (log.isDebugEnabled()) {
+                log.debug("attempting to close {}", this.getClass().getName());
+            }
+
             HiveServiceUtils.closeSession(client, sessionHandle);
             ThriftUtils.closeTransport(transport);
         }
