@@ -37,7 +37,7 @@ public class HiveServiceUtils {
         throw new HiveThriftException(status);
     }
 
-    public static TRowSet fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
+    public static TFetchResultsResp fetchResults(Client client, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
@@ -50,7 +50,7 @@ public class HiveServiceUtils {
                 log.debug(fetchResults.toString());
             }
 
-            return fetchResults.getResults();
+            return fetchResults;
 
         } catch (TException e) {
             throw new HiveThriftException(e);

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftOperation implements Closeable {
+public class ThriftOperation implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 

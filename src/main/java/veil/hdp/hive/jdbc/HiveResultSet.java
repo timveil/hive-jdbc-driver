@@ -1,8 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.TFetchOrientation;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
-import org.apache.hive.service.cli.thrift.TRowSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +20,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
+    private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
 
     // public getter & setter
     private int fetchSize;
@@ -30,9 +29,6 @@ public class HiveResultSet extends AbstractResultSet {
     private int resultSetConcurrency;
     private int resultSetHoldability;
     private SQLWarning sqlWarning = null;
-
-    // public getter only
-    private boolean lastColumnNull;
 
 
     private HiveResultSet(HiveStatement statement, Schema schema, HiveResults hiveResults) throws SQLException {
@@ -91,7 +87,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getRow() throws SQLException {
-        return hiveResults.getCursor();
+        return hiveResults.getRowIndex();
     }
 
     @Override
@@ -251,7 +247,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean wasNull() throws SQLException {
-        return lastColumnNull;
+        return lastColumnNull.get();
     }
 
     @Override
@@ -298,7 +294,7 @@ public class HiveResultSet extends AbstractResultSet {
 
         Object columnValue = ResultSetUtils.getColumnValue(schema, hiveResults.getCurrentRow(), columnIndex, targetType);
 
-        lastColumnNull = columnValue == null;
+        lastColumnNull.set(columnValue == null);
 
         return columnValue;
     }
@@ -307,7 +303,7 @@ public class HiveResultSet extends AbstractResultSet {
 
         InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, hiveResults.getCurrentRow(), columnIndex);
 
-        lastColumnNull = columnValue == null;
+        lastColumnNull.set(columnValue == null);
 
         return columnValue;
     }
@@ -316,7 +312,7 @@ public class HiveResultSet extends AbstractResultSet {
 
         Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, hiveResults.getCurrentRow(), columnIndex);
 
-        lastColumnNull = columnValue == null;
+        lastColumnNull.set(columnValue == null);
 
         return columnValue;
     }
@@ -378,19 +374,7 @@ public class HiveResultSet extends AbstractResultSet {
                 oh = handle;
             }
 
-            HiveResults.Builder builder = new HiveResults.Builder();
-            builder.maxRows(statement.getMaxRows());
-
-            if (oh != null) {
-                //todo: this probably won't work when we need to fetch additional results; should probably move into HiveResults instead
-                TRowSet tRowSet = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), oh, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
-                builder.rowSet(tRowSet);
-            }
-
-            HiveResults results = builder.build();
-
-
-            return new HiveResultSet(statement, schema, results);
+            return new HiveResultSet(statement, schema, new HiveResults.Builder().handle(oh).statement(statement).build());
         }
     }
 

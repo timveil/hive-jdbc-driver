@@ -2,6 +2,6 @@ package veil.hdp.hive.jdbc;
 
 import java.sql.SQLException;
 
-public interface Closeable {
+public interface SQLCloseable {
     void close() throws SQLException;
 }
