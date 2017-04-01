@@ -49,10 +49,13 @@ public class ThriftUtils {
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) throws SQLException {
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
+        boolean sslEnabled = HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties);
+        String endpoint = HiveDriverProperty.HTTP_ENDPOINT.get(properties);
 
-        // todo: still hard-coding http path and scheme
+        String scheme = sslEnabled ? "https" : "http";
+
         try {
-            return new THttpClient("http://" + host + ":" + port + "/cliservice", httpClient);
+            return new THttpClient(scheme + "://" + host + ":" + port + "/" + endpoint, httpClient);
         } catch (TTransportException e) {
             throw new HiveThriftException(e);
         }
