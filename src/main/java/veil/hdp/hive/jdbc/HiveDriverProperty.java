@@ -15,7 +15,7 @@ public enum HiveDriverProperty {
     TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),
 
     // HTTP Mode related
-    HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.SSL"),
+    HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
     HTTP_ENDPOINT("endpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
     // zookeeper discovery related
