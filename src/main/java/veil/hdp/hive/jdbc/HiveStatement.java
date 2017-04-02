@@ -44,13 +44,18 @@ public class HiveStatement extends AbstractStatement {
 
     private void performThriftOperation(String sql) throws SQLException {
 
-        ThriftOperation thriftOperation = new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build();
+        if (currentOperation.get() != null) {
+            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            currentOperation.get().close();;
+            currentOperation.set(null);
+            currentResultSet.set(null);
+        }
 
-        currentOperation.set(thriftOperation);
+        currentOperation.set(new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build());
 
-        HiveResultSet hiveResultSet = new HiveResultSet.Builder().statement(this).operation(thriftOperation).build();
-
-        currentResultSet.set(hiveResultSet);
+        if (currentOperation.get().hasResultSet()) {
+            currentResultSet.set(new HiveResultSet.Builder().statement(this).thriftOperation(currentOperation.get()).build());
+        }
 
     }
 
@@ -58,9 +63,7 @@ public class HiveStatement extends AbstractStatement {
     public boolean execute(String sql) throws SQLException {
         performThriftOperation(sql);
 
-        ThriftOperation operation = currentOperation.get();
-
-        return operation.hasResultSet();
+        return currentOperation.get().hasResultSet();
 
     }
 
@@ -252,7 +255,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        return HiveServiceUtils.getGeneratedKeys(connection);
+        return QueryService.getGeneratedKeys(connection);
     }
 
     @Override

@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -15,36 +14,26 @@ public class HiveConnection extends AbstractConnection {
 
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
-    private final AtomicReference<ThriftSession> currentSession = new AtomicReference<>();
+    private final ThriftSession thriftSession;
 
     private SQLWarning sqlWarning = null;
 
     private HiveConnection(ThriftSession thriftSession) {
-        currentSession.set(thriftSession);
+        this.thriftSession = thriftSession;
     }
 
     public ThriftSession getThriftSession() {
-        return currentSession.get();
+        return thriftSession;
     }
 
     @Override
     public void close() throws SQLException {
-        ThriftSession session = currentSession.get();
-
-        if (session != null) {
-            session.close();
-
-            currentSession.set(null);
-        }
+        thriftSession.close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-
-        ThriftSession session = currentSession.get();
-
-        return session == null || session.isClosed();
-
+        return thriftSession.isClosed();
     }
 
     @Override
@@ -154,12 +143,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public String getSchema() throws SQLException {
-        return HiveServiceUtils.getSchema(this);
+        return QueryService.getSchema(this);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        HiveServiceUtils.setSchema(this, schema);
+        QueryService.setSchema(this, schema);
     }
 
     @Override
@@ -168,15 +157,13 @@ public class HiveConnection extends AbstractConnection {
             throw new SQLDataException("timeout must be greater than or equal to 0.  Current value is " + timeout);
         }
 
-        return HiveServiceUtils.isValid(this, timeout);
+        return QueryService.isValid(this, timeout);
     }
 
     @Override
     public void abort(Executor executor) throws SQLException {
 
-        ThriftSession session = currentSession.get();
-
-        if (session != null && session.isClosed()) {
+        if (thriftSession.isClosed()) {
             return;
         }
 

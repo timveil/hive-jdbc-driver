@@ -1,37 +1,36 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ThriftOperation implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
-    private final TCLIService.Client client;
-    private final AtomicReference<TOperationHandle> currentOperation = new AtomicReference<>();
+    private final ThriftSession session;
+    private final TOperationHandle operation;
 
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
-    private ThriftOperation(TCLIService.Client client, TOperationHandle operationHandle) {
+    private ThriftOperation(ThriftSession thriftSession, TOperationHandle operationHandle) {
 
-        this.client = client;
-        currentOperation.set(operationHandle);
+        this.session = thriftSession;
+        this.operation = operationHandle;
+
 
         closed.set(false);
     }
 
-    public TCLIService.Client getClient() {
-        return client;
+    public ThriftSession getSession() {
+        return session;
     }
 
     public TOperationHandle getOperationHandle() {
-        return currentOperation.get();
+        return operation;
     }
 
     public boolean isClosed() {
@@ -39,13 +38,12 @@ public class ThriftOperation implements SQLCloseable {
     }
 
     public boolean hasResultSet() {
-        return currentOperation.get().isHasResultSet();
+        return operation.isHasResultSet();
     }
 
     public int getModifiedCount() {
-        TOperationHandle operationHandle = currentOperation.get();
-        if (operationHandle.isSetModifiedRowCount()) {
-            return new Double(operationHandle.getModifiedRowCount()).intValue();
+        if (operation.isSetModifiedRowCount()) {
+            return new Double(operation.getModifiedRowCount()).intValue();
         }
 
         return -1;
@@ -58,22 +56,20 @@ public class ThriftOperation implements SQLCloseable {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            HiveServiceUtils.closeOperation(client, currentOperation.get());
+            QueryService.closeOperation(this);
 
-            currentOperation.set(null);
         }
     }
 
     public void cancel() {
         if (!closed.get()) {
-            HiveServiceUtils.cancelOperation(client, currentOperation.get());
+            QueryService.cancelOperation(this);
         }
     }
 
     @Override
     public String toString() {
         return "ThriftOperation{" +
-                "client=" + client +
                 ", closed=" + closed +
                 '}';
     }
@@ -107,13 +103,13 @@ public class ThriftOperation implements SQLCloseable {
 
             ThriftSession thriftSession = connection.getThriftSession();
 
-            TCLIService.Client client = thriftSession.getClient();
 
-            TOperationHandle operationHandle = HiveServiceUtils.executeSql(client, thriftSession.getSessionHandle(), queryTimeout, sql);
 
-            HiveServiceUtils.waitForStatementToComplete(client, operationHandle);
+            TOperationHandle operationHandle = QueryService.executeSql(thriftSession, queryTimeout, sql);
 
-            return new ThriftOperation(client, operationHandle);
+            QueryService.waitForStatementToComplete(thriftSession, operationHandle);
+
+            return new ThriftOperation(thriftSession, operationHandle);
 
         }
 

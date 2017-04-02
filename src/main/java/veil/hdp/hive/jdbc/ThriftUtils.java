@@ -1,7 +1,10 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TCLIService;
+import org.apache.hive.service.cli.thrift.TOpenSessionReq;
+import org.apache.hive.service.cli.thrift.TOpenSessionResp;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.SaslException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -99,6 +103,57 @@ public class ThriftUtils {
             throw new SQLException(e);
         }
 
+    }
+
+    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws SQLException {
+        TOpenSessionReq openSessionReq = new TOpenSessionReq();
+        String username = HiveDriverProperty.USER.get(properties);
+
+        if (username != null) {
+            openSessionReq.setUsername(username);
+            openSessionReq.setPassword(HiveDriverProperty.PASSWORD.get(properties));
+        }
+
+        // set properties for session
+        Map<String, String> configuration = buildSessionConfig(properties);
+
+        if (log.isTraceEnabled()) {
+            log.trace("configuration for session provided to thrift {}", configuration);
+        }
+
+        openSessionReq.setConfiguration(configuration);
+
+        if (log.isTraceEnabled()) {
+            log.trace(openSessionReq.toString());
+        }
+
+        try {
+            TOpenSessionResp resp = client.OpenSession(openSessionReq);
+
+            QueryService.checkStatus(resp.getStatus());
+
+            return resp;
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+
+
+    private static Map<String, String> buildSessionConfig(Properties properties) {
+        Map<String, String> openSessionConfig = new HashMap<>();
+
+        for (String property : properties.stringPropertyNames()) {
+            // no longer going to use HiveConf.ConfVars to validate properties.  it requires too many dependencies.  let server side deal with this.
+            if (property.startsWith("hive.")) {
+                openSessionConfig.put("set:hiveconf:" + property, properties.getProperty(property));
+            }
+        }
+
+        openSessionConfig.put("use:database", HiveDriverProperty.DATABASE_NAME.get(properties));
+
+        return openSessionConfig;
     }
 
 }

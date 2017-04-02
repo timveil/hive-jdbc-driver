@@ -69,7 +69,7 @@ public class HiveResults implements SQLCloseable {
 
             fetchedRowsIndex.set(0);
 
-            TFetchResultsResp fetchResultsResp = HiveServiceUtils.fetchResults(statement.getConnection().getThriftSession().getClient(), operation, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
+            TFetchResultsResp fetchResultsResp = QueryService.fetchResults(statement.getConnection().getThriftSession(), operation, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
 
             List<ColumnData> columnData = getColumnData(fetchResultsResp.getResults());
 

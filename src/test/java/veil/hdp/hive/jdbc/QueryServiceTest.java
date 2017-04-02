@@ -1,14 +1,12 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.TGetInfoResp;
-import org.apache.hive.service.cli.thrift.TGetInfoType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Properties;
 
-public class HiveServiceUtilsTest extends BaseJunitTest {
+public class QueryServiceTest extends BaseJunitTest {
 
     HiveConnection connection = null;
 
@@ -75,16 +73,11 @@ public class HiveServiceUtilsTest extends BaseJunitTest {
     public void getSchema() throws Exception {
     }
 
-    @Test
-    public void getServerInfo() throws Exception {
-        TGetInfoResp serverInfo = HiveServiceUtils.getServerInfo(connection.getThriftSession().getClient(), connection.getThriftSession().getSessionHandle(), TGetInfoType.CLI_DBMS_NAME);
 
-        log.debug(serverInfo.getInfoValue().getStringValue());
-    }
 
     @Test
     public void getCatalogs() throws Exception {
-        HiveResultSet catalogs = HiveServiceUtils.getCatalogs(connection);
+        HiveResultSet catalogs = QueryService.getCatalogs(connection);
 
         log.debug(catalogs.toString());
     }

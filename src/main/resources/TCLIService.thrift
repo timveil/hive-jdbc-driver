@@ -438,7 +438,7 @@ enum TOperationState {
   // set is not available.
   RUNNING_STATE,
 
-  // The operation has completed. When an operation is in
+  // The thriftOperation has completed. When an thriftOperation is in
   // this state its result set may be fetched.
   FINISHED_STATE,
 

@@ -12,57 +12,63 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ThriftSession implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
-    private final AtomicReference<TTransport> currentTransport = new AtomicReference<>();
-    private final AtomicReference<TCLIService.Client> currentClient = new AtomicReference<>();
-    private final AtomicReference<TSessionHandle> currentSession = new AtomicReference<>();
-    private final AtomicReference<TProtocolVersion> currentProtocol = new AtomicReference<>();
+    private final TTransport transport;
+    private final TCLIService.Client client;
+    private final TSessionHandle sessionHandle;
+    private final TProtocolVersion protocolVersion;
 
     private final Properties properties;
 
     private final AtomicBoolean closed = new AtomicBoolean(true);
-    private final AtomicReference<CloseableHttpClient> httpClient = new AtomicReference<>();
+
+    private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 
     private ThriftSession(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
         this.properties = properties;
-        currentTransport.set(transport);
-        currentClient.set(client);
-        currentSession.set(sessionHandle);
-        currentProtocol.set(protocolVersion);
+        this.transport = transport;
+        this.client = client;
+        this.sessionHandle = sessionHandle;
+        this.protocolVersion = protocolVersion;
 
         closed.set(false);
     }
 
     public TTransport getTransport() {
-        return currentTransport.get();
+        return transport;
     }
 
     public TCLIService.Client getClient() {
-        return currentClient.get();
+        return client;
     }
 
     public TSessionHandle getSessionHandle() {
-        return currentSession.get();
+        return sessionHandle;
     }
 
     public TProtocolVersion getProtocolVersion() {
-        return currentProtocol.get();
+        return protocolVersion;
     }
 
     public boolean isClosed() {
         return closed.get();
     }
 
+    public ReentrantLock getSessionLock() {
+        return sessionLock;
+    }
 
     public Properties getProperties() {
         return properties;
     }
+
+
 
     @Override
     public void close() {
@@ -72,24 +78,22 @@ public class ThriftSession implements SQLCloseable {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            HiveServiceUtils.closeSession(currentClient.get(), currentSession.get());
-            ThriftUtils.closeTransport(currentTransport.get());
+            QueryService.closeSession(this);
+            ThriftUtils.closeTransport(transport);
 
-            currentProtocol.set(null);
-            currentClient.set(null);
-            currentSession.set(null);
-            currentTransport.set(null);
+
         }
     }
 
     @Override
     public String toString() {
         return "ThriftSession{" +
-                "currentTransport=" + currentTransport +
-                ", currentClient=" + currentClient +
-                ", currentSession=" + currentSession +
-                ", currentProtocol=" + currentProtocol +
+                "transport=" + transport +
+                ", client=" + client +
+                ", sessionHandle=" + sessionHandle +
+                ", protocolVersion=" + protocolVersion +
                 ", properties=" + properties +
+                ", closed=" + closed +
                 '}';
     }
 
@@ -128,7 +132,7 @@ public class ThriftSession implements SQLCloseable {
 
             TCLIService.Client client = ThriftUtils.createClient(transport);
 
-            TOpenSessionResp openSessionResp = HiveServiceUtils.openSession(properties, client);
+            TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client);
 
             TProtocolVersion protocolVersion = openSessionResp.getServerProtocolVersion();
 

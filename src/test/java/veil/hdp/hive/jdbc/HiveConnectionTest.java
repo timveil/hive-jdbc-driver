@@ -182,9 +182,11 @@ public class HiveConnectionTest extends BaseJunitTest {
             }
         };
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             executorService.submit(test);
         }
+
+        log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ calling awaitTermination ");
 
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
