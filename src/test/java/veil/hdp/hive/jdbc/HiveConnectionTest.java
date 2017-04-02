@@ -12,7 +12,9 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class HiveConnectionTest extends BaseJunitTest {
 
@@ -155,6 +157,40 @@ public class HiveConnectionTest extends BaseJunitTest {
     }
 
     @Test
+    public void testConcurrency() throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        Assert.assertNotNull(metaData);
+
+        log.debug("driver version: [{}]", metaData.getDriverVersion());
+        log.debug("database product version: [{}]", metaData.getDatabaseProductVersion());
+        log.debug("supports transactions: [{}]", metaData.supportsTransactions());
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+
+        Runnable test = () -> {
+            log.debug("******************************** calling getColumns");
+
+            try {
+                try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
+
+                    printResultSet(columns);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        };
+
+        for (int i = 0; i < 2; i++) {
+            executorService.submit(test);
+        }
+
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+    }
+
+    @Test
     public void getMetaData() throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
 
@@ -163,6 +199,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         log.debug("driver version: [{}]", metaData.getDriverVersion());
         log.debug("database product version: [{}]", metaData.getDatabaseProductVersion());
         log.debug("supports transactions: [{}]", metaData.supportsTransactions());
+
 
         log.debug("******************************** calling getCatalogs");
 
@@ -225,8 +262,8 @@ public class HiveConnectionTest extends BaseJunitTest {
             for (int i = 0; i < columnCount; i++) {
 
                 StringBuilder builder = new StringBuilder();
-                builder.append("table name [").append(rsmd.getTableName(i + 1)).append("], ");
-                builder.append("catalog name [").append(rsmd.getCatalogName(i + 1)).append("], ");
+                //builder.append("table name [").append(rsmd.getTableName(i + 1)).append("], ");
+                //builder.append("catalog name [").append(rsmd.getCatalogName(i + 1)).append("], ");
                 builder.append("column class name [").append(rsmd.getColumnClassName(i + 1)).append("], ");
                 builder.append("column display size [").append(rsmd.getColumnDisplaySize(i + 1)).append("], ");
                 builder.append("column label [").append(rsmd.getColumnLabel(i + 1)).append("], ");
@@ -238,12 +275,12 @@ public class HiveConnectionTest extends BaseJunitTest {
                 builder.append("isAutoIncrement [").append(rsmd.isAutoIncrement(i + 1)).append("], ");
                 builder.append("isCaseSensitive [").append(rsmd.isCaseSensitive(i + 1)).append("], ");
                 builder.append("isCurrency [").append(rsmd.isCurrency(i + 1)).append("], ");
-                builder.append("isDefinitelyWritable [").append(rsmd.isDefinitelyWritable(i + 1)).append("], ");
+                //builder.append("isDefinitelyWritable [").append(rsmd.isDefinitelyWritable(i + 1)).append("], ");
                 builder.append("isNullable [").append(rsmd.isNullable(i + 1)).append("], ");
                 builder.append("isReadOnly [").append(rsmd.isReadOnly(i + 1)).append("], ");
-                builder.append("isSearchable [").append(rsmd.isSearchable(i + 1)).append("], ");
-                builder.append("isSigned [").append(rsmd.isSigned(i + 1)).append("], ");
-                builder.append("isWritable [").append(rsmd.isWritable(i + 1)).append("]");
+                //builder.append("isSearchable [").append(rsmd.isSearchable(i + 1)).append("], ");
+                //builder.append("isSigned [").append(rsmd.isSigned(i + 1)).append("], ");
+                //builder.append("isWritable [").append(rsmd.isWritable(i + 1)).append("]");
 
                 log.debug(builder.toString());
             }
