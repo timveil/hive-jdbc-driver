@@ -24,8 +24,9 @@ public class HiveConnectionTest extends BaseJunitTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
+        String url = "jdbc:hive2://hive.hdp.local:10000/default";
 
+        //connection = new org.apache.hive.jdbc.HiveDriver().connect(url, properties);
         connection = new HiveDriver().connect(url, properties);
 
     }
@@ -64,6 +65,32 @@ public class HiveConnectionTest extends BaseJunitTest {
         connection.close();
 
         log.debug("is valid {}", connection.isValid(1));
+    }
+
+    @Test
+    public void createStatement2() throws SQLException {
+        Statement statement = connection.createStatement();
+        //statement.setFetchSize(2);
+        //statement.setMaxRows(5);
+        ResultSet rs = statement.executeQuery("SELECT * FROM master");
+        printResultSet(rs);
+
+        rs.close();
+        statement.close();
+
+    }
+
+    @Test
+    public void load() throws SQLException {
+        for (int i = 0; i < 1000; i++) {
+            try (Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
+                while (rs.next()) {
+                    //no-op
+                }
+                log.debug("run # {}", i);
+            }
+        }
     }
 
 
@@ -139,45 +166,52 @@ public class HiveConnectionTest extends BaseJunitTest {
 
         log.debug("******************************** calling getCatalogs");
 
-        ResultSet catalogs = metaData.getCatalogs();
+        try (ResultSet catalogs = metaData.getCatalogs()) {
 
-        printResultSet(catalogs);
+            printResultSet(catalogs);
+        }
 
         log.debug("******************************** calling getSchemas");
 
-        ResultSet schemas = metaData.getSchemas();
+        try (ResultSet schemas = metaData.getSchemas()) {
 
-        printResultSet(schemas);
+            printResultSet(schemas);
+        }
 
         log.debug("******************************** calling getTypeInfo");
 
-        ResultSet typeInfo = metaData.getTypeInfo();
+        try (ResultSet typeInfo = metaData.getTypeInfo()) {
 
-        printResultSet(typeInfo);
+            printResultSet(typeInfo);
+        }
 
         log.debug("******************************** calling getTables");
 
-        ResultSet tables = metaData.getTables(null, null, null, null);
+        try (ResultSet tables = metaData.getTables(null, null, null, null)) {
 
-        printResultSet(tables);
+            printResultSet(tables);
+        }
 
         log.debug("******************************** calling getTableTypes");
 
-        ResultSet tableTypes = metaData.getTableTypes();
+        try (ResultSet tableTypes = metaData.getTableTypes()) {
 
-        printResultSet(tableTypes);
+            printResultSet(tableTypes);
+        }
 
         log.debug("******************************** calling getFunctions");
 
-        ResultSet functions = metaData.getFunctions(null, null, "%");
+        try (ResultSet functions = metaData.getFunctions(null, null, "%")) {
 
-        printResultSet(functions);
+            printResultSet(functions);
+        }
 
         log.debug("******************************** calling getColumns");
 
-        ResultSet columns = metaData.getColumns(null, "default", "test_table", "%");
+        try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
 
-        printResultSet(columns);
+            printResultSet(columns);
+        }
     }
 
 
@@ -233,6 +267,8 @@ public class HiveConnectionTest extends BaseJunitTest {
 
             log.debug("printing ResultSet");
 
+            int counter = 0;
+
             while (rs.next()) {
 
                 List<String> row = Lists.newArrayList();
@@ -250,7 +286,7 @@ public class HiveConnectionTest extends BaseJunitTest {
 
                 String join = Joiner.on(",").join(row);
 
-                log.debug(join);
+                log.debug("{} - {}", counter++, join);
             }
 
         } catch (SQLException e) {

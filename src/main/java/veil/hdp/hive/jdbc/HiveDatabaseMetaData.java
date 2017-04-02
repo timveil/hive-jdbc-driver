@@ -12,10 +12,9 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     private final HiveConnection connection;
 
-    HiveDatabaseMetaData(HiveConnection connection) {
+    private HiveDatabaseMetaData(HiveConnection connection) {
         this.connection = connection;
     }
-
 
     @Override
     public Connection getConnection() throws SQLException {
@@ -41,7 +40,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     public int getDriverMinorVersion() {
         return new HiveDriver().getMinorVersion();
     }
-
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
@@ -248,7 +246,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         return HiveServiceUtils.getPseudoColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
-
 
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
@@ -615,7 +612,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return Boolean.FALSE;
     }
 
-
     @Override
     public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
         return Boolean.FALSE;
@@ -771,7 +767,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return "";
     }
 
-
     @Override
     public String getProcedureTerm() throws SQLException {
         return "UDF";
@@ -887,7 +882,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return 0;
     }
 
-
     @Override
     public int getSQLStateType() throws SQLException {
         return DatabaseMetaData.sqlStateSQL99;
@@ -896,6 +890,20 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         return RowIdLifetime.ROWID_UNSUPPORTED;
+    }
+
+    public static class Builder {
+
+        private HiveConnection connection;
+
+        public HiveDatabaseMetaData.Builder connection(HiveConnection connection) {
+            this.connection = connection;
+            return this;
+        }
+
+        public HiveDatabaseMetaData build() throws SQLException {
+            return new HiveDatabaseMetaData(connection);
+        }
     }
 
 }

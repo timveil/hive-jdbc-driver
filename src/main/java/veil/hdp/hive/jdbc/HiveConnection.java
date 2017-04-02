@@ -59,7 +59,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return new HiveDatabaseMetaData(this);
+        return new HiveDatabaseMetaData.Builder().connection(this).build();
     }
 
     @Override

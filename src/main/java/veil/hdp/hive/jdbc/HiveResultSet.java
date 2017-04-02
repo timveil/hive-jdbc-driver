@@ -247,7 +247,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData(currentSchema.get());
+        return new HiveResultSetMetaData.Builder().schema(currentSchema.get()).build();
     }
 
     @Override

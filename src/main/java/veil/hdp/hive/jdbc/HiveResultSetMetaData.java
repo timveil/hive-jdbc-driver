@@ -12,16 +12,12 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     // constructor
     private final Schema schema;
+    private final int columnCount;
 
-    private int columnCount;
 
-
-    HiveResultSetMetaData(Schema schema) {
+    private HiveResultSetMetaData(Schema schema, int columnCount) {
         this.schema = schema;
-
-        if (schema.getColumns() != null) {
-            this.columnCount = schema.getColumns().size();
-        }
+        this.columnCount = columnCount;
     }
 
     @Override
@@ -79,7 +75,6 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         return schema.getColumn(column).getColumnType().getHiveType().isCaseSensitive();
     }
 
-
     @Override
     public int getPrecision(int column) throws SQLException {
         return schema.getColumn(column).getColumnType().getHiveType().getPrecision();
@@ -132,6 +127,27 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
         return Boolean.FALSE;
+    }
+
+    public static class Builder {
+
+        private Schema schema;
+
+        public HiveResultSetMetaData.Builder schema(Schema schema) {
+            this.schema = schema;
+            return this;
+        }
+
+        public HiveResultSetMetaData build() throws SQLException {
+
+            int columnCount = 0;
+
+            if (schema.getColumns() != null) {
+                columnCount = schema.getColumns().size();
+            }
+
+            return new HiveResultSetMetaData(schema, columnCount);
+        }
     }
 
 
