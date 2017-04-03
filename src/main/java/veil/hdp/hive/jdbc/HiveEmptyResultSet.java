@@ -8,7 +8,7 @@ public class HiveEmptyResultSet extends AbstractResultSet {
 
     private final Schema schema;
 
-    private HiveEmptyResultSet(Schema schema) throws SQLException {
+    private HiveEmptyResultSet(Schema schema) {
         this.schema = schema;
     }
 

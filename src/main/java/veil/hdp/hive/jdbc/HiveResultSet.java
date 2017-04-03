@@ -16,19 +16,21 @@ public class HiveResultSet extends AbstractResultSet {
     // constructor
     private final Schema schema;
     private final HiveResults hiveResults;
+    private final int resultSetType;
+    private final int resultSetConcurrency;
+    private final int resultSetHoldability;
+
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+
+    // public getter & setter
     private int fetchSize;
     private int fetchDirection;
-    private int resultSetType;
-    private int resultSetConcurrency;
-    private int resultSetHoldability;
-    // public getter & setter
     private SQLWarning sqlWarning = null;
 
 
-    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, HiveResults hiveResults) throws SQLException {
+    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, HiveResults hiveResults) {
         this.fetchDirection = fetchDirection;
         this.fetchSize = fetchSize;
         this.resultSetType = resultSetType;

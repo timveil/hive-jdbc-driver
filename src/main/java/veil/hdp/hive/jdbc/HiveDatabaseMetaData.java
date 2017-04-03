@@ -901,7 +901,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
             return this;
         }
 
-        public HiveDatabaseMetaData build() throws SQLException {
+        public HiveDatabaseMetaData build() {
             return new HiveDatabaseMetaData(connection);
         }
     }

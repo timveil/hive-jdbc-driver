@@ -27,7 +27,7 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
     private SQLWarning sqlWarning = null;
 
 
-    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, HiveResults hiveResults) throws SQLException {
+    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, HiveResults hiveResults) {
         this.session = session;
         this.schema = schema;
         this.hiveResults = hiveResults;

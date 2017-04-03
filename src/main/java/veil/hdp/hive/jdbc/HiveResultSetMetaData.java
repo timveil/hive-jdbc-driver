@@ -138,7 +138,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
             return this;
         }
 
-        public HiveResultSetMetaData build() throws SQLException {
+        public HiveResultSetMetaData build() {
 
             int columnCount = 0;
 
