@@ -44,7 +44,7 @@ public class HiveEmptyResultSet extends AbstractResultSet {
             return this;
         }
 
-        public HiveEmptyResultSet build() throws SQLException {
+        public HiveEmptyResultSet build() {
             return new HiveEmptyResultSet(schema);
         }
     }
