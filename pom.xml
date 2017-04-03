@@ -60,19 +60,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>1.30</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--        <dependency>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                    <version>3.2.2</version>
-                </dependency>-->
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
@@ -101,21 +88,6 @@
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
-<!--
-
-        <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-service</artifactId>
-            <version>${hive.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
--->
-
 
         <dependency>
             <groupId>org.apache.hive</groupId>
@@ -128,7 +100,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
 
         <dependency>
             <groupId>org.apache.curator</groupId>
@@ -151,20 +122,6 @@
             <artifactId>curator-framework</artifactId>
             <version>${curator.version}</version>
         </dependency>
-
-
-        <!--        <dependency>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-common</artifactId>
-                    <version>${hadoop.version}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>-->
-
 
         <dependency>
             <groupId>org.apache.thrift</groupId>
