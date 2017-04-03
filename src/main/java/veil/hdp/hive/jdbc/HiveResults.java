@@ -67,6 +67,7 @@ public class HiveResults implements SQLCloseable {
             return false;
         }
 
+        // todo; why do i always call again.  seems unnecssary.  for example if fetch returns amount less than fetch size then i don't need to call more
         // fetch more records if necessary
         if (fetchMore.compareAndSet(true, false)) {
 

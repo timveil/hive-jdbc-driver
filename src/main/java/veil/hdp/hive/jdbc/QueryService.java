@@ -49,40 +49,38 @@ public class QueryService {
         }
     }
 
-    /*public static List<String> fetchLogs(Client client, TOperationHandle operationHandle, TProtocolVersion protocolVersion) {
-
-        List<String> logs = new ArrayList<>();
+    public static List<ColumnData> fetchLogs(ThriftSession session, TOperationHandle operationHandle) throws SQLException {
 
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
         tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
 
+        session.getSessionLock().lock();
+
         try {
-            TFetchResultsResp fetchResults = client.FetchResults(tFetchResultsReq);
+            TFetchResultsResp fetchResults = session.getClient().FetchResults(tFetchResultsReq);
 
             checkStatus(fetchResults.getStatus());
 
-
-            if (log.isDebugEnabled()) {
-                log.debug(fetchResults.toString());
+            if (log.isTraceEnabled()) {
+                log.trace(fetchResults.toString());
             }
 
-            RowSet rowSet = RowSetFactory.create(fetchResults.getResults(), protocolVersion);
+            return getColumnData(fetchResults.getResults());
+
+            /*RowSet rowSet = RowSetFactory.create(fetchResults.getResults(), protocolVersion);
 
             for (Object[] row : rowSet) {
                 logs.add(String.valueOf(row[0]));
-            }
+            }*/
 
-        } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
-        } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + "]", e);
+            throw new HiveThriftException(e);
+        } finally {
+            session.getSessionLock().unlock();
         }
 
-
-        return logs;
-    }*/
+    }
 
     public static ThriftOperation executeSql(ThriftSession session, long queryTimeout, String sql) throws SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), sql);
