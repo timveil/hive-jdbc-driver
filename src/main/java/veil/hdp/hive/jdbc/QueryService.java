@@ -9,7 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_WITH_INFO_STATUS;
@@ -22,7 +24,7 @@ public class QueryService {
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
 
-    public static TFetchResultsResp fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
+    public static List<ColumnData> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
@@ -31,7 +33,6 @@ public class QueryService {
         try {
 
             TFetchResultsResp fetchResults = session.getClient().FetchResults(fetchReq);
-            session.getSessionLock().unlock();
 
             checkStatus(fetchResults.getStatus());
 
@@ -39,7 +40,7 @@ public class QueryService {
                 log.trace(fetchResults.toString());
             }
 
-            return fetchResults;
+            return getColumnData(fetchResults.getResults());
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -83,40 +84,43 @@ public class QueryService {
         return logs;
     }*/
 
-    public static TOperationHandle executeSql(ThriftSession session, long queryTimeout, String sql) throws SQLException {
+    public static ThriftOperation executeSql(ThriftSession session, long queryTimeout, String sql) throws SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
         //todo: allows per statement configuration of session handle
         //executeStatementReq.setConfOverlay(null);
 
+        TExecuteStatementResp executeStatementResp;
+
         session.getSessionLock().lock();
 
         try {
-            TExecuteStatementResp executeStatementResp = session.getClient().ExecuteStatement(executeStatementReq);
-
-            checkStatus(executeStatementResp.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(executeStatementResp.toString());
-            }
-
-            return executeStatementResp.getOperationHandle();
-
+            executeStatementResp = session.getClient().ExecuteStatement(executeStatementReq);
         } catch (TException e) {
             throw new HiveThriftException(e);
         } finally {
             session.getSessionLock().unlock();
         }
 
+        checkStatus(executeStatementResp.getStatus());
+
+        if (log.isTraceEnabled()) {
+            log.trace(executeStatementResp.toString());
+        }
+
+        waitForStatementToComplete(session, executeStatementResp.getOperationHandle());
+
+        return new ThriftOperation.Builder().session(session).handle(executeStatementResp.getOperationHandle()).build();
+
     }
 
-    public static void waitForStatementToComplete(ThriftSession session, TOperationHandle statementHandle) throws SQLException {
+    private static void waitForStatementToComplete(ThriftSession session, TOperationHandle handle) throws SQLException {
         boolean isComplete = false;
 
-        while (!isComplete) {
+        TGetOperationStatusReq statusReq = new TGetOperationStatusReq(handle);
 
-            TGetOperationStatusReq statusReq = new TGetOperationStatusReq(statementHandle);
+        while (!isComplete) {
 
             session.getSessionLock().lock();
 
@@ -157,9 +161,9 @@ public class QueryService {
         }
     }
 
-    public static TTableSchema getResultSetSchema(ThriftSession session, TOperationHandle operationHandle) throws SQLException {
+    public static TTableSchema getResultSetSchema(ThriftSession session, TOperationHandle handle) throws SQLException {
 
-        TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
+        TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(handle);
 
         session.getSessionLock().lock();
 
@@ -182,46 +186,36 @@ public class QueryService {
     }
 
 
-    public static HiveResultSet getCatalogs(HiveConnection connection) throws SQLException {
-        TGetCatalogsResp response = getCatalogsResponse(connection.getThriftSession());
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getCatalogs(HiveConnection connection) throws SQLException {
+        return getCatalogsOperation(connection.getThriftSession()).getResultSet();
     }
 
-    public static HiveResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) throws SQLException {
-        TGetSchemasResp response = getDatabaseSchemaResponse(connection.getThriftSession(), catalog, schemaPattern);
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) throws SQLException {
+        return getDatabaseSchemaOperation(connection.getThriftSession(), catalog, schemaPattern).getResultSet();
     }
 
-    public static HiveResultSet getTypeInfo(HiveConnection connection) throws SQLException {
-        TGetTypeInfoResp response = getTypeInfoResponse(connection.getThriftSession());
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getTypeInfo(HiveConnection connection) throws SQLException {
+        return getTypeInfoOperation(connection.getThriftSession()).getResultSet();
     }
 
-    public static HiveResultSet getTableTypes(HiveConnection connection) throws SQLException {
-        TGetTableTypesResp response = getTableTypesResponse(connection.getThriftSession());
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getTableTypes(HiveConnection connection) throws SQLException {
+        return getTableTypesOperation(connection.getThriftSession()).getResultSet();
     }
 
-    public static HiveResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
-        TGetTablesResp response = getTablesResponse(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types);
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
+        return getTablesOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types).getResultSet();
     }
 
-    public static HiveResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        TGetColumnsResp response = getColumnsResponse(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        return getColumnsOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern).getResultSet();
     }
 
-    public static HiveResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
-        TGetFunctionsResp response = getFunctionsResponse(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern);
-        return buildMetaDataResultSet(connection, response.getOperationHandle());
+    public static ResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
+        return getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern).getResultSet();
     }
 
-    private static HiveResultSet buildMetaDataResultSet(HiveConnection connection, TOperationHandle operationHandle) throws SQLException {
-        return new HiveResultSet.Builder().statement(new HiveStatement.Builder().connection(connection).build()).handle(operationHandle).build();
-    }
 
-    private static TGetCatalogsResp getCatalogsResponse(ThriftSession session) throws SQLException {
+    private static ThriftOperation getCatalogsOperation(ThriftSession session) throws SQLException {
         TGetCatalogsReq req = new TGetCatalogsReq(session.getSessionHandle());
 
         session.getSessionLock().lock();
@@ -236,7 +230,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -245,7 +239,7 @@ public class QueryService {
         }
     }
 
-    private static TGetColumnsResp getColumnsResponse(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+    private static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         TGetColumnsReq req = new TGetColumnsReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -264,7 +258,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -273,7 +267,7 @@ public class QueryService {
         }
     }
 
-    private static TGetFunctionsResp getFunctionsResponse(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
+    private static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
         TGetFunctionsReq req = new TGetFunctionsReq();
         req.setSessionHandle(session.getSessionHandle());
         req.setCatalogName(catalog);
@@ -292,7 +286,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -302,7 +296,7 @@ public class QueryService {
     }
 
 
-    private static TGetTablesResp getTablesResponse(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
+    private static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws SQLException {
         TGetTablesReq req = new TGetTablesReq(session.getSessionHandle());
 
         req.setCatalogName(catalog);
@@ -325,7 +319,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -335,7 +329,7 @@ public class QueryService {
     }
 
 
-    private static TGetTypeInfoResp getTypeInfoResponse(ThriftSession session) throws SQLException {
+    private static ThriftOperation getTypeInfoOperation(ThriftSession session) throws SQLException {
         TGetTypeInfoReq req = new TGetTypeInfoReq(session.getSessionHandle());
 
         session.getSessionLock().lock();
@@ -350,7 +344,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -359,7 +353,7 @@ public class QueryService {
         }
     }
 
-    private static TGetTableTypesResp getTableTypesResponse(ThriftSession session) throws SQLException {
+    private static ThriftOperation getTableTypesOperation(ThriftSession session) throws SQLException {
         TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
 
         session.getSessionLock().lock();
@@ -374,7 +368,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -383,7 +377,7 @@ public class QueryService {
         }
     }
 
-    private static TGetSchemasResp getDatabaseSchemaResponse(ThriftSession session, String catalog, String schemaPattern) throws SQLException {
+    private static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern) throws SQLException {
         TGetSchemasReq req = new TGetSchemasReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -400,7 +394,7 @@ public class QueryService {
             checkStatus(resp.getStatus());
 
 
-            return resp;
+            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -504,7 +498,7 @@ public class QueryService {
 
         try (Statement statement = connection.createStatement()) {
             statement.setQueryTimeout(timeout);
-            try (ResultSet resultSet = statement.executeQuery("SELECT current_database()")) {
+            try (ResultSet ignored = statement.executeQuery("SELECT current_database()")) {
                 return true;
             }
         } catch (SQLException e) {
@@ -530,12 +524,16 @@ public class QueryService {
     }
 
     public static void closeOperation(ThriftOperation operation) {
-        TCloseOperationReq closeRequest = new TCloseOperationReq(operation.getOperationHandle());
+        closeOperation(operation.getSession(), operation.getOperationHandle());
+    }
 
-        operation.getSession().getSessionLock().lock();
+    public static void closeOperation(ThriftSession session, TOperationHandle handle) {
+        TCloseOperationReq closeRequest = new TCloseOperationReq(handle);
+
+        session.getSessionLock().lock();
 
         try {
-            TCloseOperationResp resp = operation.getSession().getClient().CloseOperation(closeRequest);
+            TCloseOperationResp resp = session.getClient().CloseOperation(closeRequest);
 
             checkStatus(resp.getStatus());
 
@@ -550,7 +548,7 @@ public class QueryService {
         } catch (SQLException e) {
             log.warn("sql exception: message [" + e.getMessage() + "]", e);
         } finally {
-            operation.getSession().getSessionLock().unlock();
+            session.getSessionLock().unlock();
         }
     }
 
@@ -603,5 +601,43 @@ public class QueryService {
             thriftSession.getSessionLock().unlock();
         }
 
+    }
+
+
+    private static List<ColumnData> getColumnData(TRowSet rowSet) {
+        List<ColumnData> columns = new ArrayList<>();
+
+        if (rowSet != null && rowSet.isSetColumns()) {
+
+            List<TColumn> tColumns = rowSet.getColumns();
+
+            for (TColumn column : tColumns) {
+
+                if (column.isSetBoolVal()) {
+                    columns.add(new ColumnData<>(HiveType.BOOLEAN, column.getBoolVal().getValues(), column.getBoolVal().getNulls()));
+                } else if (column.isSetByteVal()) {
+                    columns.add(new ColumnData<>(HiveType.TINY_INT, column.getByteVal().getValues(), column.getByteVal().getNulls()));
+                } else if (column.isSetI16Val()) {
+                    columns.add(new ColumnData<>(HiveType.SMALL_INT, column.getI16Val().getValues(), column.getI16Val().getNulls()));
+                } else if (column.isSetI32Val()) {
+                    columns.add(new ColumnData<>(HiveType.INTEGER, column.getI32Val().getValues(), column.getI32Val().getNulls()));
+                } else if (column.isSetI64Val()) {
+                    columns.add(new ColumnData<>(HiveType.BIG_INT, column.getI64Val().getValues(), column.getI64Val().getNulls()));
+                } else if (column.isSetDoubleVal()) {
+                    columns.add(new ColumnData<>(HiveType.DOUBLE, column.getDoubleVal().getValues(), column.getDoubleVal().getNulls()));
+                } else if (column.isSetBinaryVal()) {
+                    columns.add(new ColumnData<>(HiveType.BINARY, column.getBinaryVal().getValues(), column.getBinaryVal().getNulls()));
+                } else if (column.isSetStringVal()) {
+                    columns.add(new ColumnData<>(HiveType.STRING, column.getStringVal().getValues(), column.getStringVal().getNulls()));
+                } else {
+                    throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", column));
+                }
+            }
+
+            tColumns = null;
+            rowSet = null;
+        }
+
+        return columns;
     }
 }

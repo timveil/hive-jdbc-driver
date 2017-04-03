@@ -14,30 +14,26 @@ public class HiveResultSet extends AbstractResultSet {
     private static final Logger log = LoggerFactory.getLogger(HiveResultSet.class);
 
     // constructor
-    private final HiveStatement statement;
     private final Schema schema;
     private final HiveResults hiveResults;
-
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
-
-    // public getter & setter
     private int fetchSize;
     private int fetchDirection;
     private int resultSetType;
     private int resultSetConcurrency;
     private int resultSetHoldability;
+    // public getter & setter
     private SQLWarning sqlWarning = null;
 
 
-    private HiveResultSet(HiveStatement statement, Schema schema, HiveResults hiveResults) throws SQLException {
-        this.fetchDirection = statement.getFetchDirection();
-        this.fetchSize = statement.getFetchSize();
-        this.resultSetType = statement.getResultSetType();
-        this.resultSetConcurrency = statement.getResultSetConcurrency();
-        this.resultSetHoldability = statement.getResultSetHoldability();
-        this.statement = statement;
+    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, HiveResults hiveResults) throws SQLException {
+        this.fetchDirection = fetchDirection;
+        this.fetchSize = fetchSize;
+        this.resultSetType = resultSetType;
+        this.resultSetConcurrency = resultSetConcurrency;
+        this.resultSetHoldability = resultSetHoldability;
 
         this.schema = schema;
         this.hiveResults = hiveResults;
@@ -213,7 +209,8 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public HiveStatement getStatement() throws SQLException {
-        return statement;
+        // todo; don't love
+        return null;
     }
 
     @Override
@@ -331,7 +328,6 @@ public class HiveResultSet extends AbstractResultSet {
     @Override
     public String toString() {
         return "HiveResultSet{" +
-                "currentStatement=" + statement +
                 ", currentSchema=" + schema +
                 ", currentResults=" + hiveResults +
                 ", fetchSize=" + fetchSize +
@@ -346,42 +342,78 @@ public class HiveResultSet extends AbstractResultSet {
 
     public static class Builder {
 
-        private ThriftOperation thriftOperation;
-        private TOperationHandle handle;
-        private HiveStatement statement;
-        private Schema schema;
 
-        public HiveResultSet.Builder thriftOperation(ThriftOperation thriftOperation) {
-            this.thriftOperation = thriftOperation;
+        private ThriftSession thriftSession;
+        private TOperationHandle operationHandle;
+        private int maxRows = Constants.DEFAULT_MAX_ROWS;
+        private int fetchSize = Constants.DEFAULT_FETCH_SIZE;
+        private int fetchDirection = ResultSet.FETCH_FORWARD;
+        private int resultSetType = ResultSet.TYPE_FORWARD_ONLY;
+        private int resultSetConcurrency = ResultSet.CONCUR_READ_ONLY;
+        private int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
+
+
+        public HiveResultSet.Builder thriftSession(ThriftSession thriftSession) {
+            this.thriftSession = thriftSession;
             return this;
         }
 
-        public HiveResultSet.Builder handle(TOperationHandle handle) {
-            this.handle = handle;
+        public HiveResultSet.Builder handle(TOperationHandle operationHandle) {
+            this.operationHandle = operationHandle;
             return this;
         }
 
-        public HiveResultSet.Builder statement(HiveStatement statement) {
-            this.statement = statement;
+        public HiveResultSet.Builder fetchSize(int fetchSize) {
+            this.fetchSize = fetchSize;
+            return this;
+        }
+
+
+        public HiveResultSet.Builder maxRows(int maxRows) {
+            this.maxRows = maxRows;
+            return this;
+        }
+
+        public HiveResultSet.Builder fetchDirection(int fetchDirection) {
+            this.fetchDirection = fetchDirection;
+            return this;
+        }
+
+
+        public HiveResultSet.Builder resultSetType(int resultSetType) {
+            this.resultSetType = resultSetType;
+            return this;
+        }
+
+
+        public HiveResultSet.Builder resultSetConcurrency(int resultSetConcurrency) {
+            this.resultSetConcurrency = resultSetConcurrency;
+            return this;
+        }
+
+
+        public HiveResultSet.Builder resultSetHoldability(int resultSetHoldability) {
+            this.resultSetHoldability = resultSetHoldability;
             return this;
         }
 
 
         public HiveResultSet build() throws SQLException {
 
-            TOperationHandle oh;
+            Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
 
-            if (thriftOperation != null) {
-                oh = thriftOperation.getOperationHandle();
-            } else {
-                oh = handle;
-            }
-
-
-            Schema schema = new Schema(QueryService.getResultSetSchema(statement.getConnection().getThriftSession(), oh));
-
-
-            return new HiveResultSet(statement, schema, new HiveResults.Builder().handle(oh).statement(statement).build());
+            return new HiveResultSet(schema,
+                    fetchSize,
+                    fetchDirection,
+                    resultSetType,
+                    resultSetConcurrency,
+                    resultSetHoldability,
+                    new HiveResults.Builder()
+                            .fetchSize(fetchSize)
+                            .maxRows(maxRows)
+                            .thriftSession(thriftSession)
+                            .handle(operationHandle)
+                            .build());
         }
     }
 

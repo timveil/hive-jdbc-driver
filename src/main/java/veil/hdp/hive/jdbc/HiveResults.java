@@ -1,11 +1,11 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.*;
+import org.apache.hive.service.cli.thrift.TFetchOrientation;
+import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,9 +16,10 @@ public class HiveResults implements SQLCloseable {
     private static final Logger log = LoggerFactory.getLogger(HiveResults.class);
 
     // constructor
-    private final TOperationHandle operation;
-    private final HiveStatement statement;
-
+    private final ThriftSession thriftSession;
+    private final TOperationHandle operationHandle;
+    private final int maxRows;
+    private final int fetchSize;
 
     // atomic
 
@@ -43,10 +44,12 @@ public class HiveResults implements SQLCloseable {
     // the current row
     private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
 
+    private HiveResults(ThriftSession thriftSession, TOperationHandle operationHandle, int maxRows, int fetchSize) {
 
-    private HiveResults(TOperationHandle operation, HiveStatement statement) {
-        this.operation = operation;
-        this.statement = statement;
+        this.thriftSession = thriftSession;
+        this.operationHandle = operationHandle;
+        this.maxRows = maxRows;
+        this.fetchSize = fetchSize;
     }
 
 
@@ -60,7 +63,7 @@ public class HiveResults implements SQLCloseable {
     public boolean next() throws SQLException {
 
         // total rows have exceeded max rows
-        if (statement.getMaxRows() > 0 && totalRowsIndex.get() >= statement.getMaxRows()) {
+        if (maxRows > 0 && totalRowsIndex.get() >= maxRows) {
             return false;
         }
 
@@ -69,9 +72,7 @@ public class HiveResults implements SQLCloseable {
 
             fetchedRowsIndex.set(0);
 
-            TFetchResultsResp fetchResultsResp = QueryService.fetchResults(statement.getConnection().getThriftSession(), operation, TFetchOrientation.FETCH_NEXT, statement.getFetchSize());
-
-            List<ColumnData> columnData = getColumnData(fetchResultsResp.getResults());
+            List<ColumnData> columnData = QueryService.fetchResults(thriftSession, operationHandle, TFetchOrientation.FETCH_NEXT, fetchSize);
 
             fetchedData.set(columnData);
             fetchedColumnCount.set(columnData.size());
@@ -138,61 +139,40 @@ public class HiveResults implements SQLCloseable {
 
     }
 
-    private List<ColumnData> getColumnData(TRowSet rowSet) {
-        List<ColumnData> columns = new ArrayList<>();
-
-        if (rowSet != null && rowSet.isSetColumns()) {
-
-            List<TColumn> tColumns = rowSet.getColumns();
-
-            for (TColumn column : tColumns) {
-
-                if (column.isSetBoolVal()) {
-                    columns.add(new ColumnData<>(HiveType.BOOLEAN, column.getBoolVal().getValues(), column.getBoolVal().getNulls()));
-                } else if (column.isSetByteVal()) {
-                    columns.add(new ColumnData<>(HiveType.TINY_INT, column.getByteVal().getValues(), column.getByteVal().getNulls()));
-                } else if (column.isSetI16Val()) {
-                    columns.add(new ColumnData<>(HiveType.SMALL_INT, column.getI16Val().getValues(), column.getI16Val().getNulls()));
-                } else if (column.isSetI32Val()) {
-                    columns.add(new ColumnData<>(HiveType.INTEGER, column.getI32Val().getValues(), column.getI32Val().getNulls()));
-                } else if (column.isSetI64Val()) {
-                    columns.add(new ColumnData<>(HiveType.BIG_INT, column.getI64Val().getValues(), column.getI64Val().getNulls()));
-                } else if (column.isSetDoubleVal()) {
-                    columns.add(new ColumnData<>(HiveType.DOUBLE, column.getDoubleVal().getValues(), column.getDoubleVal().getNulls()));
-                } else if (column.isSetBinaryVal()) {
-                    columns.add(new ColumnData<>(HiveType.BINARY, column.getBinaryVal().getValues(), column.getBinaryVal().getNulls()));
-                } else if (column.isSetStringVal()) {
-                    columns.add(new ColumnData<>(HiveType.STRING, column.getStringVal().getValues(), column.getStringVal().getNulls()));
-                } else {
-                    throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", column));
-                }
-            }
-
-            tColumns = null;
-            rowSet = null;
-        }
-
-        return columns;
-    }
 
 
     public static class Builder {
 
-        private TOperationHandle operation;
-        private HiveStatement statement;
+        private ThriftSession thriftSession;
+        private TOperationHandle operationHandle;
+        private int maxRows = Constants.DEFAULT_MAX_ROWS;
+        private int fetchSize = Constants.DEFAULT_FETCH_SIZE;
 
-        public HiveResults.Builder handle(TOperationHandle operation) {
-            this.operation = operation;
+        public HiveResults.Builder thriftSession(ThriftSession thriftSession) {
+            this.thriftSession = thriftSession;
             return this;
         }
 
-        public HiveResults.Builder statement(HiveStatement statement) {
-            this.statement = statement;
+        public HiveResults.Builder handle(TOperationHandle operationHandle) {
+            this.operationHandle = operationHandle;
+            return this;
+        }
+
+
+
+        public HiveResults.Builder fetchSize(int fetchSize) {
+            this.fetchSize = fetchSize;
+            return this;
+        }
+
+
+        public HiveResults.Builder maxRows(int maxRows) {
+            this.maxRows = maxRows;
             return this;
         }
 
         public HiveResults build() {
-            return new HiveResults(operation, statement);
+            return new HiveResults(thriftSession, operationHandle, maxRows, fetchSize);
         }
 
 

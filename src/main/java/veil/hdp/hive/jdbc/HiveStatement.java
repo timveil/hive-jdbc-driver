@@ -21,7 +21,6 @@ public class HiveStatement extends AbstractStatement {
 
     // private
     private final AtomicReference<ThriftOperation> currentOperation = new AtomicReference<>();
-    private final AtomicReference<ResultSet> currentResultSet = new AtomicReference<>();
 
     // public getter & setter
     private int queryTimeout;
@@ -33,9 +32,9 @@ public class HiveStatement extends AbstractStatement {
     private HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
 
-        this.queryTimeout = 0;
-        this.maxRows = 0;
-        this.fetchSize = 1000;
+        this.queryTimeout = Constants.DEFAULT_QUERY_TIMEOUT;
+        this.maxRows = Constants.DEFAULT_MAX_ROWS;
+        this.fetchSize = Constants.DEFAULT_MAX_ROWS;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
@@ -48,15 +47,9 @@ public class HiveStatement extends AbstractStatement {
             log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             currentOperation.get().close();;
             currentOperation.set(null);
-            currentResultSet.set(null);
         }
 
-        currentOperation.set(new ThriftOperation.Builder().statement(this).sql(sql).timeout(queryTimeout).build());
-
-        if (currentOperation.get().hasResultSet()) {
-            currentResultSet.set(new HiveResultSet.Builder().statement(this).thriftOperation(currentOperation.get()).build());
-        }
-
+        currentOperation.set(QueryService.executeSql(connection.getThriftSession(), this.queryTimeout, sql));
     }
 
     @Override
@@ -78,7 +71,7 @@ public class HiveStatement extends AbstractStatement {
             throw new SQLException("The query did not generate a result set!");
         }
 
-        return currentResultSet.get();
+        return operation.getResultSet();
     }
 
     @Override
@@ -137,7 +130,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return currentResultSet.get();
+        return currentOperation.get().getResultSet();
     }
 
     @Override
@@ -207,14 +200,6 @@ public class HiveStatement extends AbstractStatement {
             operation.close();
             currentOperation.set(null);
         }
-
-        ResultSet resultSet = currentResultSet.get();
-
-        if (resultSet != null) {
-            resultSet.close();
-            currentResultSet.set(null);
-        }
-
     }
 
     @Override

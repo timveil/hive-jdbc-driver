@@ -19,12 +19,19 @@ public class HiveEmptyResultSet extends AbstractResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return new HiveResultSetMetaData.Builder().schema(schema).build();
+        if (schema != null) {
+            return new HiveResultSetMetaData.Builder().schema(schema).build();
+        }
+
+        return null;
     }
 
     @Override
     public void close() throws SQLException {
-        schema.clear();
+
+        if (schema != null) {
+            schema.clear();
+        }
     }
 
     public static class Builder {
@@ -38,8 +45,6 @@ public class HiveEmptyResultSet extends AbstractResultSet {
         }
 
         public HiveEmptyResultSet build() throws SQLException {
-
-
             return new HiveEmptyResultSet(schema);
         }
     }

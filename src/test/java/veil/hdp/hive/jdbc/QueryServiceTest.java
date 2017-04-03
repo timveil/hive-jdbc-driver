@@ -75,11 +75,4 @@ public class QueryServiceTest extends BaseJunitTest {
 
 
 
-    @Test
-    public void getCatalogs() throws Exception {
-        HiveResultSet catalogs = QueryService.getCatalogs(connection);
-
-        log.debug(catalogs.toString());
-    }
-
 }

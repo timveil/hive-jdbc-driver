@@ -80,8 +80,6 @@ public class ThriftSession implements SQLCloseable {
 
             QueryService.closeSession(this);
             ThriftUtils.closeTransport(transport);
-
-
         }
     }
 
