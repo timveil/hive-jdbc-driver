@@ -69,7 +69,6 @@ public class ThriftSession implements SQLCloseable {
     }
 
 
-
     @Override
     public void close() {
         if (closed.compareAndSet(false, true)) {

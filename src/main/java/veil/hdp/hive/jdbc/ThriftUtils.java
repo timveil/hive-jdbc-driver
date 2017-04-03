@@ -140,7 +140,6 @@ public class ThriftUtils {
     }
 
 
-
     private static Map<String, String> buildSessionConfig(Properties properties) {
         Map<String, String> openSessionConfig = new HashMap<>();
 

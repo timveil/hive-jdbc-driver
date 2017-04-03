@@ -140,7 +140,6 @@ public class HiveResults implements SQLCloseable {
     }
 
 
-
     public static class Builder {
 
         private ThriftSession thriftSession;
@@ -157,7 +156,6 @@ public class HiveResults implements SQLCloseable {
             this.operationHandle = operationHandle;
             return this;
         }
-
 
 
         public HiveResults.Builder fetchSize(int fetchSize) {
