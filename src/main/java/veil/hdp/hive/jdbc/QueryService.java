@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc;
 
+import com.google.common.collect.AbstractIterator;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
@@ -11,6 +12,7 @@ import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
@@ -24,7 +26,66 @@ public class QueryService {
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
 
-    public static List<ColumnData> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
+
+    public static Iterable<Object[]> getResults(ThriftSession session, TOperationHandle handle, int fetchSize) {
+        return () -> {
+
+            final Iterator<List<Object[]>> fetchIterator = fetchIterator(session, handle, fetchSize);
+
+            return new AbstractIterator<Object[]>() {
+
+                private Iterator<Object[]> rowSet;
+
+                @Override
+                protected Object[] computeNext() {
+                    if (rowSet == null) {
+                        if (fetchIterator.hasNext()) {
+                            rowSet = fetchIterator.next().iterator();
+                        } else {
+                            return endOfData();
+                        }
+                    }
+
+                    if (rowSet.hasNext()) {
+                        return rowSet.next();
+                    } else {
+                        rowSet = null;
+                        return computeNext();
+                    }
+                }
+            };
+        };
+    }
+
+    private static AbstractIterator<List<Object[]>> fetchIterator(ThriftSession session, TOperationHandle handle, int fetchSize) {
+        return new AbstractIterator<List<Object[]>>() {
+
+            @Override
+            protected List<Object[]> computeNext() {
+
+                List<Object[]> results = null;
+
+                try {
+                    results = QueryService.fetchResultsAsRows(session, handle, TFetchOrientation.FETCH_NEXT, fetchSize);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                if (results != null && !results.isEmpty()) {
+                    return results;
+                } else {
+                    return endOfData();
+                }
+
+            }
+        };
+    }
+
+    private static List<Object[]> fetchResultsAsRows(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
+        return toRows(fetchResults(session, operationHandle, orientation, fetchSize));
+    }
+
+    private static List<ColumnData> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
@@ -49,7 +110,7 @@ public class QueryService {
         }
     }
 
-    public static List<ColumnData> fetchLogs(ThriftSession session, TOperationHandle operationHandle) throws SQLException {
+    private static List<ColumnData> fetchLogs(ThriftSession session, TOperationHandle operationHandle) throws SQLException {
 
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
         tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
@@ -634,5 +695,37 @@ public class QueryService {
         }
 
         return columns;
+    }
+
+    private static List<Object[]> toRows(List<ColumnData> columns) {
+
+        int numColumns = columns.size();
+
+        List<Object[]> rows = new ArrayList<>();
+
+        if (numColumns > 0) {
+            ColumnData firstColumn = columns.get(0);
+
+            int numRows = 0;
+
+            if (firstColumn != null) {
+                numRows = firstColumn.getRowCount();
+            }
+
+
+            for (int r = 0; r < numRows; r++) {
+
+                Object[] row = new Object[numColumns];
+
+                for (int c = 0; c < numColumns; c++) {
+                    row[c] = columns.get(c).getValue(r);
+                }
+
+                rows.add(row);
+            }
+        }
+
+        return rows;
+
     }
 }

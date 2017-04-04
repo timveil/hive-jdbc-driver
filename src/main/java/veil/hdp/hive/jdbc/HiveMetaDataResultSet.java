@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveMetaDataResultSet extends AbstractResultSet {
 
@@ -16,21 +18,22 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
     // constructor
     private final ThriftSession session;
     private final Schema schema;
-    private final HiveResults hiveResults;
+    private final Iterator<Object[]> results;
     private final TOperationHandle operationHandle;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+    private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
 
     // public getter & setter
     private SQLWarning sqlWarning = null;
 
 
-    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, HiveResults hiveResults) {
+    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, Iterator<Object[]> results) {
         this.session = session;
         this.schema = schema;
-        this.hiveResults = hiveResults;
+        this.results = results;
         this.operationHandle = operationHandle;
 
         closed.set(false);
@@ -38,7 +41,14 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public boolean next() throws SQLException {
-        return hiveResults.next();
+        if (!results.hasNext()) {
+            currentRow.set(null);
+            return false;
+        }
+
+        currentRow.set(results.next());
+
+        return true;
 
     }
 
@@ -57,14 +67,11 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
             QueryService.closeOperation(session, operationHandle);
 
-            if (hiveResults != null) {
-                hiveResults.close();
-            }
-
             if (schema != null) {
                 schema.clear();
             }
 
+            currentRow.set(null);
 
         }
     }
@@ -182,7 +189,7 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
 
-        Object columnValue = ResultSetUtils.getColumnValue(schema, hiveResults.getCurrentRow(), columnIndex, targetType);
+        Object columnValue = ResultSetUtils.getColumnValue(schema, currentRow.get(), columnIndex, targetType);
 
         lastColumnNull.set(columnValue == null);
 
@@ -211,12 +218,9 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
             Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
 
-            HiveResults hiveResults = new HiveResults.Builder()
-                    .thriftSession(thriftSession)
-                    .handle(operationHandle)
-                    .build();
+            Iterable<Object[]> results = QueryService.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE);
 
-            return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, hiveResults);
+            return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }
     }
 

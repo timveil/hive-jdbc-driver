@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveResultSet extends AbstractResultSet {
 
@@ -15,7 +17,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // constructor
     private final Schema schema;
-    private final HiveResults hiveResults;
+    private final Iterator<Object[]> results;
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
@@ -23,6 +25,7 @@ public class HiveResultSet extends AbstractResultSet {
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+    private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
 
     // public getter & setter
     private int fetchSize;
@@ -30,7 +33,7 @@ public class HiveResultSet extends AbstractResultSet {
     private SQLWarning sqlWarning = null;
 
 
-    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, HiveResults hiveResults) {
+    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, Iterator<Object[]> results) {
         this.fetchDirection = fetchDirection;
         this.fetchSize = fetchSize;
         this.resultSetType = resultSetType;
@@ -38,14 +41,20 @@ public class HiveResultSet extends AbstractResultSet {
         this.resultSetHoldability = resultSetHoldability;
 
         this.schema = schema;
-        this.hiveResults = hiveResults;
+        this.results = results;
 
         closed.set(false);
     }
 
     @Override
     public boolean next() throws SQLException {
-        return hiveResults.next();
+        if (!results.hasNext()) {
+            currentRow.set(null);
+            return false;
+        }
+        currentRow.set(results.next());
+
+        return true;
 
     }
 
@@ -62,14 +71,11 @@ public class HiveResultSet extends AbstractResultSet {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            if (hiveResults != null) {
-                hiveResults.close();
-            }
-
             if (schema != null) {
                 schema.clear();
             }
 
+            currentRow.set(null);
 
         }
     }
@@ -96,7 +102,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getRow() throws SQLException {
-        return hiveResults.getRowIndex();
+        return 0;
     }
 
     @Override
@@ -302,7 +308,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
 
-        Object columnValue = ResultSetUtils.getColumnValue(schema, hiveResults.getCurrentRow(), columnIndex, targetType);
+        Object columnValue = ResultSetUtils.getColumnValue(schema, currentRow.get(), columnIndex, targetType);
 
         lastColumnNull.set(columnValue == null);
 
@@ -311,7 +317,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private InputStream getValueAsStream(int columnIndex) throws SQLException {
 
-        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, hiveResults.getCurrentRow(), columnIndex);
+        InputStream columnValue = ResultSetUtils.getColumnValueAsStream(schema, currentRow.get(), columnIndex);
 
         lastColumnNull.set(columnValue == null);
 
@@ -320,7 +326,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     private Time getValueAsTime(int columnIndex) throws SQLException {
 
-        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, hiveResults.getCurrentRow(), columnIndex);
+        Time columnValue = ResultSetUtils.getColumnValueAsTime(schema, currentRow.get(), columnIndex);
 
         lastColumnNull.set(columnValue == null);
 
@@ -331,7 +337,6 @@ public class HiveResultSet extends AbstractResultSet {
     public String toString() {
         return "HiveResultSet{" +
                 ", currentSchema=" + schema +
-                ", currentResults=" + hiveResults +
                 ", fetchSize=" + fetchSize +
                 ", fetchDirection=" + fetchDirection +
                 ", resultSetType=" + resultSetType +
@@ -341,6 +346,7 @@ public class HiveResultSet extends AbstractResultSet {
                 ", lastColumnNull=" + lastColumnNull +
                 '}';
     }
+
 
     public static class Builder {
 
@@ -404,18 +410,15 @@ public class HiveResultSet extends AbstractResultSet {
 
             Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
 
+            Iterable<Object[]> results = QueryService.getResults(thriftSession, operationHandle, fetchSize);
+
             return new HiveResultSet(schema,
                     fetchSize,
                     fetchDirection,
                     resultSetType,
                     resultSetConcurrency,
                     resultSetHoldability,
-                    new HiveResults.Builder()
-                            .fetchSize(fetchSize)
-                            .maxRows(maxRows)
-                            .thriftSession(thriftSession)
-                            .handle(operationHandle)
-                            .build());
+                    results.iterator());
         }
     }
 
