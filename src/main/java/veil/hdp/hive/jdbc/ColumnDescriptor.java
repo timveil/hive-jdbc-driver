@@ -2,30 +2,30 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 
-public class Column {
+public class ColumnDescriptor {
 
     private final String name;
     private final String normalizedName;
     private final String comment;
-    private final ColumnType columnType;
+    private final ColumnTypeDescriptor columnTypeDescriptor;
 
     // should be 1 based to match ResultSet
     private final int position;
 
 
-    public Column(String name, ColumnType columnType, int position) {
+    public ColumnDescriptor(String name, ColumnTypeDescriptor columnTypeDescriptor, int position) {
         this.name = name;
         this.normalizedName = normalizeName(name);
         this.comment = null;
-        this.columnType = columnType;
+        this.columnTypeDescriptor = columnTypeDescriptor;
         this.position = position;
     }
 
-    public Column(TColumnDesc columnDesc) {
+    public ColumnDescriptor(TColumnDesc columnDesc) {
         name = columnDesc.getColumnName();
         normalizedName = normalizeName(columnDesc.getColumnName());
         comment = columnDesc.getComment();
-        columnType = new ColumnType(columnDesc.getTypeDesc());
+        columnTypeDescriptor = new ColumnTypeDescriptor(columnDesc.getTypeDesc());
         position = columnDesc.getPosition();
     }
 
@@ -41,8 +41,8 @@ public class Column {
         return comment;
     }
 
-    public ColumnType getColumnType() {
-        return columnType;
+    public ColumnTypeDescriptor getColumnType() {
+        return columnTypeDescriptor;
     }
 
     public int getPosition() {

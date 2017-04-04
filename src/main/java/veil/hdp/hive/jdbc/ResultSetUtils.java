@@ -21,13 +21,13 @@ public class ResultSetUtils {
 
         Object value = row[columnIndex - 1];
 
-        Column column = schema.getColumns().get(columnIndex - 1);
+        ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
 
-        HiveType columnType = column.getColumnType().getHiveType();
+        HiveType columnType = columnDescriptor.getColumnType().getHiveType();
 
         if (targetType != null && !columnType.equals(targetType)) {
             if (log.isTraceEnabled()) {
-                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, column.getNormalizedName());
+                log.trace("target type [{}] does not match column type [{}] with value [{}] for column [{}].  you should consider using a different method on the ResultSet interface", targetType, columnType, value, columnDescriptor.getNormalizedName());
             }
         }
 
@@ -49,9 +49,9 @@ public class ResultSetUtils {
 
         Object value = row[columnIndex - 1];
 
-        Column column = schema.getColumns().get(columnIndex - 1);
+        ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
 
-        HiveType columnType = column.getColumnType().getHiveType();
+        HiveType columnType = columnDescriptor.getColumnType().getHiveType();
 
         return convertToInputStream(value, columnType);
     }
@@ -62,18 +62,18 @@ public class ResultSetUtils {
 
         Object value = row[columnIndex - 1];
 
-        Column column = schema.getColumns().get(columnIndex - 1);
+        ColumnDescriptor columnDescriptor = schema.getColumns().get(columnIndex - 1);
 
-        HiveType columnType = column.getColumnType().getHiveType();
+        HiveType columnType = columnDescriptor.getColumnType().getHiveType();
 
         return convertToTime(value, columnType);
     }
 
     public static int findColumnIndex(Schema schema, String columnLabel) throws SQLException {
-        Column column = schema.getColumn(columnLabel);
+        ColumnDescriptor columnDescriptor = schema.getColumn(columnLabel);
 
-        if (column != null) {
-            return column.getPosition();
+        if (columnDescriptor != null) {
+            return columnDescriptor.getPosition();
         }
 
         throw new SQLException("Could not find column for name " + columnLabel + " in Schema " + schema);

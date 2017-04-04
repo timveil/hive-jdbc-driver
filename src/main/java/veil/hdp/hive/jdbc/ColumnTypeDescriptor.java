@@ -6,15 +6,15 @@ import org.apache.hive.service.cli.thrift.TTypeEntry;
 
 import java.util.List;
 
-public class ColumnType {
+public class ColumnTypeDescriptor {
 
     private final HiveType hiveType;
 
-    public ColumnType(HiveType hiveType) {
+    public ColumnTypeDescriptor(HiveType hiveType) {
         this.hiveType = hiveType;
     }
 
-    public ColumnType(TTypeDesc typeDesc) {
+    public ColumnTypeDescriptor(TTypeDesc typeDesc) {
         List<TTypeEntry> typeEntries = typeDesc.getTypes();
         TPrimitiveTypeEntry primitiveTypeEntry = typeEntries.get(0).getPrimitiveEntry();
 

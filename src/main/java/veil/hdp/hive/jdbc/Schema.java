@@ -12,42 +12,42 @@ public class Schema {
 
     private static final Logger log = LoggerFactory.getLogger(Schema.class);
 
-    private final List<Column> columns;
+    private final List<ColumnDescriptor> columnDescriptors;
 
     public Schema(TTableSchema tableSchema) {
 
-        columns = new ArrayList<>();
+        columnDescriptors = new ArrayList<>();
 
         for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-            columns.add(new Column(columnDesc));
+            columnDescriptors.add(new ColumnDescriptor(columnDesc));
         }
     }
 
-    public Schema(List<Column> columns) {
-        this.columns = columns;
+    public Schema(List<ColumnDescriptor> columnDescriptors) {
+        this.columnDescriptors = columnDescriptors;
     }
 
-    public List<Column> getColumns() {
-        return columns;
+    public List<ColumnDescriptor> getColumns() {
+        return columnDescriptors;
     }
 
-    public Column getColumn(String columnName) {
+    public ColumnDescriptor getColumn(String columnName) {
 
-        for (Column column : getColumns()) {
+        for (ColumnDescriptor columnDescriptor : getColumns()) {
 
-            if (column.getNormalizedName().equalsIgnoreCase(columnName)) {
-                return column;
+            if (columnDescriptor.getNormalizedName().equalsIgnoreCase(columnName)) {
+                return columnDescriptor;
             }
         }
 
         return null;
     }
 
-    public Column getColumn(int position) {
+    public ColumnDescriptor getColumn(int position) {
 
-        for (Column column : getColumns()) {
-            if (position == column.getPosition()) {
-                return column;
+        for (ColumnDescriptor columnDescriptor : getColumns()) {
+            if (position == columnDescriptor.getPosition()) {
+                return columnDescriptor;
             }
         }
 
@@ -55,13 +55,13 @@ public class Schema {
     }
 
     public void clear() {
-        if (columns != null && !columns.isEmpty()) {
+        if (columnDescriptors != null && !columnDescriptors.isEmpty()) {
 
             if (log.isTraceEnabled()) {
                 log.trace("clearing columns collection");
             }
 
-            columns.clear();
+            columnDescriptors.clear();
         }
     }
 
@@ -70,7 +70,7 @@ public class Schema {
 
         StringBuilder stringBuilder = new StringBuilder("\nSchema {\n");
 
-        for (Column descriptor : getColumns()) {
+        for (ColumnDescriptor descriptor : getColumns()) {
             stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getColumnType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
