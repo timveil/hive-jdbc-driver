@@ -34,7 +34,7 @@ public class HiveStatement extends AbstractStatement {
 
         this.queryTimeout = Constants.DEFAULT_QUERY_TIMEOUT;
         this.maxRows = Constants.DEFAULT_MAX_ROWS;
-        this.fetchSize = Constants.DEFAULT_MAX_ROWS;
+        this.fetchSize = Constants.DEFAULT_FETCH_SIZE;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
@@ -49,7 +49,7 @@ public class HiveStatement extends AbstractStatement {
             currentOperation.set(null);
         }
 
-        currentOperation.set(QueryService.executeSql(connection.getThriftSession(), this.queryTimeout, sql));
+        currentOperation.set(QueryService.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
     }
 
     @Override

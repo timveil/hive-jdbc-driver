@@ -143,7 +143,7 @@ public class QueryService {
 
     }
 
-    public static ThriftOperation executeSql(ThriftSession session, long queryTimeout, String sql) throws SQLException {
+    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) throws SQLException {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), sql);
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
@@ -170,7 +170,7 @@ public class QueryService {
 
         waitForStatementToComplete(session, executeStatementResp.getOperationHandle());
 
-        return new ThriftOperation.Builder().session(session).handle(executeStatementResp.getOperationHandle()).build();
+        return new ThriftOperation.Builder().session(session).handle(executeStatementResp.getOperationHandle()).maxRows(maxRows).fetchSize(fetchSize).build();
 
     }
 

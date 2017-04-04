@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveResultSet extends AbstractResultSet {
@@ -25,16 +26,19 @@ public class HiveResultSet extends AbstractResultSet {
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+    private final AtomicInteger rowCount = new AtomicInteger(0);
     private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
 
     // public getter & setter
     private int fetchSize;
+    private int maxRows;
     private int fetchDirection;
     private SQLWarning sqlWarning = null;
 
 
-    private HiveResultSet(Schema schema, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, Iterator<Object[]> results) {
+    private HiveResultSet(Schema schema, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, Iterator<Object[]> results) {
         this.fetchDirection = fetchDirection;
+        this.maxRows = maxRows;
         this.fetchSize = fetchSize;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
@@ -48,11 +52,14 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean next() throws SQLException {
-        if (!results.hasNext()) {
+        if (!results.hasNext() || (maxRows > 0 && rowCount.get() >= maxRows)) {
             currentRow.set(null);
             return false;
         }
+
         currentRow.set(results.next());
+
+        rowCount.incrementAndGet();
 
         return true;
 
@@ -102,7 +109,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public int getRow() throws SQLException {
-        return 0;
+        return rowCount.get();
     }
 
     @Override
@@ -410,9 +417,14 @@ public class HiveResultSet extends AbstractResultSet {
 
             Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
 
+            if (maxRows > 0 && maxRows < fetchSize) {
+                fetchSize = maxRows;
+            }
+
             Iterable<Object[]> results = QueryService.getResults(thriftSession, operationHandle, fetchSize);
 
             return new HiveResultSet(schema,
+                    maxRows,
                     fetchSize,
                     fetchDirection,
                     resultSetType,

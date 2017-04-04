@@ -74,7 +74,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         Statement statement = connection.createStatement();
         //statement.setFetchSize(2);
         //statement.setMaxRows(5);
-        ResultSet rs = statement.executeQuery("SELECT * FROM master");
+        ResultSet rs = statement.executeQuery("SELECT * FROM test_table");
         printResultSet(rs);
 
         rs.close();
@@ -93,6 +93,39 @@ public class HiveConnectionTest extends BaseJunitTest {
                 log.debug("run # {}", i);
             }
         }
+    }
+
+    @Test
+    public void testLoadWithConcurrency() throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        Assert.assertNotNull(metaData);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        Runnable test = () -> {
+            log.debug("******************************** calling getColumns");
+
+            try {
+                try (Statement statement = connection.createStatement();
+                     ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
+                    while (rs.next()) {
+                        //no-op
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        };
+
+        for (int i = 0; i < 1000; i++) {
+            executorService.submit(test);
+        }
+
+        log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ calling awaitTermination ");
+
+        executorService.awaitTermination(2, TimeUnit.MINUTES);
+
     }
 
 
@@ -162,12 +195,7 @@ public class HiveConnectionTest extends BaseJunitTest {
 
         Assert.assertNotNull(metaData);
 
-        log.debug("driver version: [{}]", metaData.getDriverVersion());
-        log.debug("database product version: [{}]", metaData.getDatabaseProductVersion());
-        log.debug("supports transactions: [{}]", metaData.supportsTransactions());
-
         ExecutorService executorService = Executors.newFixedThreadPool(10);
-
 
         Runnable test = () -> {
             log.debug("******************************** calling getColumns");
@@ -191,6 +219,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
     }
+
 
     @Test
     public void getMetaData() throws Exception {
