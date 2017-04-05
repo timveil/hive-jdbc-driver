@@ -4,7 +4,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-public class ShortColumn extends AbstractColumn<Short> {
+public class ShortColumn extends BaseColumn<Short> {
 
     public ShortColumn(ColumnDescriptor descriptor, Short value) {
         super(descriptor, value);

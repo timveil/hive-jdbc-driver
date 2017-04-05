@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import static veil.hdp.hive.jdbc.utils.Constants.HIVE_DATE_FORMAT;
 
-public class DateColumn extends AbstractColumn<Date> {
+public class DateColumn extends BaseColumn<Date> {
 
 
     public DateColumn(ColumnDescriptor descriptor, Date value) {

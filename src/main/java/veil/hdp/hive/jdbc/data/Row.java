@@ -81,7 +81,7 @@ public class Row {
 
                 ColumnDescriptor descriptor = schema.getColumn(position);
 
-                columns.add(new AbstractColumn.Builder().index(row).column(column).descriptor(descriptor).build());
+                columns.add(new BaseColumn.Builder().index(row).column(column).descriptor(descriptor).build());
 
             }
 

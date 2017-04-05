@@ -4,7 +4,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-public class LongColumn extends AbstractColumn<Long> {
+public class LongColumn extends BaseColumn<Long> {
     public LongColumn(ColumnDescriptor descriptor, Long value) {
         super(descriptor, value);
     }

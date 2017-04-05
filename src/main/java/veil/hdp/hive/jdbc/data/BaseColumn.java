@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static veil.hdp.hive.jdbc.metadata.HiveType.*;
 import static veil.hdp.hive.jdbc.utils.Utils.format;
 
-public abstract class AbstractColumn<T> implements Column<T> {
+public class BaseColumn<T> implements Column<T> {
 
     protected final Logger log = getLogger(getClass());
 
@@ -26,7 +26,7 @@ public abstract class AbstractColumn<T> implements Column<T> {
 
     protected final T value;
 
-    protected AbstractColumn(ColumnDescriptor columnDescriptor, T value) {
+    protected BaseColumn(ColumnDescriptor columnDescriptor, T value) {
         this.descriptor = columnDescriptor;
         this.value = value;
     }

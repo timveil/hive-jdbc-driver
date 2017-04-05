@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 
-public class BinaryColumn extends AbstractColumn<ByteBuffer> {
+public class BinaryColumn extends BaseColumn<ByteBuffer> {
     public BinaryColumn(ColumnDescriptor descriptor, ByteBuffer value) {
         super(descriptor, value);
     }
