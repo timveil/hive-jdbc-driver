@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_STATUS;
 import static org.apache.hive.service.cli.thrift.TStatusCode.SUCCESS_WITH_INFO_STATUS;
@@ -37,6 +38,8 @@ public class QueryService {
 
                 private Iterator<Row> rowSet;
 
+                private final AtomicInteger rowCount = new AtomicInteger(0);
+
                 @Override
                 protected Row computeNext() {
                     if (rowSet == null) {
@@ -48,9 +51,20 @@ public class QueryService {
                     }
 
                     if (rowSet.hasNext()) {
+                        // the page has more results
+                        rowCount.incrementAndGet();
                         return rowSet.next();
+                    } else if (rowCount.get() < fetchSize) {
+                        // the page has no more results and the rowCount is < fetchSize; then i don't need
+                        // to go back to the server to know if i'm done.
+                        //
+                        // for example rowCount = 10; fetchSize = 100; then no need to look for another page
+                        //
+                        return endOfData();
                     } else {
+                        // the page has no more results, but rowCount = fetchSize.  need to check server for more results
                         rowSet = null;
+                        rowCount.set(0);
                         return computeNext();
                     }
                 }
