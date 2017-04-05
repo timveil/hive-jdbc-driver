@@ -10,13 +10,17 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>common</module>
-        <module>binary</module>
-        <module>http</module>
+        <module>binary-driver</module>
+        <module>http-driver</module>
+        <module>binary-zookeeper-driver</module>
+        <module>http-zookeeper-driver</module>
+
         <module>thrift-client</module>
-        <module>zookeeper</module>
-        <module>binary-zookeeper</module>
-        <module>http-zookeeper</module>
+        <module>common</module>
+
+        <module>binary-utils</module>
+        <module>http-utils</module>
+        <module>zookeeper-utils</module>
     </modules>
 
     <properties>
