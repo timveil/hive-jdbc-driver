@@ -29,7 +29,7 @@ public abstract class HiveDriver implements Driver {
 
     abstract TTransport buildTransport(Properties properties) throws SQLException;
 
-    abstract PropertiesCallback buildPropertiesCallback() throws SQLException;
+    abstract PropertiesCallback buildPropertiesCallback();
 
     public Connection connect(String url, Properties info) throws SQLException {
         if (acceptsURL(url)) {
@@ -73,7 +73,7 @@ public abstract class HiveDriver implements Driver {
         return DriverUtils.acceptURL(url);
     }
 
-    protected int getLoginTimeout() {
+    int getLoginTimeout() {
         long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
 
         if (timeOut > Integer.MAX_VALUE) {

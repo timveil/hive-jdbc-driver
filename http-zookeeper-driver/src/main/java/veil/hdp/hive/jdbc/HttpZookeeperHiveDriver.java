@@ -40,7 +40,7 @@ public class HttpZookeeperHiveDriver extends HiveDriver {
     }
 
     @Override
-    PropertiesCallback buildPropertiesCallback() throws SQLException {
+    PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
             HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.toString());
             HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.set(properties, true);

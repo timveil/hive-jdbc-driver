@@ -39,7 +39,7 @@ public class HttpHiveDriver extends HiveDriver {
     }
 
     @Override
-    PropertiesCallback buildPropertiesCallback() throws SQLException {
+    PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
             HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.toString());
 
