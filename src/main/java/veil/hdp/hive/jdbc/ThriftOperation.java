@@ -14,10 +14,12 @@ public class ThriftOperation implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
+    // constructor
     private final ThriftSession session;
     private final TOperationHandle operation;
     private final ResultSet resultSet;
 
+    // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
     private ThriftOperation(ThriftSession thriftSession, TOperationHandle operationHandle, ResultSet resultSet) {

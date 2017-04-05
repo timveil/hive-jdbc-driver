@@ -11,6 +11,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDatabaseMetaData.class);
 
+    // constructor
     private final HiveConnection connection;
 
     private HiveDatabaseMetaData(HiveConnection connection) {

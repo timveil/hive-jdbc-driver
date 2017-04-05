@@ -21,15 +21,15 @@ public class ThriftSession implements SQLCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
+    // constructor
     private final TTransport transport;
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
     private final TProtocolVersion protocolVersion;
-
     private final Properties properties;
 
+    // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
-
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 

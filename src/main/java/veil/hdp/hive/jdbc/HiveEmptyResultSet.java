@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 public class HiveEmptyResultSet extends AbstractResultSet {
 
+    // constructor
     private final Schema schema;
 
     private HiveEmptyResultSet(Schema schema) {
