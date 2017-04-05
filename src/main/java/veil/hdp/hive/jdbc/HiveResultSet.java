@@ -3,7 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.column.Row;
+import veil.hdp.hive.jdbc.data.Row;
+import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.utils.Constants;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ResultSetUtils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -479,13 +483,13 @@ public class HiveResultSet extends AbstractResultSet {
 
         public HiveResultSet build() throws SQLException {
 
-            Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
+            Schema schema = new Schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle));
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;
             }
 
-            Iterable<Row> results = QueryService.getResults(thriftSession, operationHandle, fetchSize, schema);
+            Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
 
             return new HiveResultSet(schema,
                     maxRows,

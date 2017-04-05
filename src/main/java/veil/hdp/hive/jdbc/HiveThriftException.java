@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class HiveThriftException extends SQLException {
 
     public HiveThriftException(TStatus status) {
-
+        //todo; got to fix this
     }
 
     public HiveThriftException(TException exception) {

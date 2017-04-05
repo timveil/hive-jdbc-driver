@@ -3,7 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.column.Row;
+import veil.hdp.hive.jdbc.data.Row;
+import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.utils.Constants;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ResultSetUtils;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -66,7 +70,7 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            QueryService.closeOperation(session, operationHandle);
+            QueryUtils.closeOperation(session, operationHandle);
 
             if (schema != null) {
                 schema.clear();
@@ -256,9 +260,9 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
         public HiveMetaDataResultSet build() throws SQLException {
 
-            Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
+            Schema schema = new Schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle));
 
-            Iterable<Row> results = QueryService.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
+            Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
 
             return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }

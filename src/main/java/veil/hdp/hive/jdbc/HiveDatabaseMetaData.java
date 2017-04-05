@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
 
@@ -81,7 +82,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        return QueryService.getCatalogs(connection);
+        return QueryUtils.getCatalogs(connection);
     }
 
     @Override
@@ -91,27 +92,27 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        return QueryService.getSchemas(connection, catalog, schemaPattern);
+        return QueryUtils.getSchemas(connection, catalog, schemaPattern);
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        return QueryService.getTypeInfo(connection);
+        return QueryUtils.getTypeInfo(connection);
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        return QueryService.getTableTypes(connection);
+        return QueryUtils.getTableTypes(connection);
     }
 
     @Override
     public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-        return QueryService.getTables(connection, catalog, schemaPattern, tableNamePattern, types);
+        return QueryUtils.getTables(connection, catalog, schemaPattern, tableNamePattern, types);
     }
 
     @Override
     public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return QueryService.getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        return QueryUtils.getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     // todo: move to constant
@@ -154,97 +155,97 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryService.getPrimaryKeys(connection, catalog, schema, table);
+        return QueryUtils.getPrimaryKeys(connection, catalog, schema, table);
     }
 
     @Override
     public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        return QueryService.getProcedures(connection, catalog, schemaPattern, procedureNamePattern);
+        return QueryUtils.getProcedures(connection, catalog, schemaPattern, procedureNamePattern);
     }
 
     @Override
     public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
-        return QueryService.getProcedureColumns(connection, catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+        return QueryUtils.getProcedureColumns(connection, catalog, schemaPattern, procedureNamePattern, columnNamePattern);
     }
 
     @Override
     public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) throws SQLException {
-        return QueryService.getColumnPrivileges(connection, catalog, schema, table, columnNamePattern);
+        return QueryUtils.getColumnPrivileges(connection, catalog, schema, table, columnNamePattern);
     }
 
     @Override
     public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return QueryService.getTablePrivileges(connection, catalog, schemaPattern, tableNamePattern);
+        return QueryUtils.getTablePrivileges(connection, catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
-        return QueryService.getBestRowIdentifier(connection, catalog, schema, table, scope, nullable);
+        return QueryUtils.getBestRowIdentifier(connection, catalog, schema, table, scope, nullable);
     }
 
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
-        return QueryService.getVersionColumns(connection, catalog, schema, table);
+        return QueryUtils.getVersionColumns(connection, catalog, schema, table);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryService.getImportedKeys(connection, catalog, schema, table);
+        return QueryUtils.getImportedKeys(connection, catalog, schema, table);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryService.getExportedKeys(connection, catalog, schema, table);
+        return QueryUtils.getExportedKeys(connection, catalog, schema, table);
     }
 
     @Override
     public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
-        return QueryService.getCrossReference(connection, parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
+        return QueryUtils.getCrossReference(connection, parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
     }
 
     @Override
     public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-        return QueryService.getIndexInfo(connection, catalog, schema, table, unique, approximate);
+        return QueryUtils.getIndexInfo(connection, catalog, schema, table, unique, approximate);
     }
 
     @Override
     public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
-        return QueryService.getUDTs(connection, catalog, schemaPattern, typeNamePattern, types);
+        return QueryUtils.getUDTs(connection, catalog, schemaPattern, typeNamePattern, types);
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
-        return QueryService.getSuperTypes(connection, catalog, schemaPattern, typeNamePattern);
+        return QueryUtils.getSuperTypes(connection, catalog, schemaPattern, typeNamePattern);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return QueryService.getSuperTables(connection, catalog, schemaPattern, tableNamePattern);
+        return QueryUtils.getSuperTables(connection, catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
-        return QueryService.getAttributes(connection, catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+        return QueryUtils.getAttributes(connection, catalog, schemaPattern, typeNamePattern, attributeNamePattern);
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        return QueryService.getClientInfoProperties(connection);
+        return QueryUtils.getClientInfoProperties(connection);
     }
 
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
-        return QueryService.getFunctions(connection, catalog, schemaPattern, functionNamePattern);
+        return QueryUtils.getFunctions(connection, catalog, schemaPattern, functionNamePattern);
     }
 
     @Override
     public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
-        return QueryService.getFunctionColumns(connection, catalog, schemaPattern, functionNamePattern, columnNamePattern);
+        return QueryUtils.getFunctionColumns(connection, catalog, schemaPattern, functionNamePattern, columnNamePattern);
     }
 
     @Override
     public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return QueryService.getPseudoColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        return QueryUtils.getPseudoColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     @Override

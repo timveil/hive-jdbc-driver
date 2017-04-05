@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
 import java.util.Properties;
@@ -143,12 +144,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public String getSchema() throws SQLException {
-        return QueryService.getSchema(this);
+        return QueryUtils.getSchema(this);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        QueryService.setSchema(this, schema);
+        QueryUtils.setSchema(this, schema);
     }
 
     @Override
@@ -157,7 +158,7 @@ public class HiveConnection extends AbstractConnection {
             throw new SQLDataException("timeout must be greater than or equal to 0.  Current value is " + timeout);
         }
 
-        return QueryService.isValid(this, timeout);
+        return QueryUtils.isValid(this, timeout);
     }
 
     @Override

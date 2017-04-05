@@ -3,6 +3,8 @@ package veil.hdp.hive.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.Constants;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,7 +51,7 @@ public class HiveStatement extends AbstractStatement {
             currentOperation.set(null);
         }
 
-        currentOperation.set(QueryService.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
+        currentOperation.set(QueryUtils.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
     }
 
     @Override
@@ -240,7 +242,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        return QueryService.getGeneratedKeys(connection);
+        return QueryUtils.getGeneratedKeys(connection);
     }
 
     @Override

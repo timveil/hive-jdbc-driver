@@ -8,6 +8,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.HttpUtils;
+import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -77,7 +80,7 @@ public class ThriftSession implements SQLCloseable {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            QueryService.closeSession(this);
+            QueryUtils.closeSession(this);
             ThriftUtils.closeTransport(transport);
         }
     }
