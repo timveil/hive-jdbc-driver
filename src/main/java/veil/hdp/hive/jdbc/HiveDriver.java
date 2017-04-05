@@ -31,6 +31,10 @@ public class HiveDriver implements Driver {
         return new SQLFeatureNotSupportedException(Utils.format("Method {0} is not yet implemented.", callClass.getName() + "." + functionName));
     }
 
+    public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass) {
+        return notImplemented(callClass, "unknown");
+    }
+
     private Connection connect(Properties properties) throws SQLException {
         return new HiveConnection.Builder().properties(properties).build();
     }
@@ -65,7 +69,7 @@ public class HiveDriver implements Driver {
 
     @Override
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException();
+        throw HiveDriver.notImplemented(this.getClass(), "getParentLogger");
     }
 
     public boolean acceptsURL(String url) throws SQLException {
