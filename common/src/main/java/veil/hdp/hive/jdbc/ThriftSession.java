@@ -98,8 +98,6 @@ public class ThriftSession implements SQLCloseable {
     public static class Builder {
         private Properties properties;
         private TTransport transport;
-        private int loginTimeout;
-
 
         public Builder properties(Properties properties) {
             this.properties = properties;
@@ -111,26 +109,7 @@ public class ThriftSession implements SQLCloseable {
             return this;
         }
 
-        public Builder timeout(int loginTimeout) {
-            this.loginTimeout = loginTimeout;
-            return this;
-        }
-
-
         public ThriftSession build() throws SQLException {
-
-            /* TransportMode transportMode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
-
-            TTransport transport;
-
-           if (transportMode.equals(TransportMode.binary)) {
-                transport = ThriftUtils.createBinaryTransport(properties, loginTimeout);
-            } else {
-                // todo: figure out how to close this
-                CloseableHttpClient client = HttpUtils.buildClient(properties);
-                transport = ThriftUtils.createHttpTransport(properties, client);
-
-            }*/
 
             ThriftUtils.openTransport(transport);
 

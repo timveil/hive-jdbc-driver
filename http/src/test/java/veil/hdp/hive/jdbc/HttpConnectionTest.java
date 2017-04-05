@@ -1,4 +1,4 @@
-package test.java.veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -16,7 +18,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class HiveConnectionTest extends BaseJunitTest {
+public class HttpConnectionTest {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     Connection connection = null;
 
@@ -29,7 +33,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         String url = "jdbc:hive2://hive.hdp.local:10000/default";
 
         //connection = new org.apache.hive.jdbc.HiveDriver().connect(url, properties);
-        connection = new HiveDriver().connect(url, properties);
+        connection = new HttpHiveDriver().connect(url, properties);
 
     }
 

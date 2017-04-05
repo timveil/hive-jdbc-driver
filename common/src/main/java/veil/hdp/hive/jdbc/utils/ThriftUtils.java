@@ -3,20 +3,15 @@ package veil.hdp.hive.jdbc.utils;
 import org.apache.hive.service.cli.thrift.TCLIService;
 import org.apache.hive.service.cli.thrift.TOpenSessionReq;
 import org.apache.hive.service.cli.thrift.TOpenSessionResp;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.transport.*;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveThriftException;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.sasl.SaslException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,60 +47,7 @@ public class ThriftUtils {
     }
 
 
-    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) throws SQLException {
-        String host = HiveDriverProperty.HOST_NAME.get(properties);
-        int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
-        boolean sslEnabled = HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties);
-        String endpoint = HiveDriverProperty.HTTP_ENDPOINT.get(properties);
 
-        String scheme = sslEnabled ? "https" : "http";
-
-        try {
-            return new THttpClient(scheme + "://" + host + ":" + port + "/" + endpoint, httpClient);
-        } catch (TTransportException e) {
-            throw new HiveThriftException(e);
-        }
-
-    }
-
-    public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
-        // todo: no support for no-sasl
-        // todo: no support for delegation tokens or ssl yet
-
-        String user = HiveDriverProperty.USER.get(properties);
-        String password = HiveDriverProperty.PASSWORD.get(properties);
-        String host = HiveDriverProperty.HOST_NAME.get(properties);
-        int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
-
-        TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
-
-        try {
-            return new TSaslClientTransport("PLAIN", null, null, null, new HashMap<>(),
-                    callbacks -> {
-                        for (Callback callback : callbacks) {
-                            if (callback instanceof NameCallback) {
-                                NameCallback nameCallback = (NameCallback) callback;
-                                nameCallback.setName(user);
-                            } else if (callback instanceof PasswordCallback) {
-                                PasswordCallback passwordCallback = (PasswordCallback) callback;
-
-                                if (password != null) {
-                                    passwordCallback.setPassword(password.toCharArray());
-                                } else {
-                                    // todo:hack: for some reason this can't be null or empty string; set default value
-                                    passwordCallback.setPassword("anonymous".toCharArray());
-                                }
-
-                            } else {
-                                throw new UnsupportedCallbackException(callback);
-                            }
-                        }
-                    }, socketTransport);
-        } catch (SaslException e) {
-            throw new SQLException(e);
-        }
-
-    }
 
     public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws SQLException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();

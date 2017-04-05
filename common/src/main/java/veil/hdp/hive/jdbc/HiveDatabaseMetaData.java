@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
@@ -35,12 +36,12 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public int getDriverMajorVersion() {
-        return new HiveDriver().getMajorVersion();
+        return Constants.DRIVER_MAJOR_VERSION;
     }
 
     @Override
     public int getDriverMinorVersion() {
-        return new HiveDriver().getMinorVersion();
+        return Constants.DRIVER_MINOR_VERSION;
     }
 
     @Override

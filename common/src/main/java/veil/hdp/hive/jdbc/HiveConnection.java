@@ -8,7 +8,6 @@ import veil.hdp.hive.jdbc.utils.QueryUtils;
 import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -209,21 +208,11 @@ public class HiveConnection extends AbstractConnection {
             ThriftSession thriftSession = new ThriftSession.Builder()
                     .properties(properties)
                     .transport(transport)
-                    .timeout(getLoginTimeout())
                     .build();
 
             return new HiveConnection(thriftSession);
         }
 
-        private int getLoginTimeout() {
-            long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
-
-            if (timeOut > Integer.MAX_VALUE) {
-                timeOut = Integer.MAX_VALUE;
-            }
-
-            return (int) timeOut;
-        }
 
     }
 

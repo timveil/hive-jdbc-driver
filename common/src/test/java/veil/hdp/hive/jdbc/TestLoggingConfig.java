@@ -1,4 +1,4 @@
-package test.java.veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;

@@ -1,30 +1,19 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.Utils;
 
 import java.sql.*;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
-public class HiveDriver implements Driver {
+public abstract class HiveDriver implements Driver {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
-
-    static {
-        try {
-
-            DriverManager.registerDriver(new HiveDriver());
-
-            if (log.isInfoEnabled()) {
-                log.info("driver [{}] has been registered.", HiveDriver.class.getName());
-            }
-
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName) {
         return new SQLFeatureNotSupportedException(Utils.format("Method {0} is not yet implemented.", callClass.getName() + "." + functionName));
@@ -35,8 +24,10 @@ public class HiveDriver implements Driver {
     }
 
     private Connection connect(Properties properties) throws SQLException {
-        return new HiveConnection.Builder().properties(properties).transport(null).build();
+        return new HiveConnection.Builder().properties(properties).transport(buildTransport(properties)).build();
     }
+
+    abstract TTransport buildTransport(Properties properties) throws SQLException;
 
     public Connection connect(String url, Properties info) throws SQLException {
         if (acceptsURL(url)) {
@@ -53,12 +44,12 @@ public class HiveDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return 1;
+        return Constants.DRIVER_MAJOR_VERSION;
     }
 
     @Override
     public int getMinorVersion() {
-        return 0;
+        return Constants.DRIVER_MINOR_VERSION;
     }
 
     @Override
@@ -78,6 +69,16 @@ public class HiveDriver implements Driver {
         }
 
         return DriverUtils.acceptURL(url);
+    }
+
+    protected int getLoginTimeout() {
+        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
+
+        if (timeOut > Integer.MAX_VALUE) {
+            timeOut = Integer.MAX_VALUE;
+        }
+
+        return (int) timeOut;
     }
 
 

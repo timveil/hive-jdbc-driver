@@ -1,15 +1,18 @@
-package test.java.veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 
-public class DriverUtilsTest extends BaseJunitTest {
+public class DriverUtilsTest {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception {
