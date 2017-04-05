@@ -15,17 +15,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HiveBaseResultSet extends AbstractResultSet {
 
     // constructor
-    protected final Schema schema;
+    final Schema schema;
 
 
     // atomic
-    protected final AtomicBoolean closed = new AtomicBoolean(true);
-    protected final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
-    protected final AtomicInteger rowCount = new AtomicInteger(0);
-    protected final AtomicReference<Row> currentRow = new AtomicReference<>();
+    final AtomicBoolean closed = new AtomicBoolean(true);
+    final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+    final AtomicInteger rowCount = new AtomicInteger(0);
+    final AtomicReference<Row> currentRow = new AtomicReference<>();
 
     // public getter & setter
-    protected SQLWarning sqlWarning = null;
+    SQLWarning sqlWarning = null;
 
     HiveBaseResultSet(Schema schema) {
         this.schema = schema;

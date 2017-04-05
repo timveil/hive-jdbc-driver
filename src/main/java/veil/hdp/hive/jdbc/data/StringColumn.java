@@ -139,4 +139,18 @@ public class StringColumn extends BaseColumn<String> {
 
         return null;
     }
+
+    @Override
+    public Character asCharacter() throws SQLException {
+        if (value != null) {
+
+            if (value.length() != 1) {
+                log.warn("may lose precision going from {} to {}; value [{}]", String.class, Character.class, value);
+            }
+
+            return value.charAt(0);
+        }
+
+        return null;
+    }
 }

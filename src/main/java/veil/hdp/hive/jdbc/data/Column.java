@@ -15,6 +15,8 @@ public interface Column<T> {
 
     T getValue();
 
+    Object asObject();
+
     Boolean asBoolean() throws SQLException;
 
     Date asDate() throws SQLException;
@@ -42,8 +44,6 @@ public interface Column<T> {
     InputStream asInputStream() throws SQLException;
 
     Time asTime() throws SQLException;
-
-    Object asObject() throws SQLException;
 
     Character asCharacter() throws SQLException;
 

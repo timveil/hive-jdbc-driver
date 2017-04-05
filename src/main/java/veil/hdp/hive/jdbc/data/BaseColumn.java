@@ -112,7 +112,7 @@ public class BaseColumn<T> implements Column<T> {
     }
 
     @Override
-    public Object asObject() throws SQLException {
+    public Object asObject() {
         return value;
     }
 
