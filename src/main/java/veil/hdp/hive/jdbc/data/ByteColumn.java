@@ -5,7 +5,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import java.sql.SQLException;
 
 public class ByteColumn extends BaseColumn<Byte> {
-    public ByteColumn(ColumnDescriptor descriptor, Byte value) {
+    ByteColumn(ColumnDescriptor descriptor, Byte value) {
         super(descriptor, value);
     }
 

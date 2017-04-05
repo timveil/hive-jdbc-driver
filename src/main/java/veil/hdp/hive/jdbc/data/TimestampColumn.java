@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class TimestampColumn extends BaseColumn<Timestamp> {
-    public TimestampColumn(ColumnDescriptor descriptor, Timestamp value) {
+    TimestampColumn(ColumnDescriptor descriptor, Timestamp value) {
         super(descriptor, value);
     }
 

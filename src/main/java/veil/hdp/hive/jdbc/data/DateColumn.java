@@ -10,7 +10,7 @@ import static veil.hdp.hive.jdbc.utils.Constants.HIVE_DATE_FORMAT;
 public class DateColumn extends BaseColumn<Date> {
 
 
-    public DateColumn(ColumnDescriptor descriptor, Date value) {
+    DateColumn(ColumnDescriptor descriptor, Date value) {
         super(descriptor, value);
     }
 

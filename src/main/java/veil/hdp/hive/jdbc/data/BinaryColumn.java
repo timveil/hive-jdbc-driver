@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.sql.SQLException;
 
 public class BinaryColumn extends BaseColumn<ByteBuffer> {
-    public BinaryColumn(ColumnDescriptor descriptor, ByteBuffer value) {
+    BinaryColumn(ColumnDescriptor descriptor, ByteBuffer value) {
         super(descriptor, value);
     }
 

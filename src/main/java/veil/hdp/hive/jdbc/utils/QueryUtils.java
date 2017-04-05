@@ -669,7 +669,7 @@ public class QueryUtils {
 
     }
 
-    private static List<Row> getRows(TRowSet rowSet, Schema schema) throws SQLException {
+    private static List<Row> getRows(TRowSet rowSet, Schema schema) {
 
         List<Row> rows = new ArrayList<>();
 

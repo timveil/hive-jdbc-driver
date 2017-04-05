@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ShortColumn extends BaseColumn<Short> {
 
-    public ShortColumn(ColumnDescriptor descriptor, Short value) {
+    ShortColumn(ColumnDescriptor descriptor, Short value) {
         super(descriptor, value);
     }
 

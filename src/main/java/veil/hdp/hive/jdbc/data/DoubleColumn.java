@@ -5,7 +5,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import java.sql.SQLException;
 
 public class DoubleColumn extends BaseColumn<Double> {
-    public DoubleColumn(ColumnDescriptor descriptor, Double value) {
+    DoubleColumn(ColumnDescriptor descriptor, Double value) {
         super(descriptor, value);
     }
 

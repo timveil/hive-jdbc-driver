@@ -5,7 +5,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import java.sql.SQLException;
 
 public class VarcharColumn extends BaseColumn<String> {
-    public VarcharColumn(ColumnDescriptor descriptor, String value) {
+    VarcharColumn(ColumnDescriptor descriptor, String value) {
         super(descriptor, value);
     }
 

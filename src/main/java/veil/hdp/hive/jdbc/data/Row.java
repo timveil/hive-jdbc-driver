@@ -68,7 +68,7 @@ public class Row {
         }
 
 
-        public Row build() throws SQLException {
+        public Row build() {
 
             List<Column> columns = new ArrayList<>();
 

@@ -4,6 +4,7 @@ import org.apache.hive.service.cli.thrift.TColumn;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
+import veil.hdp.hive.jdbc.metadata.HiveType;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -20,13 +21,13 @@ import static veil.hdp.hive.jdbc.utils.Utils.format;
 
 public class BaseColumn<T> implements Column<T> {
 
-    protected final Logger log = getLogger(getClass());
+    final Logger log = getLogger(getClass());
 
-    protected final ColumnDescriptor descriptor;
+    final ColumnDescriptor descriptor;
 
-    protected final T value;
+    final T value;
 
-    protected BaseColumn(ColumnDescriptor columnDescriptor, T value) {
+    BaseColumn(ColumnDescriptor columnDescriptor, T value) {
         this.descriptor = columnDescriptor;
         this.value = value;
     }
@@ -161,8 +162,9 @@ public class BaseColumn<T> implements Column<T> {
             return this;
         }
 
-        public Column build() throws SQLException {
+        public Column build() {
 
+            HiveType hiveType = descriptor.getColumnType().getHiveType();
 
             if (tColumn.isSetBoolVal()) {
 
@@ -197,14 +199,16 @@ public class BaseColumn<T> implements Column<T> {
                 return new IntegerColumn(descriptor, isnull ? null : value);
 
             } else if (tColumn.isSetI64Val()) {
-                // may need to convert; BIGINT, TIMESTAMP
+                // may need to convert; BIGINT, TIMESTAMP, DATE
 
                 Long value = tColumn.getI64Val().getValues().get(index);
 
                 boolean isnull = isNull(index, tColumn.getI64Val().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(TIMESTAMP)) {
+                if (hiveType.equals(TIMESTAMP)) {
                     return new TimestampColumn(descriptor, isnull ? null : new Timestamp(value));
+                } else if (hiveType.equals(DATE)) {
+                    return new DateColumn(descriptor, isnull ? null : new Date(value));
                 } else {
                     return new LongColumn(descriptor, isnull ? null : value);
                 }
@@ -217,7 +221,7 @@ public class BaseColumn<T> implements Column<T> {
 
                 boolean isnull = isNull(index, tColumn.getDoubleVal().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(FLOAT)) {
+                if (hiveType.equals(FLOAT)) {
                     return new FloatColumn(descriptor, isnull ? null : new Float(value));
                 } else {
                     return new DoubleColumn(descriptor, isnull ? null : value);
@@ -233,14 +237,18 @@ public class BaseColumn<T> implements Column<T> {
                 return new BinaryColumn(descriptor, isnull ? null : value);
 
             } else if (tColumn.isSetStringVal()) {
-                //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL
+                //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL, CHAR, VARCHAR
 
                 String value = tColumn.getStringVal().getValues().get(index);
 
                 boolean isnull = isNull(index, tColumn.getStringVal().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(DECIMAL)) {
+                if (hiveType.equals(DECIMAL)) {
                     return new DecimalColumn(descriptor, isnull ? null : new BigDecimal(value));
+                } else  if (hiveType.equals(CHAR)) {
+                    return new CharacterColumn(descriptor, isnull ? null : value.charAt(0));
+                } else  if (hiveType.equals(VARCHAR)) {
+                    return new VarcharColumn(descriptor, isnull ? null : value);
                 } else {
                     return new StringColumn(descriptor, isnull ? null : value);
                 }

@@ -5,7 +5,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import java.sql.SQLException;
 
 public class CharacterColumn extends BaseColumn<Character> {
-    public CharacterColumn(ColumnDescriptor descriptor, Character value) {
+    CharacterColumn(ColumnDescriptor descriptor, Character value) {
         super(descriptor, value);
     }
 
