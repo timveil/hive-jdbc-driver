@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
+import veil.hdp.hive.jdbc.utils.Utils;
 
 import java.sql.*;
 import java.util.Properties;
@@ -26,6 +27,9 @@ public class HiveDriver implements Driver {
         }
     }
 
+    public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName) {
+        return new SQLFeatureNotSupportedException(Utils.format("Method {0} is not yet implemented.", callClass.getName() + "." + functionName));
+    }
 
     private Connection connect(Properties properties) throws SQLException {
         return new HiveConnection.Builder().properties(properties).build();
