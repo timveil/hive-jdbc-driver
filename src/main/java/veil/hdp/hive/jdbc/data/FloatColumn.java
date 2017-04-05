@@ -41,8 +41,6 @@ public class FloatColumn extends BaseColumn<Float> {
 
     @Override
     public Double asDouble() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Float.class, Double.class, value);
-
         return getValue().doubleValue();
     }
 

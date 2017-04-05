@@ -14,12 +14,11 @@ public class HiveDriver implements Driver {
 
     static {
         try {
-            HiveDriver driver = new HiveDriver();
 
-            DriverManager.registerDriver(driver);
+            DriverManager.registerDriver(new HiveDriver());
 
             if (log.isInfoEnabled()) {
-                log.info("driver [{}] has been registered.", driver.getClass().getName());
+                log.info("driver [{}] has been registered.", HiveDriver.class.getName());
             }
 
         } catch (SQLException e) {
