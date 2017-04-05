@@ -199,7 +199,6 @@ public class BaseColumn<T> implements Column<T> {
                 return new IntegerColumn(descriptor, isnull ? null : value);
 
             } else if (tColumn.isSetI64Val()) {
-                // may need to convert; BIGINT, TIMESTAMP, DATE
 
                 Long value = tColumn.getI64Val().getValues().get(index);
 
@@ -215,7 +214,6 @@ public class BaseColumn<T> implements Column<T> {
 
 
             } else if (tColumn.isSetDoubleVal()) {
-                // may need to convert; FLOAT, DOUBLE
 
                 Double value = tColumn.getDoubleVal().getValues().get(index);
 
