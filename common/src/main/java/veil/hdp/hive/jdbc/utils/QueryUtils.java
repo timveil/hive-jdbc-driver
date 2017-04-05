@@ -102,23 +102,7 @@ public class QueryUtils {
 
         session.getSessionLock().lock();
 
-        try {
-
-            TFetchResultsResp fetchResults = session.getClient().FetchResults(fetchReq);
-
-            checkStatus(fetchResults.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(fetchResults.toString());
-            }
-
-            return getRows(fetchResults.getResults(), schema);
-
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            session.getSessionLock().unlock();
-        }
+        return getRows(session, schema, fetchReq);
     }
 
     private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema) throws SQLException {
@@ -128,6 +112,11 @@ public class QueryUtils {
 
         session.getSessionLock().lock();
 
+        return getRows(session, schema, tFetchResultsReq);
+
+    }
+
+    private static List<Row> getRows(ThriftSession session, Schema schema, TFetchResultsReq tFetchResultsReq) throws SQLException {
         try {
             TFetchResultsResp fetchResults = session.getClient().FetchResults(tFetchResultsReq);
 
@@ -144,7 +133,6 @@ public class QueryUtils {
         } finally {
             session.getSessionLock().unlock();
         }
-
     }
 
     public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) throws SQLException {
