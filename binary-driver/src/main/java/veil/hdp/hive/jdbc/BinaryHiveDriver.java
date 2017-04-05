@@ -36,6 +36,8 @@ public class BinaryHiveDriver extends HiveDriver {
     @Override
     PropertiesCallback buildPropertiesCallback() throws SQLException {
         return (properties, uri) -> {
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.toString());
+
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
 
             if (uri.getPort() != -1) {

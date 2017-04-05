@@ -10,14 +10,14 @@ import java.util.Properties;
 
 import static java.lang.Class.forName;
 
-public class BinaryDriverTest {
+public class BinaryZookeeperDriverTest {
 
 
-    private BinaryHiveDriver hiveDriver = null;
+    private BinaryZookeeperHiveDriver hiveDriver = null;
 
     @Before
     public void setUp() throws Exception {
-        hiveDriver = new BinaryHiveDriver();
+        hiveDriver = new BinaryZookeeperHiveDriver();
     }
 
     @After
@@ -34,7 +34,7 @@ public class BinaryDriverTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        url = "jdbc:hive2://hive.hdp.local:10000/default";
+        url = "jdbc:hive2://hive.hdp.local:2181/default";
 
         try {
             connection = hiveDriver.connect(url, properties);

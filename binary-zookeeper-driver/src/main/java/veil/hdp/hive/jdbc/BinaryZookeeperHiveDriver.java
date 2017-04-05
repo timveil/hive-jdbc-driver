@@ -38,6 +38,10 @@ public class BinaryZookeeperHiveDriver extends HiveDriver {
     @Override
     PropertiesCallback buildPropertiesCallback() throws SQLException {
         return (properties, uri) -> {
+
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.toString());
+            HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.set(properties, true);
+
             String authority = uri.getAuthority();
 
             ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);

@@ -28,9 +28,6 @@ public class HttpDriverTest {
     @Test
     public void connect() throws Exception {
 
-
-        Class.forName("veil.hdp.hive.jdbc.HttpHiveDriver");
-
         Connection connection = null;
         String url = null;
 
