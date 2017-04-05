@@ -12,7 +12,7 @@ public enum HiveDriverProperty {
     PASSWORD("password", null, false, null, null),
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
 
-    // not really used because i've separated into seperate drivers
+    // not really used because i've separated into separate drivers
     TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),
 
     // HTTP Mode related
@@ -20,7 +20,7 @@ public enum HiveDriverProperty {
     HTTP_ENDPOINT("endpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
     // zookeeper discovery related
-    // not really used because i've separated into seperate drivers
+    // not really used because i've separated into separate drivers
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null);
