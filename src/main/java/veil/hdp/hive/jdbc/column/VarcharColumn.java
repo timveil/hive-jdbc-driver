@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class VarcharColumn extends AbstractColumn<String> {
     public VarcharColumn(ColumnDescriptor descriptor, String value) {
         super(descriptor, value);

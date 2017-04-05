@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class FloatColumn extends AbstractColumn<Float> {
     public FloatColumn(ColumnDescriptor descriptor, Float value) {
         super(descriptor, value);

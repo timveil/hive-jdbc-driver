@@ -1,14 +1,12 @@
 package veil.hdp.hive.jdbc.column;
 
 import veil.hdp.hive.jdbc.ColumnDescriptor;
-import veil.hdp.hive.jdbc.Constants;
 
 import java.sql.Date;
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
+import static veil.hdp.hive.jdbc.Constants.HIVE_DATE_FORMAT;
+
 public class DateColumn extends AbstractColumn<Date> {
 
 
@@ -33,7 +31,7 @@ public class DateColumn extends AbstractColumn<Date> {
     @Override
     public String asString() throws SQLException {
         if (value != null) {
-            return Constants.HIVE_DATE_FORMAT.format(value);
+            return HIVE_DATE_FORMAT.format(value);
         }
 
         return null;

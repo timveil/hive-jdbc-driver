@@ -7,9 +7,6 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class BinaryColumn extends AbstractColumn<ByteBuffer> {
     public BinaryColumn(ColumnDescriptor descriptor, ByteBuffer value) {
         super(descriptor, value);

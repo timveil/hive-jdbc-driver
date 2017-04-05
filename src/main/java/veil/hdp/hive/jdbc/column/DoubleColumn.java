@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class DoubleColumn extends AbstractColumn<Double> {
     public DoubleColumn(ColumnDescriptor descriptor, Double value) {
         super(descriptor, value);

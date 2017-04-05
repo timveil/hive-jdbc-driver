@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class BooleanColumn extends AbstractColumn<Boolean> {
     public BooleanColumn(ColumnDescriptor descriptor, Boolean value) {
         super(descriptor, value);

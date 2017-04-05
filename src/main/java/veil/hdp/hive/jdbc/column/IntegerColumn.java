@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class IntegerColumn extends AbstractColumn<Integer> {
     public IntegerColumn(ColumnDescriptor descriptor, Integer value) {
         super(descriptor, value);

@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class CharacterColumn extends AbstractColumn<Character> {
     public CharacterColumn(ColumnDescriptor descriptor, Character value) {
         super(descriptor, value);

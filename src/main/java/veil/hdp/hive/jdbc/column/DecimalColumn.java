@@ -5,9 +5,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class DecimalColumn extends AbstractColumn<BigDecimal> {
     public DecimalColumn(ColumnDescriptor descriptor, BigDecimal value) {
         super(descriptor, value);

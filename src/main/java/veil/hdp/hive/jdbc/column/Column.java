@@ -9,9 +9,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public interface Column<T> {
 
     public ColumnDescriptor getDescriptor();

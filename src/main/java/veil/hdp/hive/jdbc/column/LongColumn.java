@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class LongColumn extends AbstractColumn<Long> {
     public LongColumn(ColumnDescriptor descriptor, Long value) {
         super(descriptor, value);

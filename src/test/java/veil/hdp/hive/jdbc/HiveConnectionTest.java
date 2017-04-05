@@ -74,7 +74,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         Statement statement = connection.createStatement();
         //statement.setFetchSize(2);
         //statement.setMaxRows(5);
-        ResultSet rs = statement.executeQuery("SELECT * FROM test_table");
+        ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master");
         printResultSet(rs);
 
         rs.close();
@@ -88,7 +88,7 @@ public class HiveConnectionTest extends BaseJunitTest {
             try (Statement statement = connection.createStatement();
                  ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
                 while (rs.next()) {
-                    //no-op
+                    printResultSet(rs);
                 }
                 log.debug("run # {}", i);
             }
@@ -328,7 +328,7 @@ public class HiveConnectionTest extends BaseJunitTest {
         try {
             ResultSetMetaData metaData = rs.getMetaData();
 
-            printResultSetMetaData(metaData);
+            //printResultSetMetaData(metaData);
 
             int columnCount = metaData.getColumnCount();
 

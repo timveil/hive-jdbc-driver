@@ -4,9 +4,6 @@ import veil.hdp.hive.jdbc.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public class ByteColumn extends AbstractColumn<Byte> {
     public ByteColumn(ColumnDescriptor descriptor, Byte value) {
         super(descriptor, value);

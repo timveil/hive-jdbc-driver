@@ -10,9 +10,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-/**
- * Created by tveil on 4/4/17.
- */
+import static java.lang.Boolean.valueOf;
+
 public class StringColumn extends AbstractColumn<String> {
 
     public StringColumn(ColumnDescriptor descriptor, String value) {
@@ -27,7 +26,7 @@ public class StringColumn extends AbstractColumn<String> {
     @Override
     public Boolean asBoolean() throws SQLException {
         if (value != null) {
-            return Boolean.valueOf(value);
+            return valueOf(value);
         }
 
         return null;

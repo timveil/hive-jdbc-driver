@@ -3,8 +3,6 @@ package veil.hdp.hive.jdbc.column;
 import org.apache.hive.service.cli.thrift.TColumn;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.ColumnDescriptor;
-import veil.hdp.hive.jdbc.HiveType;
-import veil.hdp.hive.jdbc.Utils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -13,10 +11,9 @@ import java.sql.*;
 import java.util.BitSet;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static veil.hdp.hive.jdbc.HiveType.*;
+import static veil.hdp.hive.jdbc.Utils.format;
 
-/**
- * Created by tveil on 4/4/17.
- */
 public abstract class AbstractColumn<T> implements Column<T> {
 
     protected final Logger log = getLogger(getClass());
@@ -144,18 +141,18 @@ public abstract class AbstractColumn<T> implements Column<T> {
             return bitset.get(index);
         }
 
-        public AbstractColumn.Builder column(TColumn tColumn) {
+        public Builder column(TColumn tColumn) {
             this.tColumn = tColumn;
             return this;
         }
 
 
-        public AbstractColumn.Builder descriptor(ColumnDescriptor descriptor) {
+        public Builder descriptor(ColumnDescriptor descriptor) {
             this.descriptor = descriptor;
             return this;
         }
 
-        public AbstractColumn.Builder index(int index) {
+        public Builder index(int index) {
             this.index = index;
             return this;
         }
@@ -202,7 +199,7 @@ public abstract class AbstractColumn<T> implements Column<T> {
 
                 boolean isnull = isNull(index, tColumn.getI64Val().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(HiveType.TIMESTAMP)) {
+                if (descriptor.getColumnType().getHiveType().equals(TIMESTAMP)) {
                     return new TimestampColumn(descriptor, isnull ? null : new Timestamp(value));
                 } else {
                     return new LongColumn(descriptor, isnull ? null : value);
@@ -216,7 +213,7 @@ public abstract class AbstractColumn<T> implements Column<T> {
 
                 boolean isnull = isNull(index, tColumn.getDoubleVal().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(HiveType.FLOAT)) {
+                if (descriptor.getColumnType().getHiveType().equals(FLOAT)) {
                     return new FloatColumn(descriptor, isnull ? null : new Float(value));
                 } else {
                     return new DoubleColumn(descriptor, isnull ? null : value);
@@ -238,7 +235,7 @@ public abstract class AbstractColumn<T> implements Column<T> {
 
                 boolean isnull = isNull(index, tColumn.getStringVal().getNulls());
 
-                if (descriptor.getColumnType().getHiveType().equals(HiveType.DECIMAL)) {
+                if (descriptor.getColumnType().getHiveType().equals(DECIMAL)) {
                     return new DecimalColumn(descriptor, isnull ? null : new BigDecimal(value));
                 } else {
                     return new StringColumn(descriptor, isnull ? null : value);
@@ -247,7 +244,7 @@ public abstract class AbstractColumn<T> implements Column<T> {
                 // todo; add others
 
             } else {
-                throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", tColumn));
+                throw new IllegalStateException(format("unknown column type for TColumn [{}]", tColumn));
             }
 
 
