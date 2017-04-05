@@ -23,7 +23,6 @@ public enum HiveType {
     VARCHAR("VARCHAR", TTypeId.VARCHAR_TYPE, JDBCType.VARCHAR, String.class, false, 0, 0),
     DATE("DATE", TTypeId.DATE_TYPE, JDBCType.DATE, Date.class, false, 0, 0),
     TIMESTAMP("TIMESTAMP", TTypeId.TIMESTAMP_TYPE, JDBCType.TIMESTAMP, Timestamp.class, false, 0, 0),
-    //TIME("TIME", null, JDBCType.TIME, Time.class),
     DECIMAL("DECIMAL", TTypeId.DECIMAL_TYPE, JDBCType.DECIMAL, BigDecimal.class, false, 0, 0),
     BINARY("BINARY", TTypeId.BINARY_TYPE, JDBCType.BINARY, byte[].class, false, 0, 0),
 
