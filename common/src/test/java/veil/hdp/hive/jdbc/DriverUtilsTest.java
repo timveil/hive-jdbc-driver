@@ -7,9 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
-import java.sql.DriverPropertyInfo;
-import java.util.Properties;
-
 public class DriverUtilsTest {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -30,7 +27,7 @@ public class DriverUtilsTest {
         boolean accepts = DriverUtils.acceptURL(url);
     }
 
-    @Test
+  /*  @Test
     public void buildDriverPropertyInfo() throws Exception {
 
         String url = "jdbc:hive2://somehost:10000/test?transportMode=http&whoknows=me";
@@ -60,6 +57,6 @@ public class DriverUtilsTest {
         log.debug(properties.toString());
 
     }
-
+*/
 
 }

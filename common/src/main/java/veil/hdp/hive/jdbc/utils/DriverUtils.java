@@ -4,18 +4,17 @@ package veil.hdp.hive.jdbc.utils;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.RetryOneTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.PropertiesCallback;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class DriverUtils {
 
@@ -31,13 +30,13 @@ public class DriverUtils {
     }
 
 
-    public static Properties buildProperties(String url, Properties suppliedProperties) throws SQLException {
+    public static Properties buildProperties(String url, Properties suppliedProperties, PropertiesCallback callback) throws SQLException {
 
         Properties properties = new Properties();
 
         loadDefaultProperties(properties);
 
-        parseUrl(url, properties);
+        parseUrl(url, properties, callback);
 
         for (String key : suppliedProperties.stringPropertyNames()) {
 
@@ -78,8 +77,8 @@ public class DriverUtils {
         log.debug(builder.toString());
     }
 
-    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
-        Properties properties = buildProperties(url, suppliedProperties);
+    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties, PropertiesCallback callback) throws SQLException {
+        Properties properties = buildProperties(url, suppliedProperties, callback);
 
         HiveDriverProperty[] driverProperties = HiveDriverProperty.values();
 
@@ -126,7 +125,7 @@ public class DriverUtils {
     }
 
 
-    private static void parseUrl(String url, Properties properties) throws SQLException {
+    private static void parseUrl(String url, Properties properties, PropertiesCallback callback) throws SQLException {
 
         URI uri = URI.create(stripPrefix(url));
 
@@ -138,7 +137,9 @@ public class DriverUtils {
 
         parseQueryParameters(uriQuery, properties);
 
-        if (HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.getBoolean(properties)) {
+        callback.merge(properties, uri);
+
+        /*if (HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.getBoolean(properties)) {
 
             String authority = uri.getAuthority();
 
@@ -151,7 +152,7 @@ public class DriverUtils {
                 HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
             }
 
-        }
+        }*/
 
     }
 
@@ -188,60 +189,5 @@ public class DriverUtils {
         return url.replace(DriverUtils.JDBC_PART, "").trim();
     }
 
-    private static void loadPropertiesFromZookeeper(String authority, Properties properties) throws SQLException {
-
-        String zooKeeperNamespace = HiveDriverProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.get(properties);
-        int retry = HiveDriverProperty.ZOOKEEPER_DISCOVERY_RETRY.getInt(properties);
-
-        /*
-
-          example string returned from zookeeper
-
-          hive.server2.authentication=NONE;hive.server2.transport.mode=binary;hive.server2.thrift.sasl.qop=auth;hive.server2.thrift.bind.host=hive-large.hdp.local;hive.server2.thrift.port=10000;hive.server2.use.SSL=false
-
-          hive.server2.authentication=NONE
-          hive.server2.transport.mode=binary
-          hive.server2.thrift.sasl.qop=auth
-          hive.server2.thrift.bind.host=hive-large.hdp.local
-          hive.server2.thrift.port=10000
-          hive.server2.use.SSL=false
-
-         */
-
-
-        Random random = new Random();
-
-        try (CuratorFramework zooKeeperClient = CuratorFrameworkFactory.builder().connectString(authority).retryPolicy(new RetryOneTime(retry)).build()) {
-
-            zooKeeperClient.start();
-
-            List<String> hosts = zooKeeperClient.getChildren().forPath("/" + zooKeeperNamespace);
-
-            String randomHost = hosts.get(random.nextInt(hosts.size()));
-
-            String hostData = new String(zooKeeperClient.getData().forPath("/" + zooKeeperNamespace + "/" + randomHost), Charset.forName("UTF-8"));
-
-            Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
-
-            for (String key : config.keySet()) {
-                String value = Strings.emptyToNull(config.get(key));
-
-                if (value != null) {
-
-                    HiveDriverProperty hiveDriverProperty = HiveDriverProperty.forAlias(key);
-
-                    if (hiveDriverProperty != null) {
-                        hiveDriverProperty.set(properties, value);
-                    } else {
-                        properties.setProperty(key, value);
-                    }
-                }
-            }
-
-
-        } catch (Exception e) {
-            throw new SQLException(e);
-        }
-    }
 
 }

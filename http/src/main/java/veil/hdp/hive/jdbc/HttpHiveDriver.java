@@ -37,4 +37,15 @@ public class HttpHiveDriver extends HiveDriver {
         return HttpUtils.createHttpTransport(properties, client);
 
     }
+
+    @Override
+    PropertiesCallback buildPropertiesCallback() throws SQLException {
+        return (properties, uri) -> {
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+
+            if (uri.getPort() != -1) {
+                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
+            }
+        };
+    }
 }

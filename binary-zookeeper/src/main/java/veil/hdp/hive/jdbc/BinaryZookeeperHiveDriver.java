@@ -4,22 +4,23 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.BinaryUtils;
+import veil.hdp.hive.jdbc.utils.ZookeeperUtils;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class BinaryHiveDriver extends HiveDriver {
+public class BinaryZookeeperHiveDriver extends HiveDriver {
 
-    private static final Logger log = LoggerFactory.getLogger(BinaryHiveDriver.class);
+    private static final Logger log = LoggerFactory.getLogger(BinaryZookeeperHiveDriver.class);
 
     static {
         try {
 
-            DriverManager.registerDriver(new BinaryHiveDriver());
+            DriverManager.registerDriver(new BinaryZookeeperHiveDriver());
 
             if (log.isInfoEnabled()) {
-                log.info("driver [{}] has been registered.", BinaryHiveDriver.class.getName());
+                log.info("driver [{}] has been registered.", BinaryZookeeperHiveDriver.class.getName());
             }
 
         } catch (SQLException e) {
@@ -33,14 +34,13 @@ public class BinaryHiveDriver extends HiveDriver {
         return BinaryUtils.createBinaryTransport(properties, getLoginTimeout());
     }
 
+
     @Override
     PropertiesCallback buildPropertiesCallback() throws SQLException {
         return (properties, uri) -> {
-            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+            String authority = uri.getAuthority();
 
-            if (uri.getPort() != -1) {
-                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
-            }
+            ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
         };
     }
 

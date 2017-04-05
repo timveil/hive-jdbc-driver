@@ -29,9 +29,11 @@ public abstract class HiveDriver implements Driver {
 
     abstract TTransport buildTransport(Properties properties) throws SQLException;
 
+    abstract PropertiesCallback buildPropertiesCallback() throws SQLException;
+
     public Connection connect(String url, Properties info) throws SQLException {
         if (acceptsURL(url)) {
-            return connect(DriverUtils.buildProperties(url, info));
+            return connect(DriverUtils.buildProperties(url, info, buildPropertiesCallback()));
         }
 
         return null;
@@ -39,7 +41,7 @@ public abstract class HiveDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        return DriverUtils.buildDriverPropertyInfo(url, info);
+        return DriverUtils.buildDriverPropertyInfo(url, info, buildPropertiesCallback());
     }
 
     @Override
