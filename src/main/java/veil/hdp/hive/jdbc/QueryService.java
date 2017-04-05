@@ -5,6 +5,7 @@ import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
+import veil.hdp.hive.jdbc.column.Row;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,17 +28,17 @@ public class QueryService {
     private static final short FETCH_TYPE_LOG = 1;
 
 
-    public static Iterable<Object[]> getResults(ThriftSession session, TOperationHandle handle, int fetchSize) {
+    public static Iterable<Row> getResults(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
         return () -> {
 
-            final Iterator<List<Object[]>> fetchIterator = fetchIterator(session, handle, fetchSize);
+            final Iterator<List<Row>> fetchIterator = fetchIterator(session, handle, fetchSize, schema);
 
-            return new AbstractIterator<Object[]>() {
+            return new AbstractIterator<Row>() {
 
-                private Iterator<Object[]> rowSet;
+                private Iterator<Row> rowSet;
 
                 @Override
-                protected Object[] computeNext() {
+                protected Row computeNext() {
                     if (rowSet == null) {
                         if (fetchIterator.hasNext()) {
                             rowSet = fetchIterator.next().iterator();
@@ -57,16 +58,16 @@ public class QueryService {
         };
     }
 
-    private static AbstractIterator<List<Object[]>> fetchIterator(ThriftSession session, TOperationHandle handle, int fetchSize) {
-        return new AbstractIterator<List<Object[]>>() {
+    private static AbstractIterator<List<Row>> fetchIterator(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
+        return new AbstractIterator<List<Row>>() {
 
             @Override
-            protected List<Object[]> computeNext() {
+            protected List<Row> computeNext() {
 
-                List<Object[]> results = null;
+                List<Row> results = null;
 
                 try {
-                    results = QueryService.fetchResultsAsRows(session, handle, TFetchOrientation.FETCH_NEXT, fetchSize);
+                    results = QueryService.fetchResults(session, handle, TFetchOrientation.FETCH_NEXT, fetchSize, schema);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -81,11 +82,8 @@ public class QueryService {
         };
     }
 
-    private static List<Object[]> fetchResultsAsRows(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
-        return toRows(fetchResults(session, operationHandle, orientation, fetchSize));
-    }
 
-    private static List<ColumnData> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize) throws SQLException {
+    private static List<Row> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize, Schema schema) throws SQLException {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
@@ -101,7 +99,7 @@ public class QueryService {
                 log.trace(fetchResults.toString());
             }
 
-            return getColumnData(fetchResults.getResults());
+            return getRows(fetchResults.getResults(), schema);
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -110,7 +108,7 @@ public class QueryService {
         }
     }
 
-    private static List<ColumnData> fetchLogs(ThriftSession session, TOperationHandle operationHandle) throws SQLException {
+    private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema) throws SQLException {
 
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
         tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
@@ -126,14 +124,7 @@ public class QueryService {
                 log.trace(fetchResults.toString());
             }
 
-            return getColumnData(fetchResults.getResults());
-
-            /*RowSet rowSet = RowSetFactory.create(fetchResults.getResults(), protocolVersion);
-
-            for (Object[] row : rowSet) {
-                logs.add(String.valueOf(row[0]));
-            }*/
-
+            return getRows(fetchResults.getResults(), schema);
 
         } catch (TException e) {
             throw new HiveThriftException(e);
@@ -662,70 +653,54 @@ public class QueryService {
 
     }
 
+    private static List<Row> getRows(TRowSet rowSet, Schema schema) throws SQLException {
 
-    private static List<ColumnData> getColumnData(TRowSet rowSet) {
-        List<ColumnData> columns = new ArrayList<>();
+        List<Row> rows = new ArrayList<>();
 
         if (rowSet != null && rowSet.isSetColumns()) {
 
             List<TColumn> tColumns = rowSet.getColumns();
 
-            for (TColumn column : tColumns) {
+            TColumn firstColumn = tColumns.get(0);
 
-                if (column.isSetBoolVal()) {
-                    columns.add(new ColumnData<>(HiveType.BOOLEAN, column.getBoolVal().getValues(), column.getBoolVal().getNulls()));
-                } else if (column.isSetByteVal()) {
-                    columns.add(new ColumnData<>(HiveType.TINY_INT, column.getByteVal().getValues(), column.getByteVal().getNulls()));
-                } else if (column.isSetI16Val()) {
-                    columns.add(new ColumnData<>(HiveType.SMALL_INT, column.getI16Val().getValues(), column.getI16Val().getNulls()));
-                } else if (column.isSetI32Val()) {
-                    columns.add(new ColumnData<>(HiveType.INTEGER, column.getI32Val().getValues(), column.getI32Val().getNulls()));
-                } else if (column.isSetI64Val()) {
-                    columns.add(new ColumnData<>(HiveType.BIG_INT, column.getI64Val().getValues(), column.getI64Val().getNulls()));
-                } else if (column.isSetDoubleVal()) {
-                    columns.add(new ColumnData<>(HiveType.DOUBLE, column.getDoubleVal().getValues(), column.getDoubleVal().getNulls()));
-                } else if (column.isSetBinaryVal()) {
-                    columns.add(new ColumnData<>(HiveType.BINARY, column.getBinaryVal().getValues(), column.getBinaryVal().getNulls()));
-                } else if (column.isSetStringVal()) {
-                    columns.add(new ColumnData<>(HiveType.STRING, column.getStringVal().getValues(), column.getStringVal().getNulls()));
-                } else {
-                    throw new IllegalStateException(Utils.format("unknown column type for TColumn [{}]", column));
-                }
-            }
-        }
+            int rowCount = getRowCount(firstColumn);
 
-        return columns;
-    }
+            for (int r = 0; r < rowCount; r++) {
 
-    private static List<Object[]> toRows(List<ColumnData> columns) {
+                rows.add(new Row.Builder().rowSet(rowSet).schema(schema).row(r).build());
 
-        int numColumns = columns.size();
-
-        List<Object[]> rows = new ArrayList<>();
-
-        if (numColumns > 0) {
-            ColumnData firstColumn = columns.get(0);
-
-            int numRows = 0;
-
-            if (firstColumn != null) {
-                numRows = firstColumn.getRowCount();
-            }
-
-
-            for (int r = 0; r < numRows; r++) {
-
-                Object[] row = new Object[numColumns];
-
-                for (int c = 0; c < numColumns; c++) {
-                    row[c] = columns.get(c).getValue(r);
-                }
-
-                rows.add(row);
             }
         }
 
         return rows;
 
     }
+
+
+    private static int getRowCount(TColumn column) {
+
+        int size = 0;
+
+        if (column.isSetBoolVal()) {
+            size = column.getBoolVal().getValuesSize();
+        } else if (column.isSetByteVal()) {
+            size = column.getByteVal().getValuesSize();
+        } else if (column.isSetI16Val()) {
+            size = column.getI16Val().getValuesSize();
+        } else if (column.isSetI32Val()) {
+            size = column.getI32Val().getValuesSize();
+        } else if (column.isSetI64Val()) {
+            size = column.getI64Val().getValuesSize();
+        } else if (column.isSetDoubleVal()) {
+            size = column.getDoubleVal().getValuesSize();
+        } else if (column.isSetBinaryVal()) {
+            size = column.getBinaryVal().getValuesSize();
+        } else if (column.isSetStringVal()) {
+            size = column.getStringVal().getValuesSize();
+        }
+
+        return size;
+
+    }
+
 }

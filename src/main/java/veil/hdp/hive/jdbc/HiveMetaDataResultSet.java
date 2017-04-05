@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.column.Row;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -18,19 +19,19 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
     // constructor
     private final ThriftSession session;
     private final Schema schema;
-    private final Iterator<Object[]> results;
+    private final Iterator<Row> results;
     private final TOperationHandle operationHandle;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
-    private final AtomicReference<Object[]> currentRow = new AtomicReference<>();
+    private final AtomicReference<Row> currentRow = new AtomicReference<>();
 
     // public getter & setter
     private SQLWarning sqlWarning = null;
 
 
-    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, Iterator<Object[]> results) {
+    private HiveMetaDataResultSet(ThriftSession session, TOperationHandle operationHandle, Schema schema, Iterator<Row> results) {
         this.session = session;
         this.schema = schema;
         this.results = results;
@@ -85,7 +86,14 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        return (Boolean) getColumnValue(columnIndex, HiveType.BOOLEAN);
+
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asBoolean();
+        }
+
+        return false;
     }
 
     @Override
@@ -95,7 +103,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        return (Double) getColumnValue(columnIndex, HiveType.DOUBLE);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asDouble();
+        }
+
+        return 0;
     }
 
     @Override
@@ -106,7 +120,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        return (Float) getColumnValue(columnIndex, HiveType.FLOAT);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asFloat();
+        }
+
+        return 0;
     }
 
     @Override
@@ -116,7 +136,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
-        return (Integer) getColumnValue(columnIndex, HiveType.INTEGER);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asInt();
+        }
+
+        return 0;
     }
 
     @Override
@@ -126,7 +152,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
-        return (Long) getColumnValue(columnIndex, HiveType.BIG_INT);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asLong();
+        }
+
+        return 0;
     }
 
     @Override
@@ -137,7 +169,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
-        return (Short) getColumnValue(columnIndex, HiveType.SMALL_INT);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asShort();
+        }
+
+        return 0;
     }
 
     @Override
@@ -147,7 +185,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public String getString(int columnIndex) throws SQLException {
-        return (String) getColumnValue(columnIndex, HiveType.STRING);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asString();
+        }
+
+        return null;
     }
 
     @Override
@@ -162,7 +206,13 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        return (Byte) getColumnValue(columnIndex, HiveType.TINY_INT);
+        Row row = currentRow.get();
+
+        if (row != null) {
+            return row.getColumn(columnIndex).asByte();
+        }
+
+        return 0;
     }
 
     @Override
@@ -187,16 +237,6 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
     }
 
 
-    private Object getColumnValue(int columnIndex, HiveType targetType) throws SQLException {
-
-        Object columnValue = ResultSetUtils.getColumnValue(schema, currentRow.get(), columnIndex, targetType);
-
-        lastColumnNull.set(columnValue == null);
-
-        return columnValue;
-    }
-
-
     public static class Builder {
 
 
@@ -218,7 +258,7 @@ public class HiveMetaDataResultSet extends AbstractResultSet {
 
             Schema schema = new Schema(QueryService.getResultSetSchema(thriftSession, operationHandle));
 
-            Iterable<Object[]> results = QueryService.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE);
+            Iterable<Row> results = QueryService.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
 
             return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }
