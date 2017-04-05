@@ -11,6 +11,10 @@
 
     <artifactId>thrift-client</artifactId>
 
+    <properties>
+        <libthrift.version>0.10.0</libthrift.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.thrift</groupId>
