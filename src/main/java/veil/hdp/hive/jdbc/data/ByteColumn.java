@@ -36,4 +36,30 @@ public class ByteColumn extends BaseColumn<Byte> {
 
         return null;
     }
+
+
+    @Override
+    public Float asFloat() throws SQLException {
+        return getValue().floatValue();
+    }
+
+    @Override
+    public Integer asInt() throws SQLException {
+        return getValue().intValue();
+    }
+
+    @Override
+    public Double asDouble() throws SQLException {
+        return getValue().doubleValue();
+    }
+
+    @Override
+    public Long asLong() throws SQLException {
+        return getValue().longValue();
+    }
+
+    @Override
+    public Short asShort() throws SQLException {
+        return getValue().shortValue();
+    }
 }

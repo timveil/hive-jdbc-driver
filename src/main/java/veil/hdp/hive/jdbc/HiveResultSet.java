@@ -37,7 +37,6 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter & setter
     private int fetchSize;
-
     private int fetchDirection;
     private SQLWarning sqlWarning = null;
 

@@ -36,31 +36,23 @@ public class ShortColumn extends BaseColumn<Short> {
 
     @Override
     public Float asFloat() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Float.class, value);
-
         return getValue().floatValue();
     }
 
 
     @Override
     public Integer asInt() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Integer.class, value);
-
         return getValue().intValue();
 
     }
 
     @Override
     public Double asDouble() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Double.class, value);
-
         return getValue().doubleValue();
     }
 
     @Override
     public Long asLong() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Long.class, value);
-
         return getValue().longValue();
     }
 

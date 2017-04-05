@@ -38,22 +38,16 @@ public class IntegerColumn extends BaseColumn<Integer> {
 
     @Override
     public Float asFloat() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Float.class, value);
-
         return getValue().floatValue();
     }
 
     @Override
     public Long asLong() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Long.class, value);
-
         return getValue().longValue();
     }
 
     @Override
     public Double asDouble() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Double.class, value);
-
         return getValue().doubleValue();
     }
 

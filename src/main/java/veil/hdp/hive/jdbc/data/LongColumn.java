@@ -66,8 +66,6 @@ public class LongColumn extends BaseColumn<Long> {
 
     @Override
     public Float asFloat() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Float.class, Float.class, value);
-
         return getValue().floatValue();
     }
 
@@ -82,8 +80,6 @@ public class LongColumn extends BaseColumn<Long> {
 
     @Override
     public Double asDouble() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Float.class, Double.class, value);
-
         return getValue().doubleValue();
     }
 
