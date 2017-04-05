@@ -29,7 +29,6 @@ public class HiveResultSet extends HiveBaseResultSet {
     private int fetchDirection;
 
 
-
     private HiveResultSet(Schema schema, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, Iterator<Row> results) {
 
         super(schema);

@@ -38,9 +38,8 @@ public class QueryUtils {
 
             return new AbstractIterator<Row>() {
 
-                private Iterator<Row> rowSet;
-
                 private final AtomicInteger rowCount = new AtomicInteger(0);
+                private Iterator<Row> rowSet;
 
                 @Override
                 protected Row computeNext() {

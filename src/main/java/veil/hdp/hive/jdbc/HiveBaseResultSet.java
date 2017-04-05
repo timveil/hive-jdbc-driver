@@ -11,9 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by tveil on 4/5/17.
- */
+
 public class HiveBaseResultSet extends AbstractResultSet {
 
     // constructor
@@ -79,7 +77,6 @@ public class HiveBaseResultSet extends AbstractResultSet {
     }
 
 
-
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
         Row row = currentRow.get();
@@ -143,7 +140,6 @@ public class HiveBaseResultSet extends AbstractResultSet {
     public double getDouble(String columnLabel) throws SQLException {
         return getDouble(findColumn(columnLabel));
     }
-
 
 
     @Override
@@ -275,7 +271,6 @@ public class HiveBaseResultSet extends AbstractResultSet {
     public byte getByte(String columnLabel) throws SQLException {
         return getByte(findColumn(columnLabel));
     }
-
 
 
     @Override

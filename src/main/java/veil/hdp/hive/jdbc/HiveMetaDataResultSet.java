@@ -65,7 +65,6 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
     }
 
 
-
     public static class Builder {
 
 

@@ -245,9 +245,9 @@ public class BaseColumn<T> implements Column<T> {
 
                 if (hiveType.equals(DECIMAL)) {
                     return new DecimalColumn(descriptor, isnull ? null : new BigDecimal(value));
-                } else  if (hiveType.equals(CHAR)) {
+                } else if (hiveType.equals(CHAR)) {
                     return new CharacterColumn(descriptor, isnull ? null : value.charAt(0));
-                } else  if (hiveType.equals(VARCHAR)) {
+                } else if (hiveType.equals(VARCHAR)) {
                     return new VarcharColumn(descriptor, isnull ? null : value);
                 } else {
                     return new StringColumn(descriptor, isnull ? null : value);
