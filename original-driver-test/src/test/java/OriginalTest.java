@@ -1,5 +1,4 @@
-package veil.hdp.hive.jdbc;
-
+import org.apache.hive.jdbc.HiveDriver;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,15 +6,14 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.Properties;
 
-
-public class OldTest {
+public class OriginalTest {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
     public void oldDriver() throws ClassNotFoundException, SQLException {
 
-        Class.forName("org.apache.hive.jdbc.HiveDriver");
+        Class.forName(HiveDriver.class.getName());
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");

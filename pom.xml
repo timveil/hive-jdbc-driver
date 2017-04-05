@@ -21,6 +21,7 @@
         <module>binary-utils</module>
         <module>http-utils</module>
         <module>zookeeper-utils</module>
+        <module>original-driver-test</module>
     </modules>
 
     <properties>
@@ -29,6 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <junit.version>4.12</junit.version>
+        <hive.version>1.2.1000.2.5.3.0-37</hive.version>
 
     </properties>
 

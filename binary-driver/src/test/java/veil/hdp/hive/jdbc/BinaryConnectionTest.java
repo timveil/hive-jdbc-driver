@@ -30,7 +30,7 @@ public class BinaryConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://hive.hdp.local:10000/default";
+        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
 
         //connection = new org.apache.hive.jdbc.HiveDriver().connect(url, properties);
         connection = new BinaryHiveDriver().connect(url, properties);

@@ -14,7 +14,6 @@
 
     <properties>
         <slf4j.version>1.7.21</slf4j.version>
-        <hive.version>1.2.1000.2.5.3.0-37</hive.version>
         <guava.version>21.0</guava.version>
     </properties>
 
