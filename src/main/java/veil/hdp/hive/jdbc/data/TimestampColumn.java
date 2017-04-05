@@ -4,6 +4,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 public class TimestampColumn extends BaseColumn<Timestamp> {
@@ -29,6 +30,15 @@ public class TimestampColumn extends BaseColumn<Timestamp> {
     public Date asDate() throws SQLException {
         if (value != null) {
             return new Date(value.getTime());
+        }
+
+        return null;
+    }
+
+    @Override
+    public Time asTime() throws SQLException {
+        if (value != null) {
+            return new Time(value.getTime());
         }
 
         return null;

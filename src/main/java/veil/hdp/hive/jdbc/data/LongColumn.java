@@ -2,7 +2,10 @@ package veil.hdp.hive.jdbc.data;
 
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class LongColumn extends BaseColumn<Long> {
     LongColumn(ColumnDescriptor descriptor, Long value) {
@@ -28,6 +31,32 @@ public class LongColumn extends BaseColumn<Long> {
         return null;
     }
 
+    @Override
+    public Date asDate() throws SQLException {
+        if (value != null) {
+            return new Date(value);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Timestamp asTimestamp() throws SQLException {
+        if (value != null) {
+            return new Timestamp(value);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Time asTime() throws SQLException {
+        if (value != null) {
+            return new Time(value);
+        }
+
+        return null;
+    }
 
     @Override
     public String asString() throws SQLException {
