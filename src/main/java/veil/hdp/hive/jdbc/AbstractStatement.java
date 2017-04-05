@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import java.sql.*;
 
-public abstract class AbstractStatement implements Statement {
+abstract class AbstractStatement implements Statement {
     @Override
     public final void setCursorName(String name) throws SQLException {
         throw new SQLFeatureNotSupportedException();

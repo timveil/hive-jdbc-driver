@@ -11,40 +11,40 @@ import java.sql.Timestamp;
 
 public interface Column<T> {
 
-    public ColumnDescriptor getDescriptor();
+    ColumnDescriptor getDescriptor();
 
-    public T getValue();
+    T getValue();
 
-    public Boolean asBoolean() throws SQLException;
+    Boolean asBoolean() throws SQLException;
 
-    public Date asDate() throws SQLException;
+    Date asDate() throws SQLException;
 
-    public Timestamp asTimestamp() throws SQLException;
+    Timestamp asTimestamp() throws SQLException;
 
-    public BigDecimal asBigDecimal() throws SQLException;
+    BigDecimal asBigDecimal() throws SQLException;
 
-    public Double asDouble() throws SQLException;
+    Double asDouble() throws SQLException;
 
-    public Float asFloat() throws SQLException;
+    Float asFloat() throws SQLException;
 
-    public Integer asInt() throws SQLException;
+    Integer asInt() throws SQLException;
 
-    public Long asLong() throws SQLException;
+    Long asLong() throws SQLException;
 
-    public Short asShort() throws SQLException;
+    Short asShort() throws SQLException;
 
-    public String asString() throws SQLException;
+    String asString() throws SQLException;
 
-    public Byte asByte() throws SQLException;
+    Byte asByte() throws SQLException;
 
-    public byte[] asByteArray() throws SQLException;
+    byte[] asByteArray() throws SQLException;
 
-    public InputStream asInputStream() throws SQLException;
+    InputStream asInputStream() throws SQLException;
 
-    public Time asTime() throws SQLException;
+    Time asTime() throws SQLException;
 
-    public Object asObject() throws SQLException;
+    Object asObject() throws SQLException;
 
-    public Character asCharacter() throws SQLException;
+    Character asCharacter() throws SQLException;
 
 }

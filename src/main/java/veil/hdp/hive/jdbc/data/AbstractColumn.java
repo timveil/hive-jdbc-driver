@@ -18,11 +18,11 @@ public abstract class AbstractColumn<T> implements Column<T> {
 
     protected final Logger log = getLogger(getClass());
 
-    protected ColumnDescriptor descriptor;
+    protected final ColumnDescriptor descriptor;
 
-    protected T value;
+    protected final T value;
 
-    public AbstractColumn(ColumnDescriptor columnDescriptor, T value) {
+    private AbstractColumn(ColumnDescriptor columnDescriptor, T value) {
         this.descriptor = columnDescriptor;
         this.value = value;
     }

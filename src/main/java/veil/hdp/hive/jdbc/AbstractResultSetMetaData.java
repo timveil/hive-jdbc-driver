@@ -4,7 +4,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
-public abstract class AbstractResultSetMetaData implements ResultSetMetaData {
+abstract class AbstractResultSetMetaData implements ResultSetMetaData {
     @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();

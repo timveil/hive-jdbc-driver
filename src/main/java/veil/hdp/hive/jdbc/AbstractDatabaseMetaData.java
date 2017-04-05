@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import java.sql.*;
 
-public abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
+abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
     @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();

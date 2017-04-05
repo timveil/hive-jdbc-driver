@@ -6,7 +6,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 
-public abstract class AbstractConnection implements Connection {
+abstract class AbstractConnection implements Connection {
 
     @Override
     public final CallableStatement prepareCall(String sql) throws SQLException {

@@ -27,6 +27,7 @@ public class HiveResultSet extends AbstractResultSet {
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
+    private final int maxRows;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -36,7 +37,7 @@ public class HiveResultSet extends AbstractResultSet {
 
     // public getter & setter
     private int fetchSize;
-    private int maxRows;
+
     private int fetchDirection;
     private SQLWarning sqlWarning = null;
 

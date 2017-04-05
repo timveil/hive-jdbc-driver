@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class AbstractDataSource implements DataSource {
+class AbstractDataSource implements DataSource {
     @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLFeatureNotSupportedException();

@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-public abstract class AbstractResultSet implements ResultSet {
+abstract class AbstractResultSet implements ResultSet {
     @Override
     public final BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         throw new SQLFeatureNotSupportedException();

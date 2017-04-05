@@ -8,7 +8,7 @@ import veil.hdp.hive.jdbc.metadata.HiveType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaticColumnDescriptors {
+class StaticColumnDescriptors {
 
     /*
         TABLE_CAT String => table catalog (may be null)
