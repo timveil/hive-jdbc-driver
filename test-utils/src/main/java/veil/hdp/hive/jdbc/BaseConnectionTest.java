@@ -6,43 +6,29 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class BinaryConnectionTest {
+public abstract class BaseConnectionTest extends BaseUnitTest {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    protected Connection connection;
 
-    Connection connection = null;
+    abstract Connection createConnection() throws SQLException;
 
     @Before
     public void setUp() throws Exception {
-
-        Properties properties = new Properties();
-        properties.setProperty("user", "hive");
-
-        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
-
-        //connection = new org.apache.hive.jdbc.HiveDriver().connect(url, properties);
-        connection = new BinaryHiveDriver().connect(url, properties);
-
+        connection = createConnection();
     }
 
     @After
     public void tearDown() throws Exception {
-
         if (connection != null) {
-
-            log.debug("attempting to close from tear down");
             connection.close();
         }
     }
@@ -366,5 +352,4 @@ public class BinaryConnectionTest {
         }
 
     }
-
 }

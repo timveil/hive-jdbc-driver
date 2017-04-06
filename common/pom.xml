@@ -12,12 +12,6 @@
 
     <artifactId>common</artifactId>
 
-    <properties>
-        <slf4j.version>1.7.21</slf4j.version>
-        <guava.version>21.0</guava.version>
-    </properties>
-
-
     <dependencies>
 
         <dependency>
