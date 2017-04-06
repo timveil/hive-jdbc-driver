@@ -64,7 +64,7 @@ public class OriginalTest {
             int columnCount = metaData.getColumnCount();
 
 
-            log.debug("printing ResultSet");
+            //log.debug("printing ResultSet");
 
             int counter = 0;
 

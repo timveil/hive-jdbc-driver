@@ -337,7 +337,7 @@ public class BinaryConnectionTest {
             int columnCount = metaData.getColumnCount();
 
 
-            log.debug("printing ResultSet");
+            //log.debug("printing ResultSet");
 
             int counter = 0;
 
