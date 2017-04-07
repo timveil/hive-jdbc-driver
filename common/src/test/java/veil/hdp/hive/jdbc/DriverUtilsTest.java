@@ -45,7 +45,7 @@ public class DriverUtilsTest extends BaseUnitTest {
 
 
         DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties, (properties, uri) -> {
-
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
         });
 
         for (DriverPropertyInfo info : driverPropertyInfos) {
@@ -58,11 +58,11 @@ public class DriverUtilsTest extends BaseUnitTest {
     public void buildProperties() throws Exception {
 
 
-        Properties properties = DriverUtils.buildProperties(url, suppliedProperties, (properties1, uri) -> {
-
+        Properties newProperties = DriverUtils.buildProperties(url, suppliedProperties, (properties, uri) -> {
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
         });
 
-        log.debug(properties.toString());
+        log.debug(newProperties.toString());
 
     }
 
