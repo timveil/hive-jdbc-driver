@@ -123,13 +123,11 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return QueryUtils.getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
-    // todo: move to constant
     @Override
     public String getCatalogSeparator() throws SQLException {
         return Character.toString(Constants.CATALOG_SEPARATOR);
     }
 
-    // todo: move to constant; need to research why this value
     @Override
     public String getCatalogTerm() throws SQLException {
         return Constants.CATALOG_TERM;
@@ -140,7 +138,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return Constants.SCHEMA_TERM;
     }
 
-    // todo: move to constant
     @Override
     public String getSearchStringEscape() throws SQLException {
         return Character.toString(Constants.SEARCH_STRING_ESCAPE);
