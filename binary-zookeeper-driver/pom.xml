@@ -73,6 +73,13 @@
                                         <include>**/*.MF</include>
                                     </includes>
                                 </filter>
+                                <filter>
+                                    <artifact>org.apache.zookeeper:zookeeper</artifact>
+                                    <excludes>
+                                        <exclude>org/apache/zookeeper/server/NettyServerCnxn</exclude>
+                                        <exclude>org/apache/zookeeper/server/NettyServerCnxnFactory</exclude>
+                                    </excludes>
+                                </filter>
                             </filters>
                         </configuration>
                     </execution>
