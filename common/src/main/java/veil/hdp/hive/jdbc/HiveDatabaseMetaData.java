@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc;
 
+import com.google.common.base.Splitter;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,16 +8,24 @@ import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
+import java.util.List;
 
 public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDatabaseMetaData.class);
 
+
     // constructor
     private final HiveConnection connection;
+    private final String hiveVersion;
+    private final int hiveMajorVersion;
+    private final int hiveMinorVersion;
 
-    private HiveDatabaseMetaData(HiveConnection connection) {
+    private HiveDatabaseMetaData(HiveConnection connection, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
         this.connection = connection;
+        this.hiveVersion = hiveVersion;
+        this.hiveMajorVersion = hiveMajorVersion;
+        this.hiveMinorVersion = hiveMinorVersion;
     }
 
     @Override
@@ -46,37 +55,34 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        return 4;
+        return Constants.JDBC_MAJOR_VERSION;
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        return 1;
+        return Constants.JDBC_MINOR_VERSION;
     }
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        return "Apache Hive";
+        return Constants.DATABASE_PRODUCT_NAME;
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        return HiveVersionInfo.getVersion();
+        return hiveVersion;
     }
 
-    // todo: split version
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return 0;
+        return hiveMajorVersion;
     }
 
-    // todo: split version
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return 0;
+        return hiveMinorVersion;
     }
 
-    // todo: i don't think this is right, need better way to determine.
     @Override
     public boolean supportsTransactions() throws SQLException {
         return Boolean.FALSE;
@@ -120,24 +126,24 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     // todo: move to constant
     @Override
     public String getCatalogSeparator() throws SQLException {
-        return String.valueOf('.');
+        return Character.toString(Constants.CATALOG_SEPARATOR);
     }
 
     // todo: move to constant; need to research why this value
     @Override
     public String getCatalogTerm() throws SQLException {
-        return "instance";
+        return Constants.CATALOG_TERM;
     }
 
     @Override
     public String getSchemaTerm() throws SQLException {
-        return "database";
+        return Constants.SCHEMA_TERM;
     }
 
     // todo: move to constant
     @Override
     public String getSearchStringEscape() throws SQLException {
-        return String.valueOf('\\');
+        return Character.toString(Constants.SEARCH_STRING_ESCAPE);
     }
 
     @Override
@@ -152,7 +158,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
-        return " ";
+        return Character.toString(Constants.IDENTIFIER_QUOTE_STRING);
     }
 
     @Override
@@ -905,7 +911,23 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         }
 
         public HiveDatabaseMetaData build() {
-            return new HiveDatabaseMetaData(connection);
+
+            final String hiveVersion = HiveVersionInfo.getVersion();
+
+            int hiveMajorVersion = -1;
+            int hiveMinorVersion = -1;
+
+            if (hiveVersion != null) {
+                List<String> strings = Splitter.on('.').splitToList(hiveVersion);
+
+                if (strings.size() >= 1) {
+                    hiveMajorVersion = Integer.parseInt(strings.get(0));
+                    hiveMinorVersion = Integer.parseInt(strings.get(1));
+                }
+            }
+
+
+            return new HiveDatabaseMetaData(connection, hiveVersion, hiveMajorVersion, hiveMinorVersion);
         }
     }
 
