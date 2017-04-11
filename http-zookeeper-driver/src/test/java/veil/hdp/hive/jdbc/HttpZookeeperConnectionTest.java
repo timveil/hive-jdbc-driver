@@ -12,7 +12,7 @@ public class HttpZookeeperConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://hive.hdp.local:10000/default";
+        String url = "jdbc:hive2://hive.hdp.local:2181/default";
 
         return new HttpZookeeperHiveDriver().connect(url, properties);
     }

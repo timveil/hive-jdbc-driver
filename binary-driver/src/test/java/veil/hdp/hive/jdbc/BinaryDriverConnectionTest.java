@@ -12,7 +12,7 @@ public class BinaryDriverConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://hive-large.hdp.local:10000/default";
+        String url = "jdbc:hive2://hive-large26.hdp.local:10000/default";
 
         return new BinaryHiveDriver().connect(url, properties);
     }
