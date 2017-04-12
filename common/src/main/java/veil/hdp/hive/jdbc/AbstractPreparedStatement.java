@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.Calendar;
 
 
-public abstract class AbstractPreparedStatement extends HiveStatement implements PreparedStatement {
+abstract class AbstractPreparedStatement extends HiveStatement implements PreparedStatement {
 
 
     AbstractPreparedStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {

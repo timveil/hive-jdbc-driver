@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,14 +8,13 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public abstract class BaseConnectionTest extends BaseUnitTest {
 
-    protected Connection connection;
+    private Connection connection;
 
     abstract Connection createConnection() throws SQLException;
 
@@ -60,25 +57,23 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     }
 
     @Test
-    public void createStatement2() throws SQLException {
-        Statement statement = connection.createStatement();
-        //statement.setFetchSize(2);
-        //statement.setMaxRows(5);
-        ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master");
-        printResultSet(rs);
+    public void testSimpleQuery2() throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master")) {
 
-        rs.close();
-        statement.close();
+            Printer.printResultSet(rs);
+        }
+
 
     }
 
     @Test
-    public void load() throws SQLException {
+    public void testLoad() throws SQLException {
         for (int i = 0; i < 1000; i++) {
             try (Statement statement = connection.createStatement();
                  ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
                 while (rs.next()) {
-                    printResultSet(rs);
+                    Printer.printResultSet(rs);
                 }
                 log.debug("run # {}", i);
             }
@@ -120,7 +115,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
 
     @Test
-    public void createStatement() throws SQLException {
+    public void testSimpleQuery() throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
 
@@ -193,7 +188,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
             try {
                 try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
 
-                    printResultSet(columns);
+                    Printer.printResultSet(columns);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -212,7 +207,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
 
     @Test
-    public void getMetaData() throws Exception {
+    public void testGetMetaData() throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
 
         Assert.assertNotNull(metaData);
@@ -226,130 +221,51 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
         try (ResultSet catalogs = metaData.getCatalogs()) {
 
-            printResultSet(catalogs);
+            Printer.printResultSet(catalogs);
         }
 
         log.debug("******************************** calling getSchemas");
 
         try (ResultSet schemas = metaData.getSchemas()) {
 
-            printResultSet(schemas);
+            Printer.printResultSet(schemas);
         }
 
         log.debug("******************************** calling getTypeInfo");
 
         try (ResultSet typeInfo = metaData.getTypeInfo()) {
 
-            printResultSet(typeInfo);
+            Printer.printResultSet(typeInfo);
         }
 
         log.debug("******************************** calling getTables");
 
         try (ResultSet tables = metaData.getTables(null, null, null, null)) {
 
-            printResultSet(tables);
+            Printer.printResultSet(tables);
         }
 
         log.debug("******************************** calling getTableTypes");
 
         try (ResultSet tableTypes = metaData.getTableTypes()) {
 
-            printResultSet(tableTypes);
+            Printer.printResultSet(tableTypes);
         }
 
         log.debug("******************************** calling getFunctions");
 
         try (ResultSet functions = metaData.getFunctions(null, null, "%")) {
 
-            printResultSet(functions);
+            Printer.printResultSet(functions);
         }
 
         log.debug("******************************** calling getColumns");
 
         try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
 
-            printResultSet(columns);
+            Printer.printResultSet(columns);
         }
     }
 
 
-    private void printResultSetMetaData(ResultSetMetaData rsmd) {
-
-        log.debug("printing ResultSetMetaData metadata");
-
-        try {
-            int columnCount = rsmd.getColumnCount();
-
-            for (int i = 0; i < columnCount; i++) {
-
-                StringBuilder builder = new StringBuilder();
-                //builder.append("table name [").append(rsmd.getTableName(i + 1)).append("], ");
-                //builder.append("catalog name [").append(rsmd.getCatalogName(i + 1)).append("], ");
-                builder.append("column class name [").append(rsmd.getColumnClassName(i + 1)).append("], ");
-                builder.append("column display size [").append(rsmd.getColumnDisplaySize(i + 1)).append("], ");
-                builder.append("column label [").append(rsmd.getColumnLabel(i + 1)).append("], ");
-                builder.append("column name [").append(rsmd.getColumnName(i + 1)).append("], ");
-                builder.append("column type [").append(rsmd.getColumnType(i + 1)).append("], ");
-                builder.append("column type name [").append(rsmd.getColumnTypeName(i + 1)).append("], ");
-                builder.append("precision [").append(rsmd.getPrecision(i + 1)).append("], ");
-                builder.append("getScale [").append(rsmd.getScale(i + 1)).append("], ");
-                builder.append("isAutoIncrement [").append(rsmd.isAutoIncrement(i + 1)).append("], ");
-                builder.append("isCaseSensitive [").append(rsmd.isCaseSensitive(i + 1)).append("], ");
-                builder.append("isCurrency [").append(rsmd.isCurrency(i + 1)).append("], ");
-                //builder.append("isDefinitelyWritable [").append(rsmd.isDefinitelyWritable(i + 1)).append("], ");
-                builder.append("isNullable [").append(rsmd.isNullable(i + 1)).append("], ");
-                builder.append("isReadOnly [").append(rsmd.isReadOnly(i + 1)).append("], ");
-                //builder.append("isSearchable [").append(rsmd.isSearchable(i + 1)).append("], ");
-                //builder.append("isSigned [").append(rsmd.isSigned(i + 1)).append("], ");
-                //builder.append("isWritable [").append(rsmd.isWritable(i + 1)).append("]");
-
-                log.debug(builder.toString());
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void printResultSet(ResultSet rs) {
-
-
-        try {
-            ResultSetMetaData metaData = rs.getMetaData();
-
-            //printResultSetMetaData(metaData);
-
-            int columnCount = metaData.getColumnCount();
-
-
-            //log.debug("printing ResultSet");
-
-            int counter = 0;
-
-            while (rs.next()) {
-
-                List<String> row = Lists.newArrayList();
-
-
-                for (int i = 0; i < columnCount; i++) {
-
-                    String columnName = metaData.getColumnName(i + 1);
-                    String columnValue = rs.getString(i + 1);
-
-                    row.add(columnName + " [" + columnValue + "]");
-
-                }
-
-
-                String join = Joiner.on(",").join(row);
-
-                log.debug("{} - {}", counter++, join);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

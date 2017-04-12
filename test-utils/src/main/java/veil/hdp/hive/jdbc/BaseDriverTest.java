@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public abstract class BaseDriverTest  extends BaseUnitTest {
 
-    protected Driver driver;
+    private Driver driver;
 
     abstract Driver createDriver() throws SQLException;
 
@@ -32,7 +32,7 @@ public abstract class BaseDriverTest  extends BaseUnitTest {
     public void connect() throws Exception {
 
         Connection connection = null;
-        String url = null;
+        String url;
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
