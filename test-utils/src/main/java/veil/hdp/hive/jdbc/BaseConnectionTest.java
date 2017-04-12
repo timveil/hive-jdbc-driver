@@ -57,7 +57,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSimpleQuery2() throws SQLException {
+    public void testSimpleQuery() throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master")) {
 
@@ -115,7 +115,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
 
     @Test
-    public void testSimpleQuery() throws SQLException {
+    public void testColumnTypes() throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
 
