@@ -6,11 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-/**
- * Created by tveil on 4/11/17.
- */
 public class HivePreparedStatement extends AbstractPreparedStatement {
-
 
 
     private HivePreparedStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
