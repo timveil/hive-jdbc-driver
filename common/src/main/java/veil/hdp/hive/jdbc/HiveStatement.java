@@ -31,7 +31,7 @@ public class HiveStatement extends AbstractStatement {
     private SQLWarning sqlWarning;
 
 
-    private HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
 
         this.queryTimeout = Constants.DEFAULT_QUERY_TIMEOUT;
