@@ -10,6 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <name>HTTP Driver Utils</name>
     <artifactId>http-utils</artifactId>
 
     <properties>

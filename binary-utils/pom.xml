@@ -10,6 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <name>Binary Driver Utils</name>
     <artifactId>binary-utils</artifactId>
 
     <dependencies>

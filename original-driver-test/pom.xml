@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Original Driver Test</name>
     <artifactId>original-driver-test</artifactId>
 
     <dependencies>

@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Binary Zookeeper Driver</name>
     <artifactId>binary-zookeeper-driver</artifactId>
 
     <dependencies>

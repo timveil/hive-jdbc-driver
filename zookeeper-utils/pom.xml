@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Zookeeper Driver Utils</name>
     <artifactId>zookeeper-utils</artifactId>
 
     <properties>
