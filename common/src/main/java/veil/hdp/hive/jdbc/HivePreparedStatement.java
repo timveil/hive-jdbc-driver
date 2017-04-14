@@ -5,24 +5,26 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by tveil on 4/11/17.
- */
 public class HivePreparedStatement extends AbstractPreparedStatement {
 
+
+    private static final char PLACEHOLDER = '?';
 
     private final String sql;
 
     private final Map<Integer, String> parameters;
+    private final List<Integer> parameterIndexes;
 
 
-    private HivePreparedStatement(HiveConnection connection, String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    private HivePreparedStatement(HiveConnection connection, String sql, List<Integer> parameterIndexes, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         super(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
         this.sql = sql;
+        this.parameterIndexes = parameterIndexes;
         parameters = new HashMap<>();
     }
 
@@ -33,17 +35,17 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        return super.executeQuery();
+        return super.executeQuery(updateSql(sql));
     }
 
     @Override
     public int executeUpdate() throws SQLException {
-        return super.executeUpdate();
+        return super.executeUpdate(updateSql(sql));
     }
 
     @Override
     public boolean execute() throws SQLException {
-        return super.execute();
+        return super.execute(updateSql(sql));
     }
 
     @Override
@@ -112,6 +114,28 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         super.setNull(parameterIndex, sqlType, typeName);
     }
 
+    private String updateSql(String originalSql) {
+        if (!originalSql.contains(String.valueOf(PLACEHOLDER))) {
+            return originalSql;
+        }
+
+        StringBuilder builder = new StringBuilder(originalSql);
+
+        for (int index : parameterIndexes) {
+
+            if (parameters.containsKey(index)) {
+                int adjustedIndex = index - 1;
+                builder.deleteCharAt(adjustedIndex);
+                builder.insert(adjustedIndex, parameterIndexes.get(index));
+            } else {
+                log.warn("######################### this is weird");
+            }
+        }
+
+        return builder.toString();
+
+    }
+
 
     public static class Builder {
 
@@ -149,30 +173,31 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
 
         private List<Integer> findPlaceHolders(final String sql) {
+
+
+            List<Integer> indexes = new ArrayList<>();
+
             int signalCount = 0;
-            int charIndex = -1;
-            int num = 0;
+
             for (int i = 0; i < sql.length(); i++) {
                 char c = sql.charAt(i);
                 if (c == '\'' || c == '\\') {
                     // record the count of char "'" and char "\"
                     signalCount++;
-                } else if (c == cchar && signalCount % 2 == 0) {
+                } else if (c == PLACEHOLDER && signalCount % 2 == 0) {
                     // check if the ? is really the parameter
-                    num++;
-                    if (num == paramLoc) {
-                        charIndex = i;
-                        break;
-                    }
+
+                    // indexes are 1 based not 0 based so add one to normalize
+                    indexes.add(i+1);
+
                 }
             }
-            return charIndex;
+
+            return indexes;
         }
 
         public HivePreparedStatement build() {
-
-
-            return new HivePreparedStatement(connection, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+            return new HivePreparedStatement(connection, sql, findPlaceHolders(sql), resultSetType, resultSetConcurrency, resultSetHoldability);
         }
     }
 }
