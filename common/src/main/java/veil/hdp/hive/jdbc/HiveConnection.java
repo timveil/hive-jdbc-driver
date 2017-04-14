@@ -50,6 +50,21 @@ public class HiveConnection extends AbstractConnection {
     }
 
     @Override
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return super.prepareStatement(sql);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+        return super.prepareStatement(sql, resultSetType, resultSetConcurrency);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+        return super.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    @Override
     public DatabaseMetaData getMetaData() throws SQLException {
         return new HiveDatabaseMetaData.Builder().connection(this).build();
     }
