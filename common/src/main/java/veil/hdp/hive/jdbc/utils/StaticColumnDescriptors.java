@@ -18,17 +18,16 @@ class StaticColumnDescriptors {
         KEY_SEQ short => sequence number within primary key( a value of 1 represents the first column of the primary key, a value of 2 would represent the second column within the primary key).
         PK_NAME String => primary key name (may be null)
      */
-    public static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("KEY_SEQ", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
-            add(new ColumnDescriptor("PK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
-        }
+    public static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<>();
 
-    };
+    static {
+        PRIMARY_KEYS.add(new ColumnDescriptor("PK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        PRIMARY_KEYS.add(new ColumnDescriptor("KEY_SEQ", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
+        PRIMARY_KEYS.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         PROCEDURE_CAT String => procedure catalog (may be null)
@@ -41,20 +40,19 @@ class StaticColumnDescriptors {
         PROCEDURE_TYPE short => kind of procedure:
         SPECIFIC_NAME String => The name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("PROCEDURE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("PROCEDURE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("PROCEDURE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 7));
-            add(new ColumnDescriptor("PROCEDURE_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
-            add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 9));
-        }
+    public static final List<ColumnDescriptor> PROCEDURES = new ArrayList<>();
 
-    };
+    static {
+        PROCEDURES.add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 9));
+        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
+        PROCEDURES.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 7));
+        PROCEDURES.add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        PROCEDURES.add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        PROCEDURES.add(new ColumnDescriptor("RESERVED", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         PROCEDURE_CAT String => procedure catalog (may be null)
@@ -78,31 +76,30 @@ class StaticColumnDescriptors {
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
         SPECIFIC_NAME String => the name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("PROCEDURE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("PROCEDURE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("PROCEDURE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("COLUMN_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 5));
-            add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 7));
-            add(new ColumnDescriptor("PRECISION", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
-            add(new ColumnDescriptor("LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 9));
-            add(new ColumnDescriptor("SCALE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 10));
-            add(new ColumnDescriptor("RADIX", new ColumnTypeDescriptor(HiveType.SMALL_INT), 11));
-            add(new ColumnDescriptor("NULLABLE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 12));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 13));
-            add(new ColumnDescriptor("COLUMN_DEF", new ColumnTypeDescriptor(HiveType.STRING), 14));
-            add(new ColumnDescriptor("SQL_DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 15));
-            add(new ColumnDescriptor("SQL_DATETIME_SUB", new ColumnTypeDescriptor(HiveType.INTEGER), 16));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 17));
-            add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.INTEGER), 18));
-            add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 19));
-            add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 20));
-        }
+    public static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<>();
 
-    };
+    static {
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 20));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 19));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.INTEGER), 18));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 17));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SQL_DATETIME_SUB", new ColumnTypeDescriptor(HiveType.INTEGER), 16));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SQL_DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 15));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_DEF", new ColumnTypeDescriptor(HiveType.STRING), 14));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 13));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("NULLABLE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 12));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("RADIX", new ColumnTypeDescriptor(HiveType.SMALL_INT), 11));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SCALE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 10));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 9));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PRECISION", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 7));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 5));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TABLE_CAT String => table catalog (may be null)
@@ -114,19 +111,18 @@ class StaticColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("GRANTOR", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("GRANTEE", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("PRIVILEGE", new ColumnTypeDescriptor(HiveType.STRING), 7));
-            add(new ColumnDescriptor("IS_GRANTABLE", new ColumnTypeDescriptor(HiveType.STRING), 8));
-        }
+    public static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<>();
 
-    };
+    static {
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("IS_GRANTABLE", new ColumnTypeDescriptor(HiveType.STRING), 8));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("PRIVILEGE", new ColumnTypeDescriptor(HiveType.STRING), 7));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("GRANTEE", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("GRANTOR", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         SCOPE short => actual scope of result
@@ -138,19 +134,18 @@ class StaticColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => is this a pseudo column like an Oracle ROWID
      */
-    public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("SCOPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 1));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 3));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("COLUMN_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
-            add(new ColumnDescriptor("BUFFER_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
-            add(new ColumnDescriptor("PSEUDO_COLUMN", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
-        }
+    public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<>();
 
-    };
+    static {
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("PSEUDO_COLUMN", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("BUFFER_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("COLUMN_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 3));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("SCOPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 1));
+    }
 
     /*
         TABLE_CAT String => table catalog (may be null)
@@ -161,18 +156,17 @@ class StaticColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("GRANTOR", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("GRANTEE", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("PRIVILEGE", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("IS_GRANTABLE", new ColumnTypeDescriptor(HiveType.STRING), 7));
-        }
+    public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<>();
 
-    };
+    static {
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("IS_GRANTABLE", new ColumnTypeDescriptor(HiveType.STRING), 7));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("PRIVILEGE", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("GRANTEE", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("GRANTOR", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         SCOPE short => is not used
@@ -202,25 +196,24 @@ class StaticColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("PKTABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("PKTABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("PKTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("PKCOLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("FKTABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("FKTABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("FKTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 7));
-            add(new ColumnDescriptor("FKCOLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 8));
-            add(new ColumnDescriptor("KEY_SEQ", new ColumnTypeDescriptor(HiveType.SMALL_INT), 9));
-            add(new ColumnDescriptor("UPDATE_RULE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 10));
-            add(new ColumnDescriptor("DELETE_RULE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 11));
-            add(new ColumnDescriptor("FK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 12));
-            add(new ColumnDescriptor("PK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 13));
-            add(new ColumnDescriptor("DEFERRABILITY", new ColumnTypeDescriptor(HiveType.SMALL_INT), 14));
-        }
+    public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<>();
 
-    };
+    static {
+        IMPORTED_KEYS.add(new ColumnDescriptor("DEFERRABILITY", new ColumnTypeDescriptor(HiveType.SMALL_INT), 14));
+        IMPORTED_KEYS.add(new ColumnDescriptor("PK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 13));
+        IMPORTED_KEYS.add(new ColumnDescriptor("FK_NAME", new ColumnTypeDescriptor(HiveType.STRING), 12));
+        IMPORTED_KEYS.add(new ColumnDescriptor("DELETE_RULE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 11));
+        IMPORTED_KEYS.add(new ColumnDescriptor("UPDATE_RULE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 10));
+        IMPORTED_KEYS.add(new ColumnDescriptor("KEY_SEQ", new ColumnTypeDescriptor(HiveType.SMALL_INT), 9));
+        IMPORTED_KEYS.add(new ColumnDescriptor("FKCOLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 8));
+        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 7));
+        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        IMPORTED_KEYS.add(new ColumnDescriptor("PKCOLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         PKTABLE_CAT String => primary key table catalog (may be null)
@@ -273,24 +266,23 @@ class StaticColumnDescriptors {
         PAGES long => When TYPE is tableIndexStatisic then this is the number of pages used for the table, otherwise it is the number of pages used for the current index.
         FILTER_CONDITION String => Filter condition, if any. (may be null)
      */
-    public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("NON_UNIQUE", new ColumnTypeDescriptor(HiveType.BOOLEAN), 4));
-            add(new ColumnDescriptor("INDEX_QUALIFIER", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("INDEX_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
-            add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 9));
-            add(new ColumnDescriptor("ASC_OR_DESC", new ColumnTypeDescriptor(HiveType.STRING), 10));
-            add(new ColumnDescriptor("CARDINALITY", new ColumnTypeDescriptor(HiveType.BIG_INT), 11));
-            add(new ColumnDescriptor("PAGES", new ColumnTypeDescriptor(HiveType.BIG_INT), 12));
-            add(new ColumnDescriptor("FILTER_CONDITION", new ColumnTypeDescriptor(HiveType.STRING), 13));
-        }
+    public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<>();
 
-    };
+    static {
+        INDEX_INFO.add(new ColumnDescriptor("FILTER_CONDITION", new ColumnTypeDescriptor(HiveType.STRING), 13));
+        INDEX_INFO.add(new ColumnDescriptor("PAGES", new ColumnTypeDescriptor(HiveType.BIG_INT), 12));
+        INDEX_INFO.add(new ColumnDescriptor("CARDINALITY", new ColumnTypeDescriptor(HiveType.BIG_INT), 11));
+        INDEX_INFO.add(new ColumnDescriptor("ASC_OR_DESC", new ColumnTypeDescriptor(HiveType.STRING), 10));
+        INDEX_INFO.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 9));
+        INDEX_INFO.add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.SMALL_INT), 8));
+        INDEX_INFO.add(new ColumnDescriptor("TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
+        INDEX_INFO.add(new ColumnDescriptor("INDEX_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        INDEX_INFO.add(new ColumnDescriptor("INDEX_QUALIFIER", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        INDEX_INFO.add(new ColumnDescriptor("NON_UNIQUE", new ColumnTypeDescriptor(HiveType.BOOLEAN), 4));
+        INDEX_INFO.add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        INDEX_INFO.add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        INDEX_INFO.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TYPE_CAT String => the type's catalog (may be null)
@@ -301,17 +293,17 @@ class StaticColumnDescriptors {
         REMARKS String => explanatory comment on the type
         BASE_TYPE short => type code of the source type of a DISTINCT type or the type
      */
-    public static final List<ColumnDescriptor> UDT = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("CLASS_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("BASE_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
-        }
-    };
+    public static final List<ColumnDescriptor> UDT = new ArrayList<>();
+
+    static {
+        UDT.add(new ColumnDescriptor("BASE_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 7));
+        UDT.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        UDT.add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
+        UDT.add(new ColumnDescriptor("CLASS_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        UDT.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        UDT.add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        UDT.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TYPE_CAT String => the UDT's catalog (may be null)
@@ -321,16 +313,16 @@ class StaticColumnDescriptors {
         SUPERTYPE_SCHEM String => the direct super type's schema (may be null)
         SUPERTYPE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("SUPERTYPE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("SUPERTYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 5));
-            add(new ColumnDescriptor("SUPERTYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
-        }
-    };
+    public static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<>();
+
+    static {
+        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 5));
+        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        SUPER_TYPES.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        SUPER_TYPES.add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        SUPER_TYPES.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TABLE_CAT String => the type's catalog (may be null)
@@ -338,14 +330,14 @@ class StaticColumnDescriptors {
         TABLE_NAME String => type name
         SUPERTABLE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("SUPERTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-        }
-    };
+    public static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<>();
+
+    static {
+        SUPER_TABLES.add(new ColumnDescriptor("SUPERTABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        SUPER_TABLES.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        SUPER_TABLES.add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        SUPER_TABLES.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TYPE_CAT String => type catalog (may be null)
@@ -370,31 +362,31 @@ class StaticColumnDescriptors {
         SCOPE_TABLE String => table name that is the scope of a reference attribute (null if the DATA_TYPE isn't REF)
         SOURCE_DATA_TYPE short => source type of a distinct type or user-generated Ref type,SQL type from java.sql.Types (null if DATA_TYPE isn't DISTINCT or user-generated REF)
      */
-    public static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TYPE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("ATTR_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
-            add(new ColumnDescriptor("ATTR_TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
-            add(new ColumnDescriptor("ATTR_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 7));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
-            add(new ColumnDescriptor("NUM_PREC_RADIX", new ColumnTypeDescriptor(HiveType.INTEGER), 9));
-            add(new ColumnDescriptor("NULLABLE", new ColumnTypeDescriptor(HiveType.INTEGER), 10));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 11));
-            add(new ColumnDescriptor("ATTR_DEF", new ColumnTypeDescriptor(HiveType.STRING), 12));
-            add(new ColumnDescriptor("SQL_DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 13));
-            add(new ColumnDescriptor("SQL_DATETIME_SUB", new ColumnTypeDescriptor(HiveType.INTEGER), 14));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 15));
-            add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.INTEGER), 16));
-            add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 17));
-            add(new ColumnDescriptor("SCOPE_CATALOG", new ColumnTypeDescriptor(HiveType.STRING), 18));
-            add(new ColumnDescriptor("SCOPE_SCHEMA", new ColumnTypeDescriptor(HiveType.STRING), 19));
-            add(new ColumnDescriptor("SCOPE_TABLE", new ColumnTypeDescriptor(HiveType.STRING), 20));
-            add(new ColumnDescriptor("SOURCE_DATA_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 21));
-        }
-    };
+    public static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<>();
+
+    static {
+        ATTRIBUTES.add(new ColumnDescriptor("SOURCE_DATA_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 21));
+        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_TABLE", new ColumnTypeDescriptor(HiveType.STRING), 20));
+        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_SCHEMA", new ColumnTypeDescriptor(HiveType.STRING), 19));
+        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_CATALOG", new ColumnTypeDescriptor(HiveType.STRING), 18));
+        ATTRIBUTES.add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 17));
+        ATTRIBUTES.add(new ColumnDescriptor("ORDINAL_POSITION", new ColumnTypeDescriptor(HiveType.INTEGER), 16));
+        ATTRIBUTES.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 15));
+        ATTRIBUTES.add(new ColumnDescriptor("SQL_DATETIME_SUB", new ColumnTypeDescriptor(HiveType.INTEGER), 14));
+        ATTRIBUTES.add(new ColumnDescriptor("SQL_DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 13));
+        ATTRIBUTES.add(new ColumnDescriptor("ATTR_DEF", new ColumnTypeDescriptor(HiveType.STRING), 12));
+        ATTRIBUTES.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 11));
+        ATTRIBUTES.add(new ColumnDescriptor("NULLABLE", new ColumnTypeDescriptor(HiveType.INTEGER), 10));
+        ATTRIBUTES.add(new ColumnDescriptor("NUM_PREC_RADIX", new ColumnTypeDescriptor(HiveType.INTEGER), 9));
+        ATTRIBUTES.add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
+        ATTRIBUTES.add(new ColumnDescriptor("ATTR_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 7));
+        ATTRIBUTES.add(new ColumnDescriptor("ATTR_TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        ATTRIBUTES.add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
+        ATTRIBUTES.add(new ColumnDescriptor("ATTR_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        ATTRIBUTES.add(new ColumnDescriptor("TYPE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        ATTRIBUTES.add(new ColumnDescriptor("TYPE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        ATTRIBUTES.add(new ColumnDescriptor("TYPE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         NAME String=> The name of the client info property
@@ -402,14 +394,14 @@ class StaticColumnDescriptors {
         DEFAULT_VALUE String=> The default value of the property
         DESCRIPTION String=> A description of the property. This will typically contain information as to where this property is stored in the database.
      */
-    public static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("NAME", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("MAX_LEN", new ColumnTypeDescriptor(HiveType.INTEGER), 2));
-            add(new ColumnDescriptor("DEFAULT_VALUE", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("DESCRIPTION", new ColumnTypeDescriptor(HiveType.STRING), 4));
-        }
-    };
+    public static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<>();
+
+    static {
+        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("DESCRIPTION", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("DEFAULT_VALUE", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("MAX_LEN", new ColumnTypeDescriptor(HiveType.INTEGER), 2));
+        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("NAME", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         FUNCTION_CAT String => function catalog (may be null)
@@ -419,16 +411,16 @@ class StaticColumnDescriptors {
         FUNCTION_TYPE short => kind of function:
         SPECIFIC_NAME String => the name which uniquely identifies this function within its schema. This is a user specified, or DBMS generated, name that may be different then the FUNCTION_NAME for example with overload functions
      */
-    public static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("FUNCTION_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("FUNCTION_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("FUNCTION_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("FUNCTION_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 5));
-            add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
-        }
-    };
+    public static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<>();
+
+    static {
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("SPECIFIC_NAME", new ColumnTypeDescriptor(HiveType.STRING), 6));
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_TYPE", new ColumnTypeDescriptor(HiveType.SMALL_INT), 5));
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 
     /*
         TABLE_CAT String => table catalog (may be null)
@@ -444,26 +436,26 @@ class StaticColumnDescriptors {
         CHAR_OCTET_LENGTH int => for char types the maximum number of bytes in the column
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
      */
-    public static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
-            add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
-            add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
-            add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
-            add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
-            add(new ColumnDescriptor("COLUMN_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
-            add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.INTEGER), 7));
-            add(new ColumnDescriptor("NUM_PREC_RADIX", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
-            add(new ColumnDescriptor("COLUMN_USAGE", new ColumnTypeDescriptor(HiveType.STRING), 9));
-            add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 10));
-            add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 11));
-            add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 12));
-        }
-    };
+    public static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<>();
 
-    public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<ColumnDescriptor>() {
-        {
-            add(new ColumnDescriptor("GENERATED_KEY", new ColumnTypeDescriptor(HiveType.STRING), 1));
-        }
-    };
+    static {
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("IS_NULLABLE", new ColumnTypeDescriptor(HiveType.STRING), 12));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", new ColumnTypeDescriptor(HiveType.INTEGER), 11));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("REMARKS", new ColumnTypeDescriptor(HiveType.STRING), 10));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_USAGE", new ColumnTypeDescriptor(HiveType.STRING), 9));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("NUM_PREC_RADIX", new ColumnTypeDescriptor(HiveType.INTEGER), 8));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("DECIMAL_DIGITS", new ColumnTypeDescriptor(HiveType.INTEGER), 7));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_SIZE", new ColumnTypeDescriptor(HiveType.INTEGER), 6));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("DATA_TYPE", new ColumnTypeDescriptor(HiveType.INTEGER), 5));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_NAME", new ColumnTypeDescriptor(HiveType.STRING), 4));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_NAME", new ColumnTypeDescriptor(HiveType.STRING), 3));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_SCHEM", new ColumnTypeDescriptor(HiveType.STRING), 2));
+        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_CAT", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
+
+    public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<>();
+
+    static {
+        GENERATED_KEYS.add(new ColumnDescriptor("GENERATED_KEY", new ColumnTypeDescriptor(HiveType.STRING), 1));
+    }
 }
