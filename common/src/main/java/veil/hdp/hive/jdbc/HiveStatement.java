@@ -45,13 +45,15 @@ public class HiveStatement extends AbstractStatement {
 
     private void performThriftOperation(String sql) throws SQLException {
 
-        if (currentOperation.get() != null) {
+        ThriftOperation operation = currentOperation.get();
+
+        if (operation != null) {
             log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            currentOperation.get().close();
-            currentOperation.set(null);
+            operation.close();
+            currentOperation.compareAndSet(operation, null);
         }
 
-        currentOperation.set(QueryUtils.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
+        currentOperation.compareAndSet(null, QueryUtils.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
     }
 
     @Override
@@ -64,16 +66,15 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-
         performThriftOperation(sql);
 
-        ThriftOperation operation = currentOperation.get();
+        ThriftOperation thriftOperation = currentOperation.get();
 
-        if (!operation.hasResultSet()) {
+        if (!thriftOperation.hasResultSet()) {
             throw new HiveSQLException("The query did not generate a result set!");
         }
 
-        return operation.getResultSet();
+        return thriftOperation.getResultSet();
     }
 
     @Override
@@ -81,13 +82,13 @@ public class HiveStatement extends AbstractStatement {
 
         performThriftOperation(sql);
 
-        ThriftOperation operation = currentOperation.get();
+        ThriftOperation thriftOperation = currentOperation.get();
 
-        if (operation.hasResultSet()) {
+        if (thriftOperation.hasResultSet()) {
             throw new HiveSQLException("The query generated a result set when an updated was expected");
         }
 
-        return operation.getModifiedCount();
+        return thriftOperation.getModifiedCount();
     }
 
     @Override
