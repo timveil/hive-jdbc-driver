@@ -1,7 +1,8 @@
 package veil.hdp.hive.jdbc;
 
-import com.codahale.metrics.*;
-import com.google.common.base.Stopwatch;
+import com.codahale.metrics.ConsoleReporter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -143,9 +144,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
             try {
                 try (Statement statement = connection.createStatement();
                      ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
-                    while (rs.next()) {
-                        //no-op
-                    }
+                    Printer.printResultSet(rs);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
