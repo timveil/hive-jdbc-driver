@@ -129,22 +129,6 @@ public class HiveResultSet extends HiveBaseResultSet {
         return null;
     }
 
-
-    @Override
-    public String toString() {
-        return "HiveResultSet{" +
-                ", currentSchema=" + schema +
-                ", fetchSize=" + fetchSize +
-                ", fetchDirection=" + fetchDirection +
-                ", resultSetType=" + resultSetType +
-                ", resultSetConcurrency=" + resultSetConcurrency +
-                ", resultSetHoldability=" + resultSetHoldability +
-                ", sqlWarning=" + sqlWarning +
-                ", lastColumnNull=" + lastColumnNull +
-                '}';
-    }
-
-
     public static class Builder {
 
 

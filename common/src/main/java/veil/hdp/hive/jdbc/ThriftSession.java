@@ -83,18 +83,6 @@ public class ThriftSession implements SQLCloseable {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ThriftSession{" +
-                "transport=" + transport +
-                ", client=" + client +
-                ", sessionHandle=" + sessionHandle +
-                ", protocolVersion=" + protocolVersion +
-                ", properties=" + properties +
-                ", closed=" + closed +
-                '}';
-    }
-
     public static class Builder {
         private Properties properties;
         private TTransport transport;

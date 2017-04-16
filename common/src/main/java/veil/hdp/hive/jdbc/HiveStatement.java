@@ -256,20 +256,6 @@ public class HiveStatement extends AbstractStatement {
         // no-op; don't support setting this value
     }
 
-    @Override
-    public String toString() {
-        return "HiveStatement{" +
-                "connection=" + connection +
-                ", resultSetType=" + resultSetType +
-                ", resultSetConcurrency=" + resultSetConcurrency +
-                ", resultSetHoldability=" + resultSetHoldability +
-                ", queryTimeout=" + queryTimeout +
-                ", maxRows=" + maxRows +
-                ", fetchSize=" + fetchSize +
-                ", sqlWarning=" + sqlWarning +
-                '}';
-    }
-
     public static class Builder {
 
         private HiveConnection connection;

@@ -197,13 +197,6 @@ public class HiveConnection extends AbstractConnection {
     }
 
 
-    @Override
-    public String toString() {
-        return "HiveConnection{" +
-                ", sqlWarning=" + sqlWarning +
-                '}';
-    }
-
     public static class Builder {
 
         private Properties properties;

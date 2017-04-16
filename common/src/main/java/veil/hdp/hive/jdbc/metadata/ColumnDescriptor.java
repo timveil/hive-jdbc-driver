@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 
 public class ColumnDescriptor {
@@ -57,5 +58,16 @@ public class ColumnDescriptor {
         }
 
         return name.toLowerCase();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("name", name)
+                .append("normalizedName", normalizedName)
+                .append("comment", comment)
+                .append("columnTypeDescriptor", columnTypeDescriptor)
+                .append("position", position)
+                .toString();
     }
 }

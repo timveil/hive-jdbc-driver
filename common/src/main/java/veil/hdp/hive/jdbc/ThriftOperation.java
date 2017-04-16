@@ -80,13 +80,6 @@ public class ThriftOperation implements SQLCloseable {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ThriftOperation{" +
-                ", closed=" + closed +
-                '}';
-    }
-
     public static class Builder {
 
         private TOperationHandle operationHandle;
