@@ -43,30 +43,32 @@ public class QueryUtils {
 
                 @Override
                 protected Row computeNext() {
-                    if (rowSet == null) {
-                        if (fetchIterator.hasNext()) {
-                            rowSet = fetchIterator.next().iterator();
-                        } else {
-                            return endOfData();
+                    while (true) {
+                        if (rowSet == null) {
+                            if (fetchIterator.hasNext()) {
+                                rowSet = fetchIterator.next().iterator();
+                            } else {
+                                return endOfData();
+                            }
                         }
-                    }
 
-                    if (rowSet.hasNext()) {
-                        // the page has more results
-                        rowCount.incrementAndGet();
-                        return rowSet.next();
-                    } else if (rowCount.get() < fetchSize) {
-                        // the page has no more results and the rowCount is < fetchSize; then i don't need
-                        // to go back to the server to know if i'm done.
-                        //
-                        // for example rowCount = 10; fetchSize = 100; then no need to look for another page
-                        //
-                        return endOfData();
-                    } else {
-                        // the page has no more results, but rowCount = fetchSize.  need to check server for more results
-                        rowSet = null;
-                        rowCount.set(0);
-                        return computeNext();
+                        if (rowSet.hasNext()) {
+                            // the page has more results
+                            rowCount.incrementAndGet();
+                            return rowSet.next();
+                        } else if (rowCount.get() < fetchSize) {
+                            // the page has no more results and the rowCount is < fetchSize; then i don't need
+                            // to go back to the server to know if i'm done.
+                            //
+                            // for example rowCount = 10; fetchSize = 100; then no need to look for another page
+                            //
+                            return endOfData();
+                        } else {
+                            // the page has no more results, but rowCount = fetchSize.  need to check server for more results
+                            rowSet = null;
+                            rowCount.set(0);
+
+                        }
                     }
                 }
             };
