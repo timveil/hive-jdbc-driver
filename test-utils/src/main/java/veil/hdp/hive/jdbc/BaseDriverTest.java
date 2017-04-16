@@ -10,11 +10,11 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public abstract class BaseDriverTest  extends BaseUnitTest {
+public abstract class BaseDriverTest extends BaseUnitTest {
 
     private Driver driver;
 
-    abstract Driver createDriver() throws SQLException;
+    public abstract Driver createDriver() throws SQLException;
 
     @Before
     public void setUp() throws Exception {

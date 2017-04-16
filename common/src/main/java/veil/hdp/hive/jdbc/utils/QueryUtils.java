@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.collect.AbstractIterator;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hive.service.cli.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
@@ -136,7 +137,7 @@ public class QueryUtils {
     }
 
     public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) throws SQLException {
-        TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), sql);
+        TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), StringUtils.trim(sql));
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
         //todo: allows per statement configuration of session handle

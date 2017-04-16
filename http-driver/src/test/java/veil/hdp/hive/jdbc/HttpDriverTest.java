@@ -9,7 +9,7 @@ public class HttpDriverTest extends BaseDriverTest {
 
 
     @Override
-    Driver createDriver() throws SQLException {
+    public Driver createDriver() throws SQLException {
         return new HttpHiveDriver();
     }
 

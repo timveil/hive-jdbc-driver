@@ -16,7 +16,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
     private Connection connection;
 
-    abstract Connection createConnection() throws SQLException;
+    public abstract Connection createConnection() throws SQLException;
 
     @Before
     public void setUp() throws Exception {
@@ -62,6 +62,20 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
              ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master")) {
 
             Printer.printResultSet(rs);
+        }
+
+
+    }
+
+    @Test
+    public void testPreparedStatement() throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_string = ?")) {
+            statement.setString(1, "test");
+
+            try (ResultSet rs = statement.executeQuery()) {
+
+                Printer.printResultSet(rs);
+            }
         }
 
 

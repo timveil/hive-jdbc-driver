@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class BinaryZookeeperDriverTest extends BaseDriverTest {
 
     @Override
-    Driver createDriver() throws SQLException {
+    public Driver createDriver() throws SQLException {
         return new BinaryZookeeperHiveDriver();
     }
 

@@ -16,7 +16,7 @@ public abstract class HiveDriver implements Driver {
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName) {
-        return new SQLFeatureNotSupportedException(Utils.format("Method {0} is not yet implemented.", callClass.getName() + "." + functionName));
+        return new SQLFeatureNotSupportedException(Utils.format("Method {} is not yet implemented.", callClass.getName() + "." + functionName));
     }
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass) {

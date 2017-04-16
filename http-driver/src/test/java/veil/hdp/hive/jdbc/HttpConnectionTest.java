@@ -1,8 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -10,7 +7,7 @@ import java.util.Properties;
 public class HttpConnectionTest extends BaseConnectionTest {
 
     @Override
-    Connection createConnection() throws SQLException {
+    public Connection createConnection() throws SQLException {
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");

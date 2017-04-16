@@ -51,17 +51,17 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return super.prepareStatement(sql);
+        return new HivePreparedStatement.Builder().connection(this).sql(sql).build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return super.prepareStatement(sql, resultSetType, resultSetConcurrency);
+        return new HivePreparedStatement.Builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return super.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+        return new HivePreparedStatement.Builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(resultSetHoldability).build();
     }
 
     @Override

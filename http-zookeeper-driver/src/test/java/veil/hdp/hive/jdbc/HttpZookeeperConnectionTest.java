@@ -8,7 +8,7 @@ public class HttpZookeeperConnectionTest extends BaseConnectionTest {
 
 
     @Override
-    Connection createConnection() throws SQLException {
+    public Connection createConnection() throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
