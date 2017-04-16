@@ -14,13 +14,29 @@ import java.util.concurrent.TimeUnit;
 public abstract class HiveDriver implements Driver {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
+    private static final String NOT_PROVIDED = "NOT PROVIDED";
+    private static final String UNKNOWN = "UNKNOWN";
+
+    public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName, String reason) {
+        return new SQLFeatureNotSupportedException(Utils.format("Method [{}] is not implemented. Reason: [{}]", callClass.getName() + '.' + functionName, reason));
+    }
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName) {
-        return new SQLFeatureNotSupportedException(Utils.format("Method {} is not yet implemented.", callClass.getName() + '.' + functionName));
+        return notImplemented(callClass, functionName, NOT_PROVIDED);
     }
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass) {
-        return notImplemented(callClass, "unknown");
+        return notImplemented(callClass, UNKNOWN);
+    }
+
+    static int getLoginTimeout() {
+        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
+
+        if (timeOut > Integer.MAX_VALUE) {
+            timeOut = Integer.MAX_VALUE;
+        }
+
+        return (int) timeOut;
     }
 
     private Connection connect(Properties properties) throws SQLException {
@@ -61,7 +77,7 @@ public abstract class HiveDriver implements Driver {
 
     @Override
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw HiveDriver.notImplemented(this.getClass(), "getParentLogger");
+        throw HiveDriver.notImplemented(this.getClass(), "getParentLogger", "This driver uses SLF4J instead of JUL directly for performance reasons");
     }
 
     public boolean acceptsURL(String url) throws SQLException {
@@ -71,16 +87,6 @@ public abstract class HiveDriver implements Driver {
         }
 
         return DriverUtils.acceptURL(url);
-    }
-
-    static int getLoginTimeout() {
-        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
-
-        if (timeOut > Integer.MAX_VALUE) {
-            timeOut = Integer.MAX_VALUE;
-        }
-
-        return (int) timeOut;
     }
 
 
