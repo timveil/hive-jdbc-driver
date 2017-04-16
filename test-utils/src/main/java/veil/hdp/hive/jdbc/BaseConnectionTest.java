@@ -95,7 +95,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < getTestRuns(); i++) {
             log.debug("run # {}", i);
 
             final Timer.Context queryContext = timer.time();
@@ -117,7 +117,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < getTestRuns(); i++) {
             log.debug("run # {}", i);
 
             final Timer.Context queryContext = timer.time();

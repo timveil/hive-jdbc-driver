@@ -12,6 +12,10 @@ public class BaseUnitTest {
         return System.getProperty("test.host");
     }
 
+    public static int getTestRuns() {
+        return Integer.parseInt(System.getProperty("test.runs", "1000"));
+    }
+
 }
 
 
