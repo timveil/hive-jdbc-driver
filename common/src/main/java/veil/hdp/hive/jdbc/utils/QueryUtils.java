@@ -131,7 +131,7 @@ public class QueryUtils {
             return getRows(fetchResults.getResults(), schema);
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -151,7 +151,7 @@ public class QueryUtils {
         try {
             executeStatementResp = session.getClient().ExecuteStatement(executeStatementReq);
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -186,18 +186,18 @@ public class QueryUtils {
 
                     switch (statusResp.getOperationState()) {
                         case CLOSED_STATE:
-                            throw new SQLException("The thriftOperation was closed by a client");
+                            throw new HiveSQLException("The thriftOperation was closed by a client");
                         case FINISHED_STATE:
                             isComplete = true;
                             break;
                         case CANCELED_STATE:
-                            throw new SQLException("The thriftOperation was canceled by a client");
+                            throw new HiveSQLException("The thriftOperation was canceled by a client");
                         case TIMEDOUT_STATE:
                             throw new SQLTimeoutException("The thriftOperation timed out");
                         case ERROR_STATE:
-                            throw new SQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
+                            throw new HiveSQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
                         case UKNOWN_STATE:
-                            throw new SQLException("The thriftOperation is in an unrecognized state");
+                            throw new HiveSQLException("The thriftOperation is in an unrecognized state");
                         case INITIALIZED_STATE:
                         case PENDING_STATE:
                         case RUNNING_STATE:
@@ -206,7 +206,7 @@ public class QueryUtils {
                 }
 
             } catch (TException e) {
-                throw new HiveThriftException(e);
+                throw new HiveSQLException(e);
             } finally {
                 session.getSessionLock().unlock();
             }
@@ -232,7 +232,7 @@ public class QueryUtils {
             return metadataResp.getSchema();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -286,7 +286,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -314,7 +314,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -342,7 +342,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -375,7 +375,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -400,7 +400,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -424,7 +424,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -450,7 +450,7 @@ public class QueryUtils {
             return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -571,7 +571,7 @@ public class QueryUtils {
             return;
         }
 
-        throw new HiveThriftException(status);
+        throw new HiveSQLException(status);
     }
 
     public static void closeOperation(ThriftOperation operation) {

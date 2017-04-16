@@ -4,6 +4,7 @@ import org.apache.thrift.transport.TSaslClientTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveSQLException;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
@@ -51,7 +52,7 @@ public class BinaryUtils {
                         }
                     }, socketTransport);
         } catch (SaslException e) {
-            throw new SQLException(e);
+            throw new HiveSQLException(e);
         }
 
     }

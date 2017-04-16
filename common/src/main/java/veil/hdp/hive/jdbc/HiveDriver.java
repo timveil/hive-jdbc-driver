@@ -87,7 +87,7 @@ public abstract class HiveDriver implements Driver {
     public boolean acceptsURL(String url) throws SQLException {
 
         if (url == null) {
-            throw new SQLException("url is null");
+            throw new HiveSQLException("url is null");
         }
 
         return DriverUtils.acceptURL(url);

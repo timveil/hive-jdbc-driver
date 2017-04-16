@@ -5,7 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import veil.hdp.hive.jdbc.HiveThriftException;
+import veil.hdp.hive.jdbc.HiveSQLException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class HiveExceptionUtils {
         try {
             return (Throwable) Class.forName(className).getConstructor(String.class, Throwable.class).newInstance(message, cause);
         } catch (Exception e) {
-            return new HiveThriftException(MessageFormat.format("Original Exception Class [{0}], Original Exception Message [{1}]", className, message), cause);
+            return new HiveSQLException(MessageFormat.format("Original Exception Class [{0}], Original Exception Message [{1}]", className, message), cause);
         }
     }
 

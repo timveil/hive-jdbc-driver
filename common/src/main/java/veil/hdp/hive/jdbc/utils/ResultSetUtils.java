@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
 import org.slf4j.Logger;
+import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
@@ -20,7 +21,7 @@ public class ResultSetUtils {
             return columnDescriptor.getPosition();
         }
 
-        throw new SQLException(MessageFormat.format("Could not find column for name {0} in Schema {1}", columnLabel, schema));
+        throw new HiveSQLException(MessageFormat.format("Could not find column for name {0} in Schema {1}", columnLabel, schema));
     }
 
 }

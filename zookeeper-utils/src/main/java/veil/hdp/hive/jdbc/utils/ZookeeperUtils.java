@@ -9,6 +9,7 @@ import org.apache.curator.retry.RetryOneTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveSQLException;
 
 import java.nio.charset.Charset;
 import java.sql.SQLException;
@@ -76,7 +77,7 @@ public class ZookeeperUtils {
 
 
         } catch (Exception e) {
-            throw new SQLException(e);
+            throw new HiveSQLException(e);
         }
     }
 

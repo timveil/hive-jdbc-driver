@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc.data;
 
 import org.apache.hive.service.cli.thrift.TColumn;
 import org.apache.hive.service.cli.thrift.TRowSet;
+import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
@@ -31,7 +32,7 @@ public class Row {
             }
         }
 
-        throw new SQLException(MessageFormat.format("invalid column position [{0}] for row; row has [{1}] columns", position, columns.size()));
+        throw new HiveSQLException(MessageFormat.format("invalid column position [{0}] for row; row has [{1}] columns", position, columns.size()));
     }
 
     public Column getColumn(String name) throws SQLException {
@@ -43,7 +44,7 @@ public class Row {
             }
         }
 
-        throw new SQLException(MessageFormat.format("invalid column name [{0}] for row;", name));
+        throw new HiveSQLException(MessageFormat.format("invalid column name [{0}] for row;", name));
     }
 
 

@@ -10,7 +10,7 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveThriftException;
+import veil.hdp.hive.jdbc.HiveSQLException;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class ThriftUtils {
             try {
                 transport.open();
             } catch (TTransportException e) {
-                throw new HiveThriftException(e);
+                throw new HiveSQLException(e);
             }
         }
 
@@ -78,7 +78,7 @@ public class ThriftUtils {
 
             return resp;
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveSQLException(e);
         }
 
     }

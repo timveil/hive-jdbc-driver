@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.PropertiesCallback;
 
 import java.net.URI;
@@ -122,7 +123,7 @@ public class DriverUtils {
 
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
             if (property.isRequired() && property.get(properties) == null) {
-                throw new SQLException(MessageFormat.format("property [{0}] is required", property.getName()));
+                throw new HiveSQLException(MessageFormat.format("property [{0}] is required", property.getName()));
             }
         }
 

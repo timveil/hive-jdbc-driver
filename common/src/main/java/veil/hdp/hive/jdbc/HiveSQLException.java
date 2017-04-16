@@ -1,14 +1,13 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.hive.service.cli.thrift.TStatus;
-import org.apache.thrift.TException;
 import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
 
 import java.sql.SQLException;
 
-public class HiveThriftException extends SQLException {
+public class HiveSQLException extends SQLException {
 
-    public HiveThriftException(TStatus status) {
+    public HiveSQLException(TStatus status) {
 
         super(status.getErrorMessage(), status.getSqlState(), status.getErrorCode());
 
@@ -18,11 +17,19 @@ public class HiveThriftException extends SQLException {
 
     }
 
-    public HiveThriftException(TException exception) {
-        super(exception);
+    public HiveSQLException(Throwable cause) {
+        super(cause);
     }
 
-    public HiveThriftException(String reason, Throwable cause) {
+    public HiveSQLException(String reason, Throwable cause) {
         super(reason, cause);
+    }
+
+    public HiveSQLException(String reason) {
+        super(reason);
+    }
+
+    public HiveSQLException(String reason, String SQLState, int vendorCode) {
+        super(reason, SQLState, vendorCode);
     }
 }

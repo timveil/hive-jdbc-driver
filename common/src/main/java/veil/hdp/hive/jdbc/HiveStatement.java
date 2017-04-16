@@ -70,7 +70,7 @@ public class HiveStatement extends AbstractStatement {
         ThriftOperation operation = currentOperation.get();
 
         if (!operation.hasResultSet()) {
-            throw new SQLException("The query did not generate a result set!");
+            throw new HiveSQLException("The query did not generate a result set!");
         }
 
         return operation.getResultSet();
@@ -84,7 +84,7 @@ public class HiveStatement extends AbstractStatement {
         ThriftOperation operation = currentOperation.get();
 
         if (operation.hasResultSet()) {
-            throw new SQLException("The query generated a result set when an updated was expected");
+            throw new HiveSQLException("The query generated a result set when an updated was expected");
         }
 
         return operation.getModifiedCount();
