@@ -57,10 +57,12 @@ public class ZookeeperUtils {
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
-            for (String key : config.keySet()) {
-                String value = Strings.emptyToNull(config.get(key));
+            for (Map.Entry<String, String> entry : config.entrySet()) {
+                String value = Strings.emptyToNull(entry.getValue());
 
                 if (value != null) {
+
+                    String key = entry.getKey();
 
                     HiveDriverProperty hiveDriverProperty = HiveDriverProperty.forAlias(key);
 

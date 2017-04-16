@@ -167,11 +167,11 @@ public class DriverUtils {
             parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
         }
 
-        for (String key : parameters.keySet()) {
-            String value = Strings.nullToEmpty(parameters.get(key));
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            String value = Strings.nullToEmpty(entry.getValue());
 
             if (value != null) {
-                properties.setProperty(key, value);
+                properties.setProperty(entry.getKey(), value);
             }
         }
 
