@@ -7,6 +7,11 @@ public class BaseUnitTest {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+
+    public String getHost() {
+        return System.getProperty("test.host");
+    }
+
 }
 
 

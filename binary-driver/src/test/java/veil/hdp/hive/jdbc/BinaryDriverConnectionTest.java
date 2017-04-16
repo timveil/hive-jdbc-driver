@@ -8,11 +8,11 @@ public class BinaryDriverConnectionTest extends BaseConnectionTest {
 
 
     @Override
-    public Connection createConnection() throws SQLException {
+    public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://hive.hdp.local:10000/default";
+        String url = "jdbc:hive2://" + host + ":10000/default";
 
         return new BinaryHiveDriver().connect(url, properties);
     }

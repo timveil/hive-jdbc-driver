@@ -20,11 +20,11 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     private static final MetricRegistry metrics = new MetricRegistry();
     private Connection connection;
 
-    public abstract Connection createConnection() throws SQLException;
+    public abstract Connection createConnection(String host) throws SQLException;
 
     @Before
     public void setUp() throws Exception {
-        connection = createConnection();
+        connection = createConnection(getHost());
     }
 
     @After

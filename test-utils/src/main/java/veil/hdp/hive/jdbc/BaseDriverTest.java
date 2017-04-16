@@ -37,7 +37,7 @@ public abstract class BaseDriverTest extends BaseUnitTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        url = "jdbc:hive2://hive.hdp.local:10000/default";
+        url = "jdbc:hive2://" + getHost() + ":10000/default";
 
         try {
             connection = driver.connect(url, properties);
