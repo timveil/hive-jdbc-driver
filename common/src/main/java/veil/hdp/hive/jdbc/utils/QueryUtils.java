@@ -570,8 +570,6 @@ public class QueryUtils {
             return;
         }
 
-        // todo: convert this to local HiveThriftException and convert strings to stack trace
-        //throw new HiveSQLException(status);
         throw new HiveThriftException(status);
     }
 
