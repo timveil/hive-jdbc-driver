@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -592,11 +593,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
+            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -617,11 +618,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
+            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             operation.getSession().getSessionLock().unlock();
         }
@@ -642,11 +643,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
+            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + ']', e);
+            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             thriftSession.getSessionLock().unlock();
         }

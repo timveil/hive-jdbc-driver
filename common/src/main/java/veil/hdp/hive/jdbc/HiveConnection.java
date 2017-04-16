@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -172,7 +173,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public boolean isValid(int timeout) throws SQLException {
         if (timeout < 0) {
-            throw new SQLDataException("timeout must be greater than or equal to 0.  Current value is " + timeout);
+            throw new SQLDataException(MessageFormat.format("timeout must be greater than or equal to 0.  Current value is {0}", timeout));
         }
 
         return QueryUtils.isValid(this, timeout);
@@ -239,7 +240,7 @@ public class HiveConnection extends AbstractConnection {
                 }
                 close();
             } catch (SQLException e) {
-                log.error("error closing during abort: sql state [" + e.getSQLState() + ']', e);
+                log.error(MessageFormat.format("error closing during abort: sql state [{0}]", e.getSQLState()), e);
             }
         }
     }

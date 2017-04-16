@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
-import veil.hdp.hive.jdbc.utils.Utils;
 
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +19,7 @@ public abstract class HiveDriver implements Driver {
     private static final String UNKNOWN = "UNKNOWN";
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName, String reason) {
-        return new SQLFeatureNotSupportedException(Utils.format("Method [{}] is not implemented. Reason: [{}]", callClass.getName() + '.' + functionName, reason));
+        return new SQLFeatureNotSupportedException(MessageFormat.format("Method [{0}] is not implemented. Reason: [{1}]", callClass.getName() + '.' + functionName, reason));
     }
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass, String functionName) {

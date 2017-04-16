@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.util.BitSet;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -130,10 +131,10 @@ public class BaseColumn<T> implements Column<T> {
         private int index;
 
         private static boolean isNull(int index, byte[] nulls) {
-            int length = nulls.length;
-            int bits = length * 8;
-            BitSet bitset = new BitSet(bits);
-            for (int i = 0; i < bits; i++) {
+            int nullsLength = nulls.length;
+            int bitsLength = nullsLength * 8;
+            BitSet bitset = new BitSet(bitsLength);
+            for (int i = 0; i < bitsLength; i++) {
                 int i1 = i / 8;
                 byte aNull = nulls[i1];
                 int i2 = i % 8;
@@ -253,7 +254,7 @@ public class BaseColumn<T> implements Column<T> {
                 // todo; add others
 
             } else {
-                throw new IllegalStateException(veil.hdp.hive.jdbc.utils.Utils.format("unknown column type for TColumn [{}]", tColumn));
+                throw new IllegalStateException(MessageFormat.format("unknown column type for TColumn [{0}]", tColumn));
             }
 
 

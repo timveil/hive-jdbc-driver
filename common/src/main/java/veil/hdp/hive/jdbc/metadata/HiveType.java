@@ -6,6 +6,7 @@ import org.apache.hive.service.cli.thrift.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.Map;
 
 public enum HiveType {
@@ -73,7 +74,7 @@ public enum HiveType {
             }
         }
 
-        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + ']');
+        throw new IllegalArgumentException(MessageFormat.format("Unrecognized TTypeId [{0}]", tTypeId));
     }
 
     public String getName() {

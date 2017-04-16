@@ -7,6 +7,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Row {
             }
         }
 
-        throw new SQLException("invalid column position [" + position + "] for row; row has [" + columns.size() + "] columns");
+        throw new SQLException(MessageFormat.format("invalid column position [{0}] for row; row has [{1}] columns", position, columns.size()));
     }
 
     public Column getColumn(String name) throws SQLException {
@@ -42,7 +43,7 @@ public class Row {
             }
         }
 
-        throw new SQLException("invalid column name [" + name + "] for row;");
+        throw new SQLException(MessageFormat.format("invalid column name [{0}] for row;", name));
     }
 
 

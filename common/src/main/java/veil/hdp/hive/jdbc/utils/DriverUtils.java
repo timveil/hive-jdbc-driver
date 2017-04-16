@@ -12,6 +12,7 @@ import veil.hdp.hive.jdbc.PropertiesCallback;
 import java.net.URI;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -121,7 +122,7 @@ public class DriverUtils {
 
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
             if (property.isRequired() && property.get(properties) == null) {
-                throw new SQLException("property [" + property.getName() + "] is required");
+                throw new SQLException(MessageFormat.format("property [{0}] is required", property.getName()));
             }
         }
 

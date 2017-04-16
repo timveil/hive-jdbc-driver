@@ -90,21 +90,23 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
         Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testSimpleQueryLoad"));
 
-        ConsoleReporter reporter = ConsoleReporter
+        try (ConsoleReporter reporter = ConsoleReporter
                 .forRegistry(metrics)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build();
+                .build()) {
 
-        for (int i = 0; i < getTestRuns(); i++) {
-            log.debug("run # {}", i);
+            for (int i = 0; i < getTestRuns(); i++) {
+                log.debug("run # {}", i);
 
-            final Timer.Context queryContext = timer.time();
-            testSimpleQuery();
-            queryContext.stop();
+                try (Timer.Context queryContext = timer.time()) {
+                    testSimpleQuery();
+                    queryContext.stop();
+                }
+            }
+
+
+            reporter.report();
         }
-
-
-        reporter.report();
 
     }
 
@@ -112,21 +114,23 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     public void testPreparedStatementLoad() throws SQLException {
         Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testPreparedStatementLoad"));
 
-        ConsoleReporter reporter = ConsoleReporter
+        try (ConsoleReporter reporter = ConsoleReporter
                 .forRegistry(metrics)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build();
+                .build()) {
 
-        for (int i = 0; i < getTestRuns(); i++) {
-            log.debug("run # {}", i);
+            for (int i = 0; i < getTestRuns(); i++) {
+                log.debug("run # {}", i);
 
-            final Timer.Context queryContext = timer.time();
-            testPreparedStatement();
-            queryContext.stop();
+                try (Timer.Context queryContext = timer.time()) {
+                    testPreparedStatement();
+                    queryContext.stop();
+                }
+            }
+
+
+            reporter.report();
         }
-
-
-        reporter.report();
 
     }
 
