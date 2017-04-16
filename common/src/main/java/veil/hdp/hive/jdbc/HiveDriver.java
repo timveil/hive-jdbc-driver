@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,9 @@ public abstract class HiveDriver implements Driver {
     abstract PropertiesCallback buildPropertiesCallback();
 
     public Connection connect(String url, Properties info) throws SQLException {
+
+        url = StringUtils.trimToNull(url);
+
         if (acceptsURL(url)) {
             return connect(DriverUtils.buildProperties(url, info, buildPropertiesCallback()));
         }

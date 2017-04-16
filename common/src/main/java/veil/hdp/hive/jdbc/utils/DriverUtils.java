@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DriverUtils {
 
@@ -23,7 +25,8 @@ public class DriverUtils {
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";
     private static final String JDBC_HIVE2_PREFIX = JDBC_PART + HIVE2_PART + "//";
-
+    private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile("/");
+    private static final Pattern JDBC_PATTERN = Pattern.compile(DriverUtils.JDBC_PART, Pattern.LITERAL);
 
     public static boolean acceptURL(String url) {
         return url.startsWith(JDBC_HIVE2_PREFIX);
@@ -178,7 +181,7 @@ public class DriverUtils {
         String path = uri.getPath();
 
         if (path != null && path.startsWith("/")) {
-            return path.replaceFirst("/", "");
+            return FORWARD_SLASH_PATTERN.matcher(path).replaceFirst("");
         }
 
         return null;
@@ -186,7 +189,8 @@ public class DriverUtils {
 
 
     private static String stripPrefix(String url) {
-        return url.replace(DriverUtils.JDBC_PART, "").trim();
+        return JDBC_PATTERN.matcher(url).replaceAll(Matcher.quoteReplacement(""));
+
     }
 
 
