@@ -53,7 +53,7 @@ public class HiveStatement extends AbstractStatement {
             currentOperation.compareAndSet(operation, null);
         }
 
-        currentOperation.compareAndSet(null, QueryUtils.executeSql(connection.getThriftSession(), sql, this.queryTimeout, fetchSize, maxRows));
+        currentOperation.compareAndSet(null, QueryUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows));
     }
 
     @Override
