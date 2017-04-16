@@ -64,9 +64,9 @@ public class HiveExceptionUtils {
     }
 
     private static class ExceptionDetails {
-        private String exceptionClass;
-        private String exceptionMessage;
-        private List<StackTraceElement> stackTraceElements;
+        private final String exceptionClass;
+        private final String exceptionMessage;
+        private final List<StackTraceElement> stackTraceElements;
 
         ExceptionDetails(String exceptionClass, String exceptionMessage) {
             this.exceptionClass = exceptionClass;
