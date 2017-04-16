@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import com.codahale.metrics.*;
+import com.google.common.base.Stopwatch;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class BaseConnectionTest extends BaseUnitTest {
 
+    private static final MetricRegistry metrics = new MetricRegistry();
     private Connection connection;
 
     public abstract Connection createConnection() throws SQLException;
@@ -59,7 +62,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     @Test
     public void testSimpleQuery() throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM hivetest.master")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
 
             Printer.printResultSet(rs);
         }
@@ -82,16 +85,48 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     }
 
     @Test
-    public void testLoad() throws SQLException {
-        for (int i = 0; i < 1000; i++) {
-            try (Statement statement = connection.createStatement();
-                 ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
-                while (rs.next()) {
-                    Printer.printResultSet(rs);
-                }
-                log.debug("run # {}", i);
-            }
+    public void testSimpleQueryLoad() throws SQLException {
+
+        Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testSimpleQueryLoad"));
+
+        ConsoleReporter reporter = ConsoleReporter
+                .forRegistry(metrics)
+                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                .build();
+
+        for (int i = 0; i < 100; i++) {
+            log.debug("run # {}", i);
+
+            final Timer.Context queryContext = timer.time();
+            testSimpleQuery();
+            queryContext.stop();
         }
+
+
+        reporter.report();
+
+    }
+
+    @Test
+    public void testPreparedStatementLoad() throws SQLException {
+        Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testPreparedStatementLoad"));
+
+        ConsoleReporter reporter = ConsoleReporter
+                .forRegistry(metrics)
+                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                .build();
+
+        for (int i = 0; i < 100; i++) {
+            log.debug("run # {}", i);
+
+            final Timer.Context queryContext = timer.time();
+            testPreparedStatement();
+            queryContext.stop();
+        }
+
+
+        reporter.report();
+
     }
 
     @Test
