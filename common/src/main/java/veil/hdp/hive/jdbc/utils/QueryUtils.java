@@ -102,8 +102,6 @@ public class QueryUtils {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
-        session.getSessionLock().lock();
-
         return getRows(session, schema, fetchReq);
     }
 
@@ -112,29 +110,28 @@ public class QueryUtils {
         TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
         tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
 
-        session.getSessionLock().lock();
-
         return getRows(session, schema, tFetchResultsReq);
 
     }
 
     private static List<Row> getRows(ThriftSession session, Schema schema, TFetchResultsReq tFetchResultsReq) throws SQLException {
+        TFetchResultsResp fetchResults;
+
+        session.getSessionLock().lock();
+
         try {
-            TFetchResultsResp fetchResults = session.getClient().FetchResults(tFetchResultsReq);
-
-            checkStatus(fetchResults.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(fetchResults.toString());
-            }
-
-            return getRows(fetchResults.getResults(), schema);
-
+            fetchResults = session.getClient().FetchResults(tFetchResultsReq);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(fetchResults.getStatus());
+
+        return getRows(fetchResults.getResults(), schema);
+
+
     }
 
     public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) throws SQLException {
@@ -158,10 +155,6 @@ public class QueryUtils {
 
         checkStatus(executeStatementResp.getStatus());
 
-        if (log.isTraceEnabled()) {
-            log.trace(executeStatementResp.toString());
-        }
-
         waitForStatementToComplete(session, executeStatementResp.getOperationHandle());
 
         return new ThriftOperation.Builder().session(session).handle(executeStatementResp.getOperationHandle()).maxRows(maxRows).fetchSize(fetchSize).build();
@@ -175,41 +168,44 @@ public class QueryUtils {
 
         while (!isComplete) {
 
+
+            TGetOperationStatusResp statusResp;
+
             session.getSessionLock().lock();
 
             try {
-                TGetOperationStatusResp statusResp = session.getClient().GetOperationStatus(statusReq);
-
-                checkStatus(statusResp.getStatus());
-
-                if (statusResp.isSetOperationState()) {
-
-                    switch (statusResp.getOperationState()) {
-                        case CLOSED_STATE:
-                            throw new HiveSQLException("The thriftOperation was closed by a client");
-                        case FINISHED_STATE:
-                            isComplete = true;
-                            break;
-                        case CANCELED_STATE:
-                            throw new HiveSQLException("The thriftOperation was canceled by a client");
-                        case TIMEDOUT_STATE:
-                            throw new SQLTimeoutException("The thriftOperation timed out");
-                        case ERROR_STATE:
-                            throw new HiveSQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
-                        case UKNOWN_STATE:
-                            throw new HiveSQLException("The thriftOperation is in an unrecognized state");
-                        case INITIALIZED_STATE:
-                        case PENDING_STATE:
-                        case RUNNING_STATE:
-                            break;
-                    }
-                }
-
+                statusResp = session.getClient().GetOperationStatus(statusReq);
             } catch (TException e) {
                 throw new HiveSQLException(e);
             } finally {
                 session.getSessionLock().unlock();
             }
+
+            checkStatus(statusResp.getStatus());
+
+            if (statusResp.isSetOperationState()) {
+
+                switch (statusResp.getOperationState()) {
+                    case CLOSED_STATE:
+                        throw new HiveSQLException("The thriftOperation was closed by a client");
+                    case FINISHED_STATE:
+                        isComplete = true;
+                        break;
+                    case CANCELED_STATE:
+                        throw new HiveSQLException("The thriftOperation was canceled by a client");
+                    case TIMEDOUT_STATE:
+                        throw new SQLTimeoutException("The thriftOperation timed out");
+                    case ERROR_STATE:
+                        throw new HiveSQLException(statusResp.getErrorMessage(), statusResp.getSqlState(), statusResp.getErrorCode());
+                    case UKNOWN_STATE:
+                        throw new HiveSQLException("The thriftOperation is in an unrecognized state");
+                    case INITIALIZED_STATE:
+                    case PENDING_STATE:
+                    case RUNNING_STATE:
+                        break;
+                }
+            }
+
 
         }
     }
@@ -218,24 +214,23 @@ public class QueryUtils {
 
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(handle);
 
+        TGetResultSetMetadataResp metadataResp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetResultSetMetadataResp metadataResp = session.getClient().GetResultSetMetadata(metadataReq);
-
-            checkStatus(metadataResp.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(metadataResp.toString());
-            }
-
-            return metadataResp.getSchema();
-
+            metadataResp = session.getClient().GetResultSetMetadata(metadataReq);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(metadataResp.getStatus());
+
+        return metadataResp.getSchema();
+
+
     }
 
 
@@ -271,25 +266,23 @@ public class QueryUtils {
     private static ThriftOperation getCatalogsOperation(ThriftSession session) throws SQLException {
         TGetCatalogsReq req = new TGetCatalogsReq(session.getSessionHandle());
 
+        TGetCatalogsResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetCatalogsResp resp = session.getClient().GetCatalogs(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetCatalogs(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
+
     }
 
     private static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
@@ -299,25 +292,22 @@ public class QueryUtils {
         req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
         req.setColumnName(columnNamePattern == null ? "%" : columnNamePattern);
 
+        TGetColumnsResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetColumnsResp resp = session.getClient().GetColumns(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetColumns(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
     }
 
     private static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
@@ -327,25 +317,23 @@ public class QueryUtils {
         req.setSchemaName(schemaPattern);
         req.setFunctionName(functionNamePattern == null ? "%" : functionNamePattern);
 
+        TGetFunctionsResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetFunctionsResp resp = session.getClient().GetFunctions(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetFunctions(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
+
     }
 
 
@@ -360,74 +348,68 @@ public class QueryUtils {
             req.setTableTypes(Arrays.asList(types));
         }
 
+        TGetTablesResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetTablesResp resp = session.getClient().GetTables(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetTables(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
+
     }
 
 
     private static ThriftOperation getTypeInfoOperation(ThriftSession session) throws SQLException {
         TGetTypeInfoReq req = new TGetTypeInfoReq(session.getSessionHandle());
 
+        TGetTypeInfoResp resp;
+
         session.getSessionLock().lock();
 
+
         try {
-            TGetTypeInfoResp resp = session.getClient().GetTypeInfo(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetTypeInfo(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
+
     }
 
     private static ThriftOperation getTableTypesOperation(ThriftSession session) throws SQLException {
         TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
 
+        TGetTableTypesResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetTableTypesResp resp = session.getClient().GetTableTypes(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetTableTypes(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
     }
 
     private static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern) throws SQLException {
@@ -435,25 +417,23 @@ public class QueryUtils {
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
 
+        TGetSchemasResp resp;
+
         session.getSessionLock().lock();
 
         try {
-            TGetSchemasResp resp = session.getClient().GetSchemas(req);
-
-            if (log.isTraceEnabled()) {
-                log.trace(resp.toString());
-            }
-
-            checkStatus(resp.getStatus());
-
-
-            return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
+            resp = session.getClient().GetSchemas(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        checkStatus(resp.getStatus());
+
+        return new ThriftOperation.Builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+
+
     }
 
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) {
@@ -581,75 +561,79 @@ public class QueryUtils {
     public static void closeOperation(ThriftSession session, TOperationHandle handle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(handle);
 
+        TCloseOperationResp resp = null;
+
         session.getSessionLock().lock();
 
         try {
-            TCloseOperationResp resp = session.getClient().CloseOperation(closeRequest);
-
-            checkStatus(resp.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(closeRequest.toString());
-            }
-
+            resp = session.getClient().CloseOperation(closeRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } catch (SQLException e) {
-            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             session.getSessionLock().unlock();
         }
+
+        if (resp != null) {
+            try {
+                checkStatus(resp.getStatus());
+            } catch (SQLException e) {
+                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
+            }
+        }
+
     }
 
     public static void cancelOperation(ThriftOperation operation) {
         TCancelOperationReq cancelRequest = new TCancelOperationReq(operation.getOperationHandle());
 
+        TCancelOperationResp resp = null;
+
         operation.getSession().getSessionLock().lock();
 
         try {
-            TCancelOperationResp resp = operation.getSession().getClient().CancelOperation(cancelRequest);
-
-            checkStatus(resp.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(cancelRequest.toString());
-            }
-
+            resp = operation.getSession().getClient().CancelOperation(cancelRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } catch (SQLException e) {
-            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             operation.getSession().getSessionLock().unlock();
+        }
+
+        if (resp != null) {
+            try {
+                checkStatus(resp.getStatus());
+            } catch (SQLException e) {
+                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
+            }
         }
     }
 
     public static void closeSession(ThriftSession thriftSession) {
         TCloseSessionReq closeRequest = new TCloseSessionReq(thriftSession.getSessionHandle());
 
+        TCloseSessionResp resp = null;
+
         thriftSession.getSessionLock().lock();
 
         try {
-            TCloseSessionResp resp = thriftSession.getClient().CloseSession(closeRequest);
-
-            checkStatus(resp.getStatus());
-
-            if (log.isTraceEnabled()) {
-                log.trace(closeRequest.toString());
-            }
-
+            resp = thriftSession.getClient().CloseSession(closeRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } catch (SQLException e) {
-            log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
         } finally {
             thriftSession.getSessionLock().unlock();
+        }
+
+        if (resp != null) {
+            try {
+                checkStatus(resp.getStatus());
+            } catch (SQLException e) {
+                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
+            }
         }
 
     }
