@@ -122,7 +122,7 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
             return originalSql;
         }
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(originalSql.length());
 
         int escapeCount = 0;
         int parameterCount = 1;

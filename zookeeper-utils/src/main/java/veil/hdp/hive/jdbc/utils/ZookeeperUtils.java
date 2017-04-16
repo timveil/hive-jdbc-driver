@@ -49,11 +49,11 @@ public class ZookeeperUtils {
 
             zooKeeperClient.start();
 
-            List<String> hosts = zooKeeperClient.getChildren().forPath("/" + zooKeeperNamespace);
+            List<String> hosts = zooKeeperClient.getChildren().forPath('/' + zooKeeperNamespace);
 
             String randomHost = hosts.get(random.nextInt(hosts.size()));
 
-            String hostData = new String(zooKeeperClient.getData().forPath("/" + zooKeeperNamespace + "/" + randomHost), Charset.forName("UTF-8"));
+            String hostData = new String(zooKeeperClient.getData().forPath('/' + zooKeeperNamespace + '/' + randomHost), Charset.forName("UTF-8"));
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 

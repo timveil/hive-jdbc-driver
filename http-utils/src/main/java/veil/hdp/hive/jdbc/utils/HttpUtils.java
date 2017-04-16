@@ -52,7 +52,7 @@ public class HttpUtils {
         String scheme = sslEnabled ? "https" : "http";
 
         try {
-            return new THttpClient(scheme + "://" + host + ":" + port + "/" + endpoint, httpClient);
+            return new THttpClient(scheme + "://" + host + ':' + port + '/' + endpoint, httpClient);
         } catch (TTransportException e) {
             throw new HiveThriftException(e);
         }

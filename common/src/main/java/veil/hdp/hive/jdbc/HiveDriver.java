@@ -73,7 +73,7 @@ public abstract class HiveDriver implements Driver {
         return DriverUtils.acceptURL(url);
     }
 
-    int getLoginTimeout() {
+    static int getLoginTimeout() {
         long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
 
         if (timeOut > Integer.MAX_VALUE) {

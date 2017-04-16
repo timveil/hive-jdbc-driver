@@ -50,10 +50,10 @@ public class ColumnDescriptor {
         return position;
     }
 
-    private String normalizeName(String name) {
+    private static String normalizeName(String name) {
 
         if (name.contains(".")) {
-            name = name.substring(name.lastIndexOf(".") + 1);
+            name = name.substring(name.lastIndexOf('.') + 1);
         }
 
         return name.toLowerCase();
