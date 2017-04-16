@@ -130,9 +130,9 @@ public class BaseColumn<T> implements Column<T> {
         private int index;
 
         private static boolean isNull(int index, byte[] nulls) {
-            BitSet bitset = new BitSet();
             int length = nulls.length;
             int bits = length * 8;
+            BitSet bitset = new BitSet(bits);
             for (int i = 0; i < bits; i++) {
                 int i1 = i / 8;
                 byte aNull = nulls[i1];

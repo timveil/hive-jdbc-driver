@@ -70,7 +70,7 @@ public class DriverUtils {
         Set<String> strings = properties.stringPropertyNames();
 
         for (String key : strings) {
-            builder.append("\t").append(key).append(" : ").append(properties.getProperty(key)).append("\n");
+            builder.append('\t').append(key).append(" : ").append(properties.getProperty(key)).append('\n');
         }
         builder.append("******************************************\n");
 

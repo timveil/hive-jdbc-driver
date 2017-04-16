@@ -21,28 +21,21 @@ public class Printer {
 
             for (int i = 0; i < columnCount; i++) {
 
-                StringBuilder builder = new StringBuilder();
-                //builder.append("table name [").append(rsmd.getTableName(i + 1)).append("], ");
-                //builder.append("catalog name [").append(rsmd.getCatalogName(i + 1)).append("], ");
-                builder.append("column class name [").append(rsmd.getColumnClassName(i + 1)).append("], ");
-                builder.append("column display size [").append(rsmd.getColumnDisplaySize(i + 1)).append("], ");
-                builder.append("column label [").append(rsmd.getColumnLabel(i + 1)).append("], ");
-                builder.append("column name [").append(rsmd.getColumnName(i + 1)).append("], ");
-                builder.append("column type [").append(rsmd.getColumnType(i + 1)).append("], ");
-                builder.append("column type name [").append(rsmd.getColumnTypeName(i + 1)).append("], ");
-                builder.append("precision [").append(rsmd.getPrecision(i + 1)).append("], ");
-                builder.append("getScale [").append(rsmd.getScale(i + 1)).append("], ");
-                builder.append("isAutoIncrement [").append(rsmd.isAutoIncrement(i + 1)).append("], ");
-                builder.append("isCaseSensitive [").append(rsmd.isCaseSensitive(i + 1)).append("], ");
-                builder.append("isCurrency [").append(rsmd.isCurrency(i + 1)).append("], ");
-                //builder.append("isDefinitelyWritable [").append(rsmd.isDefinitelyWritable(i + 1)).append("], ");
-                builder.append("isNullable [").append(rsmd.isNullable(i + 1)).append("], ");
-                builder.append("isReadOnly [").append(rsmd.isReadOnly(i + 1)).append("], ");
-                //builder.append("isSearchable [").append(rsmd.isSearchable(i + 1)).append("], ");
-                //builder.append("isSigned [").append(rsmd.isSigned(i + 1)).append("], ");
-                //builder.append("isWritable [").append(rsmd.isWritable(i + 1)).append("]");
+                String metadata = "column class name [" + rsmd.getColumnClassName(i + 1) + "], " +
+                        "column display size [" + rsmd.getColumnDisplaySize(i + 1) + "], " +
+                        "column label [" + rsmd.getColumnLabel(i + 1) + "], " +
+                        "column name [" + rsmd.getColumnName(i + 1) + "], " +
+                        "column type [" + rsmd.getColumnType(i + 1) + "], " +
+                        "column type name [" + rsmd.getColumnTypeName(i + 1) + "], " +
+                        "precision [" + rsmd.getPrecision(i + 1) + "], " +
+                        "getScale [" + rsmd.getScale(i + 1) + "], " +
+                        "isAutoIncrement [" + rsmd.isAutoIncrement(i + 1) + "], " +
+                        "isCaseSensitive [" + rsmd.isCaseSensitive(i + 1) + "], " +
+                        "isCurrency [" + rsmd.isCurrency(i + 1) + "], " +
+                        "isNullable [" + rsmd.isNullable(i + 1) + "], " +
+                        "isReadOnly [" + rsmd.isReadOnly(i + 1) + "], ";
 
-                log.debug(builder.toString());
+                log.debug(metadata);
             }
 
         } catch (SQLException e) {
@@ -69,7 +62,7 @@ public class Printer {
                     String columnName = metaData.getColumnName(i + 1);
                     String columnValue = rs.getString(i + 1);
 
-                    row.add(columnName + " [" + columnValue + "]");
+                    row.add(columnName + " [" + columnValue + ']');
 
                 }
 

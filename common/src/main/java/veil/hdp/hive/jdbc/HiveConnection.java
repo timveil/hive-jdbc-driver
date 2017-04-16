@@ -239,7 +239,7 @@ public class HiveConnection extends AbstractConnection {
                 }
                 close();
             } catch (SQLException e) {
-                log.error("error closing during abort: sql state [" + e.getSQLState() + "]", e);
+                log.error("error closing during abort: sql state [" + e.getSQLState() + ']', e);
             }
         }
     }

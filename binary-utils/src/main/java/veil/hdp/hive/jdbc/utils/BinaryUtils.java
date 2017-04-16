@@ -11,7 +11,6 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.SaslException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -30,7 +29,7 @@ public class BinaryUtils {
         TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
 
         try {
-            return new TSaslClientTransport("PLAIN", null, null, null, new HashMap<>(),
+            return new TSaslClientTransport("PLAIN", null, null, null, null,
                     callbacks -> {
                         for (Callback callback : callbacks) {
                             if (callback instanceof NameCallback) {

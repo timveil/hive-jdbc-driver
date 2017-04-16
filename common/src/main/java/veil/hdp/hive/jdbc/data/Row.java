@@ -71,9 +71,11 @@ public class Row {
 
         public Row build() {
 
-            List<Column> columns = new ArrayList<>();
+
 
             List<TColumn> tColumns = tRowSet.getColumns();
+
+            List<Column> columns = new ArrayList<>(tColumns.size());
 
             for (int c = 0; c < tColumns.size(); c++) {
                 TColumn column = tColumns.get(c);

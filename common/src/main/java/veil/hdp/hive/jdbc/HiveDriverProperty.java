@@ -48,7 +48,7 @@ public enum HiveDriverProperty {
 
     public static HiveDriverProperty forAlias(String alias) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.getHiveConfName() != null && property.getHiveConfName().equalsIgnoreCase(alias)) {
+            if (property.hiveConfName != null && property.hiveConfName.equalsIgnoreCase(alias)) {
                 return property;
             }
         }

@@ -16,7 +16,7 @@ public class Schema {
 
     public Schema(TTableSchema tableSchema) {
 
-        columnDescriptors = new ArrayList<>();
+        columnDescriptors = new ArrayList<>(tableSchema.getColumnsSize());
 
         for (TColumnDesc columnDesc : tableSchema.getColumns()) {
             columnDescriptors.add(new ColumnDescriptor(columnDesc));
@@ -74,7 +74,7 @@ public class Schema {
             stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getColumnType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
-        stringBuilder.append("}");
+        stringBuilder.append('}');
 
         return stringBuilder.toString();
     }

@@ -594,11 +594,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + "]", e);
+            log.warn("sql exception: message [" + e.getMessage() + ']', e);
         } finally {
             session.getSessionLock().unlock();
         }
@@ -619,11 +619,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + "]", e);
+            log.warn("sql exception: message [" + e.getMessage() + ']', e);
         } finally {
             operation.getSession().getSessionLock().unlock();
         }
@@ -644,11 +644,11 @@ public class QueryUtils {
             }
 
         } catch (TTransportException e) {
-            log.warn("thrift transport exception: type [" + e.getType() + "]", e);
+            log.warn("thrift transport exception: type [" + e.getType() + ']', e);
         } catch (TException e) {
-            log.warn("thrift exception exception: message [" + e.getMessage() + "]", e);
+            log.warn("thrift exception exception: message [" + e.getMessage() + ']', e);
         } catch (SQLException e) {
-            log.warn("sql exception: message [" + e.getMessage() + "]", e);
+            log.warn("sql exception: message [" + e.getMessage() + ']', e);
         } finally {
             thriftSession.getSessionLock().unlock();
         }
@@ -657,7 +657,7 @@ public class QueryUtils {
 
     private static List<Row> getRows(TRowSet rowSet, Schema schema) {
 
-        List<Row> rows = new ArrayList<>();
+        List<Row> rows = null;
 
         if (rowSet != null && rowSet.isSetColumns()) {
 
@@ -666,6 +666,8 @@ public class QueryUtils {
             TColumn firstColumn = tColumns.get(0);
 
             int rowCount = getRowCount(firstColumn);
+
+            rows = new ArrayList<>(rowCount);
 
             for (int r = 0; r < rowCount; r++) {
 

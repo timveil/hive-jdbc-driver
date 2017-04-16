@@ -67,13 +67,13 @@ public enum HiveType {
 
     public static HiveType valueOf(TTypeId tTypeId) {
         for (HiveType hiveType : values()) {
-            TTypeId thriftType = hiveType.getThriftType();
+            TTypeId thriftType = hiveType.thriftType;
             if (thriftType != null && thriftType.equals(tTypeId)) {
                 return hiveType;
             }
         }
 
-        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + "]");
+        throw new IllegalArgumentException("Unrecognized TTypeId [" + tTypeId + ']');
     }
 
     public String getName() {
