@@ -19,18 +19,12 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
     private static final MetricRegistry metrics = new MetricRegistry();
     private Connection connection;
-    private ConsoleReporter reporter;
 
     public abstract Connection createConnection(String host) throws SQLException;
 
     @Before
     public void setUp() throws Exception {
         connection = createConnection(getHost());
-
-        reporter = ConsoleReporter
-                .forRegistry(metrics)
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build();
     }
 
     @After
@@ -38,8 +32,6 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
         if (connection != null) {
             connection.close();
         }
-
-        reporter.close();
     }
 
     @Test
@@ -70,27 +62,37 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
     @Test
     public void testSimpleQuery() throws SQLException {
-        try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
-
-            Printer.printResultSet(rs);
-        }
+        executeSimpleQuery(true);
 
 
     }
 
+    private void executeSimpleQuery(boolean print) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
+
+            if (print) {
+                Printer.printResultSet(rs);
+            }
+        }
+    }
+
     @Test
     public void testPreparedStatement() throws SQLException {
+        executePreparedStatement(true);
+    }
+
+    private void executePreparedStatement(boolean print) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_string = ?")) {
             statement.setString(1, "test");
 
             try (ResultSet rs = statement.executeQuery()) {
 
-                Printer.printResultSet(rs);
+                if (print) {
+                    Printer.printResultSet(rs);
+                }
             }
         }
-
-
     }
 
     @Test
@@ -98,21 +100,26 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
         // warm-up
         for (int i = 0; i < 10; i++) {
-            testSimpleQuery();
+            executeSimpleQuery(false);
         }
 
-        Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testSimpleQueryLoad"));
+        try (ConsoleReporter reporter = ConsoleReporter
+                .forRegistry(metrics)
+                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                .build()) {
 
-        for (int i = 0; i < getTestRuns(); i++) {
-            log.debug("run # {}", i);
+            Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testSimpleQueryLoad"));
 
-            try (Timer.Context queryContext = timer.time()) {
-                testSimpleQuery();
+            for (int i = 0; i < getTestRuns(); i++) {
+                log.debug("run # {}", i);
+
+                try (Timer.Context queryContext = timer.time()) {
+                    executeSimpleQuery(true);
+                }
             }
+
+            reporter.report();
         }
-
-
-        reporter.report();
 
     }
 
@@ -121,21 +128,27 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
         // warm-up
         for (int i = 0; i < 10; i++) {
-            testPreparedStatement();
+            executePreparedStatement(false);
         }
 
-        Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testPreparedStatementLoad"));
+        try (ConsoleReporter reporter = ConsoleReporter
+                .forRegistry(metrics)
+                .convertDurationsTo(TimeUnit.MILLISECONDS)
+                .build()) {
 
-        for (int i = 0; i < getTestRuns(); i++) {
-            log.debug("run # {}", i);
+            Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testPreparedStatementLoad"));
 
-            try (Timer.Context queryContext = timer.time()) {
-                testPreparedStatement();
+            for (int i = 0; i < getTestRuns(); i++) {
+                log.debug("run # {}", i);
+
+                try (Timer.Context queryContext = timer.time()) {
+                    executePreparedStatement(true);
+                }
             }
+
+
+            reporter.report();
         }
-
-
-        reporter.report();
 
     }
 
