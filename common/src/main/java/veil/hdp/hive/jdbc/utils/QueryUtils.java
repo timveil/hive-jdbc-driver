@@ -7,7 +7,9 @@ import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.*;
+import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
+import veil.hdp.hive.jdbc.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.ResultSet;
@@ -15,7 +17,6 @@ import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -439,79 +440,79 @@ public class QueryUtils {
     }
 
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.PRIMARY_KEYS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.PRIMARY_KEYS).build()).build();
     }
 
     public static ResultSet getProcedureColumns(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.PROCEDURE_COLUMNS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.PROCEDURE_COLUMNS).build()).build();
     }
 
     public static ResultSet getProcedures(HiveConnection connection, String catalog, String schemaPattern, String procedureNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.PROCEDURES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.PROCEDURES).build()).build();
     }
 
     public static ResultSet getColumnPrivileges(HiveConnection connection, String catalog, String schema, String table, String columnNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.COLUMN_PRIVILEGES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.COLUMN_PRIVILEGES).build()).build();
     }
 
     public static ResultSet getTablePrivileges(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.TABLE_PRIVILEGES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.TABLE_PRIVILEGES).build()).build();
     }
 
     public static ResultSet getBestRowIdentifier(HiveConnection connection, String catalog, String schema, String table, int scope, boolean nullable) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.BEST_ROW_IDENTIFIER)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.BEST_ROW_IDENTIFIER).build()).build();
     }
 
     public static ResultSet getVersionColumns(HiveConnection connection, String catalog, String schema, String table) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.VERSION_COLUMNS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.VERSION_COLUMNS).build()).build();
     }
 
     public static ResultSet getImportedKeys(HiveConnection connection, String catalog, String schema, String table) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.IMPORTED_KEYS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.IMPORTED_KEYS).build()).build();
     }
 
     public static ResultSet getExportedKeys(HiveConnection connection, String catalog, String schema, String table) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.EXPORTED_KEYS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.EXPORTED_KEYS).build()).build();
     }
 
     public static ResultSet getCrossReference(HiveConnection connection, String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.CROSS_REFERENCE)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.CROSS_REFERENCE).build()).build();
     }
 
     public static ResultSet getIndexInfo(HiveConnection connection, String catalog, String schema, String table, boolean unique, boolean approximate) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.INDEX_INFO)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.INDEX_INFO).build()).build();
     }
 
     public static ResultSet getUDTs(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, int[] types) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.UDT)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.UDT).build()).build();
     }
 
     public static ResultSet getSuperTypes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.SUPER_TYPES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.SUPER_TYPES).build()).build();
     }
 
     public static ResultSet getSuperTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.SUPER_TABLES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.SUPER_TABLES).build()).build();
     }
 
     public static ResultSet getAttributes(HiveConnection connection, String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.ATTRIBUTES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.ATTRIBUTES).build()).build();
     }
 
     public static ResultSet getClientInfoProperties(HiveConnection connection) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.CLIENT_INFO_PROPERTIES)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.CLIENT_INFO_PROPERTIES).build()).build();
     }
 
     public static ResultSet getFunctionColumns(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.FUNCTION_COLUMNS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.FUNCTION_COLUMNS).build()).build();
     }
 
     public static ResultSet getPseudoColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.PSEUDO_COLUMNS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.PSEUDO_COLUMNS).build()).build();
     }
 
     public static ResultSet getGeneratedKeys(HiveConnection connection) {
-        return new HiveEmptyResultSet.Builder().schema(new Schema(StaticColumnDescriptors.PSEUDO_COLUMNS)).build();
+        return new HiveEmptyResultSet.Builder().schema(new Schema.Builder().descriptors(StaticColumnDescriptors.PSEUDO_COLUMNS).build()).build();
     }
 
     public static String getSchema(HiveConnection connection) throws SQLException {
@@ -646,50 +647,15 @@ public class QueryUtils {
 
         if (rowSet != null && rowSet.isSetColumns()) {
 
-            List<TColumn> tColumns = rowSet.getColumns();
+            ColumnBasedSet cbs = new ColumnBasedSet.Builder().rowSet(rowSet).schema(schema).build();
 
-            TColumn firstColumn = tColumns.get(0);
+            rows = new RowBaseSet.Builder().columnBaseSet(cbs).build().getRows();
 
-            int rowCount = getRowCount(firstColumn);
-
-            rows = new ArrayList<>(rowCount);
-
-            for (int r = 0; r < rowCount; r++) {
-
-                rows.add(new Row.Builder().rowSet(rowSet).schema(schema).row(r).build());
-
-            }
         }
 
         return rows;
 
     }
 
-
-    private static int getRowCount(TColumn column) {
-
-        int size = 0;
-
-        if (column.isSetBoolVal()) {
-            size = column.getBoolVal().getValuesSize();
-        } else if (column.isSetByteVal()) {
-            size = column.getByteVal().getValuesSize();
-        } else if (column.isSetI16Val()) {
-            size = column.getI16Val().getValuesSize();
-        } else if (column.isSetI32Val()) {
-            size = column.getI32Val().getValuesSize();
-        } else if (column.isSetI64Val()) {
-            size = column.getI64Val().getValuesSize();
-        } else if (column.isSetDoubleVal()) {
-            size = column.getDoubleVal().getValuesSize();
-        } else if (column.isSetBinaryVal()) {
-            size = column.getBinaryVal().getValuesSize();
-        } else if (column.isSetStringVal()) {
-            size = column.getStringVal().getValuesSize();
-        }
-
-        return size;
-
-    }
 
 }

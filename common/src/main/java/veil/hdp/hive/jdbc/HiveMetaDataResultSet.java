@@ -84,7 +84,7 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
         public HiveMetaDataResultSet build() throws SQLException {
 
-            Schema schema = new Schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle));
+            Schema schema = new Schema.Builder().schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle)).build();
 
             Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
 

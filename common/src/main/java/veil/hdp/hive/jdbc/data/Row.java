@@ -2,11 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 
 import com.google.common.primitives.Ints;
-import org.apache.hive.service.cli.thrift.TColumn;
-import org.apache.hive.service.cli.thrift.TRowSet;
 import veil.hdp.hive.jdbc.HiveSQLException;
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -44,18 +40,12 @@ public class Row {
 
     public static class Builder {
 
-        private TRowSet tRowSet;
-        private Schema schema;
+        private ColumnBasedSet columnBasedSet;
         private int row;
 
 
-        public Row.Builder rowSet(TRowSet tRowSet) {
-            this.tRowSet = tRowSet;
-            return this;
-        }
-
-        public Row.Builder schema(Schema schema) {
-            this.schema = schema;
+        public Row.Builder columnBasedSet(ColumnBasedSet columnBasedSet) {
+            this.columnBasedSet = columnBasedSet;
             return this;
         }
 
@@ -68,20 +58,12 @@ public class Row {
         public Row build() {
 
 
+            int columnCount = columnBasedSet.getColumnCount();
 
-            List<TColumn> tColumns = tRowSet.getColumns();
+            List<Column> columns = new ArrayList<>(columnCount);
 
-            List<Column> columns = new ArrayList<>(tColumns.size());
-
-            for (int c = 0; c < tColumns.size(); c++) {
-                TColumn column = tColumns.get(c);
-
-                int position = c + 1;
-
-                ColumnDescriptor descriptor = schema.getColumn(position);
-
-                columns.add(new BaseColumn.Builder().index(row).column(column).descriptor(descriptor).build());
-
+            for (ColumnData columnData : columnBasedSet.getColumns()) {
+                columns.add(new BaseColumn.Builder().row(row).columnData(columnData).build());
             }
 
             columns.sort((o1, o2) -> Ints.compare(o1.getDescriptor().getPosition(), o2.getDescriptor().getPosition()));

@@ -15,18 +15,7 @@ public class Schema {
 
     private final List<ColumnDescriptor> columnDescriptors;
 
-    public Schema(TTableSchema tableSchema) {
-
-        columnDescriptors = new ArrayList<>(tableSchema.getColumnsSize());
-
-        for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-            columnDescriptors.add(new ColumnDescriptor(columnDesc));
-        }
-
-        columnDescriptors.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
-    }
-
-    public Schema(List<ColumnDescriptor> columnDescriptors) {
+    private Schema(List<ColumnDescriptor> columnDescriptors) {
         this.columnDescriptors = columnDescriptors;
     }
 
@@ -73,5 +62,38 @@ public class Schema {
         stringBuilder.append('}');
 
         return stringBuilder.toString();
+    }
+
+   public static class Builder {
+
+        private TTableSchema tableSchema;
+        private List<ColumnDescriptor> columnDescriptors;
+
+        public Schema.Builder schema(TTableSchema tTableSchema) {
+            this.tableSchema = tTableSchema;
+            return this;
+        }
+
+
+       public Schema.Builder descriptors(List<ColumnDescriptor> columnDescriptors) {
+           this.columnDescriptors = columnDescriptors;
+           return this;
+       }
+
+        public Schema build() {
+
+            if (tableSchema != null) {
+
+                columnDescriptors = new ArrayList<>(tableSchema.getColumnsSize());
+
+                for (TColumnDesc columnDesc : tableSchema.getColumns()) {
+                    columnDescriptors.add(new ColumnDescriptor(columnDesc));
+                }
+            }
+
+            columnDescriptors.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
+
+            return new Schema(columnDescriptors);
+        }
     }
 }

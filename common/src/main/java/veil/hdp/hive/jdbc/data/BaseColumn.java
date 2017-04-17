@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import org.apache.hive.service.cli.thrift.*;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
@@ -8,7 +7,6 @@ import veil.hdp.hive.jdbc.metadata.HiveType;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -123,154 +121,108 @@ public class BaseColumn<T> implements Column<T> {
 
     public static class Builder {
 
-        private static final byte[] MASKS = new byte[]{
-                0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
-        };
-        private TColumn tColumn;
-        private ColumnDescriptor descriptor;
-        private int index;
+        private ColumnData columnData;
+        private int row;
 
-        private static boolean isNull(int index, byte[] nulls) {
-            int nullsLength = nulls.length;
-            int bitsLength = nullsLength * 8;
-            BitSet bitset = new BitSet(bitsLength);
-            for (int i = 0; i < bitsLength; i++) {
-                int i1 = i / 8;
-                byte aNull = nulls[i1];
-                int i2 = i % 8;
-                byte mask = MASKS[i2];
-                boolean wtf = (aNull & mask) != 0;
-                bitset.set(i, wtf);
-            }
 
-            return bitset.get(index);
-        }
-
-        public Builder column(TColumn tColumn) {
-            this.tColumn = tColumn;
+        public Builder columnData(ColumnData columnData) {
+            this.columnData = columnData;
             return this;
         }
 
 
-        public Builder descriptor(ColumnDescriptor descriptor) {
-            this.descriptor = descriptor;
-            return this;
-        }
-
-        public Builder index(int index) {
-            this.index = index;
+        public Builder row(int row) {
+            this.row = row;
             return this;
         }
 
         public Column build() {
 
+            ColumnDescriptor descriptor = columnData.getDescriptor();
+
             HiveType hiveType = descriptor.getColumnType().getHiveType();
 
-            if (tColumn.isSetBoolVal()) {
+            BitSet bitSet = columnData.getNulls();
 
-                TBoolColumn tBoolColumn = tColumn.getBoolVal();
+            boolean isNull = bitSet.get(row);
 
-                Boolean value = tBoolColumn.getValues().get(index);
 
-                boolean isnull = isNull(index, tBoolColumn.getNulls());
 
-                return new BooleanColumn(descriptor, isnull ? null : value);
+            if (columnData instanceof BooleanColumnData) {
 
-            } else if (tColumn.isSetByteVal()) {
+                BooleanColumnData data = (BooleanColumnData)columnData;
 
-                TByteColumn tByteColumn = tColumn.getByteVal();
+                return new BooleanColumn(descriptor, isNull ? null : data.getValues().get(row));
 
-                Byte value = tByteColumn.getValues().get(index);
+            } else if (columnData instanceof ByteColumnData) {
+                ByteColumnData data = (ByteColumnData)columnData;
 
-                boolean isnull = isNull(index, tByteColumn.getNulls());
+                return new ByteColumn(descriptor, isNull ? null : data.getValues().get(row));
 
-                return new ByteColumn(descriptor, isnull ? null : value);
+            } else if (columnData instanceof ShortColumnData) {
+                ShortColumnData data = (ShortColumnData)columnData;
 
-            } else if (tColumn.isSetI16Val()) {
+                return new ShortColumn(descriptor, isNull ? null : data.getValues().get(row));
 
-                TI16Column tColumnI16Val = tColumn.getI16Val();
+            } else if (columnData instanceof IntegerColumnData) {
+                IntegerColumnData data = (IntegerColumnData)columnData;
 
-                Short value = tColumnI16Val.getValues().get(index);
+                return new IntegerColumn(descriptor, isNull ? null : data.getValues().get(row));
 
-                boolean isnull = isNull(index, tColumnI16Val.getNulls());
+            } else if (columnData instanceof LongColumnData) {
+                LongColumnData data = (LongColumnData)columnData;
 
-                return new ShortColumn(descriptor, isnull ? null : value);
-
-            } else if (tColumn.isSetI32Val()) {
-
-                TI32Column tColumnI32Val = tColumn.getI32Val();
-
-                Integer value = tColumnI32Val.getValues().get(index);
-
-                boolean isnull = isNull(index, tColumnI32Val.getNulls());
-
-                return new IntegerColumn(descriptor, isnull ? null : value);
-
-            } else if (tColumn.isSetI64Val()) {
-
-                TI64Column tColumnI64Val = tColumn.getI64Val();
-
-                Long value = tColumnI64Val.getValues().get(index);
-
-                boolean isnull = isNull(index, tColumnI64Val.getNulls());
+                Long value = data.getValues().get(row);
 
                 if (hiveType.equals(TIMESTAMP)) {
-                    return new TimestampColumn(descriptor, isnull ? null : new Timestamp(value));
+                    return new TimestampColumn(descriptor, isNull ? null : new Timestamp(value));
                 } else if (hiveType.equals(DATE)) {
-                    return new DateColumn(descriptor, isnull ? null : new Date(value));
+                    return new DateColumn(descriptor, isNull ? null : new Date(value));
                 } else {
-                    return new LongColumn(descriptor, isnull ? null : value);
+                    return new LongColumn(descriptor, isNull ? null : value);
                 }
 
 
-            } else if (tColumn.isSetDoubleVal()) {
+            } else if (columnData instanceof DoubleColumnData) {
 
-                TDoubleColumn tDoubleColumn = tColumn.getDoubleVal();
+                DoubleColumnData data = (DoubleColumnData)columnData;
 
-                Double value = tDoubleColumn.getValues().get(index);
-
-                boolean isnull = isNull(index, tDoubleColumn.getNulls());
+                Double value = data.getValues().get(row);
 
                 if (hiveType.equals(FLOAT)) {
-                    return new FloatColumn(descriptor, isnull ? null : new Float(value));
+                    return new FloatColumn(descriptor, isNull ? null : new Float(value));
                 } else {
-                    return new DoubleColumn(descriptor, isnull ? null : value);
+                    return new DoubleColumn(descriptor, isNull ? null : value);
                 }
 
 
-            } else if (tColumn.isSetBinaryVal()) {
+            } else if (columnData instanceof BinaryColumnData) {
 
-                TBinaryColumn tBinaryColumn = tColumn.getBinaryVal();
+                BinaryColumnData data = (BinaryColumnData)columnData;
 
-                ByteBuffer value = tBinaryColumn.getValues().get(index);
+                return new BinaryColumn(descriptor, isNull ? null : data.getValues().get(row));
 
-                boolean isnull = isNull(index, tBinaryColumn.getNulls());
-
-                return new BinaryColumn(descriptor, isnull ? null : value);
-
-            } else if (tColumn.isSetStringVal()) {
+            } else if (columnData instanceof StringColumnData) {
                 //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL, CHAR, VARCHAR
 
-                TStringColumn tStringColumn = tColumn.getStringVal();
+                StringColumnData data = (StringColumnData)columnData;
 
-                String value = tStringColumn.getValues().get(index);
-
-                boolean isnull = isNull(index, tStringColumn.getNulls());
+                String value = data.getValues().get(row);
 
                 if (hiveType.equals(DECIMAL)) {
-                    return new DecimalColumn(descriptor, isnull ? null : new BigDecimal(value));
+                    return new DecimalColumn(descriptor, isNull ? null : new BigDecimal(value));
                 } else if (hiveType.equals(CHAR)) {
-                    return new CharacterColumn(descriptor, isnull ? null : value.charAt(0));
+                    return new CharacterColumn(descriptor, isNull ? null : value.charAt(0));
                 } else if (hiveType.equals(VARCHAR)) {
-                    return new VarcharColumn(descriptor, isnull ? null : value);
+                    return new VarcharColumn(descriptor, isNull ? null : value);
                 } else {
-                    return new StringColumn(descriptor, isnull ? null : value);
+                    return new StringColumn(descriptor, isNull ? null : value);
                 }
 
                 // todo; add others
 
             } else {
-                throw new IllegalStateException(MessageFormat.format("unknown column type for TColumn [{0}]", tColumn));
+                throw new IllegalStateException(MessageFormat.format("unknown instance of ColumnData [{0}]", columnData));
             }
 
 

@@ -189,7 +189,7 @@ public class HiveResultSet extends HiveBaseResultSet {
 
         public HiveResultSet build() throws SQLException {
 
-            Schema schema = new Schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle));
+            Schema schema = new Schema.Builder().schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle)).build();
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;
