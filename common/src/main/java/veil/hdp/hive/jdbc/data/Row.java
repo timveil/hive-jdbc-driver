@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
 
+import com.google.common.primitives.Ints;
 import org.apache.hive.service.cli.thrift.TColumn;
 import org.apache.hive.service.cli.thrift.TRowSet;
 import veil.hdp.hive.jdbc.HiveSQLException;
@@ -25,14 +26,7 @@ public class Row {
     }
 
     public Column getColumn(int position) throws SQLException {
-
-        for (Column column : columns) {
-            if (column.getDescriptor().getPosition() == position) {
-                return column;
-            }
-        }
-
-        throw new HiveSQLException(MessageFormat.format("invalid column position [{0}] for row; row has [{1}] columns", position, columns.size()));
+        return columns.get(position - 1);
     }
 
     public Column getColumn(String name) throws SQLException {
@@ -89,6 +83,8 @@ public class Row {
                 columns.add(new BaseColumn.Builder().index(row).column(column).descriptor(descriptor).build());
 
             }
+
+            columns.sort((o1, o2) -> Ints.compare(o1.getDescriptor().getPosition(), o2.getDescriptor().getPosition()));
 
 
             return new Row(columns);

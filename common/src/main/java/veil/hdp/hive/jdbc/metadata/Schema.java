@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc.metadata;
 
+import com.google.common.primitives.Ints;
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 import org.apache.hive.service.cli.thrift.TTableSchema;
 import org.slf4j.Logger;
@@ -21,6 +22,8 @@ public class Schema {
         for (TColumnDesc columnDesc : tableSchema.getColumns()) {
             columnDescriptors.add(new ColumnDescriptor(columnDesc));
         }
+
+        columnDescriptors.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
     }
 
     public Schema(List<ColumnDescriptor> columnDescriptors) {
@@ -44,14 +47,7 @@ public class Schema {
     }
 
     public ColumnDescriptor getColumn(int position) {
-
-        for (ColumnDescriptor columnDescriptor : columnDescriptors) {
-            if (position == columnDescriptor.getPosition()) {
-                return columnDescriptor;
-            }
-        }
-
-        return null;
+        return columnDescriptors.get(position - 1);
     }
 
     public void clear() {
