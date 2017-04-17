@@ -76,7 +76,7 @@ public class ColumnData<T> {
             throw new IllegalStateException(MessageFormat.format("no values set for TColumn [{0}]", column));
         }
 
-        private BitSet buildBitSet(byte[] nulls) {
+        private static BitSet buildBitSet(byte[] nulls) {
             int nullsLength = nulls.length;
             int bitsLength = nullsLength * 8;
             BitSet bitset = new BitSet(bitsLength);
