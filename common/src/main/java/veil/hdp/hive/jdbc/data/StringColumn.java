@@ -20,7 +20,7 @@ public class StringColumn extends BaseColumn<String> {
 
     @Override
     public String asString() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override
