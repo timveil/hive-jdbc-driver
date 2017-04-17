@@ -41,11 +41,6 @@ public class Schema {
 
     public void clear() {
         if (columnDescriptors != null && !columnDescriptors.isEmpty()) {
-
-            if (log.isTraceEnabled()) {
-                log.trace("clearing columns collection");
-            }
-
             columnDescriptors.clear();
         }
     }

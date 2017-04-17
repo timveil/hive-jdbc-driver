@@ -63,14 +63,8 @@ public class ThriftOperation implements SQLCloseable {
     @Override
     public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
-            if (log.isTraceEnabled()) {
-                log.trace("attempting to close {}", this.getClass().getName());
-            }
-
             QueryUtils.closeOperation(this);
-
             resultSet.close();
-
         }
     }
 

@@ -9,9 +9,11 @@ import java.util.List;
 
 public class ColumnBasedSet {
 
+    private final int rowCount;
     private final List<ColumnData> columns;
 
-    private ColumnBasedSet(List<ColumnData> columns) {
+    private ColumnBasedSet(int rowCount, List<ColumnData> columns) {
+        this.rowCount = rowCount;
         this.columns = columns;
     }
 
@@ -20,7 +22,7 @@ public class ColumnBasedSet {
     }
 
     public int getRowCount() {
-        return columns.get(0).getRowCount();
+        return rowCount;
     }
 
     public int getColumnCount() {
@@ -45,25 +47,27 @@ public class ColumnBasedSet {
 
         public ColumnBasedSet build() {
 
-            List<ColumnData> columnData = null;
+            List<TColumn> tColumns = rowSet.getColumns();
 
-            if (rowSet != null && rowSet.isSetColumns()) {
+            List<ColumnData> columnData = new ArrayList<>(tColumns.size());
 
-                List<TColumn> tColumns = rowSet.getColumns();
+            int position = 1;
 
-                columnData = new ArrayList<>(tColumns.size());
+            int rowCount = 0;
 
-                int position = 1;
+            for (TColumn column : tColumns) {
 
-                for (TColumn column : tColumns) {
+                ColumnData data = new ColumnData.Builder().column(column).descriptor(schema.getColumn(position)).build();
 
-                    columnData.add(new ColumnData.Builder().column(column).descriptor(schema.getColumn(position)).build());
+                rowCount = data.getRowCount();
 
-                    position++;
-                }
+                columnData.add(data);
+
+                position++;
             }
 
-            return new ColumnBasedSet(columnData);
+
+            return new ColumnBasedSet(rowCount, columnData);
         }
     }
 
