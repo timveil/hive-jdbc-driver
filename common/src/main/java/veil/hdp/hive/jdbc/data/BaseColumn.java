@@ -148,27 +148,27 @@ public class BaseColumn<T> implements Column<T> {
 
             if (columnData instanceof BooleanColumnData) {
 
-                BooleanColumnData data = (BooleanColumnData)columnData;
+                BooleanColumnData data = (BooleanColumnData) columnData;
 
                 return new BooleanColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof ByteColumnData) {
-                ByteColumnData data = (ByteColumnData)columnData;
+                ByteColumnData data = (ByteColumnData) columnData;
 
                 return new ByteColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof ShortColumnData) {
-                ShortColumnData data = (ShortColumnData)columnData;
+                ShortColumnData data = (ShortColumnData) columnData;
 
                 return new ShortColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof IntegerColumnData) {
-                IntegerColumnData data = (IntegerColumnData)columnData;
+                IntegerColumnData data = (IntegerColumnData) columnData;
 
                 return new IntegerColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof LongColumnData) {
-                LongColumnData data = (LongColumnData)columnData;
+                LongColumnData data = (LongColumnData) columnData;
 
                 Long value = data.getValues().get(row);
 
@@ -183,7 +183,7 @@ public class BaseColumn<T> implements Column<T> {
 
             } else if (columnData instanceof DoubleColumnData) {
 
-                DoubleColumnData data = (DoubleColumnData)columnData;
+                DoubleColumnData data = (DoubleColumnData) columnData;
 
                 Double value = data.getValues().get(row);
 
@@ -196,14 +196,14 @@ public class BaseColumn<T> implements Column<T> {
 
             } else if (columnData instanceof BinaryColumnData) {
 
-                BinaryColumnData data = (BinaryColumnData)columnData;
+                BinaryColumnData data = (BinaryColumnData) columnData;
 
                 return new BinaryColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof StringColumnData) {
                 //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL, CHAR, VARCHAR
 
-                StringColumnData data = (StringColumnData)columnData;
+                StringColumnData data = (StringColumnData) columnData;
 
                 String value = data.getValues().get(row);
 
