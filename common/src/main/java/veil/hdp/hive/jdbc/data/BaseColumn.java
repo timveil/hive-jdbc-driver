@@ -146,8 +146,6 @@ public class BaseColumn<T> implements Column<T> {
 
             boolean isNull = bitSet.get(row);
 
-
-
             if (columnData instanceof BooleanColumnData) {
 
                 BooleanColumnData data = (BooleanColumnData)columnData;
