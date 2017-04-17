@@ -438,7 +438,7 @@ enum TOperationState {
   // set is not available.
   RUNNING_STATE,
 
-  // The thriftOperation has completed. When an thriftOperation is in
+  // The operation has completed. When an operation is in
   // this state its result set may be fetched.
   FINISHED_STATE,
 
@@ -695,7 +695,7 @@ struct TExecuteStatementReq {
   // is executed. These properties apply to this statement
   // only and will not affect the subsequent state of the Session.
   3: optional map<string, string> confOverlay
-  
+
   // Execute asynchronously when runAsync is true
   4: optional bool runAsync = false
 
@@ -724,13 +724,13 @@ struct TGetTypeInfoReq {
 struct TGetTypeInfoResp {
   1: required TStatus status
   2: optional TOperationHandle operationHandle
-}  
+}
 
 
 // GetCatalogs()
 //
-// Returns the list of catalogs (databases) 
-// Results are ordered by TABLE_CATALOG 
+// Returns the list of catalogs (databases)
+// Results are ordered by TABLE_CATALOG
 //
 // Resultset columns :
 // col1
@@ -751,7 +751,7 @@ struct TGetCatalogsResp {
 
 // GetSchemas()
 //
-// Retrieves the schema names available in this database. 
+// Retrieves the schema names available in this database.
 // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
 // col1
 // name: TABLE_SCHEM
@@ -840,9 +840,9 @@ struct TGetTablesResp {
 
 // GetTableTypes()
 //
-// Returns the table types available in this database. 
-// The results are ordered by table type. 
-// 
+// Returns the table types available in this database.
+// The results are ordered by table type.
+//
 // col1
 // name: TABLE_TYPE
 // type: STRING
@@ -863,8 +863,8 @@ struct TGetTableTypesResp {
 // Returns a list of columns in the specified tables.
 // The information is returned as a result set which can be fetched
 // using the OperationHandle provided in the response.
-// Results are ordered by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, 
-// and ORDINAL_POSITION. 
+// Results are ordered by TABLE_CAT, TABLE_SCHEM, TABLE_NAME,
+// and ORDINAL_POSITION.
 //
 // Result Set Columns are the same as those for the ODBC CLIColumns
 // function.
@@ -960,7 +960,7 @@ struct TGetFunctionsResp {
   1: required TStatus status
   2: optional TOperationHandle operationHandle
 }
-  
+
 
 // GetOperationStatus()
 //
@@ -968,6 +968,8 @@ struct TGetFunctionsResp {
 struct TGetOperationStatusReq {
   // Session to run this request against
   1: required TOperationHandle operationHandle
+  // optional arguments to get progress information
+  2: optional bool getProgressUpdate
 }
 
 struct TGetOperationStatusResp {
@@ -983,6 +985,8 @@ struct TGetOperationStatusResp {
 
   // Error message
   5: optional string errorMessage
+
+  10: optional TProgressUpdateResp progressUpdateResponse
 }
 
 
@@ -1065,7 +1069,7 @@ struct TFetchResultsReq {
   // The fetch orientation. For V1 this must be either
   // FETCH_NEXT or FETCH_FIRST. Defaults to FETCH_NEXT.
   2: required TFetchOrientation orientation = TFetchOrientation.FETCH_NEXT
-  
+
   // Max number of rows that should be returned in
   // the rowset.
   3: required i64 maxRows
@@ -1136,6 +1140,21 @@ struct TRenewDelegationTokenReq {
 struct TRenewDelegationTokenResp {
   // status of the request
   1: required TStatus status
+}
+
+enum TJobExecutionStatus {
+    IN_PROGRESS,
+    COMPLETE,
+    NOT_AVAILABLE
+}
+
+struct TProgressUpdateResp {
+  1: required list<string> headerNames
+  2: required list<list<string>> rows
+  3: required double progressedPercentage
+  4: required TJobExecutionStatus status
+  5: required string footerSummary
+  6: required i64 startTime
 }
 
 service TCLIService {
