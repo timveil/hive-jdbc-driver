@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TStatusCode implements TEnum {
+public enum TStatusCode implements org.apache.thrift.TEnum {
   SUCCESS_STATUS(0),
   SUCCESS_WITH_INFO_STATUS(1),
   STILL_EXECUTING_STATUS(2),

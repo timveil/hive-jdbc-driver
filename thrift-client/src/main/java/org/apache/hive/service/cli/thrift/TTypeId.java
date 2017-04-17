@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TTypeId implements TEnum {
+public enum TTypeId implements org.apache.thrift.TEnum {
   BOOLEAN_TYPE(0),
   TINYINT_TYPE(1),
   SMALLINT_TYPE(2),

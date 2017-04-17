@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TOperationState implements TEnum {
+public enum TOperationState implements org.apache.thrift.TEnum {
   INITIALIZED_STATE(0),
   RUNNING_STATE(1),
   FINISHED_STATE(2),

@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TProtocolVersion implements TEnum {
+public enum TProtocolVersion implements org.apache.thrift.TEnum {
   HIVE_CLI_SERVICE_PROTOCOL_V1(0),
   HIVE_CLI_SERVICE_PROTOCOL_V2(1),
   HIVE_CLI_SERVICE_PROTOCOL_V3(2),

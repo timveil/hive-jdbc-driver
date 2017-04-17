@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TGetInfoType implements TEnum {
+public enum TGetInfoType implements org.apache.thrift.TEnum {
   CLI_MAX_DRIVER_CONNECTIONS(0),
   CLI_MAX_CONCURRENT_ACTIVITIES(1),
   CLI_DATA_SOURCE_NAME(2),

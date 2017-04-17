@@ -6,7 +6,6 @@
  */
 package org.apache.hive.service.cli.thrift;
 
-import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TProtocolException;
 
 import java.util.*;
@@ -204,7 +203,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   }
 
   @Override
-  protected Object standardSchemeReadValue(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TField field) throws TException {
+  protected Object standardSchemeReadValue(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TField field) throws org.apache.thrift.TException {
     _Fields setField = _Fields.findByThriftId(field.id);
     if (setField != null) {
       switch (setField) {
@@ -272,7 +271,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   }
 
   @Override
-  protected void standardSchemeWriteValue(org.apache.thrift.protocol.TProtocol oprot) throws TException {
+  protected void standardSchemeWriteValue(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
     switch (setField_) {
       case STRING_VALUE:
         String stringValue = (String)value_;
@@ -304,7 +303,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   }
 
   @Override
-  protected Object tupleSchemeReadValue(org.apache.thrift.protocol.TProtocol iprot, short fieldID) throws TException {
+  protected Object tupleSchemeReadValue(org.apache.thrift.protocol.TProtocol iprot, short fieldID) throws org.apache.thrift.TException {
     _Fields setField = _Fields.findByThriftId(fieldID);
     if (setField != null) {
       switch (setField) {
@@ -341,7 +340,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   }
 
   @Override
-  protected void tupleSchemeWriteValue(org.apache.thrift.protocol.TProtocol oprot) throws TException {
+  protected void tupleSchemeWriteValue(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
     switch (setField_) {
       case STRING_VALUE:
         String stringValue = (String)value_;
@@ -557,7 +556,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
     try {
       write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-    } catch (TException te) {
+    } catch (org.apache.thrift.TException te) {
       throw new java.io.IOException(te);
     }
   }
@@ -566,7 +565,7 @@ public class TGetInfoValue extends org.apache.thrift.TUnion<TGetInfoValue, TGetI
   private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
     try {
       read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-    } catch (TException te) {
+    } catch (org.apache.thrift.TException te) {
       throw new java.io.IOException(te);
     }
   }

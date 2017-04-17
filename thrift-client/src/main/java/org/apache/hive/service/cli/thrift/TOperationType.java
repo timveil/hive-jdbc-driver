@@ -7,9 +7,7 @@
 package org.apache.hive.service.cli.thrift;
 
 
-import org.apache.thrift.TEnum;
-
-public enum TOperationType implements TEnum {
+public enum TOperationType implements org.apache.thrift.TEnum {
   EXECUTE_STATEMENT(0),
   GET_TYPE_INFO(1),
   GET_CATALOGS(2),
