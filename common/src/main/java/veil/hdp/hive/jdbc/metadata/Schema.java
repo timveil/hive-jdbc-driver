@@ -64,7 +64,7 @@ public class Schema {
         return stringBuilder.toString();
     }
 
-   public static class Builder {
+    public static class Builder {
 
         private TTableSchema tableSchema;
         private List<ColumnDescriptor> columnDescriptors;
@@ -75,10 +75,10 @@ public class Schema {
         }
 
 
-       public Schema.Builder descriptors(List<ColumnDescriptor> columnDescriptors) {
-           this.columnDescriptors = columnDescriptors;
-           return this;
-       }
+        public Schema.Builder descriptors(List<ColumnDescriptor> columnDescriptors) {
+            this.columnDescriptors = columnDescriptors;
+            return this;
+        }
 
         public Schema build() {
 

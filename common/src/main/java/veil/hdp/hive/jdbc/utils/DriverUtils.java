@@ -144,21 +144,6 @@ public class DriverUtils {
 
         callback.merge(properties, uri);
 
-        /*if (HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.getBoolean(properties)) {
-
-            String authority = uri.getAuthority();
-
-            loadPropertiesFromZookeeper(authority, properties);
-
-        } else {
-            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
-
-            if (uri.getPort() != -1) {
-                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
-            }
-
-        }*/
-
     }
 
     private static void parseQueryParameters(String path, Properties properties) {

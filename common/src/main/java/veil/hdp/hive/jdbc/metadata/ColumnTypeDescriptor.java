@@ -12,15 +12,8 @@ public class ColumnTypeDescriptor {
 
     private final HiveType hiveType;
 
-    public ColumnTypeDescriptor(HiveType hiveType) {
+    private ColumnTypeDescriptor(HiveType hiveType) {
         this.hiveType = hiveType;
-    }
-
-    public ColumnTypeDescriptor(TTypeDesc typeDesc) {
-        List<TTypeEntry> typeEntries = typeDesc.getTypes();
-        TPrimitiveTypeEntry primitiveTypeEntry = typeEntries.get(0).getPrimitiveEntry();
-
-        this.hiveType = HiveType.valueOf(primitiveTypeEntry.getType());
     }
 
     public HiveType getHiveType() {
@@ -32,5 +25,34 @@ public class ColumnTypeDescriptor {
         return new ToStringBuilder(this)
                 .append("hiveType", hiveType)
                 .toString();
+    }
+
+    public static class Builder {
+
+        private TTypeDesc typeDesc;
+        private HiveType hiveType;
+
+        public ColumnTypeDescriptor.Builder thriftType(TTypeDesc typeDesc) {
+            this.typeDesc = typeDesc;
+            return this;
+        }
+
+        public ColumnTypeDescriptor.Builder hiveType(HiveType hiveType) {
+            this.hiveType = hiveType;
+            return this;
+        }
+
+        public ColumnTypeDescriptor build() {
+
+            if (hiveType != null) {
+                return new ColumnTypeDescriptor(hiveType);
+            } else {
+                List<TTypeEntry> typeEntries = typeDesc.getTypes();
+                TPrimitiveTypeEntry primitiveTypeEntry = typeEntries.get(0).getPrimitiveEntry();
+
+                return new ColumnTypeDescriptor(HiveType.valueOf(primitiveTypeEntry.getType()));
+            }
+
+        }
     }
 }

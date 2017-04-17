@@ -27,7 +27,7 @@ public class ColumnDescriptor {
         name = columnDesc.getColumnName();
         normalizedName = normalizeName(columnDesc.getColumnName());
         comment = columnDesc.getComment();
-        columnTypeDescriptor = new ColumnTypeDescriptor(columnDesc.getTypeDesc());
+        columnTypeDescriptor = new ColumnTypeDescriptor.Builder().thriftType(columnDesc.getTypeDesc()).build();
         position = columnDesc.getPosition();
     }
 
@@ -69,5 +69,12 @@ public class ColumnDescriptor {
                 .append("columnTypeDescriptor", columnTypeDescriptor)
                 .append("position", position)
                 .toString();
+    }
+
+    public static class Builder {
+        //todo
+        public ColumnDescriptor build() {
+            return null;
+        }
     }
 }
