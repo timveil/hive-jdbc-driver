@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -120,14 +121,17 @@ public class QueryUtils {
     private static List<Row> getRows(ThriftSession session, Schema schema, TFetchResultsReq tFetchResultsReq) throws SQLException {
         TFetchResultsResp fetchResults;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            fetchResults = session.getClient().FetchResults(tFetchResultsReq);
+            fetchResults = client.FetchResults(tFetchResultsReq);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(fetchResults.getStatus());
@@ -146,14 +150,17 @@ public class QueryUtils {
 
         TExecuteStatementResp executeStatementResp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            executeStatementResp = session.getClient().ExecuteStatement(executeStatementReq);
+            executeStatementResp = client.ExecuteStatement(executeStatementReq);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(executeStatementResp.getStatus());
@@ -174,14 +181,17 @@ public class QueryUtils {
 
             TGetOperationStatusResp statusResp;
 
-            session.getSessionLock().lock();
+            ReentrantLock lock = session.getSessionLock();
+            TCLIService.Client client = session.getClient();
+
+            lock.lock();
 
             try {
-                statusResp = session.getClient().GetOperationStatus(statusReq);
+                statusResp = client.GetOperationStatus(statusReq);
             } catch (TException e) {
                 throw new HiveSQLException(e);
             } finally {
-                session.getSessionLock().unlock();
+                lock.unlock();
             }
 
             checkStatus(statusResp.getStatus());
@@ -219,14 +229,17 @@ public class QueryUtils {
 
         TGetResultSetMetadataResp metadataResp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            metadataResp = session.getClient().GetResultSetMetadata(metadataReq);
+            metadataResp = client.GetResultSetMetadata(metadataReq);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(metadataResp.getStatus());
@@ -271,14 +284,17 @@ public class QueryUtils {
 
         TGetCatalogsResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetCatalogs(req);
+            resp = client.GetCatalogs(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -297,14 +313,17 @@ public class QueryUtils {
 
         TGetColumnsResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetColumns(req);
+            resp = client.GetColumns(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -322,14 +341,17 @@ public class QueryUtils {
 
         TGetFunctionsResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetFunctions(req);
+            resp = client.GetFunctions(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -353,14 +375,17 @@ public class QueryUtils {
 
         TGetTablesResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetTables(req);
+            resp = client.GetTables(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -376,15 +401,17 @@ public class QueryUtils {
 
         TGetTypeInfoResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
 
+        lock.lock();
 
         try {
-            resp = session.getClient().GetTypeInfo(req);
+            resp = client.GetTypeInfo(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -399,14 +426,17 @@ public class QueryUtils {
 
         TGetTableTypesResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetTableTypes(req);
+            resp = client.GetTableTypes(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -422,14 +452,17 @@ public class QueryUtils {
 
         TGetSchemasResp resp;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().GetSchemas(req);
+            resp = client.GetSchemas(req);
         } catch (TException e) {
             throw new HiveSQLException(e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -566,16 +599,19 @@ public class QueryUtils {
 
         TCloseOperationResp resp = null;
 
-        session.getSessionLock().lock();
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
 
         try {
-            resp = session.getClient().CloseOperation(closeRequest);
+            resp = client.CloseOperation(closeRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } finally {
-            session.getSessionLock().unlock();
+            lock.unlock();
         }
 
         if (resp != null) {
@@ -593,16 +629,19 @@ public class QueryUtils {
 
         TCancelOperationResp resp = null;
 
-        operation.getSession().getSessionLock().lock();
+        ReentrantLock lock = operation.getSession().getSessionLock();
+        TCLIService.Client client = operation.getSession().getClient();
+
+        lock.lock();
 
         try {
-            resp = operation.getSession().getClient().CancelOperation(cancelRequest);
+            resp = client.CancelOperation(cancelRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } finally {
-            operation.getSession().getSessionLock().unlock();
+            lock.unlock();
         }
 
         if (resp != null) {
@@ -619,16 +658,19 @@ public class QueryUtils {
 
         TCloseSessionResp resp = null;
 
-        thriftSession.getSessionLock().lock();
+        ReentrantLock lock = thriftSession.getSessionLock();
+        TCLIService.Client client = thriftSession.getClient();
+
+        lock.lock();
 
         try {
-            resp = thriftSession.getClient().CloseSession(closeRequest);
+            resp = client.CloseSession(closeRequest);
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
         } finally {
-            thriftSession.getSessionLock().unlock();
+            lock.unlock();
         }
 
         if (resp != null) {

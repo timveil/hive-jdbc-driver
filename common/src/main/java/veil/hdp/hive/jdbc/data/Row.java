@@ -21,7 +21,7 @@ public class Row {
         return columns;
     }
 
-    public Column getColumn(int position) throws SQLException {
+    public Column getColumn(int position) {
         return columns.get(position - 1);
     }
 
