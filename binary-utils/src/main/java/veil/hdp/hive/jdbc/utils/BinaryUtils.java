@@ -18,6 +18,8 @@ import java.util.Properties;
 public class BinaryUtils {
 
 
+    private static final String PLAIN = "PLAIN";
+
     public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
         // todo: no support for no-sasl
         // todo: no support for delegation tokens or ssl yet
@@ -30,7 +32,7 @@ public class BinaryUtils {
         TTransport socketTransport = new TSocket(host, port, loginTimeoutMilliseconds);
 
         try {
-            return new TSaslClientTransport("PLAIN", null, null, null, null,
+            return new TSaslClientTransport(PLAIN, null, null, null, null,
                     callbacks -> {
                         for (Callback callback : callbacks) {
                             if (callback instanceof NameCallback) {
