@@ -41,8 +41,19 @@ public class DriverUtils {
 
         loadDefaultProperties(properties);
 
+        loadSuppliedProperties(suppliedProperties, properties);
+
         parseUrl(url, properties, callback);
 
+        validateProperties(properties);
+
+        printProperties(properties);
+
+        return properties;
+
+    }
+
+    private static void loadSuppliedProperties(Properties suppliedProperties, Properties properties) {
         for (String key : suppliedProperties.stringPropertyNames()) {
 
             String value = Strings.emptyToNull(suppliedProperties.getProperty(key));
@@ -52,13 +63,6 @@ public class DriverUtils {
             }
 
         }
-
-        validateProperties(properties);
-
-        printProperties(properties);
-
-        return properties;
-
     }
 
     private static void loadDefaultProperties(Properties properties) {

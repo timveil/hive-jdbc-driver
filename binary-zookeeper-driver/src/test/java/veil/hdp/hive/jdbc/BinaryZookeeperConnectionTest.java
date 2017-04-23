@@ -10,6 +10,7 @@ public class BinaryZookeeperConnectionTest extends BaseConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
+        properties.setProperty("zkNamespace", "hiveserver2-hive2");
 
         String url = "jdbc:hive2://" + host + ":2181/default";
 
