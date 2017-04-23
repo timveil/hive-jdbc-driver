@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
+import org.apache.commons.lang3.builder.Builder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.hive.service.cli.thrift.TColumnDesc;
 
@@ -27,7 +28,7 @@ public class ColumnDescriptor {
         name = columnDesc.getColumnName();
         normalizedName = normalizeName(columnDesc.getColumnName());
         comment = columnDesc.getComment();
-        columnTypeDescriptor = new ColumnTypeDescriptor.Builder().thriftType(columnDesc.getTypeDesc()).build();
+        columnTypeDescriptor = ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build();
         position = columnDesc.getPosition();
     }
 
@@ -60,6 +61,11 @@ public class ColumnDescriptor {
         return name.toLowerCase();
     }
 
+
+    public static ColumnDescriptorBuilder builder() {
+        return new ColumnDescriptorBuilder();
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -71,7 +77,11 @@ public class ColumnDescriptor {
                 .toString();
     }
 
-    public static class Builder {
+    public static class ColumnDescriptorBuilder implements Builder<ColumnDescriptor> {
+
+        private ColumnDescriptorBuilder() {
+        }
+
         //todo
         public ColumnDescriptor build() {
             return null;

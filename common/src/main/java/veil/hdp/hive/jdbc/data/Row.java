@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 
 import com.google.common.primitives.Ints;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveSQLException;
 
 import java.sql.SQLException;
@@ -38,18 +39,25 @@ public class Row {
     }
 
 
-    public static class Builder {
+    public static RowBuilder builder() {
+        return new RowBuilder();
+    }
+
+
+    public static class RowBuilder implements Builder<Row> {
 
         private ColumnBasedSet columnBasedSet;
         private int row;
 
+        private RowBuilder() {
+        }
 
-        public Row.Builder columnBasedSet(ColumnBasedSet columnBasedSet) {
+        public RowBuilder columnBasedSet(ColumnBasedSet columnBasedSet) {
             this.columnBasedSet = columnBasedSet;
             return this;
         }
 
-        public Row.Builder row(int row) {
+        public RowBuilder row(int row) {
             this.row = row;
             return this;
         }
@@ -63,7 +71,7 @@ public class Row {
             List<Column> columns = new ArrayList<>(columnCount);
 
             for (ColumnData columnData : columnBasedSet.getColumns()) {
-                columns.add(new BaseColumn.Builder().row(row).columnData(columnData).build());
+                columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
             }
 
             columns.sort((o1, o2) -> Ints.compare(o1.getDescriptor().getPosition(), o2.getDescriptor().getPosition()));

@@ -5,6 +5,7 @@ import org.apache.hive.service.cli.thrift.TColumnDesc;
 import org.apache.hive.service.cli.thrift.TTableSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,18 +60,26 @@ public class Schema {
         return stringBuilder.toString();
     }
 
-    public static class Builder {
+
+    public static SchemaBuilder builder() {
+        return new SchemaBuilder();
+    }
+
+    public static class SchemaBuilder implements Builder<Schema> {
 
         private TTableSchema tableSchema;
         private List<ColumnDescriptor> columnDescriptors;
 
-        public Schema.Builder schema(TTableSchema tTableSchema) {
+        private SchemaBuilder() {
+        }
+
+        public SchemaBuilder schema(TTableSchema tTableSchema) {
             this.tableSchema = tTableSchema;
             return this;
         }
 
 
-        public Schema.Builder descriptors(List<ColumnDescriptor> columnDescriptors) {
+        public SchemaBuilder descriptors(List<ColumnDescriptor> columnDescriptors) {
             this.columnDescriptors = columnDescriptors;
             return this;
         }

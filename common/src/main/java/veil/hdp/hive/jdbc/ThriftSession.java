@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
@@ -41,6 +40,10 @@ public class ThriftSession implements SQLCloseable {
         closed.set(false);
     }
 
+    public static ThriftSessionBuilder builder() {
+        return new ThriftSessionBuilder();
+    }
+
     public TTransport getTransport() {
         return transport;
     }
@@ -69,7 +72,6 @@ public class ThriftSession implements SQLCloseable {
         return properties;
     }
 
-
     @Override
     public void close() {
         if (closed.compareAndSet(false, true)) {
@@ -83,21 +85,25 @@ public class ThriftSession implements SQLCloseable {
         }
     }
 
-    public static class Builder {
+    public static class ThriftSessionBuilder implements Builder<ThriftSession> {
         private Properties properties;
         private TTransport transport;
 
-        public Builder properties(Properties properties) {
+        private ThriftSessionBuilder() {
+        }
+
+        public ThriftSessionBuilder properties(Properties properties) {
             this.properties = properties;
             return this;
         }
 
-        public Builder transport(TTransport transport) {
+        public ThriftSessionBuilder transport(TTransport transport) {
             this.transport = transport;
             return this;
         }
 
-        public ThriftSession build() throws SQLException {
+        @Override
+        public ThriftSession build() {
 
             ThriftUtils.openTransport(transport);
 

@@ -10,9 +10,8 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.HiveThriftException;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -22,13 +21,13 @@ public class ThriftUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftUtils.class);
 
-    public static void openTransport(TTransport transport) throws SQLException {
+    public static void openTransport(TTransport transport) throws HiveThriftException {
 
         if (!transport.isOpen()) {
             try {
                 transport.open();
             } catch (TTransportException e) {
-                throw new HiveSQLException(e);
+                throw new HiveThriftException(e);
             }
         }
 
@@ -49,7 +48,7 @@ public class ThriftUtils {
 
 
 
-    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws SQLException {
+    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
         String username = HiveDriverProperty.USER.get(properties);
 
@@ -78,7 +77,7 @@ public class ThriftUtils {
 
             return resp;
         } catch (TException e) {
-            throw new HiveSQLException(e);
+            throw new HiveThriftException(e);
         }
 
     }

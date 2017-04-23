@@ -898,11 +898,19 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         return RowIdLifetime.ROWID_UNSUPPORTED;
     }
 
-    public static class Builder {
+
+    public static HiveDatabaseMetaDataBuilder builder() {
+        return new HiveDatabaseMetaDataBuilder();
+    }
+
+    public static class HiveDatabaseMetaDataBuilder implements Builder<HiveDatabaseMetaData> {
 
         private HiveConnection connection;
 
-        public HiveDatabaseMetaData.Builder connection(HiveConnection connection) {
+        private HiveDatabaseMetaDataBuilder() {
+        }
+
+        public HiveDatabaseMetaDataBuilder connection(HiveConnection connection) {
             this.connection = connection;
             return this;
         }

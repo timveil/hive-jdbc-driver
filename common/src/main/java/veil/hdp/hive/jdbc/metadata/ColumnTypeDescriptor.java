@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
+import org.apache.commons.lang3.builder.Builder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.hive.service.cli.thrift.TPrimitiveTypeEntry;
 import org.apache.hive.service.cli.thrift.TTypeDesc;
@@ -27,17 +28,25 @@ public class ColumnTypeDescriptor {
                 .toString();
     }
 
-    public static class Builder {
+
+    public static ColumnTypeDescriptorBuilder builder() {
+        return new ColumnTypeDescriptorBuilder();
+    }
+
+    public static class ColumnTypeDescriptorBuilder implements Builder<ColumnTypeDescriptor> {
 
         private TTypeDesc typeDesc;
         private HiveType hiveType;
 
-        public ColumnTypeDescriptor.Builder thriftType(TTypeDesc typeDesc) {
+        private ColumnTypeDescriptorBuilder() {
+        }
+
+        public ColumnTypeDescriptorBuilder thriftType(TTypeDesc typeDesc) {
             this.typeDesc = typeDesc;
             return this;
         }
 
-        public ColumnTypeDescriptor.Builder hiveType(HiveType hiveType) {
+        public ColumnTypeDescriptorBuilder hiveType(HiveType hiveType) {
             this.hiveType = hiveType;
             return this;
         }

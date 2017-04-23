@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import org.apache.hive.service.cli.thrift.TColumn;
 import org.apache.hive.service.cli.thrift.TRowSet;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.util.ArrayList;
@@ -29,18 +30,25 @@ public class ColumnBasedSet {
         return columns.size();
     }
 
-    public static class Builder {
+
+    public static ColumnBasedSetBuilder builder() {
+        return new ColumnBasedSetBuilder();
+    }
+
+    public static class ColumnBasedSetBuilder implements Builder<ColumnBasedSet> {
 
         private TRowSet rowSet;
         private Schema schema;
 
+        private ColumnBasedSetBuilder() {
+        }
 
-        public ColumnBasedSet.Builder rowSet(TRowSet tRowSet) {
+        public ColumnBasedSetBuilder rowSet(TRowSet tRowSet) {
             this.rowSet = tRowSet;
             return this;
         }
 
-        public ColumnBasedSet.Builder schema(Schema schema) {
+        public ColumnBasedSetBuilder schema(Schema schema) {
             this.schema = schema;
             return this;
         }
@@ -57,7 +65,7 @@ public class ColumnBasedSet {
 
             for (TColumn column : tColumns) {
 
-                ColumnData data = new ColumnData.Builder().column(column).descriptor(schema.getColumn(position)).build();
+                ColumnData data = ColumnData.builder().column(column).descriptor(schema.getColumn(position)).build();
 
                 rowCount = data.getRowCount();
 

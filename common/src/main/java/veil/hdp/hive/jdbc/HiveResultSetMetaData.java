@@ -130,11 +130,19 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         return Boolean.FALSE;
     }
 
-    public static class Builder {
+
+    public static HiveResultSetMetaDataBuilder builder() {
+        return new HiveResultSetMetaDataBuilder();
+    }
+
+    public static class HiveResultSetMetaDataBuilder implements Builder<HiveResultSetMetaData> {
 
         private Schema schema;
 
-        public HiveResultSetMetaData.Builder schema(Schema schema) {
+        private HiveResultSetMetaDataBuilder() {
+        }
+
+        public HiveResultSetMetaDataBuilder schema(Schema schema) {
             this.schema = schema;
             return this;
         }

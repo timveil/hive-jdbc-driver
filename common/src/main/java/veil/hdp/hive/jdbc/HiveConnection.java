@@ -42,7 +42,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new HiveStatement.Builder()
+        return HiveStatement.builder()
                 .connection(this)
                 .type(ResultSet.TYPE_FORWARD_ONLY)
                 .concurrency(ResultSet.CONCUR_READ_ONLY)
@@ -52,22 +52,22 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return new HivePreparedStatement.Builder().connection(this).sql(sql).build();
+        return HivePreparedStatement.preparedStatementBuilder().connection(this).sql(sql).build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new HivePreparedStatement.Builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).build();
+        return HivePreparedStatement.preparedStatementBuilder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new HivePreparedStatement.Builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(resultSetHoldability).build();
+        return HivePreparedStatement.preparedStatementBuilder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(resultSetHoldability).build();
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return new HiveDatabaseMetaData.Builder().connection(this).build();
+        return HiveDatabaseMetaData.builder().connection(this).build();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new HiveStatement.Builder()
+        return HiveStatement.builder()
                 .connection(this)
                 .type(resultSetType)
                 .concurrency(resultSetConcurrency)
@@ -92,7 +92,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new HiveStatement.Builder()
+        return HiveStatement.builder()
                 .connection(this)
                 .type(resultSetType)
                 .concurrency(resultSetConcurrency)
@@ -197,24 +197,31 @@ public class HiveConnection extends AbstractConnection {
     }
 
 
-    public static class Builder {
+    public static HiveConnectionBuilder builder() {
+        return new HiveConnectionBuilder();
+    }
+
+    public static class HiveConnectionBuilder implements Builder<HiveConnection> {
 
         private Properties properties;
 
         private TTransport transport;
 
-        public HiveConnection.Builder properties(Properties properties) {
+        private HiveConnectionBuilder() {
+        }
+
+        public HiveConnectionBuilder properties(Properties properties) {
             this.properties = properties;
             return this;
         }
 
-        public HiveConnection.Builder transport(TTransport transport) {
+        public HiveConnectionBuilder transport(TTransport transport) {
             this.transport = transport;
             return this;
         }
 
-        public HiveConnection build() throws SQLException {
-            ThriftSession thriftSession = new ThriftSession.Builder()
+        public HiveConnection build() {
+            ThriftSession thriftSession = ThriftSession.builder()
                     .properties(properties)
                     .transport(transport)
                     .build();

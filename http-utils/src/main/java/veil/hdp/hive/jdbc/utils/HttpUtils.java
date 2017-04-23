@@ -11,10 +11,9 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.HiveThriftException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class HttpUtils {
@@ -43,7 +42,7 @@ public class HttpUtils {
     }
 
 
-    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) throws SQLException {
+    public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) {
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
         boolean sslEnabled = HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties);
@@ -54,7 +53,7 @@ public class HttpUtils {
         try {
             return new THttpClient(scheme + "://" + host + ':' + port + '/' + endpoint, httpClient);
         } catch (TTransportException e) {
-            throw new HiveSQLException(e);
+            throw new HiveThriftException(e);
         }
 
     }

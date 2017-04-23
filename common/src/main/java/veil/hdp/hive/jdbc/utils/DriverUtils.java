@@ -130,7 +130,7 @@ public class DriverUtils {
     }
 
 
-    private static void parseUrl(String url, Properties properties, PropertiesCallback callback) throws SQLException {
+    private static void parseUrl(String url, Properties properties, PropertiesCallback callback) {
 
         URI uri = URI.create(stripPrefix(url));
 

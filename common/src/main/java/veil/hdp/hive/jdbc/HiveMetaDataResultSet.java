@@ -61,26 +61,33 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
     }
 
 
-    public static class Builder {
+    public static HiveMetaDataResultSetBuilder builder() {
+        return new HiveMetaDataResultSetBuilder();
+    }
+
+    public static class HiveMetaDataResultSetBuilder implements Builder<HiveMetaDataResultSet> {
 
 
         private ThriftSession thriftSession;
         private TOperationHandle operationHandle;
 
-        public HiveMetaDataResultSet.Builder thriftSession(ThriftSession thriftSession) {
+        private HiveMetaDataResultSetBuilder() {
+        }
+
+        public HiveMetaDataResultSetBuilder thriftSession(ThriftSession thriftSession) {
             this.thriftSession = thriftSession;
             return this;
         }
 
-        public HiveMetaDataResultSet.Builder handle(TOperationHandle operationHandle) {
+        public HiveMetaDataResultSetBuilder handle(TOperationHandle operationHandle) {
             this.operationHandle = operationHandle;
             return this;
         }
 
 
-        public HiveMetaDataResultSet build() throws SQLException {
+        public HiveMetaDataResultSet build() {
 
-            Schema schema = new Schema.Builder().schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle)).build();
+            Schema schema = QueryUtils.getSchema(thriftSession, operationHandle);
 
             Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
 

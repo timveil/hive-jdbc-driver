@@ -74,7 +74,11 @@ public class ThriftOperation implements SQLCloseable {
         }
     }
 
-    public static class Builder {
+    public static ThriftOperationBuilder builder() {
+        return new ThriftOperationBuilder();
+    }
+
+    public static class ThriftOperationBuilder implements Builder<ThriftOperation> {
 
         private TOperationHandle operationHandle;
         private ThriftSession session;
@@ -86,70 +90,73 @@ public class ThriftOperation implements SQLCloseable {
         private int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
         private boolean metaDataOperation;
 
-        public ThriftOperation.Builder session(ThriftSession session) {
+        private ThriftOperationBuilder() {
+        }
+
+        public ThriftOperationBuilder session(ThriftSession session) {
             this.session = session;
             return this;
         }
 
 
-        public ThriftOperation.Builder handle(TOperationHandle operationHandle) {
+        public ThriftOperationBuilder handle(TOperationHandle operationHandle) {
             this.operationHandle = operationHandle;
             return this;
         }
 
 
-        public ThriftOperation.Builder fetchSize(int fetchSize) {
+        public ThriftOperationBuilder fetchSize(int fetchSize) {
             this.fetchSize = fetchSize;
             return this;
         }
 
 
-        public ThriftOperation.Builder maxRows(int maxRows) {
+        public ThriftOperationBuilder maxRows(int maxRows) {
             this.maxRows = maxRows;
             return this;
         }
 
-        public ThriftOperation.Builder fetchDirection(int fetchDirection) {
+        public ThriftOperationBuilder fetchDirection(int fetchDirection) {
             this.fetchDirection = fetchDirection;
             return this;
         }
 
 
-        public ThriftOperation.Builder resultSetType(int resultSetType) {
+        public ThriftOperationBuilder resultSetType(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;
         }
 
 
-        public ThriftOperation.Builder resultSetConcurrency(int resultSetConcurrency) {
+        public ThriftOperationBuilder resultSetConcurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
 
-        public ThriftOperation.Builder resultSetHoldability(int resultSetHoldability) {
+        public ThriftOperationBuilder resultSetHoldability(int resultSetHoldability) {
             this.resultSetHoldability = resultSetHoldability;
             return this;
         }
 
-        public ThriftOperation.Builder metaData(boolean metaDataOperation) {
+        public ThriftOperationBuilder metaData(boolean metaDataOperation) {
             this.metaDataOperation = metaDataOperation;
             return this;
         }
 
-        public ThriftOperation build() throws SQLException {
+        public ThriftOperation build() {
 
             ResultSet resultSet;
 
             if (operationHandle.isHasResultSet()) {
 
                 if (metaDataOperation) {
-                    resultSet = new HiveMetaDataResultSet.Builder()
+                    resultSet = HiveMetaDataResultSet.builder()
                             .handle(operationHandle)
                             .thriftSession(session)
                             .build();
                 } else {
-                    resultSet = new HiveResultSet.Builder()
+                    resultSet = HiveResultSet.builder()
                             .thriftSession(session)
                             .handle(operationHandle)
                             .resultSetConcurrency(resultSetConcurrency)
@@ -162,7 +169,7 @@ public class ThriftOperation implements SQLCloseable {
                 }
 
             } else {
-                resultSet = new HiveEmptyResultSet.Builder().build();
+                resultSet = HiveEmptyResultSet.builder().build();
             }
 
             return new ThriftOperation(session, operationHandle, resultSet);

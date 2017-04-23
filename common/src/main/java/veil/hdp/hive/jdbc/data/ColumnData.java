@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
 import org.apache.hive.service.cli.thrift.TColumn;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.text.MessageFormat;
@@ -35,7 +36,12 @@ public class ColumnData<T> {
         return values.size();
     }
 
-    public static class Builder {
+
+    public static ColumnDataBuilder builder() {
+        return new ColumnDataBuilder();
+    }
+
+    public static class ColumnDataBuilder implements Builder<ColumnData> {
 
         private static final byte[] MASKS = new byte[]{
                 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
@@ -44,12 +50,15 @@ public class ColumnData<T> {
         private TColumn column;
         private ColumnDescriptor columnDescriptor;
 
-        public ColumnData.Builder column(TColumn column) {
+        private ColumnDataBuilder() {
+        }
+
+        public ColumnDataBuilder column(TColumn column) {
             this.column = column;
             return this;
         }
 
-        public ColumnData.Builder descriptor(ColumnDescriptor columnDescriptor) {
+        public ColumnDataBuilder descriptor(ColumnDescriptor columnDescriptor) {
             this.columnDescriptor = columnDescriptor;
             return this;
         }

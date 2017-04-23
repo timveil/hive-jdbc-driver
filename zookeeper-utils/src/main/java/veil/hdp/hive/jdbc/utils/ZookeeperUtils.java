@@ -9,10 +9,9 @@ import org.apache.curator.retry.RetryOneTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.HiveException;
 
 import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,7 +22,7 @@ public class ZookeeperUtils {
     private static final Logger log = LoggerFactory.getLogger(DriverUtils.class);
 
 
-    public static void loadPropertiesFromZookeeper(String authority, Properties properties) throws SQLException {
+    public static void loadPropertiesFromZookeeper(String authority, Properties properties) {
 
         String zooKeeperNamespace = HiveDriverProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.get(properties);
         int retry = HiveDriverProperty.ZOOKEEPER_DISCOVERY_RETRY.getInt(properties);
@@ -77,7 +76,7 @@ public class ZookeeperUtils {
 
 
         } catch (Exception e) {
-            throw new HiveSQLException(e);
+            throw new HiveException(e);
         }
     }
 

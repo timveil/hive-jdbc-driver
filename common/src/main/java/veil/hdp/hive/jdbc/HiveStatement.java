@@ -256,29 +256,37 @@ public class HiveStatement extends AbstractStatement {
         // no-op; don't support setting this value
     }
 
-    public static class Builder {
+
+    public static HiveStatementBuilder builder() {
+        return new HiveStatementBuilder();
+    }
+
+    public static class HiveStatementBuilder implements Builder<HiveStatement> {
 
         private HiveConnection connection;
         private int resultSetType;
         private int resultSetConcurrency;
         private int resultSetHoldability;
 
-        public HiveStatement.Builder connection(HiveConnection connection) {
+        private HiveStatementBuilder() {
+        }
+
+        public HiveStatementBuilder connection(HiveConnection connection) {
             this.connection = connection;
             return this;
         }
 
-        public HiveStatement.Builder type(int resultSetType) {
+        public HiveStatementBuilder type(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;
         }
 
-        public HiveStatement.Builder concurrency(int resultSetConcurrency) {
+        public HiveStatementBuilder concurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
-        public HiveStatement.Builder holdability(int resultSetHoldability) {
+        public HiveStatementBuilder holdability(int resultSetHoldability) {
             this.resultSetHoldability = resultSetHoldability;
             return this;
         }

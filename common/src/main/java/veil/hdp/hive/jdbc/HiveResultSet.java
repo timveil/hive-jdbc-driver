@@ -124,7 +124,12 @@ public class HiveResultSet extends HiveBaseResultSet {
         return null;
     }
 
-    public static class Builder {
+
+    public static HiveResultSetBuilder builder() {
+        return new HiveResultSetBuilder();
+    }
+
+    public static class HiveResultSetBuilder implements Builder<HiveResultSet> {
 
 
         private ThriftSession thriftSession;
@@ -136,55 +141,58 @@ public class HiveResultSet extends HiveBaseResultSet {
         private int resultSetConcurrency = ResultSet.CONCUR_READ_ONLY;
         private int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
 
+        private HiveResultSetBuilder() {
+        }
 
-        public HiveResultSet.Builder thriftSession(ThriftSession thriftSession) {
+        public HiveResultSetBuilder thriftSession(ThriftSession thriftSession) {
             this.thriftSession = thriftSession;
             return this;
         }
 
-        public HiveResultSet.Builder handle(TOperationHandle operationHandle) {
+        public HiveResultSetBuilder handle(TOperationHandle operationHandle) {
             this.operationHandle = operationHandle;
             return this;
         }
 
-        public HiveResultSet.Builder fetchSize(int fetchSize) {
+        public HiveResultSetBuilder fetchSize(int fetchSize) {
             this.fetchSize = fetchSize;
             return this;
         }
 
 
-        public HiveResultSet.Builder maxRows(int maxRows) {
+        public HiveResultSetBuilder maxRows(int maxRows) {
             this.maxRows = maxRows;
             return this;
         }
 
-        public HiveResultSet.Builder fetchDirection(int fetchDirection) {
+        public HiveResultSetBuilder fetchDirection(int fetchDirection) {
             this.fetchDirection = fetchDirection;
             return this;
         }
 
 
-        public HiveResultSet.Builder resultSetType(int resultSetType) {
+        public HiveResultSetBuilder resultSetType(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;
         }
 
 
-        public HiveResultSet.Builder resultSetConcurrency(int resultSetConcurrency) {
+        public HiveResultSetBuilder resultSetConcurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
 
-        public HiveResultSet.Builder resultSetHoldability(int resultSetHoldability) {
+        public HiveResultSetBuilder resultSetHoldability(int resultSetHoldability) {
             this.resultSetHoldability = resultSetHoldability;
             return this;
         }
 
 
-        public HiveResultSet build() throws SQLException {
+        public HiveResultSet build() {
 
-            Schema schema = new Schema.Builder().schema(QueryUtils.getResultSetSchema(thriftSession, operationHandle)).build();
+
+            Schema schema = QueryUtils.getSchema(thriftSession, operationHandle);
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;

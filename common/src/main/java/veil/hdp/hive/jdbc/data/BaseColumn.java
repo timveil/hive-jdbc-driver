@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
 import org.slf4j.Logger;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.HiveType;
@@ -119,19 +120,26 @@ public class BaseColumn<T> implements Column<T> {
         throw HiveDriver.notImplemented(this.getClass(), "asCharacter");
     }
 
-    public static class Builder {
+
+    public static BaseColumnBuilder builder() {
+        return new BaseColumnBuilder();
+    }
+
+    public static class BaseColumnBuilder implements Builder<Column> {
 
         private ColumnData columnData;
         private int row;
 
+        private BaseColumnBuilder() {
+        }
 
-        public Builder columnData(ColumnData columnData) {
+        public BaseColumnBuilder columnData(ColumnData columnData) {
             this.columnData = columnData;
             return this;
         }
 
 
-        public Builder row(int row) {
+        public BaseColumnBuilder row(int row) {
             this.row = row;
             return this;
         }

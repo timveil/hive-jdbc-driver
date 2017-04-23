@@ -146,7 +146,11 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     }
 
 
-    public static class Builder {
+    public static PreparedStatementBuilder preparedStatementBuilder() {
+        return new PreparedStatementBuilder();
+    }
+
+    public static class PreparedStatementBuilder implements Builder<HivePreparedStatement> {
 
         private HiveConnection connection;
         private String sql;
@@ -154,28 +158,30 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         private int resultSetConcurrency;
         private int resultSetHoldability;
 
+        private PreparedStatementBuilder() {
+        }
 
-        public HivePreparedStatement.Builder connection(HiveConnection connection) {
+        public PreparedStatementBuilder connection(HiveConnection connection) {
             this.connection = connection;
             return this;
         }
 
-        public HivePreparedStatement.Builder sql(String sql) {
+        public PreparedStatementBuilder sql(String sql) {
             this.sql = sql;
             return this;
         }
 
-        public HivePreparedStatement.Builder type(int resultSetType) {
+        public PreparedStatementBuilder type(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;
         }
 
-        public HivePreparedStatement.Builder concurrency(int resultSetConcurrency) {
+        public PreparedStatementBuilder concurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
-        public HivePreparedStatement.Builder holdability(int resultSetHoldability) {
+        public PreparedStatementBuilder holdability(int resultSetHoldability) {
             this.resultSetHoldability = resultSetHoldability;
             return this;
         }

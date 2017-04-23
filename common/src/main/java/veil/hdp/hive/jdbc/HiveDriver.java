@@ -41,7 +41,7 @@ public abstract class HiveDriver implements Driver {
     }
 
     private Connection connect(Properties properties) throws SQLException {
-        return new HiveConnection.Builder().properties(properties).transport(buildTransport(properties)).build();
+        return HiveConnection.builder().properties(properties).transport(buildTransport(properties)).build();
     }
 
     abstract TTransport buildTransport(Properties properties) throws SQLException;
