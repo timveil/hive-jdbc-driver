@@ -31,6 +31,10 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
     }
 
+    public static HiveMetaDataResultSetBuilder builder() {
+        return new HiveMetaDataResultSetBuilder();
+    }
+
     @Override
     public boolean next() throws SQLException {
         if (!results.hasNext()) {
@@ -43,7 +47,6 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
         return true;
 
     }
-
 
     @Override
     public void close() throws SQLException {
@@ -58,11 +61,6 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
             currentRow.set(null);
 
         }
-    }
-
-
-    public static HiveMetaDataResultSetBuilder builder() {
-        return new HiveMetaDataResultSetBuilder();
     }
 
     public static class HiveMetaDataResultSetBuilder implements Builder<HiveMetaDataResultSet> {

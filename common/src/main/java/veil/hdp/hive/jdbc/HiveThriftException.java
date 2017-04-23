@@ -9,7 +9,6 @@ import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
 public class HiveThriftException extends RuntimeException {
 
 
-
     public HiveThriftException(TException cause) {
         super(cause);
     }

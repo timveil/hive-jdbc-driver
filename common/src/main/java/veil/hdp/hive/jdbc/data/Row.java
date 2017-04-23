@@ -18,6 +18,10 @@ public class Row {
         this.columns = columns;
     }
 
+    public static RowBuilder builder() {
+        return new RowBuilder();
+    }
+
     public List<Column> getColumns() {
         return columns;
     }
@@ -37,12 +41,6 @@ public class Row {
 
         throw new HiveSQLException(MessageFormat.format("invalid column name [{0}] for row;", name));
     }
-
-
-    public static RowBuilder builder() {
-        return new RowBuilder();
-    }
-
 
     public static class RowBuilder implements Builder<Row> {
 

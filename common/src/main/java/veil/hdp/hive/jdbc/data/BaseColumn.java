@@ -31,6 +31,10 @@ public class BaseColumn<T> implements Column<T> {
         this.value = value;
     }
 
+    public static BaseColumnBuilder builder() {
+        return new BaseColumnBuilder();
+    }
+
     public ColumnDescriptor getDescriptor() {
         return descriptor;
     }
@@ -118,11 +122,6 @@ public class BaseColumn<T> implements Column<T> {
     @Override
     public Character asCharacter() throws SQLException {
         throw HiveDriver.notImplemented(this.getClass(), "asCharacter");
-    }
-
-
-    public static BaseColumnBuilder builder() {
-        return new BaseColumnBuilder();
     }
 
     public static class BaseColumnBuilder implements Builder<Column> {

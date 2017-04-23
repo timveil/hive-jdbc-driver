@@ -43,6 +43,10 @@ public class HiveResultSet extends HiveBaseResultSet {
 
     }
 
+    public static HiveResultSetBuilder builder() {
+        return new HiveResultSetBuilder();
+    }
+
     @Override
     public boolean next() throws SQLException {
         if (!results.hasNext() || (maxRows > 0 && rowCount.get() >= maxRows)) {
@@ -57,7 +61,6 @@ public class HiveResultSet extends HiveBaseResultSet {
         return true;
 
     }
-
 
     @Override
     public void close() throws SQLException {
@@ -96,7 +99,6 @@ public class HiveResultSet extends HiveBaseResultSet {
         return rowCount.get();
     }
 
-
     @Override
     public int getConcurrency() throws SQLException {
         return resultSetConcurrency;
@@ -117,16 +119,10 @@ public class HiveResultSet extends HiveBaseResultSet {
         return resultSetHoldability;
     }
 
-
     @Override
     public HiveStatement getStatement() throws SQLException {
         // todo; don't love
         return null;
-    }
-
-
-    public static HiveResultSetBuilder builder() {
-        return new HiveResultSetBuilder();
     }
 
     public static class HiveResultSetBuilder implements Builder<HiveResultSet> {

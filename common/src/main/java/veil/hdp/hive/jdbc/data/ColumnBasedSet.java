@@ -18,6 +18,10 @@ public class ColumnBasedSet {
         this.columns = columns;
     }
 
+    public static ColumnBasedSetBuilder builder() {
+        return new ColumnBasedSetBuilder();
+    }
+
     public List<ColumnData> getColumns() {
         return columns;
     }
@@ -28,11 +32,6 @@ public class ColumnBasedSet {
 
     public int getColumnCount() {
         return columns.size();
-    }
-
-
-    public static ColumnBasedSetBuilder builder() {
-        return new ColumnBasedSetBuilder();
     }
 
     public static class ColumnBasedSetBuilder implements Builder<ColumnBasedSet> {

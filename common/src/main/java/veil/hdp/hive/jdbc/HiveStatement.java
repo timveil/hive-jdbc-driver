@@ -44,6 +44,10 @@ public class HiveStatement extends AbstractStatement {
 
     }
 
+    public static HiveStatementBuilder builder() {
+        return new HiveStatementBuilder();
+    }
+
     private void performThriftOperation(String sql) throws SQLException {
 
         ThriftOperation operation = currentOperation.get();
@@ -255,11 +259,6 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void closeOnCompletion() throws SQLException {
         // no-op; don't support setting this value
-    }
-
-
-    public static HiveStatementBuilder builder() {
-        return new HiveStatementBuilder();
     }
 
     public static class HiveStatementBuilder implements Builder<HiveStatement> {

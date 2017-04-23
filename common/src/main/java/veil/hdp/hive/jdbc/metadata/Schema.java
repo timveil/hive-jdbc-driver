@@ -20,6 +20,10 @@ public class Schema {
         this.columnDescriptors = columnDescriptors;
     }
 
+    public static SchemaBuilder builder() {
+        return new SchemaBuilder();
+    }
+
     public List<ColumnDescriptor> getColumns() {
         return columnDescriptors;
     }
@@ -58,11 +62,6 @@ public class Schema {
         stringBuilder.append('}');
 
         return stringBuilder.toString();
-    }
-
-
-    public static SchemaBuilder builder() {
-        return new SchemaBuilder();
     }
 
     public static class SchemaBuilder implements Builder<Schema> {

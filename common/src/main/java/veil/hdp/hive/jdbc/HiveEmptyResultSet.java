@@ -15,6 +15,10 @@ public class HiveEmptyResultSet extends AbstractResultSet {
         this.schema = schema;
     }
 
+    public static HiveEmptyResultSetBuilder builder() {
+        return new HiveEmptyResultSetBuilder();
+    }
+
     @Override
     public boolean next() throws SQLException {
         return false;
@@ -35,11 +39,6 @@ public class HiveEmptyResultSet extends AbstractResultSet {
         if (schema != null) {
             schema.clear();
         }
-    }
-
-
-    public static HiveEmptyResultSetBuilder builder() {
-        return new HiveEmptyResultSetBuilder();
     }
 
     public static class HiveEmptyResultSetBuilder implements Builder<HiveEmptyResultSet> {

@@ -28,6 +28,10 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
         this.hiveMinorVersion = hiveMinorVersion;
     }
 
+    public static HiveDatabaseMetaDataBuilder builder() {
+        return new HiveDatabaseMetaDataBuilder();
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
         return connection;
@@ -896,11 +900,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
         return RowIdLifetime.ROWID_UNSUPPORTED;
-    }
-
-
-    public static HiveDatabaseMetaDataBuilder builder() {
-        return new HiveDatabaseMetaDataBuilder();
     }
 
     public static class HiveDatabaseMetaDataBuilder implements Builder<HiveDatabaseMetaData> {

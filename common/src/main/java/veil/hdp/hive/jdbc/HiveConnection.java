@@ -26,6 +26,10 @@ public class HiveConnection extends AbstractConnection {
         this.thriftSession = thriftSession;
     }
 
+    public static HiveConnectionBuilder builder() {
+        return new HiveConnectionBuilder();
+    }
+
     public ThriftSession getThriftSession() {
         return thriftSession;
     }
@@ -194,11 +198,6 @@ public class HiveConnection extends AbstractConnection {
         } else {
             command.run();
         }
-    }
-
-
-    public static HiveConnectionBuilder builder() {
-        return new HiveConnectionBuilder();
     }
 
     public static class HiveConnectionBuilder implements Builder<HiveConnection> {

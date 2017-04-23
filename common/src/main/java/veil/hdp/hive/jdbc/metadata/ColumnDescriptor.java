@@ -32,6 +32,19 @@ public class ColumnDescriptor {
         position = columnDesc.getPosition();
     }
 
+    private static String normalizeName(String name) {
+
+        if (name.contains(".")) {
+            name = name.substring(name.lastIndexOf('.') + 1);
+        }
+
+        return name.toLowerCase();
+    }
+
+    public static ColumnDescriptorBuilder builder() {
+        return new ColumnDescriptorBuilder();
+    }
+
     public String getName() {
         return name;
     }
@@ -50,20 +63,6 @@ public class ColumnDescriptor {
 
     public int getPosition() {
         return position;
-    }
-
-    private static String normalizeName(String name) {
-
-        if (name.contains(".")) {
-            name = name.substring(name.lastIndexOf('.') + 1);
-        }
-
-        return name.toLowerCase();
-    }
-
-
-    public static ColumnDescriptorBuilder builder() {
-        return new ColumnDescriptorBuilder();
     }
 
     @Override

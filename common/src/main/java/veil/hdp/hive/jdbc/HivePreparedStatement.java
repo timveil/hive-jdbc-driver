@@ -10,10 +10,10 @@ import java.util.Map;
 public class HivePreparedStatement extends AbstractPreparedStatement {
 
 
-    private static final char PLACEHOLDER = '?' ;
-    private static final char SINGLE_QUOTE = '\'' ;
-    private static final char DOUBLE_QUOTE = '"' ;
-    private static final char BACKSLASH = '\\' ;
+    private static final char PLACEHOLDER = '?';
+    private static final char SINGLE_QUOTE = '\'';
+    private static final char DOUBLE_QUOTE = '"';
+    private static final char BACKSLASH = '\\';
     private static final String NULL_STRING = "NULL";
 
     private static final char[] ESCAPE_CHARS = new char[]{SINGLE_QUOTE, BACKSLASH, DOUBLE_QUOTE};
@@ -31,6 +31,10 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         super(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
         this.sql = sql;
         parameterValues = new HashMap<>();
+    }
+
+    public static PreparedStatementBuilder preparedStatementBuilder() {
+        return new PreparedStatementBuilder();
     }
 
     @Override
@@ -106,15 +110,13 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
     @Override
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
-       setNull(parameterIndex, sqlType, null);
+        setNull(parameterIndex, sqlType, null);
     }
 
     @Override
     public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
         parameterValues.put(parameterIndex, NULL_STRING);
     }
-
-
 
     private String updateSql(String originalSql) {
 
@@ -143,11 +145,6 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
         return builder.toString();
 
-    }
-
-
-    public static PreparedStatementBuilder preparedStatementBuilder() {
-        return new PreparedStatementBuilder();
     }
 
     public static class PreparedStatementBuilder implements Builder<HivePreparedStatement> {

@@ -20,6 +20,10 @@ public class ColumnData<T> {
         this.nulls = nulls;
     }
 
+    public static ColumnDataBuilder builder() {
+        return new ColumnDataBuilder();
+    }
+
     public ColumnDescriptor getDescriptor() {
         return descriptor;
     }
@@ -36,11 +40,6 @@ public class ColumnData<T> {
         return values.size();
     }
 
-
-    public static ColumnDataBuilder builder() {
-        return new ColumnDataBuilder();
-    }
-
     public static class ColumnDataBuilder implements Builder<ColumnData> {
 
         private static final byte[] MASKS = new byte[]{
@@ -51,6 +50,23 @@ public class ColumnData<T> {
         private ColumnDescriptor columnDescriptor;
 
         private ColumnDataBuilder() {
+        }
+
+        private static BitSet buildBitSet(byte[] nulls) {
+            int nullsLength = nulls.length;
+            int bitsLength = nullsLength * 8;
+            BitSet bitset = new BitSet(bitsLength);
+
+            for (int i = 0; i < bitsLength; i++) {
+                int i1 = i / 8;
+                byte aNull = nulls[i1];
+                int i2 = i % 8;
+                byte mask = MASKS[i2];
+                boolean wtf = (aNull & mask) != 0;
+                bitset.set(i, wtf);
+            }
+
+            return bitset;
         }
 
         public ColumnDataBuilder column(TColumn column) {
@@ -83,23 +99,6 @@ public class ColumnData<T> {
             }
 
             throw new IllegalStateException(MessageFormat.format("no values set for TColumn [{0}]", column));
-        }
-
-        private static BitSet buildBitSet(byte[] nulls) {
-            int nullsLength = nulls.length;
-            int bitsLength = nullsLength * 8;
-            BitSet bitset = new BitSet(bitsLength);
-
-            for (int i = 0; i < bitsLength; i++) {
-                int i1 = i / 8;
-                byte aNull = nulls[i1];
-                int i2 = i % 8;
-                byte mask = MASKS[i2];
-                boolean wtf = (aNull & mask) != 0;
-                bitset.set(i, wtf);
-            }
-
-            return bitset;
         }
 
     }

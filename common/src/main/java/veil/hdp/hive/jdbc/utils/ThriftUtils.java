@@ -54,8 +54,6 @@ public class ThriftUtils {
     }
 
 
-
-
     public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
         TOpenSessionReq openSessionReq = new TOpenSessionReq();
         String username = HiveDriverProperty.USER.get(properties);

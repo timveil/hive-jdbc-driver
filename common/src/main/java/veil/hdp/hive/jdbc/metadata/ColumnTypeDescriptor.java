@@ -17,6 +17,10 @@ public class ColumnTypeDescriptor {
         this.hiveType = hiveType;
     }
 
+    public static ColumnTypeDescriptorBuilder builder() {
+        return new ColumnTypeDescriptorBuilder();
+    }
+
     public HiveType getHiveType() {
         return hiveType;
     }
@@ -26,11 +30,6 @@ public class ColumnTypeDescriptor {
         return new ToStringBuilder(this)
                 .append("hiveType", hiveType)
                 .toString();
-    }
-
-
-    public static ColumnTypeDescriptorBuilder builder() {
-        return new ColumnTypeDescriptorBuilder();
     }
 
     public static class ColumnTypeDescriptorBuilder implements Builder<ColumnTypeDescriptor> {

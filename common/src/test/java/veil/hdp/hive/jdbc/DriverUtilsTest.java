@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
-import java.net.URI;
 import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class DriverUtilsTest extends BaseUnitTest {

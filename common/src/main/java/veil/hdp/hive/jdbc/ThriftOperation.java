@@ -31,6 +31,10 @@ public class ThriftOperation implements SQLCloseable {
         closed.set(false);
     }
 
+    public static ThriftOperationBuilder builder() {
+        return new ThriftOperationBuilder();
+    }
+
     public ThriftSession getSession() {
         return session;
     }
@@ -50,7 +54,6 @@ public class ThriftOperation implements SQLCloseable {
     public ResultSet getResultSet() {
         return resultSet;
     }
-
 
     public int getModifiedCount() {
         if (operation.isSetModifiedRowCount()) {
@@ -72,10 +75,6 @@ public class ThriftOperation implements SQLCloseable {
         if (!closed.get()) {
             ThriftUtils.cancelOperation(this);
         }
-    }
-
-    public static ThriftOperationBuilder builder() {
-        return new ThriftOperationBuilder();
     }
 
     public static class ThriftOperationBuilder implements Builder<ThriftOperation> {

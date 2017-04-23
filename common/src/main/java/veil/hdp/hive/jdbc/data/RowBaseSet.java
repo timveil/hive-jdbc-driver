@@ -13,13 +13,12 @@ public class RowBaseSet {
         this.rows = rows;
     }
 
-    public List<Row> getRows() {
-        return rows;
-    }
-
-
     public static RowBasedSetBuilder builder() {
         return new RowBasedSetBuilder();
+    }
+
+    public List<Row> getRows() {
+        return rows;
     }
 
     public static class RowBasedSetBuilder implements Builder<RowBaseSet> {

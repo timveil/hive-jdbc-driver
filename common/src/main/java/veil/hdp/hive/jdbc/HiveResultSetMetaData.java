@@ -21,6 +21,10 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         this.columnCount = columnCount;
     }
 
+    public static HiveResultSetMetaDataBuilder builder() {
+        return new HiveResultSetMetaDataBuilder();
+    }
+
     @Override
     public int getColumnCount() throws SQLException {
         return columnCount;
@@ -128,11 +132,6 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
     @Override
     public boolean isDefinitelyWritable(int column) throws SQLException {
         return Boolean.FALSE;
-    }
-
-
-    public static HiveResultSetMetaDataBuilder builder() {
-        return new HiveResultSetMetaDataBuilder();
     }
 
     public static class HiveResultSetMetaDataBuilder implements Builder<HiveResultSetMetaData> {
