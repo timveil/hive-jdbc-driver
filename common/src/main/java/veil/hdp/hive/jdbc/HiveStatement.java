@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +54,7 @@ public class HiveStatement extends AbstractStatement {
             currentOperation.compareAndSet(operation, null);
         }
 
-        currentOperation.compareAndSet(null, QueryUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows));
+        currentOperation.compareAndSet(null, ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows));
     }
 
     @Override

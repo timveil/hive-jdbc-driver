@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -192,13 +192,13 @@ public class HiveResultSet extends HiveBaseResultSet {
         public HiveResultSet build() {
 
 
-            Schema schema = QueryUtils.getSchema(thriftSession, operationHandle);
+            Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;
             }
 
-            Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
+            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
 
             return new HiveResultSet(schema,
                     maxRows,

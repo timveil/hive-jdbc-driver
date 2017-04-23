@@ -1,26 +1,13 @@
 package veil.hdp.hive.jdbc.utils;
 
-import com.google.common.collect.AbstractIterator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hive.service.cli.thrift.*;
-import org.apache.thrift.TException;
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.*;
-import veil.hdp.hive.jdbc.data.ColumnBasedSet;
-import veil.hdp.hive.jdbc.data.Row;
-import veil.hdp.hive.jdbc.data.RowBaseSet;
+import veil.hdp.hive.jdbc.HiveConnection;
+import veil.hdp.hive.jdbc.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,438 +15,35 @@ public class QueryUtils {
 
     private static final Logger log = getLogger(QueryUtils.class);
 
-    private static final short FETCH_TYPE_QUERY = 0;
-    private static final short FETCH_TYPE_LOG = 1;
-
-
-    public static Iterable<Row> getResults(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
-        return () -> {
-
-            final Iterator<List<Row>> fetchIterator = fetchIterator(session, handle, fetchSize, schema);
-
-            return new AbstractIterator<Row>() {
-
-                private final AtomicInteger rowCount = new AtomicInteger(0);
-                private Iterator<Row> rowSet;
-
-                @Override
-                protected Row computeNext() {
-                    while (true) {
-                        if (rowSet == null) {
-                            if (fetchIterator.hasNext()) {
-                                rowSet = fetchIterator.next().iterator();
-                            } else {
-                                return endOfData();
-                            }
-                        }
-
-                        if (rowSet.hasNext()) {
-                            // the page has more results
-                            rowCount.incrementAndGet();
-                            return rowSet.next();
-                        } else if (rowCount.get() < fetchSize) {
-                            // the page has no more results and the rowCount is < fetchSize; then i don't need
-                            // to go back to the server to know if i'm done.
-                            //
-                            // for example rowCount = 10; fetchSize = 100; then no need to look for another page
-                            //
-                            return endOfData();
-                        } else {
-                            // the page has no more results, but rowCount = fetchSize.  need to check server for more results
-                            rowSet = null;
-                            rowCount.set(0);
-
-                        }
-                    }
-                }
-            };
-        };
-    }
-
-    private static AbstractIterator<List<Row>> fetchIterator(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
-        return new AbstractIterator<List<Row>>() {
-
-            @Override
-            protected List<Row> computeNext() {
-
-                List<Row> results = QueryUtils.fetchResults(session, handle, TFetchOrientation.FETCH_NEXT, fetchSize, schema);
-
-                if (results != null && !results.isEmpty()) {
-                    return results;
-                } else {
-                    return endOfData();
-                }
-
-            }
-        };
-    }
-
-
-    private static List<Row> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize, Schema schema) {
-        TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
-        fetchReq.setFetchType(FETCH_TYPE_QUERY);
-
-        return getRows(session, schema, fetchReq);
-    }
-
-    private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema) {
-
-        TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
-        tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
-
-        return getRows(session, schema, tFetchResultsReq);
-
-    }
-
-    private static List<Row> getRows(ThriftSession session, Schema schema, TFetchResultsReq tFetchResultsReq) {
-        TFetchResultsResp fetchResults;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            fetchResults = client.FetchResults(tFetchResultsReq);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(fetchResults.getStatus());
-
-        return getRows(fetchResults.getResults(), schema);
-
-
-    }
-
-    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) {
-        TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), StringUtils.trim(sql));
-        executeStatementReq.setRunAsync(true);
-        executeStatementReq.setQueryTimeout(queryTimeout);
-        //todo: allows per statement configuration of session handle
-        //executeStatementReq.setConfOverlay(null);
-
-        TExecuteStatementResp executeStatementResp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            executeStatementResp = client.ExecuteStatement(executeStatementReq);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(executeStatementResp.getStatus());
-
-        waitForStatementToComplete(session, executeStatementResp.getOperationHandle());
-
-        return ThriftOperation.builder().session(session).handle(executeStatementResp.getOperationHandle()).maxRows(maxRows).fetchSize(fetchSize).build();
-
-    }
-
-    private static void waitForStatementToComplete(ThriftSession session, TOperationHandle handle) {
-        boolean isComplete = false;
-
-        TGetOperationStatusReq statusReq = new TGetOperationStatusReq(handle);
-
-        while (!isComplete) {
-
-
-            TGetOperationStatusResp statusResp;
-
-            ReentrantLock lock = session.getSessionLock();
-            TCLIService.Client client = session.getClient();
-
-            lock.lock();
-
-            try {
-                statusResp = client.GetOperationStatus(statusReq);
-            } catch (TException e) {
-                throw new HiveThriftException(e);
-            } finally {
-                lock.unlock();
-            }
-
-            checkStatus(statusResp.getStatus());
-
-            if (statusResp.isSetOperationState()) {
-
-                switch (statusResp.getOperationState()) {
-                    case FINISHED_STATE:
-                        isComplete = true;
-                        break;
-                    case CLOSED_STATE:
-                    case CANCELED_STATE:
-                    case TIMEDOUT_STATE:
-                    case ERROR_STATE:
-                    case UKNOWN_STATE:
-                        throw new HiveThriftException(statusResp);
-                    case INITIALIZED_STATE:
-                    case PENDING_STATE:
-                    case RUNNING_STATE:
-                        break;
-                }
-            }
-
-
-        }
-    }
-
-    public static Schema getSchema(ThriftSession session, TOperationHandle handle) {
-
-        TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(handle);
-
-        TGetResultSetMetadataResp metadataResp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            metadataResp = client.GetResultSetMetadata(metadataReq);
-        } catch (TException e) {
-            throw new HiveException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(metadataResp.getStatus());
-
-        return Schema.builder().schema(metadataResp.getSchema()).build();
-
-
-    }
-
 
     public static ResultSet getCatalogs(HiveConnection connection) {
-        return getCatalogsOperation(connection.getThriftSession()).getResultSet();
+        return ThriftUtils.getCatalogsOperation(connection.getThriftSession()).getResultSet();
     }
 
     public static ResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) {
-        return getDatabaseSchemaOperation(connection.getThriftSession(), catalog, schemaPattern).getResultSet();
+        return ThriftUtils.getDatabaseSchemaOperation(connection.getThriftSession(), catalog, schemaPattern).getResultSet();
     }
 
     public static ResultSet getTypeInfo(HiveConnection connection) {
-        return getTypeInfoOperation(connection.getThriftSession()).getResultSet();
+        return ThriftUtils.getTypeInfoOperation(connection.getThriftSession()).getResultSet();
     }
 
     public static ResultSet getTableTypes(HiveConnection connection) {
-        return getTableTypesOperation(connection.getThriftSession()).getResultSet();
+        return ThriftUtils.getTableTypesOperation(connection.getThriftSession()).getResultSet();
     }
 
     public static ResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
-        return getTablesOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types).getResultSet();
+        return ThriftUtils.getTablesOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types).getResultSet();
     }
 
     public static ResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
-        return getColumnsOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern).getResultSet();
+        return ThriftUtils.getColumnsOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern).getResultSet();
     }
 
     public static ResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) {
-        return getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern).getResultSet();
+        return ThriftUtils.getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern).getResultSet();
     }
 
-
-    private static ThriftOperation getCatalogsOperation(ThriftSession session) {
-        TGetCatalogsReq req = new TGetCatalogsReq(session.getSessionHandle());
-
-        TGetCatalogsResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetCatalogs(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-
-    }
-
-    private static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
-        TGetColumnsReq req = new TGetColumnsReq(session.getSessionHandle());
-        req.setCatalogName(catalog);
-        req.setSchemaName(schemaPattern);
-        req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
-        req.setColumnName(columnNamePattern == null ? "%" : columnNamePattern);
-
-        TGetColumnsResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetColumns(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-    }
-
-    private static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) {
-        TGetFunctionsReq req = new TGetFunctionsReq();
-        req.setSessionHandle(session.getSessionHandle());
-        req.setCatalogName(catalog);
-        req.setSchemaName(schemaPattern);
-        req.setFunctionName(functionNamePattern == null ? "%" : functionNamePattern);
-
-        TGetFunctionsResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetFunctions(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-
-    }
-
-
-    private static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
-        TGetTablesReq req = new TGetTablesReq(session.getSessionHandle());
-
-        req.setCatalogName(catalog);
-        req.setSchemaName(schemaPattern);
-        req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
-
-        if (types != null) {
-            req.setTableTypes(Arrays.asList(types));
-        }
-
-        TGetTablesResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetTables(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-
-    }
-
-
-    private static ThriftOperation getTypeInfoOperation(ThriftSession session) {
-        TGetTypeInfoReq req = new TGetTypeInfoReq(session.getSessionHandle());
-
-        TGetTypeInfoResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetTypeInfo(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-
-    }
-
-    private static ThriftOperation getTableTypesOperation(ThriftSession session) {
-        TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
-
-        TGetTableTypesResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetTableTypes(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-    }
-
-    private static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern) {
-        TGetSchemasReq req = new TGetSchemasReq(session.getSessionHandle());
-        req.setCatalogName(catalog);
-        req.setSchemaName(schemaPattern);
-
-        TGetSchemasResp resp;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.GetSchemas(req);
-        } catch (TException e) {
-            throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
-        }
-
-        checkStatus(resp.getStatus());
-
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
-
-
-    }
 
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) {
         return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PRIMARY_KEYS).build()).build();
@@ -537,7 +121,7 @@ public class QueryUtils {
         return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PSEUDO_COLUMNS).build()).build();
     }
 
-    public static String getSchema(HiveConnection connection) throws SQLException {
+    public static String getDatabaseSchema(HiveConnection connection) throws SQLException {
 
         String schema = null;
 
@@ -564,129 +148,13 @@ public class QueryUtils {
         }
     }
 
-    public static void setSchema(HiveConnection connection, String schema) throws SQLException {
+    public static void setDatabaseSchema(HiveConnection connection, String schema) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("USE " + schema);
         }
     }
 
-    static void checkStatus(TStatus status) {
 
-        if (status.getStatusCode() == TStatusCode.SUCCESS_STATUS || status.getStatusCode() == TStatusCode.SUCCESS_WITH_INFO_STATUS) {
-            return;
-        }
-
-        throw new HiveThriftException(status);
-    }
-
-    public static void closeOperation(ThriftOperation operation) {
-        closeOperation(operation.getSession(), operation.getOperationHandle());
-    }
-
-    public static void closeOperation(ThriftSession session, TOperationHandle handle) {
-        TCloseOperationReq closeRequest = new TCloseOperationReq(handle);
-
-        TCloseOperationResp resp = null;
-
-        ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.CloseOperation(closeRequest);
-        } catch (TTransportException e) {
-            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
-        } catch (TException e) {
-            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
-        }
-
-        if (resp != null) {
-            try {
-                checkStatus(resp.getStatus());
-            } catch (HiveThriftException e) {
-                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
-            }
-        }
-
-    }
-
-    public static void cancelOperation(ThriftOperation operation) {
-        TCancelOperationReq cancelRequest = new TCancelOperationReq(operation.getOperationHandle());
-
-        TCancelOperationResp resp = null;
-
-        ReentrantLock lock = operation.getSession().getSessionLock();
-        TCLIService.Client client = operation.getSession().getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.CancelOperation(cancelRequest);
-        } catch (TTransportException e) {
-            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
-        } catch (TException e) {
-            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
-        }
-
-        if (resp != null) {
-            try {
-                checkStatus(resp.getStatus());
-            } catch (HiveThriftException e) {
-                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
-            }
-        }
-    }
-
-    public static void closeSession(ThriftSession thriftSession) {
-        TCloseSessionReq closeRequest = new TCloseSessionReq(thriftSession.getSessionHandle());
-
-        TCloseSessionResp resp = null;
-
-        ReentrantLock lock = thriftSession.getSessionLock();
-        TCLIService.Client client = thriftSession.getClient();
-
-        lock.lock();
-
-        try {
-            resp = client.CloseSession(closeRequest);
-        } catch (TTransportException e) {
-            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
-        } catch (TException e) {
-            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
-        }
-
-        if (resp != null) {
-            try {
-                checkStatus(resp.getStatus());
-            } catch (HiveThriftException e) {
-                log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
-            }
-        }
-
-    }
-
-    private static List<Row> getRows(TRowSet rowSet, Schema schema) {
-
-        List<Row> rows = null;
-
-        if (rowSet != null && rowSet.isSetColumns()) {
-
-            ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(schema).build();
-
-            rows = RowBaseSet.builder().columnBaseSet(cbs).build().getRows();
-
-        }
-
-        return rows;
-
-    }
 
 
 }

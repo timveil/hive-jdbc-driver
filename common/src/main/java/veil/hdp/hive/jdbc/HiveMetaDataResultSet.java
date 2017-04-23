@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -49,7 +49,7 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
     public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
 
-            QueryUtils.closeOperation(session, operationHandle);
+            ThriftUtils.closeOperation(session, operationHandle);
 
             if (schema != null) {
                 schema.clear();
@@ -87,9 +87,9 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
         public HiveMetaDataResultSet build() {
 
-            Schema schema = QueryUtils.getSchema(thriftSession, operationHandle);
+            Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
 
-            Iterable<Row> results = QueryUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
+            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
 
             return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }

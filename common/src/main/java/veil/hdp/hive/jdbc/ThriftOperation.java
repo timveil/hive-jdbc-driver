@@ -4,7 +4,7 @@ import org.apache.hive.service.cli.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,14 +63,14 @@ public class ThriftOperation implements SQLCloseable {
     @Override
     public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
-            QueryUtils.closeOperation(this);
+            ThriftUtils.closeOperation(this);
             resultSet.close();
         }
     }
 
     public void cancel() {
         if (!closed.get()) {
-            QueryUtils.cancelOperation(this);
+            ThriftUtils.cancelOperation(this);
         }
     }
 

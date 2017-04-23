@@ -162,12 +162,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public String getSchema() throws SQLException {
-        return QueryUtils.getSchema(this);
+        return QueryUtils.getDatabaseSchema(this);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        QueryUtils.setSchema(this, schema);
+        QueryUtils.setDatabaseSchema(this, schema);
     }
 
     @Override
