@@ -18,7 +18,29 @@
             <artifactId>hive-jdbc</artifactId>
             <version>${hive.version}</version>
             <classifier>standalone</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- original jar has a dependency on commons-logging; all other logging dependencies will come from test-utils -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>

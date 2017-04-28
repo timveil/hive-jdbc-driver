@@ -15,7 +15,7 @@ public class OriginalHiveDriverConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10000/default";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
 
         return new HiveDriver().connect(url, properties);
     }
