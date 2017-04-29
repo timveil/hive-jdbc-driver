@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.cli.thrift.TOperationHandle;
+import org.apache.hive.service.rpc.thrift.TOperationHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;

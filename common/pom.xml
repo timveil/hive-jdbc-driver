@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-common</artifactId>
-            <version>${hive.version}</version>
+            <version>${hive2.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.collect.AbstractIterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hive.service.cli.thrift.*;
+import org.apache.hive.service.rpc.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
@@ -55,7 +55,7 @@ public class ThriftUtils {
 
 
     public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
-        TOpenSessionReq openSessionReq = new TOpenSessionReq();
+        TOpenSessionReq openSessionReq = new TOpenSessionReq(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8);
         String username = HiveDriverProperty.USER.get(properties);
 
         if (username != null) {

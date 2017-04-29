@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc.metadata;
 
-import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
+//import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
-import org.apache.hive.service.cli.thrift.TTypeId;
+import org.apache.hive.service.rpc.thrift.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -39,8 +39,8 @@ public enum HiveType {
     // todo: don't understand INTERVAL_YEAR_MONTH
     INTERVAL_YEAR_MONTH("INTERVAL_YEAR_MONTH", TTypeId.INTERVAL_YEAR_MONTH_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalYearMonth.class, true, 0, 0),
 
-    // todo: don't understand INTERVAL_DAY_TIME
-    INTERVAL_DAY_TIME("INTERVAL_DAY_TIME", TTypeId.INTERVAL_DAY_TIME_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalDayTime.class, true, 0, 0),
+    // todo: don't understand INTERVAL_DAY_TIME; doesn't seem to exist in Hive 2.
+    //INTERVAL_DAY_TIME("INTERVAL_DAY_TIME", TTypeId.INTERVAL_DAY_TIME_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalDayTime.class, true, 0, 0),
 
     // todo: don't understand ARRAY
     ARRAY("ARRAY", TTypeId.ARRAY_TYPE, JDBCType.ARRAY, Array.class, true, 0, 0),

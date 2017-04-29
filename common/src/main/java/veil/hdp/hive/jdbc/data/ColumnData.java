@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc.data;
 
-import org.apache.hive.service.cli.thrift.TColumn;
+import org.apache.hive.service.rpc.thrift.TColumn;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 

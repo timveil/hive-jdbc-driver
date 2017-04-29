@@ -13,7 +13,7 @@ public class BaseUnitTest {
     }
 
     public static int getTestRuns() {
-        return Integer.parseInt(System.getProperty("test.runs", "1000"));
+        return Integer.parseInt(System.getProperty("test.runs", "100"));
     }
 
 }
