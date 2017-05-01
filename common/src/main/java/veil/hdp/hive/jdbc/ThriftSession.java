@@ -1,12 +1,13 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.rpc.thrift.TCLIService;
-import org.apache.hive.service.rpc.thrift.TOpenSessionResp;
-import org.apache.hive.service.rpc.thrift.TProtocolVersion;
-import org.apache.hive.service.rpc.thrift.TSessionHandle;
+
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.thrift.TCLIService;
+import veil.hdp.hive.jdbc.thrift.TOpenSessionResp;
+import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
+import veil.hdp.hive.jdbc.thrift.TSessionHandle;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.util.Properties;

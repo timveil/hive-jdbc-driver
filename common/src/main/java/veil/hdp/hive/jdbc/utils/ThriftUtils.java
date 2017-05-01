@@ -2,7 +2,6 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.collect.AbstractIterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hive.service.rpc.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
@@ -14,6 +13,7 @@ import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.thrift.*;
 
 import java.text.MessageFormat;
 import java.util.*;

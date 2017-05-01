@@ -32,8 +32,8 @@
 // * Service names begin with the letter "T", use a capital letter for each
 //   new word (with no underscores), and end with the word "Service".
 
-namespace java org.apache.hive.service.rpc.thrift
-namespace cpp apache.hive.service.rpc.thrift
+namespace java veil.hdp.hive.jdbc.thrift
+// namespace cpp apache.hive.service.rpc.thrift
 
 // List of protocol versions. A new token should be
 // added to the end of this list every time a change is made.

@@ -1,11 +1,11 @@
 package veil.hdp.hive.jdbc.metadata;
 
 import com.google.common.primitives.Ints;
-import org.apache.hive.service.rpc.thrift.TColumnDesc;
-import org.apache.hive.service.rpc.thrift.TTableSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.thrift.TColumnDesc;
+import veil.hdp.hive.jdbc.thrift.TTableSchema;
 
 import java.util.ArrayList;
 import java.util.List;

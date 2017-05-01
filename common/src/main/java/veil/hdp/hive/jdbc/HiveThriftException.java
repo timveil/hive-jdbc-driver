@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc;
 
-import org.apache.hive.service.rpc.thrift.TGetOperationStatusResp;
-import org.apache.hive.service.rpc.thrift.TStatus;
 import org.apache.thrift.TException;
+import veil.hdp.hive.jdbc.thrift.TGetOperationStatusResp;
+import veil.hdp.hive.jdbc.thrift.TStatus;
 import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
 
 

@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.metadata;
 
 //import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
-import org.apache.hive.service.rpc.thrift.TTypeId;
+import veil.hdp.hive.jdbc.thrift.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;
