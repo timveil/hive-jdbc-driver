@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
+
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 
@@ -11,6 +13,9 @@ public enum HiveDriverProperty {
     USER("user", null, false, null, null),
     PASSWORD("password", null, false, null, null),
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
+
+    // make sure to spell out differnces in readme; look at *.thrift
+    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
 
     // not really used because i've separated into separate drivers
     TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),

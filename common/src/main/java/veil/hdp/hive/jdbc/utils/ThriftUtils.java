@@ -55,7 +55,11 @@ public class ThriftUtils {
 
 
     public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
-        TOpenSessionReq openSessionReq = new TOpenSessionReq(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8);
+
+        TProtocolVersion protocolVersion = TProtocolVersion.findByValue(HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties));
+
+        TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
+
         String username = HiveDriverProperty.USER.get(properties);
 
         if (username != null) {
@@ -66,15 +70,7 @@ public class ThriftUtils {
         // set properties for session
         Map<String, String> configuration = buildSessionConfig(properties);
 
-        if (log.isTraceEnabled()) {
-            log.trace("configuration for session provided to thrift {}", configuration);
-        }
-
         openSessionReq.setConfiguration(configuration);
-
-        if (log.isTraceEnabled()) {
-            log.trace(openSessionReq.toString());
-        }
 
         try {
             TOpenSessionResp resp = client.OpenSession(openSessionReq);
