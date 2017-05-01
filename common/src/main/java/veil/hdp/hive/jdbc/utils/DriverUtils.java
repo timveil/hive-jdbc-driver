@@ -14,9 +14,7 @@ import java.net.URI;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,7 +74,9 @@ public class DriverUtils {
         builder.append("connection properties\n");
         builder.append("******************************************\n");
 
-        Set<String> strings = properties.stringPropertyNames();
+        List<String> strings = new ArrayList<String>(properties.stringPropertyNames());
+
+        Collections.sort(strings);
 
         for (String key : strings) {
             builder.append('\t').append(key).append(" : ").append(properties.getProperty(key)).append('\n');

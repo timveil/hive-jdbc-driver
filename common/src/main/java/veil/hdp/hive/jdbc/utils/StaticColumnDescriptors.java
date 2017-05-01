@@ -10,6 +10,13 @@ import java.util.List;
 
 class StaticColumnDescriptors {
 
+
+    private static final ColumnTypeDescriptor STRING = ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build();
+    private static final ColumnTypeDescriptor INTEGER = ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build();
+    private static final ColumnTypeDescriptor SMALL_INT = ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build();
+    private static final ColumnTypeDescriptor BIG_INT = ColumnTypeDescriptor.builder().hiveType(HiveType.BIG_INT).build();
+    private static final ColumnTypeDescriptor BOOLEAN = ColumnTypeDescriptor.builder().hiveType(HiveType.BOOLEAN).build();
+
     /*
         TABLE_CAT String => table catalog (may be null)
         TABLE_SCHEM String => table schema (may be null)
@@ -20,13 +27,15 @@ class StaticColumnDescriptors {
      */
     public static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<>(6);
 
+
     static {
-        PRIMARY_KEYS.add(new ColumnDescriptor("PK_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        PRIMARY_KEYS.add(new ColumnDescriptor("KEY_SEQ", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 5));
-        PRIMARY_KEYS.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        PRIMARY_KEYS.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("PK_NAME").typeDescriptor(STRING).position(6).build());
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("KEY_SEQ").typeDescriptor(INTEGER).position(5).build());
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(4).build());
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        PRIMARY_KEYS.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -43,15 +52,15 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> PROCEDURES = new ArrayList<>(9);
 
     static {
-        PROCEDURES.add(new ColumnDescriptor("SPECIFIC_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 9));
-        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 8));
-        PROCEDURES.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 7));
-        PROCEDURES.add(new ColumnDescriptor("RESERVED", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        PROCEDURES.add(new ColumnDescriptor("RESERVED", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        PROCEDURES.add(new ColumnDescriptor("RESERVED", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        PROCEDURES.add(new ColumnDescriptor("PROCEDURE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        PROCEDURES.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(9).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("PROCEDURE_TYPE").typeDescriptor(SMALL_INT).position(8).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(7).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("RESERVED").typeDescriptor(STRING).position(6).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("RESERVED").typeDescriptor(STRING).position(5).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("RESERVED").typeDescriptor(STRING).position(4).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("PROCEDURE_NAME").typeDescriptor(STRING).position(3).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("PROCEDURE_SCHEM").typeDescriptor(STRING).position(2).build());
+        PROCEDURES.add(ColumnDescriptor.builder().name("PROCEDURE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -79,26 +88,26 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<>(20);
 
     static {
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SPECIFIC_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 20));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("IS_NULLABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 19));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("ORDINAL_POSITION", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 18));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 17));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SQL_DATETIME_SUB", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 16));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SQL_DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 15));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_DEF", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 14));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 13));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("NULLABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 12));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("RADIX", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 11));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("SCALE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 10));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("LENGTH", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 9));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PRECISION", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 8));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 7));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 6));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 5));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        PROCEDURE_COLUMNS.add(new ColumnDescriptor("PROCEDURE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(20).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("IS_NULLABLE").typeDescriptor(STRING).position(19).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("ORDINAL_POSITION").typeDescriptor(INTEGER).position(18).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("CHAR_OCTET_LENGTH").typeDescriptor(INTEGER).position(17).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("SQL_DATETIME_SUB").typeDescriptor(INTEGER).position(16).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("SQL_DATA_TYPE").typeDescriptor(INTEGER).position(15).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_DEF").typeDescriptor(STRING).position(14).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(13).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("NULLABLE").typeDescriptor(SMALL_INT).position(12).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("RADIX").typeDescriptor(SMALL_INT).position(11).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("SCALE").typeDescriptor(SMALL_INT).position(10).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("LENGTH").typeDescriptor(INTEGER).position(9).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("PRECISION").typeDescriptor(INTEGER).position(8).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(7).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("DATA_TYPE").typeDescriptor(INTEGER).position(6).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_TYPE").typeDescriptor(SMALL_INT).position(5).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(4).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("PROCEDURE_NAME").typeDescriptor(STRING).position(3).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("PROCEDURE_SCHEM").typeDescriptor(STRING).position(2).build());
+        PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("PROCEDURE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -114,14 +123,14 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<>(8);
 
     static {
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("IS_GRANTABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 8));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("PRIVILEGE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 7));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("GRANTEE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("GRANTOR", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        COLUMN_PRIVILEGES.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("IS_GRANTABLE").typeDescriptor(STRING).position(8).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("PRIVILEGE").typeDescriptor(STRING).position(7).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("GRANTEE").typeDescriptor(STRING).position(6).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("GRANTOR").typeDescriptor(STRING).position(5).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(4).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -137,14 +146,14 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<>(8);
 
     static {
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("PSEUDO_COLUMN", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 8));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("DECIMAL_DIGITS", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 7));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("BUFFER_LENGTH", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 6));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("COLUMN_SIZE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 5));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 3));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        BEST_ROW_IDENTIFIER.add(new ColumnDescriptor("SCOPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 1));
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("PSEUDO_COLUMN").typeDescriptor(SMALL_INT).position(8).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("DECIMAL_DIGITS").typeDescriptor(SMALL_INT).position(7).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("BUFFER_LENGTH").typeDescriptor(INTEGER).position(6).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("COLUMN_SIZE").typeDescriptor(INTEGER).position(5).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(4).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("DATA_TYPE").typeDescriptor(INTEGER).position(3).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(2).build());
+        BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("SCOPE").typeDescriptor(SMALL_INT).position(1).build());
     }
 
     /*
@@ -159,13 +168,13 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<>(7);
 
     static {
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("IS_GRANTABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 7));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("PRIVILEGE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("GRANTEE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("GRANTOR", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        TABLE_PRIVILEGES.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("IS_GRANTABLE").typeDescriptor(STRING).position(7).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("PRIVILEGE").typeDescriptor(STRING).position(6).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("GRANTEE").typeDescriptor(STRING).position(5).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("GRANTOR").typeDescriptor(STRING).position(4).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -199,20 +208,20 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<>(14);
 
     static {
-        IMPORTED_KEYS.add(new ColumnDescriptor("DEFERRABILITY", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 14));
-        IMPORTED_KEYS.add(new ColumnDescriptor("PK_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 13));
-        IMPORTED_KEYS.add(new ColumnDescriptor("FK_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 12));
-        IMPORTED_KEYS.add(new ColumnDescriptor("DELETE_RULE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 11));
-        IMPORTED_KEYS.add(new ColumnDescriptor("UPDATE_RULE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 10));
-        IMPORTED_KEYS.add(new ColumnDescriptor("KEY_SEQ", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 9));
-        IMPORTED_KEYS.add(new ColumnDescriptor("FKCOLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 8));
-        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 7));
-        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        IMPORTED_KEYS.add(new ColumnDescriptor("FKTABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        IMPORTED_KEYS.add(new ColumnDescriptor("PKCOLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        IMPORTED_KEYS.add(new ColumnDescriptor("PKTABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("DEFERRABILITY").typeDescriptor(SMALL_INT).position(14).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("PK_NAME").typeDescriptor(STRING).position(13).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("FK_NAME").typeDescriptor(STRING).position(12).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("DELETE_RULE").typeDescriptor(SMALL_INT).position(11).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("UPDATE_RULE").typeDescriptor(SMALL_INT).position(10).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("KEY_SEQ").typeDescriptor(SMALL_INT).position(9).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("FKCOLUMN_NAME").typeDescriptor(STRING).position(8).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("FKTABLE_NAME").typeDescriptor(STRING).position(7).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("FKTABLE_SCHEM").typeDescriptor(STRING).position(6).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("FKTABLE_CAT").typeDescriptor(STRING).position(5).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("PKCOLUMN_NAME").typeDescriptor(STRING).position(4).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("PKTABLE_NAME").typeDescriptor(STRING).position(3).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("PKTABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        IMPORTED_KEYS.add(ColumnDescriptor.builder().name("PKTABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -269,19 +278,19 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<>(13);
 
     static {
-        INDEX_INFO.add(new ColumnDescriptor("FILTER_CONDITION", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 13));
-        INDEX_INFO.add(new ColumnDescriptor("PAGES", ColumnTypeDescriptor.builder().hiveType(HiveType.BIG_INT).build(), 12));
-        INDEX_INFO.add(new ColumnDescriptor("CARDINALITY", ColumnTypeDescriptor.builder().hiveType(HiveType.BIG_INT).build(), 11));
-        INDEX_INFO.add(new ColumnDescriptor("ASC_OR_DESC", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 10));
-        INDEX_INFO.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 9));
-        INDEX_INFO.add(new ColumnDescriptor("ORDINAL_POSITION", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 8));
-        INDEX_INFO.add(new ColumnDescriptor("TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 7));
-        INDEX_INFO.add(new ColumnDescriptor("INDEX_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        INDEX_INFO.add(new ColumnDescriptor("INDEX_QUALIFIER", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        INDEX_INFO.add(new ColumnDescriptor("NON_UNIQUE", ColumnTypeDescriptor.builder().hiveType(HiveType.BOOLEAN).build(), 4));
-        INDEX_INFO.add(new ColumnDescriptor("TABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        INDEX_INFO.add(new ColumnDescriptor("TABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        INDEX_INFO.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        INDEX_INFO.add(ColumnDescriptor.builder().name("FILTER_CONDITION").typeDescriptor(STRING).position(13).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("PAGES").typeDescriptor(BIG_INT).position(12).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("CARDINALITY").typeDescriptor(BIG_INT).position(11).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("ASC_OR_DESC").typeDescriptor(STRING).position(10).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(9).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("ORDINAL_POSITION").typeDescriptor(SMALL_INT).position(8).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("TYPE").typeDescriptor(SMALL_INT).position(7).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("INDEX_NAME").typeDescriptor(STRING).position(6).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("INDEX_QUALIFIER").typeDescriptor(STRING).position(5).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("NON_UNIQUE").typeDescriptor(BOOLEAN).position(4).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        INDEX_INFO.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -296,13 +305,13 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> UDT = new ArrayList<>(7);
 
     static {
-        UDT.add(new ColumnDescriptor("BASE_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 7));
-        UDT.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        UDT.add(new ColumnDescriptor("DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 5));
-        UDT.add(new ColumnDescriptor("CLASS_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        UDT.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        UDT.add(new ColumnDescriptor("TYPE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        UDT.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        UDT.add(ColumnDescriptor.builder().name("BASE_TYPE").typeDescriptor(SMALL_INT).position(7).build());
+        UDT.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(6).build());
+        UDT.add(ColumnDescriptor.builder().name("DATA_TYPE").typeDescriptor(INTEGER).position(5).build());
+        UDT.add(ColumnDescriptor.builder().name("CLASS_NAME").typeDescriptor(STRING).position(4).build());
+        UDT.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(3).build());
+        UDT.add(ColumnDescriptor.builder().name("TYPE_SCHEM").typeDescriptor(STRING).position(2).build());
+        UDT.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -316,12 +325,12 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<>(6);
 
     static {
-        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 5));
-        SUPER_TYPES.add(new ColumnDescriptor("SUPERTYPE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        SUPER_TYPES.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        SUPER_TYPES.add(new ColumnDescriptor("TYPE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        SUPER_TYPES.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("SUPERTYPE_NAME").typeDescriptor(STRING).position(6).build());
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("SUPERTYPE_SCHEM").typeDescriptor(STRING).position(5).build());
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("SUPERTYPE_CAT").typeDescriptor(STRING).position(4).build());
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(3).build());
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("TYPE_SCHEM").typeDescriptor(STRING).position(2).build());
+        SUPER_TYPES.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -333,10 +342,10 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<>(4);
 
     static {
-        SUPER_TABLES.add(new ColumnDescriptor("SUPERTABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        SUPER_TABLES.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        SUPER_TABLES.add(new ColumnDescriptor("TYPE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        SUPER_TABLES.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        SUPER_TABLES.add(ColumnDescriptor.builder().name("SUPERTABLE_NAME").typeDescriptor(STRING).position(4).build());
+        SUPER_TABLES.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(3).build());
+        SUPER_TABLES.add(ColumnDescriptor.builder().name("TYPE_SCHEM").typeDescriptor(STRING).position(2).build());
+        SUPER_TABLES.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -365,27 +374,27 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<>(21);
 
     static {
-        ATTRIBUTES.add(new ColumnDescriptor("SOURCE_DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 21));
-        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_TABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 20));
-        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_SCHEMA", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 19));
-        ATTRIBUTES.add(new ColumnDescriptor("SCOPE_CATALOG", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 18));
-        ATTRIBUTES.add(new ColumnDescriptor("IS_NULLABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 17));
-        ATTRIBUTES.add(new ColumnDescriptor("ORDINAL_POSITION", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 16));
-        ATTRIBUTES.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 15));
-        ATTRIBUTES.add(new ColumnDescriptor("SQL_DATETIME_SUB", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 14));
-        ATTRIBUTES.add(new ColumnDescriptor("SQL_DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 13));
-        ATTRIBUTES.add(new ColumnDescriptor("ATTR_DEF", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 12));
-        ATTRIBUTES.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 11));
-        ATTRIBUTES.add(new ColumnDescriptor("NULLABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 10));
-        ATTRIBUTES.add(new ColumnDescriptor("NUM_PREC_RADIX", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 9));
-        ATTRIBUTES.add(new ColumnDescriptor("DECIMAL_DIGITS", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 8));
-        ATTRIBUTES.add(new ColumnDescriptor("ATTR_SIZE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 7));
-        ATTRIBUTES.add(new ColumnDescriptor("ATTR_TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        ATTRIBUTES.add(new ColumnDescriptor("DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 5));
-        ATTRIBUTES.add(new ColumnDescriptor("ATTR_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        ATTRIBUTES.add(new ColumnDescriptor("TYPE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        ATTRIBUTES.add(new ColumnDescriptor("TYPE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        ATTRIBUTES.add(new ColumnDescriptor("TYPE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SOURCE_DATA_TYPE").typeDescriptor(SMALL_INT).position(21).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SCOPE_TABLE").typeDescriptor(STRING).position(20).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SCOPE_SCHEMA").typeDescriptor(STRING).position(19).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SCOPE_CATALOG").typeDescriptor(STRING).position(18).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("IS_NULLABLE").typeDescriptor(STRING).position(17).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("ORDINAL_POSITION").typeDescriptor(INTEGER).position(16).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("CHAR_OCTET_LENGTH").typeDescriptor(INTEGER).position(15).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SQL_DATETIME_SUB").typeDescriptor(INTEGER).position(14).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("SQL_DATA_TYPE").typeDescriptor(INTEGER).position(13).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("ATTR_DEF").typeDescriptor(STRING).position(12).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(11).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("NULLABLE").typeDescriptor(INTEGER).position(10).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("NUM_PREC_RADIX").typeDescriptor(INTEGER).position(9).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("DECIMAL_DIGITS").typeDescriptor(INTEGER).position(8).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("ATTR_SIZE").typeDescriptor(INTEGER).position(7).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("ATTR_TYPE_NAME").typeDescriptor(STRING).position(6).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("DATA_TYPE").typeDescriptor(INTEGER).position(5).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("ATTR_NAME").typeDescriptor(STRING).position(4).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("TYPE_NAME").typeDescriptor(STRING).position(3).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("TYPE_SCHEM").typeDescriptor(STRING).position(2).build());
+        ATTRIBUTES.add(ColumnDescriptor.builder().name("TYPE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -397,10 +406,10 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<>(4);
 
     static {
-        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("DESCRIPTION", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("DEFAULT_VALUE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("MAX_LEN", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 2));
-        CLIENT_INFO_PROPERTIES.add(new ColumnDescriptor("NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        CLIENT_INFO_PROPERTIES.add(ColumnDescriptor.builder().name("DESCRIPTION").typeDescriptor(STRING).position(4).build());
+        CLIENT_INFO_PROPERTIES.add(ColumnDescriptor.builder().name("DEFAULT_VALUE").typeDescriptor(STRING).position(3).build());
+        CLIENT_INFO_PROPERTIES.add(ColumnDescriptor.builder().name("MAX_LEN").typeDescriptor(INTEGER).position(2).build());
+        CLIENT_INFO_PROPERTIES.add(ColumnDescriptor.builder().name("NAME").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -414,12 +423,12 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<>(6);
 
     static {
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("SPECIFIC_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 6));
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.SMALL_INT).build(), 5));
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        FUNCTION_COLUMNS.add(new ColumnDescriptor("FUNCTION_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(6).build());
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("FUNCTION_TYPE").typeDescriptor(SMALL_INT).position(5).build());
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(4).build());
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("FUNCTION_NAME").typeDescriptor(STRING).position(3).build());
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("FUNCTION_SCHEM").typeDescriptor(STRING).position(2).build());
+        FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("FUNCTION_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     /*
@@ -439,23 +448,23 @@ class StaticColumnDescriptors {
     public static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<>(12);
 
     static {
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("IS_NULLABLE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 12));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("CHAR_OCTET_LENGTH", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 11));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("REMARKS", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 10));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_USAGE", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 9));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("NUM_PREC_RADIX", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 8));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("DECIMAL_DIGITS", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 7));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_SIZE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 6));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("DATA_TYPE", ColumnTypeDescriptor.builder().hiveType(HiveType.INTEGER).build(), 5));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("COLUMN_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 4));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_NAME", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 3));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_SCHEM", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 2));
-        PSEUDO_COLUMNS.add(new ColumnDescriptor("TABLE_CAT", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("IS_NULLABLE").typeDescriptor(STRING).position(12).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("CHAR_OCTET_LENGTH").typeDescriptor(INTEGER).position(11).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("REMARKS").typeDescriptor(STRING).position(10).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_USAGE").typeDescriptor(STRING).position(9).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("NUM_PREC_RADIX").typeDescriptor(INTEGER).position(8).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("DECIMAL_DIGITS").typeDescriptor(INTEGER).position(7).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_SIZE").typeDescriptor(INTEGER).position(6).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("DATA_TYPE").typeDescriptor(INTEGER).position(5).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(4).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position( 1).build());
     }
 
     public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<>(1);
 
     static {
-        GENERATED_KEYS.add(new ColumnDescriptor("GENERATED_KEY", ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build(), 1));
+        GENERATED_KEYS.add(ColumnDescriptor.builder().name("GENERATED_KEY").typeDescriptor(STRING).position(1).build());
     }
 }

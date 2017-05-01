@@ -90,7 +90,7 @@ public class Schema {
                 columnDescriptors = new ArrayList<>(tableSchema.getColumnsSize());
 
                 for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-                    columnDescriptors.add(new ColumnDescriptor(columnDesc));
+                    columnDescriptors.add(ColumnDescriptor.builder().thriftColumn(columnDesc).build());
                 }
             }
 

@@ -15,31 +15,14 @@ public class ColumnDescriptor {
     // should be 1 based to match ResultSet
     private final int position;
 
-
-    public ColumnDescriptor(String name, ColumnTypeDescriptor columnTypeDescriptor, int position) {
+    private ColumnDescriptor(String name, String normalizedName, String comment, ColumnTypeDescriptor columnTypeDescriptor, int position) {
         this.name = name;
-        this.normalizedName = normalizeName(name);
-        this.comment = null;
+        this.normalizedName = normalizedName;
+        this.comment = comment;
         this.columnTypeDescriptor = columnTypeDescriptor;
         this.position = position;
     }
 
-    public ColumnDescriptor(TColumnDesc columnDesc) {
-        name = columnDesc.getColumnName();
-        normalizedName = normalizeName(columnDesc.getColumnName());
-        comment = columnDesc.getComment();
-        columnTypeDescriptor = ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build();
-        position = columnDesc.getPosition();
-    }
-
-    private static String normalizeName(String name) {
-
-        if (name.contains(".")) {
-            name = name.substring(name.lastIndexOf('.') + 1);
-        }
-
-        return name.toLowerCase();
-    }
 
     public static ColumnDescriptorBuilder builder() {
         return new ColumnDescriptorBuilder();
@@ -78,12 +61,59 @@ public class ColumnDescriptor {
 
     public static class ColumnDescriptorBuilder implements Builder<ColumnDescriptor> {
 
+        private TColumnDesc columnDesc;
+        private ColumnTypeDescriptor typeDescriptor;
+        private String name;
+        private int position;
+
+
+
         private ColumnDescriptorBuilder() {
+        }
+
+        public ColumnDescriptorBuilder thriftColumn(TColumnDesc columnDesc) {
+            this.columnDesc = columnDesc;
+            return this;
+        }
+
+        public ColumnDescriptorBuilder typeDescriptor(ColumnTypeDescriptor typeDescriptor) {
+            this.typeDescriptor = typeDescriptor;
+            return this;
+        }
+
+        public ColumnDescriptorBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ColumnDescriptorBuilder position(int position) {
+            this.position = position;
+            return this;
         }
 
         //todo
         public ColumnDescriptor build() {
-            return null;
+
+            if (columnDesc != null) {
+                String name = columnDesc.getColumnName();
+                String comment = columnDesc.getComment();
+                ColumnTypeDescriptor columnTypeDescriptor = ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build();
+                int position = columnDesc.getPosition();
+
+                return new ColumnDescriptor(name, normalizeName(name), comment, columnTypeDescriptor, position);
+            } else {
+                return new ColumnDescriptor(name, normalizeName(name), null, typeDescriptor, position);
+            }
+        }
+
+
+        private static String normalizeName(String name) {
+
+            if (name.contains(".")) {
+                name = name.substring(name.lastIndexOf('.') + 1);
+            }
+
+            return name.toLowerCase();
         }
     }
 }
