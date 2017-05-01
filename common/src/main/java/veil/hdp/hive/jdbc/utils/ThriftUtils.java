@@ -58,6 +58,10 @@ public class ThriftUtils {
 
         TProtocolVersion protocolVersion = TProtocolVersion.findByValue(HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties));
 
+        if (protocolVersion == null) {
+            throw new HiveException("protocol version is not properly set");
+        }
+
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
 
         String username = HiveDriverProperty.USER.get(properties);
