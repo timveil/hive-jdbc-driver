@@ -91,16 +91,12 @@ public class ColumnDescriptor {
             return this;
         }
 
-        //todo
         public ColumnDescriptor build() {
 
             if (columnDesc != null) {
                 String name = columnDesc.getColumnName();
-                String comment = columnDesc.getComment();
-                ColumnTypeDescriptor columnTypeDescriptor = ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build();
-                int position = columnDesc.getPosition();
 
-                return new ColumnDescriptor(name, normalizeName(name), comment, columnTypeDescriptor, position);
+                return new ColumnDescriptor(name, normalizeName(name), columnDesc.getComment(), ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build(), columnDesc.getPosition());
             } else {
                 return new ColumnDescriptor(name, normalizeName(name), null, typeDescriptor, position);
             }
