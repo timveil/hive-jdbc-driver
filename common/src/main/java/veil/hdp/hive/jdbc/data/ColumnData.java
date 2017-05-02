@@ -10,6 +10,11 @@ import java.util.List;
 
 public class ColumnData<T> {
 
+    private static final byte[] MASKS = new byte[]{
+            0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
+    };
+
+
     private final ColumnDescriptor descriptor;
     private final List<T> values;
     private final BitSet nulls;
@@ -42,10 +47,6 @@ public class ColumnData<T> {
 
     public static class ColumnDataBuilder implements Builder<ColumnData> {
 
-        private static final byte[] MASKS = new byte[]{
-                0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
-        };
-
         private TColumn column;
         private ColumnDescriptor columnDescriptor;
 
@@ -55,15 +56,18 @@ public class ColumnData<T> {
         private static BitSet buildBitSet(byte[] nulls) {
             int nullsLength = nulls.length;
             int bitsLength = nullsLength * 8;
+
             BitSet bitset = new BitSet(bitsLength);
 
             for (int i = 0; i < bitsLength; i++) {
-                int i1 = i / 8;
-                byte aNull = nulls[i1];
-                int i2 = i % 8;
-                byte mask = MASKS[i2];
-                boolean wtf = (aNull & mask) != 0;
-                bitset.set(i, wtf);
+                int nullIndex = i / 8;
+                int maskIndex = i % 8;
+
+                byte aNull = nulls[nullIndex];
+                byte mask = MASKS[maskIndex];
+
+                boolean isNull = (aNull & mask) != 0;
+                bitset.set(i, isNull);
             }
 
             return bitset;

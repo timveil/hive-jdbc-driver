@@ -74,7 +74,7 @@ public class DriverUtils {
         builder.append("connection properties\n");
         builder.append("******************************************\n");
 
-        List<String> strings = new ArrayList<String>(properties.stringPropertyNames());
+        List<String> strings = new ArrayList<>(properties.stringPropertyNames());
 
         Collections.sort(strings);
 
