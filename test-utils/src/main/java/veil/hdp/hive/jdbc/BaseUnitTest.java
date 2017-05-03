@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class BaseUnitTest {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected static final Logger log = LoggerFactory.getLogger(BaseUnitTest.class);
 
 
     public static String getHost() {

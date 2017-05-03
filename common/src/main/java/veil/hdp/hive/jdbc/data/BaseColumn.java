@@ -20,7 +20,7 @@ import static veil.hdp.hive.jdbc.metadata.HiveType.*;
 
 public class BaseColumn<T> implements Column<T> {
 
-    final Logger log = getLogger(getClass());
+    static final Logger log = getLogger(BaseColumn.class);
 
     final ColumnDescriptor descriptor;
 

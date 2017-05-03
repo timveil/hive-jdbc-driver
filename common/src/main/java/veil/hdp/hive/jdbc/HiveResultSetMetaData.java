@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
-    private final Logger log = LoggerFactory.getLogger(HiveResultSetMetaData.class);
+    private static final Logger log = LoggerFactory.getLogger(HiveResultSetMetaData.class);
 
     // constructor
     private final Schema schema;
