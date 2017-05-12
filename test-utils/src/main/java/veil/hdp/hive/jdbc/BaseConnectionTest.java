@@ -69,7 +69,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
     private void executeSimpleQuery(boolean print) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM master limit 10")) {
 
             if (print) {
                 Printer.printResultSet(rs);

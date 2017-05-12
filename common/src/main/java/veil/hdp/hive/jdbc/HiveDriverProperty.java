@@ -28,7 +28,16 @@ public enum HiveDriverProperty {
     // not really used because i've separated into separate drivers
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
-    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null);
+    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
+
+    KERBEROS_PRINCIPAL("principal", null, false, null, null),
+
+    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.toString(), false, null, "hive.server2.authentication",
+            AuthenticationMode.NONE.toString(),
+            AuthenticationMode.NOSASL.toString(),
+            AuthenticationMode.KERBEROS.toString(),
+            AuthenticationMode.LDAP.toString(),
+            AuthenticationMode.PAM.toString());
 
     private final String name;
     private final String defaultValue;

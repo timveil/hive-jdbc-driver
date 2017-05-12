@@ -23,6 +23,7 @@
         <module>zookeeper-utils</module>
         <module>original-driver-test</module>
         <module>test-utils</module>
+        <module>kerberos-utils</module>
     </modules>
 
     <properties>
@@ -33,6 +34,7 @@
         <junit.version>4.12</junit.version>
         <hive.version>1.2.1000.2.6.0.3-8</hive.version>
         <hive2.version>2.1.0.2.6.0.3-8</hive2.version>
+        <hadoop.version>2.7.3.2.6.0.3-8</hadoop.version>
         <slf4j.version>1.7.25</slf4j.version>
         <guava.version>21.0</guava.version>
 

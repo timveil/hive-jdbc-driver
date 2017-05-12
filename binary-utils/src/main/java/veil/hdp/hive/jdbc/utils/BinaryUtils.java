@@ -1,24 +1,39 @@
 package veil.hdp.hive.jdbc.utils;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.thrift.transport.TSaslClientTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.AuthenticationMode;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.security.PlainCallbackHandler;
 
+import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTHENTICATION;
 
 
 public class BinaryUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
 
-    private static final String PLAIN = "PLAIN";
+    // TODO: MAKE THESE VALUES PART OF ENUM, MAYBE AUTHENTICATIONMODE
+    private static final String MECHANISM_PLAIN = "PLAIN";
+    private static final String MECHANISM_KERBEROS = "GSSAPI";
 
 
-    public static TSocket createSocket(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
+    public static TSocket createSocket(Properties properties, int loginTimeoutMilliseconds) {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
@@ -31,15 +46,82 @@ public class BinaryUtils {
         // todo: no support for no-sasl
         // todo: no support for delegation tokens or ssl yet
 
-        String user = HiveDriverProperty.USER.get(properties);
-        String password = HiveDriverProperty.PASSWORD.get(properties);
+
+        AuthenticationMode authenticationMode = AuthenticationMode.valueOf(HiveDriverProperty.AUTHENTICATION_MODE.get(properties));
 
         TSocket socket = createSocket(properties, loginTimeoutMilliseconds);
 
         try {
-            return new TSaslClientTransport(PLAIN, null, null, null, null, new PlainCallbackHandler(user, password), socket);
-        } catch (SaslException e) {
+            switch (authenticationMode) {
+
+                case NONE:
+
+                    String user = HiveDriverProperty.USER.get(properties);
+                    String password = HiveDriverProperty.PASSWORD.get(properties);
+
+                    return buildSocketWithSASL(user, password, socket);
+                case NOSASL:
+                    return socket;
+                case LDAP:
+                    break;
+                case KERBEROS:
+                    return buildSocketWithKerberos(properties, socket);
+                case PAM:
+                    break;
+            }
+        } catch (HiveException e) {
             throw new HiveSQLException(e);
+        }
+
+        throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported!");
+
+    }
+
+    private static TTransport buildSocketWithSASL(String user, String password, TSocket socket) {
+        try {
+            return new TSaslClientTransport(MECHANISM_PLAIN,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new PlainCallbackHandler(user, password),
+                    socket);
+        } catch (SaslException e) {
+            throw new HiveException(e);
+        }
+    }
+
+    private static TTransport buildSocketWithKerberos(Properties properties, TSocket socket) {
+
+        try {
+            UserGroupInformation ugi = UserGroupInformation.getLoginUser();
+
+            Configuration conf = new Configuration();
+            conf.set(HADOOP_SECURITY_AUTHENTICATION, AuthenticationMode.KERBEROS.toString());
+
+            String principal = HiveDriverProperty.KERBEROS_PRINCIPAL.get(properties);
+            String host = HiveDriverProperty.HOST_NAME.get(properties);
+
+            Principal serverPrincipal = PrincipalUtils.parsePrincipal(principal);
+
+            Map<String, String> saslProps = new HashMap<>();
+            saslProps.put(Sasl.QOP, "auth-conf,auth-int,auth");
+            saslProps.put(Sasl.SERVER_AUTH, "true");
+
+           TTransport saslTransport = new TSaslClientTransport(
+                    MECHANISM_KERBEROS,
+                    null,
+                    serverPrincipal.getUser(),
+                    serverPrincipal.getServer(),
+                    saslProps,
+                    null,
+                    socket);
+
+            return new SecureTransport(saslTransport, UserGroupInformation.getCurrentUser());
+
+
+        } catch (IOException e) {
+            throw new HiveException(e);
         }
 
     }

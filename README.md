@@ -43,3 +43,20 @@ HIVE_CLI_SERVICE_PROTOCOL_V9
 // V10 adds support for in place updates via GetOperationStatus
 HIVE_CLI_SERVICE_PROTOCOL_V10
 ```
+
+```
+ Options are NONE (uses plain SASL), NOSASL, KERBEROS, LDAP, PAM and CUSTOM.
+Set following for KERBEROS mode:
+```
+
+
+https://community.hortonworks.com/articles/28537/user-authentication-from-windows-workstation-to-hd.html
+
+http://web.mit.edu/kerberos/dist/index.html
+
+C:\Program Files\MIT\Kerberos
+
+Copy the krb5.conf file (from the HDP KDC) to above mentioned location and rename krb5.conf to krb5.ini.
+
+
+had to specify -Djava.security.krb5.conf=C:\ProgramData\MIT\Kerberos5\krb5.ini when starting up dbviz, setting environment variable, KRB5_CONFIG, did not work.
