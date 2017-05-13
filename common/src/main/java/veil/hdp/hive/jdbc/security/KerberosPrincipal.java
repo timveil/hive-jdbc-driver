@@ -1,12 +1,12 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc.security;
 
-public class Principal {
+public class KerberosPrincipal {
 
     private String user;
     private String server;
     private String realm;
 
-    public Principal(String user, String server, String realm) {
+    public KerberosPrincipal(String user, String server, String realm) {
         this.user = user;
         this.server = server;
         this.realm = realm;

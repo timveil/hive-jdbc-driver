@@ -22,7 +22,7 @@ public class BinaryDriverConnectionTestKerberos extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&principal=hive/hdp2.lab.local@LAB.LOCAL";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Principal=hive/hdp2.lab.local@LAB.LOCAL&krb5PreAuth=false";
 
         return new BinaryHiveDriver().connect(url, properties);
     }

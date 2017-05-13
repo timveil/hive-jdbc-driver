@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.thrift.transport.TSaslClientTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -11,8 +9,11 @@ import veil.hdp.hive.jdbc.AuthenticationMode;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.HiveSQLException;
-import veil.hdp.hive.jdbc.security.PlainCallbackHandler;
+import veil.hdp.hive.jdbc.security.*;
 
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
 import java.io.IOException;
@@ -20,8 +21,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.HADOOP_SECURITY_AUTHENTICATION;
 
 
 public class BinaryUtils {
@@ -94,33 +93,44 @@ public class BinaryUtils {
     private static TTransport buildSocketWithKerberos(Properties properties, TSocket socket) {
 
         try {
-            UserGroupInformation ugi = UserGroupInformation.getLoginUser();
 
-            Configuration conf = new Configuration();
-            conf.set(HADOOP_SECURITY_AUTHENTICATION, AuthenticationMode.KERBEROS.toString());
+            System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
+            System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
 
             String principal = HiveDriverProperty.KERBEROS_PRINCIPAL.get(properties);
             String host = HiveDriverProperty.HOST_NAME.get(properties);
 
-            Principal serverPrincipal = PrincipalUtils.parsePrincipal(principal);
+            KerberosPrincipal kerberosPrincipal = PrincipalUtils.parsePrincipal(principal);
 
-            Map<String, String> saslProps = new HashMap<>();
-            saslProps.put(Sasl.QOP, "auth-conf,auth-int,auth");
-            saslProps.put(Sasl.SERVER_AUTH, "true");
+            Map<String, String> saslProps = new HashMap<>(2);
+            saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
+            saslProps.put(Sasl.SERVER_AUTH, HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.get(properties));
 
-           TTransport saslTransport = new TSaslClientTransport(
+            TTransport saslTransport = new TSaslClientTransport(
                     MECHANISM_KERBEROS,
                     null,
-                    serverPrincipal.getUser(),
-                    serverPrincipal.getServer(),
+                    kerberosPrincipal.getUser(),
+                    kerberosPrincipal.getServer(),
                     saslProps,
                     null,
                     socket);
 
-            return new SecureTransport(saslTransport, UserGroupInformation.getCurrentUser());
+            // todo: i can't find a difference in behavior between these two option with the original driver.  they both seem accomplish the same thing
+            if (HiveDriverProperty.KERBEROS_PRE_AUTHENTICATION_ENABLED.getBoolean(properties)) {
+                return new PreAuthenticatedSecureTransport(saslTransport);
+            } else {
+
+                Subject subject = new Subject();
+
+                // todo: it seems i can comment this out and i'm still logged in suggesting that JAAS does not matter.
+                LoginContext login = new LoginContext(JdbcConfiguration.SIMPLE_CONFIG_NAME, subject, null, new JdbcConfiguration(properties));
+                login.login();
+
+                return new SecureTransport(saslTransport, subject);
+            }
 
 
-        } catch (IOException e) {
+        } catch (IOException | LoginException e) {
             throw new HiveException(e);
         }
 

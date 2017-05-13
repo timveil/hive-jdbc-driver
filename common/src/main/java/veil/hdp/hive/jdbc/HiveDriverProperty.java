@@ -30,7 +30,19 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
-    KERBEROS_PRINCIPAL("principal", null, false, null, null),
+    KERBEROS_PRINCIPAL("krb5Principal", null, false, null, null),
+    // sun.security.krb5.debug
+    KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
+    // javax.security.auth.useSubjectCredsOnly
+    KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", "false", false, null, null),
+    KERBEROS_PRE_AUTHENTICATION_ENABLED("krb5PreAuth", "false", false, null, null),
+
+    // Sasl.QOP
+    SASL_QUALITY_OF_PROTECTION("saslQOP", "auth-conf,auth-int,auth", false, null, null),
+    // Sasl.SERVER_AUTH
+    SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", "true", false, null, null),
+
+    JAAS_DEBUG_ENABLED("jaasDebug", "true", false, null, null),
 
     AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.toString(), false, null, "hive.server2.authentication",
             AuthenticationMode.NONE.toString(),

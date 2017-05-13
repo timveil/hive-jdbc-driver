@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,13 @@ public class PrincipalUtils {
 
     private static final Pattern PRINCIPAL_PATTERN = Pattern.compile("[/@]");
 
-    public static final Principal parsePrincipal(String principal) {
+    public static final KerberosPrincipal parsePrincipal(String principal) {
         String[] split = PRINCIPAL_PATTERN.split(principal);
 
         if (split.length == 3) {
-            return new Principal(split[0], split[1], split[2]);
+            return new KerberosPrincipal(split[0], split[1], split[2]);
         } else if (split.length == 2) {
-            return new Principal(split[0], getLocalHost(), split[1]);
+            return new KerberosPrincipal(split[0], getLocalHost(), split[1]);
         } else {
             throw new IllegalArgumentException("invalid principal [" + principal + ']');
         }

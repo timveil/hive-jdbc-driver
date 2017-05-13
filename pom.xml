@@ -23,7 +23,6 @@
         <module>zookeeper-utils</module>
         <module>original-driver-test</module>
         <module>test-utils</module>
-        <module>kerberos-utils</module>
     </modules>
 
     <properties>
