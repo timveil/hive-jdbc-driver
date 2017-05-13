@@ -123,6 +123,7 @@ public class BinaryUtils {
                 Subject subject = new Subject();
 
                 // todo: it seems i can comment this out and i'm still logged in suggesting that JAAS does not matter.
+                // this is part of UGI but i don't see why it matters in JDBC
                 LoginContext login = new LoginContext(JdbcConfiguration.SIMPLE_CONFIG_NAME, subject, null, new JdbcConfiguration(properties));
                 login.login();
 
