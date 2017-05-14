@@ -197,6 +197,7 @@ public class BinaryUtils {
 
         Map<String, String> options = new HashMap<>(1);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
+        options.put(LoginModuleConstants.DEBUG_NATIVE, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
 
         JaasConfiguration config = new JaasConfiguration();
         config.addAppConfigEntry(loginModuleName, PlatformUtils.getOSLoginModuleName(), REQUIRED, options);
@@ -229,6 +230,7 @@ public class BinaryUtils {
 
     private class LoginModuleConstants {
         public static final String DEBUG = "debug";
+        public static final String DEBUG_NATIVE = "debugNative";
         public static final String DO_NOT_PROMPT = "doNotPrompt";
         public static final String KEY_TAB = "keyTab";
         public static final String PRINCIPAL = "principal";
