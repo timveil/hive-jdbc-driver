@@ -15,12 +15,12 @@ public class JaasConfiguration extends Configuration {
 
     private final Map<String, AppConfigurationEntry[]> entries = new HashMap<>(1);
 
-    public void addAppConfigEntry(String loginModuleName, String loginClass, LoginModuleControlFlag controlFlag, Map<String, ?> options){
+    public void addAppConfigEntry(String configurationName, String loginModuleClassName, LoginModuleControlFlag controlFlag, Map<String, ?> options){
 
         log.debug("options {}", options);
 
-        AppConfigurationEntry entry = new AppConfigurationEntry(loginClass, controlFlag, options);
-        entries.put(loginModuleName, new AppConfigurationEntry[]{entry});
+        AppConfigurationEntry entry = new AppConfigurationEntry(loginModuleClassName, controlFlag, options);
+        entries.put(configurationName, new AppConfigurationEntry[]{entry});
     }
 
     @Override

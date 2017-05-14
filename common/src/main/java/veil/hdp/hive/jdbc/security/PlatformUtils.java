@@ -15,7 +15,7 @@ public class PlatformUtils {
     private static final boolean isWindows = StringUtils.startsWithIgnoreCase(OS_NAME, "windows");
 
 
-    public static String getKrb5LoginModuleName() {
+    public static String getKrb5LoginModuleClassName() {
         String loginModule = "com.sun.security.auth.module.Krb5LoginModule";
 
         log.debug("krb5 login module [{}]", loginModule);
@@ -23,7 +23,7 @@ public class PlatformUtils {
         return loginModule;
     }
 
-    public static String getOSLoginModuleName() {
+    public static String getOSLoginModuleClassName() {
 
         String loginModule = isWindows ? "com.sun.security.auth.module.NTLoginModule" : "com.sun.security.auth.module.UnixLoginModule";
 

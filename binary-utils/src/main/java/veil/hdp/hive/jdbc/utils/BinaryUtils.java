@@ -151,10 +151,10 @@ public class BinaryUtils {
 
             if (HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties) != null) {
                 // this will use the local keytab and principal passed in the url
-                loginContext = keytabContext(properties);
+                loginContext = keytabContext(properties, PlatformUtils.getKrb5LoginModuleClassName());
             } else {
                 // this requires that kinit be called outside the driver
-                loginContext = osContext(properties);
+                loginContext = localContext(properties, PlatformUtils.getOSLoginModuleClassName());
             }
 
             loginContext.login();
@@ -172,9 +172,9 @@ public class BinaryUtils {
     }
 
 
-    private static LoginContext keytabContext(Properties properties) throws LoginException {
+    private static LoginContext keytabContext(Properties properties, String loginModuleClassName) throws LoginException {
 
-        String loginModuleName = "withKeytab";
+        String configName = "fromKeytab";
 
         Map<String, String> options = new HashMap<>(7);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
@@ -186,28 +186,30 @@ public class BinaryUtils {
         options.put(LoginModuleConstants.REFRESH_KRB_5_CONFIG, "true");
 
         JaasConfiguration config = new JaasConfiguration();
-        config.addAppConfigEntry(loginModuleName, PlatformUtils.getKrb5LoginModuleName(), REQUIRED, options);
+        config.addAppConfigEntry(configName, loginModuleClassName, REQUIRED, options);
 
-        return new LoginContext(loginModuleName, null, null, config);
+        return new LoginContext(configName, null, null, config);
     }
 
-    private static LoginContext osContext(Properties properties) throws LoginException {
+    private static LoginContext localContext(Properties properties, String loginModuleClassName) throws LoginException {
 
-        String loginModuleName = "fromOs";
+        String configName = "fromLocal";
 
         Map<String, String> options = new HashMap<>(1);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
+
+        // available on windows, but not unix
         options.put(LoginModuleConstants.DEBUG_NATIVE, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
 
         JaasConfiguration config = new JaasConfiguration();
-        config.addAppConfigEntry(loginModuleName, PlatformUtils.getOSLoginModuleName(), REQUIRED, options);
+        config.addAppConfigEntry(configName, loginModuleClassName, REQUIRED, options);
 
-        return new LoginContext(loginModuleName, null, null, config);
+        return new LoginContext(configName, null, null, config);
     }
 
-    private static LoginContext cacheContext(Properties properties) throws LoginException {
+    private static LoginContext cacheContext(Properties properties, String loginModuleClassName) throws LoginException {
 
-        String loginModuleName = "ticketCache";
+        String configName = "fromTicketCache";
 
         Map<String, String> options = new HashMap<>(4);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
@@ -221,11 +223,10 @@ public class BinaryUtils {
             options.put(LoginModuleConstants.TICKET_CACHE, ticketCache);
         }
 
-
         JaasConfiguration config = new JaasConfiguration();
-        config.addAppConfigEntry(loginModuleName, PlatformUtils.getKrb5LoginModuleName(), OPTIONAL, options);
+        config.addAppConfigEntry(configName, loginModuleClassName, OPTIONAL, options);
 
-        return new LoginContext(loginModuleName, null, null, config);
+        return new LoginContext(configName, null, null, config);
     }
 
     private class LoginModuleConstants {
