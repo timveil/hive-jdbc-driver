@@ -13,7 +13,7 @@ public class PrincipalUtils {
 
     private static final Pattern PRINCIPAL_PATTERN = Pattern.compile("[/@]");
 
-    public static final ProvidedPrincipal parsePrincipal(String principal) {
+    public static ProvidedPrincipal parsePrincipal(String principal) {
         String[] split = PRINCIPAL_PATTERN.split(principal);
 
         if (split.length == 3) {

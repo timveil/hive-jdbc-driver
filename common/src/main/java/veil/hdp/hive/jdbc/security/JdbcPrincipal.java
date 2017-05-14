@@ -4,7 +4,7 @@ import java.security.Principal;
 
 public class JdbcPrincipal implements Principal {
 
-    private String name;
+    private final String name;
 
     public JdbcPrincipal(String name) {
         this.name = name;

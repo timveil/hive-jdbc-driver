@@ -9,7 +9,7 @@ import java.security.PrivilegedActionException;
 
 public class SecureTransport extends WrappedTransport {
 
-    private Subject subject;
+    private final Subject subject;
 
     public SecureTransport(TTransport wrapped, Subject subject) {
         super(wrapped);

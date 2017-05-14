@@ -26,7 +26,7 @@ public class PlatformUtils {
 
     public static String getOSLoginModuleName() {
 
-        String loginModule = null;
+        String loginModule;
 
         if (isIBM) {
             if (isWindows) {
@@ -52,7 +52,7 @@ public class PlatformUtils {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 
         try {
-            String principalClass = null;
+            String principalClass;
 
             if (isIBM) {
                 if (is64Bit) {

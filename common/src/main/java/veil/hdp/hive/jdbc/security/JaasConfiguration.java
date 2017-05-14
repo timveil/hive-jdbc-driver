@@ -13,7 +13,7 @@ public class JaasConfiguration extends Configuration {
 
     private static final Logger log = LoggerFactory.getLogger(JaasConfiguration.class);
 
-    private Map<String, AppConfigurationEntry[]> entries = new HashMap<String, AppConfigurationEntry[]>();
+    private final Map<String, AppConfigurationEntry[]> entries = new HashMap<>(1);
 
     public void addAppConfigEntry(String loginModuleName, String loginClass, LoginModuleControlFlag controlFlag, Map<String, ?> options){
 

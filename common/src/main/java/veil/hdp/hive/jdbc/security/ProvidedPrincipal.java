@@ -2,9 +2,9 @@ package veil.hdp.hive.jdbc.security;
 
 public class ProvidedPrincipal {
 
-    private String user;
-    private String server;
-    private String realm;
+    private final String user;
+    private final String server;
+    private final String realm;
 
     public ProvidedPrincipal(String user, String server, String realm) {
         this.user = user;

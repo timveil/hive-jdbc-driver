@@ -116,7 +116,7 @@ public class BinaryUtils {
                     null,
                     socket);
 
-            Subject subject = null;
+            Subject subject;
 
             if (HiveDriverProperty.KERBEROS_PRE_AUTHENTICATION_ENABLED.getBoolean(properties)) {
 
@@ -149,7 +149,7 @@ public class BinaryUtils {
     // todo: move this method and related out of this class
     private static Subject jaasLogin(Properties properties) {
 
-        LoginContext loginContext = null;
+        LoginContext loginContext;
 
         try {
 
@@ -181,7 +181,7 @@ public class BinaryUtils {
 
         String loginModuleName = "withKeytab";
 
-        Map<String, String> options = new HashMap<String, String>(7);
+        Map<String, String> options = new HashMap<>(7);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
         options.put(LoginModuleConstants.DO_NOT_PROMPT, "true");
         options.put(LoginModuleConstants.KEY_TAB, HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties));
@@ -200,7 +200,7 @@ public class BinaryUtils {
 
         String loginModuleName = "fromOs";
 
-        Map<String, String> options = new HashMap<String, String>(1);
+        Map<String, String> options = new HashMap<>(1);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
 
         JaasConfiguration config = new JaasConfiguration();
@@ -213,7 +213,7 @@ public class BinaryUtils {
 
         String loginModuleName = "ticketCache";
 
-        Map<String, String> options = new HashMap<String, String>(4);
+        Map<String, String> options = new HashMap<>(4);
         options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
         options.put(LoginModuleConstants.DO_NOT_PROMPT, "true");
         options.put(LoginModuleConstants.USE_TICKET_CACHE, "true");
