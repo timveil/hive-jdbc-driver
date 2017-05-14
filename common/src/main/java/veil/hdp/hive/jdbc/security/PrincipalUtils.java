@@ -13,13 +13,13 @@ public class PrincipalUtils {
 
     private static final Pattern PRINCIPAL_PATTERN = Pattern.compile("[/@]");
 
-    public static final KerberosPrincipal parsePrincipal(String principal) {
+    public static final ProvidedPrincipal parsePrincipal(String principal) {
         String[] split = PRINCIPAL_PATTERN.split(principal);
 
         if (split.length == 3) {
-            return new KerberosPrincipal(split[0], split[1], split[2]);
+            return new ProvidedPrincipal(split[0], split[1], split[2]);
         } else if (split.length == 2) {
-            return new KerberosPrincipal(split[0], getLocalHost(), split[1]);
+            return new ProvidedPrincipal(split[0], getLocalHost(), split[1]);
         } else {
             throw new IllegalArgumentException("invalid principal [" + principal + ']');
         }

@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.OPTIONAL;
+import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
+
 
 public class BinaryUtils {
 
@@ -98,7 +101,7 @@ public class BinaryUtils {
 
             String host = HiveDriverProperty.HOST_NAME.get(properties);
 
-            KerberosPrincipal serverPrincipal = PrincipalUtils.parsePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
+            ProvidedPrincipal serverPrincipal = PrincipalUtils.parsePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
 
             Map<String, String> saslProps = new HashMap<>(2);
             saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
@@ -122,16 +125,16 @@ public class BinaryUtils {
                 AccessControlContext context = AccessController.getContext();
                 subject = Subject.getSubject(context);
 
+                log.debug("pre auth subject [{}]", subject);
+
             } else {
 
-                subject = new Subject();
 
-                //jaasLogin(properties, subject);
+                subject = jaasLogin(properties);
 
 
             }
 
-            log.debug("subject [{}]", subject);
 
             return new SecureTransport(saslTransport, subject);
 
@@ -141,37 +144,102 @@ public class BinaryUtils {
 
     }
 
-    private static void jaasLogin(Properties properties, Subject subject)  {
+    // todo: move this method and related out of this class
+    private static Subject jaasLogin(Properties properties) {
 
-        // todo: it seems i can comment this out and i'm still logged in suggesting that JAAS does not matter.
-        // this is part of UGI but i don't see why it matters in JDBC
-
-        String moduleName = null;
-
-        if (HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties) != null) {
-            // this will use the local keytab and principal passed in the url
-            moduleName = JdbcConfiguration.KERBEROS_KEYTAB;
-        } else {
-            // this requires that kinit be called outside the driver
-            moduleName = JdbcConfiguration.KERBEROS_OS;
-        }
+        LoginContext loginContext = null;
 
         try {
-            log.debug("creating configuration...");
 
-            // todo: make a new specific configuration object per type
-            JdbcConfiguration configuration = new JdbcConfiguration(properties);
+            if (HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties) != null) {
+                // this will use the local keytab and principal passed in the url
+                loginContext = keytabContext(properties);
+            } else {
+                // this requires that kinit be called outside the driver
+                loginContext = osContext(properties);
+            }
 
-            log.debug("creating context...");
-
-            LoginContext loginContext = new LoginContext(moduleName, subject, null, configuration);
-
-            log.debug("calling login...");
 
             loginContext.login();
+
+            Subject clientSubject = loginContext.getSubject();
+
+            log.debug("logged in subject [{}]", clientSubject);
+
+            return clientSubject;
+
         } catch (LoginException e) {
             throw new HiveException(e);
         }
 
+    }
+
+
+    private static LoginContext keytabContext(Properties properties) throws LoginException {
+
+        String loginModuleName = "withKeytab";
+
+        Map<String, String> options = new HashMap<String, String>(7);
+        options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
+        options.put(LoginModuleConstants.DO_NOT_PROMPT, "true");
+        options.put(LoginModuleConstants.KEY_TAB, HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties));
+        options.put(LoginModuleConstants.PRINCIPAL, HiveDriverProperty.KERBEROS_LOCAL_PRINCIPAL.get(properties));
+        options.put(LoginModuleConstants.USE_KEY_TAB, "true");
+        options.put(LoginModuleConstants.STORE_KEY, "true");
+        options.put(LoginModuleConstants.REFRESH_KRB_5_CONFIG, "true");
+
+        JaasConfiguration config = new JaasConfiguration();
+        config.addAppConfigEntry(loginModuleName, PlatformUtils.getKrb5LoginModuleName(), REQUIRED, options);
+
+        return new LoginContext(loginModuleName, null, null, config);
+    }
+
+    private static LoginContext osContext(Properties properties) throws LoginException {
+
+        String loginModuleName = "fromOs";
+
+        Map<String, String> options = new HashMap<String, String>(1);
+        options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
+
+        JaasConfiguration config = new JaasConfiguration();
+        config.addAppConfigEntry(loginModuleName, PlatformUtils.getOSLoginModuleName(), REQUIRED, options);
+
+        return new LoginContext(loginModuleName, null, null, config);
+    }
+
+    private static LoginContext cacheContext(Properties properties) throws LoginException {
+
+        String loginModuleName = "ticketCache";
+
+        Map<String, String> options = new HashMap<String, String>(4);
+        options.put(LoginModuleConstants.DEBUG, HiveDriverProperty.JAAS_DEBUG_ENABLED.get(properties));
+        options.put(LoginModuleConstants.DO_NOT_PROMPT, "true");
+        options.put(LoginModuleConstants.USE_TICKET_CACHE, "true");
+        options.put(LoginModuleConstants.RENEW_TGT, "true");
+
+        String ticketCache = System.getenv("KRB5CCNAME");
+
+        if (ticketCache != null) {
+            options.put(LoginModuleConstants.TICKET_CACHE, ticketCache);
+        }
+
+
+        JaasConfiguration config = new JaasConfiguration();
+        config.addAppConfigEntry(loginModuleName, PlatformUtils.getKrb5LoginModuleName(), OPTIONAL, options);
+
+        return new LoginContext(loginModuleName, null, null, config);
+    }
+
+    private class LoginModuleConstants {
+        public static final String DEBUG = "debug";
+        public static final String DO_NOT_PROMPT = "doNotPrompt";
+        public static final String KEY_TAB = "keyTab";
+        public static final String PRINCIPAL = "principal";
+        public static final String USE_KEY_TAB = "useKeyTab";
+        public static final String STORE_KEY = "storeKey";
+        public static final String REFRESH_KRB_5_CONFIG = "refreshKrb5Config";
+        public static final String USE_TICKET_CACHE = "useTicketCache";
+        public static final String RENEW_TGT = "renewTGT";
+        public static final String TICKET_CACHE = "ticketCache";
     }
 }

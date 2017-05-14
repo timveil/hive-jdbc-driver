@@ -25,7 +25,7 @@ public class JdbcLoginModule implements LoginModule {
 
         Principal principal = getCanonicalUser(PlatformUtils.getOsPrincipalClass());
 
-        // todo - need to merge this JdbcPrincipal and KerberosPrincipal concept;  seems like a bunch of back and forth
+        // todo - need to merge this JdbcPrincipal and ProvidedPrincipal concept;  seems like a bunch of back and forth
         JdbcPrincipal userEntry = new JdbcPrincipal(principal.getName());
         subject.getPrincipals().add(userEntry);
 
