@@ -168,4 +168,10 @@ public enum HiveDriverProperty {
 
         return propertyInfo;
     }
+
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
