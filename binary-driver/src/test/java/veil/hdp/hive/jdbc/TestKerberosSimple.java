@@ -18,7 +18,6 @@ public class TestKerberosSimple extends BaseConnectionTest {
     @Override
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
-        properties.setProperty("user", "hive");
 
         String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
 

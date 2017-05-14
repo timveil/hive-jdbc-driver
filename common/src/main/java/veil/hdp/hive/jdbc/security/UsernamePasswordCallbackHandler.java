@@ -1,14 +1,19 @@
 package veil.hdp.hive.jdbc.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.security.auth.callback.*;
 import java.io.IOException;
 
-public class PlainCallbackHandler implements CallbackHandler {
+public class UsernamePasswordCallbackHandler implements CallbackHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(UsernamePasswordCallbackHandler.class);
 
     private final String username;
     private final String password;
 
-    public PlainCallbackHandler(String username, String password) {
+    public UsernamePasswordCallbackHandler(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -22,14 +27,7 @@ public class PlainCallbackHandler implements CallbackHandler {
                 nameCallback.setName(username);
             } else if (callback instanceof PasswordCallback) {
                 PasswordCallback passwordCallback = (PasswordCallback) callback;
-
-                if (password != null) {
-                    passwordCallback.setPassword(password.toCharArray());
-                } else {
-                    // todo:hack: for some reason this can't be null or empty string; set default value
-                    passwordCallback.setPassword("anonymous".toCharArray());
-                }
-
+                passwordCallback.setPassword(password.toCharArray());
             } else {
                 throw new UnsupportedCallbackException(callback);
             }

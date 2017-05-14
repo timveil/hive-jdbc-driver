@@ -9,8 +9,12 @@ public class BinaryDriverConnectionTest extends BaseConnectionTest {
 
     @Override
     public Connection createConnection(String host) throws SQLException {
+
+
         Properties properties = new Properties();
-        properties.setProperty("user", "hive");
+
+        // user is not needed when authmode set to NONE
+        //properties.setProperty("user", "xxx");
 
         String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
 

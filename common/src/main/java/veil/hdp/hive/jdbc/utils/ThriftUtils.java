@@ -64,12 +64,14 @@ public class ThriftUtils {
 
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
 
-        String username = HiveDriverProperty.USER.get(properties);
+
+        // todo: not requried when AuthenticationMode is NONE
+        /*String username = HiveDriverProperty.USER.get(properties);
 
         if (username != null) {
             openSessionReq.setUsername(username);
             openSessionReq.setPassword(HiveDriverProperty.PASSWORD.get(properties));
-        }
+        }*/
 
         // set properties for session
         Map<String, String> configuration = buildSessionConfig(properties);

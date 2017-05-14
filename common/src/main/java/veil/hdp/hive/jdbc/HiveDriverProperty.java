@@ -10,8 +10,13 @@ public enum HiveDriverProperty {
     // required by JDBC Spec
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
+
+    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored
     USER("user", null, false, null, null),
+
+    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored
     PASSWORD("password", null, false, null, null),
+
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
 
     // make sure to spell out differnces in readme; look at *.thrift

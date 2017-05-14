@@ -21,6 +21,8 @@ public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     public static CloseableHttpClient buildClient(Properties properties) {
+
+        // todo: is this still required, because its not on the binary side when AuthenticationMode = NONE
         String user = HiveDriverProperty.USER.get(properties);
         String password = HiveDriverProperty.PASSWORD.get(properties);
 

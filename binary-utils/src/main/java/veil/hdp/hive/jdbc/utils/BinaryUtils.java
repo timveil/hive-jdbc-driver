@@ -76,16 +76,14 @@ public class BinaryUtils {
 
     private static TTransport buildSocketWithSASL(Properties properties, TSocket socket) {
 
-        String user = HiveDriverProperty.USER.get(properties);
-        String password = HiveDriverProperty.PASSWORD.get(properties);
-
         try {
+            // some userid must be specified.  it can really be anything when AuthenticationMode = NONE
             return new TSaslClientTransport(MECHANISM_PLAIN,
                     null,
                     null,
                     null,
                     null,
-                    new PlainCallbackHandler(user, password),
+                    new AnonymousCallbackHandler(),
                     socket);
         } catch (SaslException e) {
             throw new HiveException(e);
