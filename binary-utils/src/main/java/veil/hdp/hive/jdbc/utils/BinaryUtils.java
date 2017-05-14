@@ -118,12 +118,14 @@ public class BinaryUtils {
 
             Subject subject = null;
 
-            // todo: i can't find a difference in behavior between these two option with the original driver.  they both seem accomplish the same thing
             if (HiveDriverProperty.KERBEROS_PRE_AUTHENTICATION_ENABLED.getBoolean(properties)) {
 
-                // this seems to require that kinit be called outside the driver
                 AccessControlContext context = AccessController.getContext();
                 subject = Subject.getSubject(context);
+
+                if (subject == null) {
+                    throw new IllegalArgumentException("KERBEROS_PRE_AUTHENTICATION_ENABLED is set to true but subject is null.  This is likely an invalid configuration");
+                }
 
                 log.debug("pre auth subject [{}]", subject);
 
