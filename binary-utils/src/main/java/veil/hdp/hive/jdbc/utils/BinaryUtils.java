@@ -16,7 +16,8 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
-import java.io.IOException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,6 @@ public class BinaryUtils {
     }
 
     public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
-        // todo: no support for no-sasl
         // todo: no support for delegation tokens or ssl yet
 
 
@@ -54,17 +54,12 @@ public class BinaryUtils {
             switch (authenticationMode) {
 
                 case NONE:
-
-                    String user = HiveDriverProperty.USER.get(properties);
-                    String password = HiveDriverProperty.PASSWORD.get(properties);
-
-                    return buildSocketWithSASL(user, password, socket);
+                    return buildSocketWithSASL(properties, socket);
                 case NOSASL:
                     return socket;
-                case LDAP:
-                    break;
                 case KERBEROS:
                     return buildSocketWithKerberos(properties, socket);
+                case LDAP:
                 case PAM:
                     break;
             }
@@ -76,7 +71,11 @@ public class BinaryUtils {
 
     }
 
-    private static TTransport buildSocketWithSASL(String user, String password, TSocket socket) {
+    private static TTransport buildSocketWithSASL(Properties properties, TSocket socket) {
+
+        String user = HiveDriverProperty.USER.get(properties);
+        String password = HiveDriverProperty.PASSWORD.get(properties);
+
         try {
             return new TSaslClientTransport(MECHANISM_PLAIN,
                     null,
@@ -114,23 +113,63 @@ public class BinaryUtils {
                     null,
                     socket);
 
+            Subject subject = null;
+
             // todo: i can't find a difference in behavior between these two option with the original driver.  they both seem accomplish the same thing
             if (HiveDriverProperty.KERBEROS_PRE_AUTHENTICATION_ENABLED.getBoolean(properties)) {
-                return new PreAuthenticatedSecureTransport(saslTransport);
+
+                // this seems to require that kinit be called outside the driver
+                AccessControlContext context = AccessController.getContext();
+                subject = Subject.getSubject(context);
+
             } else {
 
-                Subject subject = new Subject();
+                subject = new Subject();
 
-                // todo: it seems i can comment this out and i'm still logged in suggesting that JAAS does not matter.
-                // this is part of UGI but i don't see why it matters in JDBC
-                LoginContext login = new LoginContext(JdbcConfiguration.SIMPLE_CONFIG_NAME, subject, null, new JdbcConfiguration(properties));
-                login.login();
+                //jaasLogin(properties, subject);
 
-                return new SecureTransport(saslTransport, subject);
+
             }
 
+            log.debug("subject [{}]", subject);
 
-        } catch (IOException | LoginException e) {
+            return new SecureTransport(saslTransport, subject);
+
+        } catch (SaslException e) {
+            throw new HiveException(e);
+        }
+
+    }
+
+    private static void jaasLogin(Properties properties, Subject subject)  {
+
+        // todo: it seems i can comment this out and i'm still logged in suggesting that JAAS does not matter.
+        // this is part of UGI but i don't see why it matters in JDBC
+
+        String moduleName = null;
+
+        if (HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties) != null) {
+            // this will use the local keytab and principal passed in the url
+            moduleName = JdbcConfiguration.KERBEROS_KEYTAB;
+        } else {
+            // this requires that kinit be called outside the driver
+            moduleName = JdbcConfiguration.KERBEROS_OS;
+        }
+
+        try {
+            log.debug("creating configuration...");
+
+            // todo: make a new specific configuration object per type
+            JdbcConfiguration configuration = new JdbcConfiguration(properties);
+
+            log.debug("creating context...");
+
+            LoginContext loginContext = new LoginContext(moduleName, subject, null, configuration);
+
+            log.debug("calling login...");
+
+            loginContext.login();
+        } catch (LoginException e) {
             throw new HiveException(e);
         }
 

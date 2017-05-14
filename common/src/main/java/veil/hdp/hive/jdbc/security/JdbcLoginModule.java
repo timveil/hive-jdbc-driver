@@ -48,6 +48,6 @@ public class JdbcLoginModule implements LoginModule {
             return user;
         }
 
-        throw new LoginException("Unable to locate principal in subject [" + subject + "] for class [" + cls + ']');
+        throw new LoginException("Unable to locate principal for class [" + cls + "] in subject [" + subject.toString() + "]");
     }
 }

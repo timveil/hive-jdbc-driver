@@ -17,7 +17,11 @@ public class PlatformUtils {
     private static final boolean isAIX = OS_NAME.equals("AIX");
 
     public static String getKrb5LoginModuleName() {
-        return isIBM ? "com.ibm.security.auth.module.Krb5LoginModule" : "com.sun.security.auth.module.Krb5LoginModule";
+        String loginModule =  isIBM ? "com.ibm.security.auth.module.Krb5LoginModule" : "com.sun.security.auth.module.Krb5LoginModule";
+
+        log.debug("krb5 login module [{}]", loginModule);
+
+        return loginModule;
     }
 
     public static String getOSLoginModuleName() {
@@ -39,7 +43,7 @@ public class PlatformUtils {
                     : "com.sun.security.auth.module.UnixLoginModule";
         }
 
-        log.debug("login module [{}]", loginModule);
+        log.debug("os login module [{}]", loginModule);
 
         return loginModule;
     }

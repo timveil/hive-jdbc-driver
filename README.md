@@ -62,3 +62,6 @@ Copy the krb5.conf file (from the HDP KDC) to above mentioned location and renam
 had to specify -Djava.security.krb5.conf=C:\ProgramData\MIT\Kerberos5\krb5.ini when starting up dbviz, setting environment variable, KRB5_CONFIG, did not work.
 
 must specify Djavax.security.auth.useSubjectCredsOnly=false for things to work. need to investigate why
+
+
+this is a good reference: https://github.com/jcmturner/java-kerberos-utils

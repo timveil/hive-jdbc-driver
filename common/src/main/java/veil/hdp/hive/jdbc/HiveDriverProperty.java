@@ -31,7 +31,9 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
-    KERBEROS_SERVER_PRINCIPAL("krb5Principal", null, false, null, null),
+    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
+    KERBEROS_LOCAL_PRINCIPAL("krb5LocalPrincipal", null, false, null, null),
+    KERBEROS_LOCAL_KEYTAB("krb5LocalKeytab", null, false, null, null),
     // sun.security.krb5.debug
     KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
     // javax.security.auth.useSubjectCredsOnly
