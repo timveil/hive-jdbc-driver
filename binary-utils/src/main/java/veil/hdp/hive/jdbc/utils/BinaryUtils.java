@@ -130,11 +130,7 @@ public class BinaryUtils {
                 log.debug("pre auth subject [{}]", subject);
 
             } else {
-
-
                 subject = jaasLogin(properties);
-
-
             }
 
 
@@ -160,7 +156,6 @@ public class BinaryUtils {
                 // this requires that kinit be called outside the driver
                 loginContext = osContext(properties);
             }
-
 
             loginContext.login();
 

@@ -65,3 +65,6 @@ must specify Djavax.security.auth.useSubjectCredsOnly=false for things to work. 
 
 
 this is a good reference: https://github.com/jcmturner/java-kerberos-utils
+
+
+NO SUPPORT for IBM JDK
