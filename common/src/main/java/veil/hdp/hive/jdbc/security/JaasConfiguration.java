@@ -17,7 +17,7 @@ public class JaasConfiguration extends Configuration {
 
     public void addAppConfigEntry(String configurationName, String loginModuleClassName, LoginModuleControlFlag controlFlag, Map<String, ?> options) {
 
-        log.debug("options {}", options);
+        log.debug("config name [{}], classname [{}], control flag [{}], options [{}]", configurationName, loginModuleClassName, controlFlag, options);
 
         AppConfigurationEntry entry = new AppConfigurationEntry(loginModuleClassName, controlFlag, options);
         entries.put(configurationName, new AppConfigurationEntry[]{entry});
