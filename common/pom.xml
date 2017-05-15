@@ -46,6 +46,7 @@
             <version>3.5</version>
         </dependency>
 
+        <!-- important for things like org.apache.hadoop.hive.common.type.HiveIntervalYearMonth -->
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-common</artifactId>
