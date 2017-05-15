@@ -69,8 +69,6 @@
                                     <artifact>*:*</artifact>
                                     <includes>
                                         <include>**/*.class</include>
-                                        <include>**/simplelogger.properties</include>
-                                        <include>**/*-version-info.properties</include>
                                         <include>**/*.MF</include>
                                     </includes>
                                 </filter>
