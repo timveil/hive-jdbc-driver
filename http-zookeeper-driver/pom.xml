@@ -67,6 +67,7 @@
                                 </filter>
                                 <filter>
                                     <artifact>org.apache.zookeeper:zookeeper</artifact>
+                                    <!-- since i am excluding netty from my zookeeper dependency, lets remove the only classes that call reference it -->
                                     <excludes>
                                         <exclude>org/apache/zookeeper/server/NettyServerCnxn</exclude>
                                         <exclude>org/apache/zookeeper/server/NettyServerCnxnFactory</exclude>
