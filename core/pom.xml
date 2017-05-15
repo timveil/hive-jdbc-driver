@@ -12,7 +12,7 @@
 
     <name>Core</name>
     <artifactId>core</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
 

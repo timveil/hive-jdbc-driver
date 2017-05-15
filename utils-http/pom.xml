@@ -12,7 +12,7 @@
 
     <name>Utils - HTTP</name>
     <artifactId>utils-http</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <http.version>4.4.1</http.version>

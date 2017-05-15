@@ -11,7 +11,7 @@
 
     <name>Utils - Zookeeper</name>
     <artifactId>utils-zookeeper</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <curator.version>2.12.0</curator.version>

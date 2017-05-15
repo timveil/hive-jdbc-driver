@@ -11,7 +11,7 @@
 
     <name>Test - Tools</name>
     <artifactId>test-tools</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

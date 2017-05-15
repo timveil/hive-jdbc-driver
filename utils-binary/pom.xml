@@ -12,7 +12,7 @@
 
     <name>Utils - Binary</name>
     <artifactId>utils-binary</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
 

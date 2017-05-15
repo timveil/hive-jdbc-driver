@@ -12,8 +12,7 @@
     <name>Core - Thrift</name>
     <artifactId>core-thrift</artifactId>
 
-    <!-- todo: this could probably be jar -->
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <libthrift.version>0.9.3</libthrift.version>
