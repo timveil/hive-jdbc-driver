@@ -12,10 +12,10 @@ public enum HiveDriverProperty {
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
 
-    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored; can be principal
+    // when authmode == none then this is ignored; can be principal when using KERBEROS_MODE = PASSWORD
     USER("user", null, false, null, null),
 
-    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored
+    // when authmode == none then this is ignored
     PASSWORD("password", null, false, null, null),
 
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
@@ -36,13 +36,15 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
-    // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
+
     KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.toString(), false, null, null, KerberosMode.KEYTAB.toString(), KerberosMode.PASSWORD.toString(), KerberosMode.PREAUTH.toString()),
+    // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
+    // keytab used to authenticate when KerberosMode = KEYTAB
     KERBEROS_LOCAL_KEYTAB("krb5LocalKeytab", null, false, null, null),
     // sun.security.krb5.debug
     KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
-    // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property
+    // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property; see http://docs.oracle.com/javase/7/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html
     KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", "false", false, null, null),
 
     // Sasl.QOP
