@@ -13,10 +13,6 @@
     <artifactId>utils-zookeeper</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <curator.version>2.12.0</curator.version>
-    </properties>
-
     <dependencies>
 
         <dependency>

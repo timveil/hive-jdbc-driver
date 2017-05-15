@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+
     <name>Test - Tools</name>
     <artifactId>test-tools</artifactId>
     <packaging>jar</packaging>
@@ -43,7 +44,7 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>3.2.2</version>
+            <version>${metrics.version}</version>
         </dependency>
     </dependencies>
 

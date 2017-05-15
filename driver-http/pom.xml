@@ -14,10 +14,6 @@
     <artifactId>driver-http</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <http.version>4.4.1</http.version>
-    </properties>
-
 
     <dependencies>
 
