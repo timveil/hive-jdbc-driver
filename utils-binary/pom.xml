@@ -18,13 +18,13 @@
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>driver-core</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>driver-core-thrift</artifactId>
+            <artifactId>core-thrift</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

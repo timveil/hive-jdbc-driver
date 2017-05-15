@@ -10,15 +10,15 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <name>Driver - Core</name>
-    <artifactId>driver-core</artifactId>
+    <name>Core</name>
+    <artifactId>core</artifactId>
     <packaging>pom</packaging>
 
     <dependencies>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>driver-core-thrift</artifactId>
+            <artifactId>core-thrift</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

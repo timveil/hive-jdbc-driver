@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Driver - Core Thrift</name>
-    <artifactId>driver-core-thrift</artifactId>
+    <name>Core - Thrift</name>
+    <artifactId>core-thrift</artifactId>
 
     <!-- todo: this could probably be jar -->
     <packaging>pom</packaging>
