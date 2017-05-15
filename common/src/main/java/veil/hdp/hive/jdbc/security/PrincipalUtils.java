@@ -1,37 +1,65 @@
 package veil.hdp.hive.jdbc.security;
 
+import com.google.common.base.Splitter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class PrincipalUtils {
 
     private static final Logger log = LoggerFactory.getLogger(PrincipalUtils.class);
 
-    private static final Pattern PRINCIPAL_PATTERN = Pattern.compile("[/@]");
 
-    public static ProvidedPrincipal parsePrincipal(String principal) {
-        String[] split = PRINCIPAL_PATTERN.split(principal);
+    public static ServicePrincipal parseServicePrincipal(String principal) {
 
-        if (split.length == 3) {
-            return new ProvidedPrincipal(split[0], split[1], split[2]);
-        } else if (split.length == 2) {
-            return new ProvidedPrincipal(split[0], getLocalHost(), split[1]);
-        } else {
-            throw new IllegalArgumentException("invalid principal [" + principal + ']');
-        }
-    }
-
-    private static String getLocalHost() {
-        try {
-            return InetAddress.getLocalHost().getCanonicalHostName();
-        } catch (UnknownHostException e) {
-            log.warn(e.getLocalizedMessage(), e);
+        if (StringUtils.isBlank(principal)) {
+            throw new RuntimeException("principal is null or empty");
         }
 
-        return null;
+        List<String> strings = Splitter.on('@').splitToList(principal);
+
+        if (strings.size() != 2) {
+            throw new RuntimeException("invalid principal [" + principal + ']');
+        }
+
+        String firstPart = strings.get(0);
+
+        String realm = strings.get(1);
+
+
+        List<String> serviceParts = Splitter.on('/').splitToList(firstPart);
+
+        if (strings.size() != 2) {
+            throw new RuntimeException("invalid first part [" + firstPart + "] of principal [" + principal + ']');
+        }
+
+        String service = serviceParts.get(0);
+        String host = serviceParts.get(1);
+
+        return new ServicePrincipal(service, StringUtils.lowerCase(host), realm);
+
     }
+
+    public static UserPrincipal parseUserPrincipal(String principal) {
+
+        if (StringUtils.isBlank(principal)) {
+            throw new RuntimeException("principal is null or empty");
+        }
+
+        List<String> strings = Splitter.on('@').splitToList(principal);
+
+        if (strings.size() != 2) {
+            throw new RuntimeException("invalid principal [" + principal + ']');
+        }
+
+        String user = strings.get(0);
+
+        String realm = strings.get(1);
+
+        return new UserPrincipal(user, realm);
+
+    }
+
 }

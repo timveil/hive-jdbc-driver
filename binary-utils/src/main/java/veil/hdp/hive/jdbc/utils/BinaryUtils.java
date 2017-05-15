@@ -91,7 +91,7 @@ public class BinaryUtils {
             System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
             System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
 
-            ProvidedPrincipal serverPrincipal = PrincipalUtils.parsePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
+            ServicePrincipal serverPrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
 
             Map<String, String> saslProps = new HashMap<>(2);
             saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
@@ -100,8 +100,8 @@ public class BinaryUtils {
             TTransport saslTransport = new TSaslClientTransport(
                     MECHANISM_KERBEROS,
                     null,
-                    serverPrincipal.getUser(),
-                    serverPrincipal.getServer(),
+                    serverPrincipal.getService(),
+                    serverPrincipal.getHost(),
                     saslProps,
                     null,
                     socket);
