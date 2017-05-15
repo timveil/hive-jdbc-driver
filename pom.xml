@@ -9,20 +9,20 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
+    <name>Hive JDBC Driver</name>
+
     <modules>
-        <module>binary-driver</module>
-        <module>http-driver</module>
-        <module>binary-zookeeper-driver</module>
-        <module>http-zookeeper-driver</module>
-
-        <module>thrift-client</module>
-        <module>common</module>
-
-        <module>binary-utils</module>
-        <module>http-utils</module>
-        <module>zookeeper-utils</module>
-        <module>original-driver-test</module>
-        <module>test-utils</module>
+        <module>driver-binary</module>
+        <module>driver-http</module>
+        <module>driver-binary-zookeeper</module>
+        <module>driver-http-zookeeper</module>
+        <module>driver-core-thrift</module>
+        <module>driver-core</module>
+        <module>utils-binary</module>
+        <module>utils-http</module>
+        <module>utils-zookeeper</module>
+        <module>test-original-driver</module>
+        <module>test-tools</module>
     </modules>
 
     <properties>
@@ -55,6 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

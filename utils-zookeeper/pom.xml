@@ -9,8 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Zookeeper Driver Utils</name>
-    <artifactId>zookeeper-utils</artifactId>
+    <name>Utils - Zookeeper</name>
+    <artifactId>utils-zookeeper</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <curator.version>2.12.0</curator.version>
@@ -20,7 +21,7 @@
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>driver-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

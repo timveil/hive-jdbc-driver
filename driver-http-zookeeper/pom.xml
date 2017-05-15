@@ -9,33 +9,27 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Binary Zookeeper Driver</name>
-    <artifactId>binary-zookeeper-driver</artifactId>
+    <name>Driver - HTTP Zookeeper</name>
+    <artifactId>driver-http-zookeeper</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>utils-zookeeper</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>binary-utils</artifactId>
+            <artifactId>utils-http</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
-            <artifactId>zookeeper-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>veil.hdp.hive</groupId>
-            <artifactId>test-utils</artifactId>
+            <artifactId>test-tools</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

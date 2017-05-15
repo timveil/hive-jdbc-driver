@@ -9,8 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Common Tests</name>
-    <artifactId>test-utils</artifactId>
+    <name>Test - Tools</name>
+    <artifactId>test-tools</artifactId>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>

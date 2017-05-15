@@ -9,8 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Thrift Client</name>
-    <artifactId>thrift-client</artifactId>
+    <name>Driver - Core Thrift</name>
+    <artifactId>driver-core-thrift</artifactId>
+
+    <!-- todo: this could probably be jar -->
+    <packaging>pom</packaging>
 
     <properties>
         <libthrift.version>0.9.3</libthrift.version>
