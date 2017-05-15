@@ -118,7 +118,7 @@ public class BinaryUtils {
 
                 case KEYTAB:
 
-                    String keyTab = HiveDriverProperty.KERBEROS_LOCAL_KEYTAB.get(properties);
+                    String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
                     String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
 
                     subject = KerberosService.loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);

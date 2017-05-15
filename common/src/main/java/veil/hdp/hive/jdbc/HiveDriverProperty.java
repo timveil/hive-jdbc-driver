@@ -40,8 +40,8 @@ public enum HiveDriverProperty {
     KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.toString(), false, null, null, KerberosMode.KEYTAB.toString(), KerberosMode.PASSWORD.toString(), KerberosMode.PREAUTH.toString()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
-    // keytab used to authenticate when KerberosMode = KEYTAB
-    KERBEROS_LOCAL_KEYTAB("krb5LocalKeytab", null, false, null, null),
+    // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjuction with USER property
+    KERBEROS_USER_KEYTAB("krb5UserKeytab", null, false, null, null),
     // sun.security.krb5.debug
     KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
     // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property; see http://docs.oracle.com/javase/7/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html
