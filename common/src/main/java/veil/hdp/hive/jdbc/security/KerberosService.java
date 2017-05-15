@@ -22,6 +22,8 @@ public class KerberosService {
         AccessControlContext preAuthContext = AccessController.getContext();
         Subject subject = Subject.getSubject(preAuthContext);
 
+        log.debug("pre-auth subject [{}]", subject);
+
         return subject;
     }
 
@@ -43,6 +45,8 @@ public class KerberosService {
 
         Subject subject = context.getSubject();
 
+        log.debug("successfully logged in subject with password [{}]", subject);
+
         return subject;
     }
 
@@ -63,6 +67,8 @@ public class KerberosService {
         context.login();
 
         Subject subject = context.getSubject();
+
+        log.debug("successfully logged in subject with local login module [{}]", subject);
 
         return subject;
     }
@@ -86,6 +92,8 @@ public class KerberosService {
         context.login();
 
         Subject subject = context.getSubject();
+
+        log.debug("successfully logged in subject with keytab [{}]", subject);
 
         return subject;
     }

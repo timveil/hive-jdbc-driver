@@ -144,9 +144,7 @@ public class BinaryUtils {
 
             return new SecureTransport(saslTransport, subject);
 
-        } catch (SaslException e) {
-            throw new HiveException(e);
-        } catch (LoginException e) {
+        } catch (SaslException | LoginException e) {
             throw new HiveException(e);
         }
 
