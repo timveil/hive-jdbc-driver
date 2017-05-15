@@ -3,12 +3,12 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import veil.hdp.hive.jdbc.HiveSQLException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HiveExceptionUtils {
@@ -43,9 +43,9 @@ public class HiveExceptionUtils {
 
         Throwable throwable = null;
 
-        List<ExceptionDetails> reversed = Lists.reverse(list);
+        Collections.reverse(list);
 
-        for (ExceptionDetails exd : reversed) {
+        for (ExceptionDetails exd : list) {
             if (throwable == null) {
                 throwable = exd.build(null);
             } else {

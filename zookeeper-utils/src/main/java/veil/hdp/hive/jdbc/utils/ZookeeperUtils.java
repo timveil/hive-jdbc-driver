@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
@@ -58,7 +58,7 @@ public class ZookeeperUtils {
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
             for (Map.Entry<String, String> entry : config.entrySet()) {
-                String value = Strings.emptyToNull(entry.getValue());
+                String value = StringUtils.trimToNull(entry.getValue());
 
                 if (value != null) {
 

@@ -1,13 +1,13 @@
 package veil.hdp.hive.jdbc;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Printer {
@@ -55,7 +55,7 @@ public class Printer {
 
             while (rs.next()) {
 
-                List<String> row = Lists.newArrayList();
+                List<String> row = new ArrayList<>();
 
                 for (int i = 0; i < columnCount; i++) {
 

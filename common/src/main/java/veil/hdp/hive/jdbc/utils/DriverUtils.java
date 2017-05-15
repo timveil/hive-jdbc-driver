@@ -2,8 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
@@ -54,7 +53,7 @@ public class DriverUtils {
     private static void loadSuppliedProperties(Properties suppliedProperties, Properties properties) {
         for (String key : suppliedProperties.stringPropertyNames()) {
 
-            String value = Strings.emptyToNull(suppliedProperties.getProperty(key));
+            String value = StringUtils.trimToNull(suppliedProperties.getProperty(key));
 
             if (value != null) {
                 properties.setProperty(key, value);
@@ -142,7 +141,7 @@ public class DriverUtils {
 
         URI uri = URI.create(stripPrefix(url));
 
-        String databaseName = Strings.emptyToNull(getDatabaseName(uri));
+        String databaseName = StringUtils.trimToNull(getDatabaseName(uri));
 
         HiveDriverProperty.DATABASE_NAME.set(properties, databaseName);
 
@@ -156,14 +155,14 @@ public class DriverUtils {
 
     private static void parseQueryParameters(String path, Properties properties) {
 
-        Map<String, String> parameters = Maps.newHashMap();
+        Map<String, String> parameters = new HashMap<>();
 
         if (path != null) {
             parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
         }
 
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            String value = Strings.nullToEmpty(entry.getValue());
+            String value = StringUtils.trimToNull(entry.getValue());
 
             if (value != null) {
                 properties.setProperty(entry.getKey(), value);
