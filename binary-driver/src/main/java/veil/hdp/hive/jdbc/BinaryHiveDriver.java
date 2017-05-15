@@ -36,7 +36,7 @@ public class BinaryHiveDriver extends HiveDriver {
     @Override
     PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
-            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.toString());
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.name());
 
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
 

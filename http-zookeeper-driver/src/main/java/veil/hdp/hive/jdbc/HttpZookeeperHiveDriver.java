@@ -42,7 +42,7 @@ public class HttpZookeeperHiveDriver extends HiveDriver {
     @Override
     PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
-            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.toString());
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.name());
             HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.set(properties, true);
 
             String authority = uri.getAuthority();

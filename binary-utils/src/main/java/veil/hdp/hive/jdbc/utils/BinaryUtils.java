@@ -25,11 +25,6 @@ public class BinaryUtils {
 
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
 
-    // TODO: MAKE THESE VALUES PART OF ENUM, MAYBE AUTHENTICATIONMODE
-    private static final String MECHANISM_PLAIN = "PLAIN";
-    private static final String MECHANISM_KERBEROS = "GSSAPI";
-
-
     public static TSocket createSocket(Properties properties, int loginTimeoutMilliseconds) {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
@@ -56,9 +51,7 @@ public class BinaryUtils {
                     return socket;
                 case KERBEROS:
                     return buildSocketWithKerberos(properties, socket);
-                case LDAP:
-                case PAM:
-                    break;
+
             }
         } catch (HiveException e) {
             throw new HiveSQLException(e);
@@ -72,7 +65,7 @@ public class BinaryUtils {
 
         try {
             // some userid must be specified.  it can really be anything when AuthenticationMode = NONE
-            return new TSaslClientTransport(MECHANISM_PLAIN,
+            return new TSaslClientTransport(SASLMechanism.PLAIN.name(),
                     null,
                     null,
                     null,
@@ -88,59 +81,14 @@ public class BinaryUtils {
 
         try {
 
-            System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
-            System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+            TTransport saslTransport = buildSaslTransport(properties, socket);
 
-            ServicePrincipal serverPrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
-
-            Map<String, String> saslProps = new HashMap<>(2);
-            saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
-            saslProps.put(Sasl.SERVER_AUTH, HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.get(properties));
-
-            TTransport saslTransport = new TSaslClientTransport(
-                    MECHANISM_KERBEROS,
-                    null,
-                    serverPrincipal.getService(),
-                    serverPrincipal.getHost(),
-                    saslProps,
-                    null,
-                    socket);
-
-            Subject subject = null;
-
-            KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
-
-            log.debug("kerberos mode [{}]", kerberosMode);
-
-            boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
-
-            switch (kerberosMode) {
-
-                case KEYTAB:
-
-                    String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
-                    String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
-
-                    subject = KerberosService.loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);
-
-                    break;
-                case PREAUTH:
-                    subject = KerberosService.getPreAuthenticatedSubject();
-
-                    break;
-                case PASSWORD:
-
-                    String principal = HiveDriverProperty.USER.get(properties);
-                    String password = HiveDriverProperty.PASSWORD.get(properties);
-
-                    subject = KerberosService.loginWithPassword(principal, password, debugJaas);
-
-                    break;
-            }
+            Subject subject = getSubject(properties);
 
             if (subject == null) {
-                throw new IllegalArgumentException("Subject is null.  This is likely an invalid configuration");
+                throw new HiveException("Subject is null.  This is likely an invalid configuration");
             }
+
 
             return new SecureTransport(saslTransport, subject);
 
@@ -150,6 +98,52 @@ public class BinaryUtils {
 
     }
 
+    private static TTransport buildSaslTransport(Properties properties, TSocket socket) throws SaslException {
+        ServicePrincipal serverPrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
+
+        Map<String, String> saslProps = new HashMap<>(2);
+        saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
+        saslProps.put(Sasl.SERVER_AUTH, HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.get(properties));
+
+        return new TSaslClientTransport(
+                SASLMechanism.GSSAPI.name(),
+                null,
+                serverPrincipal.getService(),
+                serverPrincipal.getHost(),
+                saslProps,
+                null,
+                socket);
+    }
+
+    private static Subject getSubject(Properties properties) throws LoginException {
+
+        System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
+        System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+
+        KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
+
+        log.debug("kerberos mode [{}]", kerberosMode);
+
+        boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
+
+        switch (kerberosMode) {
+            case KEYTAB:
+                String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
+                String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
+
+                return KerberosService.loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);
+            case PREAUTH:
+                return KerberosService.getPreAuthenticatedSubject();
+            case PASSWORD:
+                String principal = HiveDriverProperty.USER.get(properties);
+                String password = HiveDriverProperty.PASSWORD.get(properties);
+
+                return KerberosService.loginWithPassword(principal, password, debugJaas);
+        }
+
+        throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
+
+    }
 
 
 }

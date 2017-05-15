@@ -113,7 +113,7 @@ public class DriverUtils {
             boolean valid = false;
 
             for (HiveDriverProperty property : HiveDriverProperty.values()) {
-                if (property.getName().equalsIgnoreCase(key)) {
+                if (property.getKey().equalsIgnoreCase(key)) {
                     valid = true;
                     break;
                 }
@@ -131,7 +131,7 @@ public class DriverUtils {
 
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
             if (property.isRequired() && property.get(properties) == null) {
-                throw new HiveSQLException(MessageFormat.format("property [{0}] is required", property.getName()));
+                throw new HiveSQLException(MessageFormat.format("property [{0}] is required", property.getKey()));
             }
         }
 

@@ -41,7 +41,7 @@ public class HttpHiveDriver extends HiveDriver {
     @Override
     PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
-            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.toString());
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.http.name());
 
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
 

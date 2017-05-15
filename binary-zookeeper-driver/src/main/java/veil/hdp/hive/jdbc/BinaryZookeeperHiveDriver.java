@@ -39,7 +39,7 @@ public class BinaryZookeeperHiveDriver extends HiveDriver {
     PropertiesCallback buildPropertiesCallback() {
         return (properties, uri) -> {
 
-            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.toString());
+            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.name());
             HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.set(properties, true);
 
             String authority = uri.getAuthority();

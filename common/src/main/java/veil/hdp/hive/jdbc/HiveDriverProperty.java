@@ -24,7 +24,7 @@ public enum HiveDriverProperty {
     THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
 
     // not really used because i've separated into separate drivers
-    TRANSPORT_MODE("transportMode", TransportMode.binary.toString(), false, null, "hive.server2.transport.mode", TransportMode.binary.toString(), TransportMode.http.toString()),
+    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), false, null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
 
     // HTTP Mode related
     HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
@@ -37,7 +37,7 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
 
-    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.toString(), false, null, null, KerberosMode.KEYTAB.toString(), KerberosMode.PASSWORD.toString(), KerberosMode.PREAUTH.toString()),
+    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), false, null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjuction with USER property
@@ -54,14 +54,14 @@ public enum HiveDriverProperty {
 
     JAAS_DEBUG_ENABLED("jaasDebug", "true", false, null, null),
 
-    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.toString(), false, null, "hive.server2.authentication",
-            AuthenticationMode.NONE.toString(),
-            AuthenticationMode.NOSASL.toString(),
-            AuthenticationMode.KERBEROS.toString(),
-            AuthenticationMode.LDAP.toString(),
-            AuthenticationMode.PAM.toString());
+    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), false, null, "hive.server2.authentication",
+            AuthenticationMode.NONE.name(),
+            AuthenticationMode.NOSASL.name(),
+            AuthenticationMode.KERBEROS.name(),
+            AuthenticationMode.LDAP.name(),
+            AuthenticationMode.PAM.name());
 
-    private final String name;
+    private final String key;
     private final String defaultValue;
     private final boolean required;
     private final String description;
@@ -69,12 +69,12 @@ public enum HiveDriverProperty {
     private final String[] choices;
 
 
-    HiveDriverProperty(String name, String defaultValue, boolean required, String description, String hiveConfName) {
-        this(name, defaultValue, required, description, hiveConfName, (String[]) null);
+    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfName) {
+        this(key, defaultValue, required, description, hiveConfName, (String[]) null);
     }
 
-    HiveDriverProperty(String name, String defaultValue, boolean required, String description, String hiveConfName, String... choices) {
-        this.name = name;
+    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfName, String... choices) {
+        this.key = key;
         this.defaultValue = defaultValue;
         this.required = required;
         this.description = description;
@@ -92,8 +92,8 @@ public enum HiveDriverProperty {
         return null;
     }
 
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
     public String getDefaultValue() {
@@ -102,7 +102,7 @@ public enum HiveDriverProperty {
 
     public void setDefaultValue(Properties properties) {
         if (defaultValue != null) {
-            properties.setProperty(name, defaultValue);
+            properties.setProperty(key, defaultValue);
         }
     }
 
@@ -124,22 +124,22 @@ public enum HiveDriverProperty {
 
     public void set(Properties properties, String value) {
         if (value == null) {
-            properties.remove(name);
+            properties.remove(key);
         } else {
-            properties.setProperty(name, value);
+            properties.setProperty(key, value);
         }
     }
 
     public void set(Properties properties, boolean value) {
-        properties.setProperty(name, Boolean.toString(value));
+        properties.setProperty(key, Boolean.toString(value));
     }
 
     public void set(Properties properties, int value) {
-        properties.setProperty(name, Integer.toString(value));
+        properties.setProperty(key, Integer.toString(value));
     }
 
     public String get(Properties properties) {
-        return properties.getProperty(name, defaultValue);
+        return properties.getProperty(key, defaultValue);
     }
 
     public boolean getBoolean(Properties properties) {
@@ -163,7 +163,7 @@ public enum HiveDriverProperty {
     }
 
     public DriverPropertyInfo toDriverPropertyInfo(Properties properties) {
-        DriverPropertyInfo propertyInfo = new DriverPropertyInfo(name, get(properties));
+        DriverPropertyInfo propertyInfo = new DriverPropertyInfo(key, get(properties));
         propertyInfo.required = required;
         propertyInfo.description = description;
         propertyInfo.choices = choices;
@@ -174,6 +174,6 @@ public enum HiveDriverProperty {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.key;
     }
 }
