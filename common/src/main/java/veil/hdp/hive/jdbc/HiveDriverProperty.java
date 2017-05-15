@@ -8,6 +8,9 @@ import java.util.Properties;
 
 public enum HiveDriverProperty {
 
+    /***************************************************
+     *  COMMON
+     ***************************************************/
     // required by JDBC Spec
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
@@ -20,22 +23,45 @@ public enum HiveDriverProperty {
 
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
 
+    // should not be used in URL becuase its coded into separate drivers
+    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), false, null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
+
+
+    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), false, null, "hive.server2.authentication",
+            AuthenticationMode.NONE.name(),
+            AuthenticationMode.NOSASL.name(),
+            AuthenticationMode.KERBEROS.name(),
+            AuthenticationMode.LDAP.name(),
+            AuthenticationMode.PAM.name()),
+
+    /***************************************************
+     *  BINARY
+     ***************************************************/
+
     // make sure to spell out differnces in readme; look at *.thrift
     THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
 
-    // not really used because i've separated into separate drivers
-    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), false, null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
 
-    // HTTP Mode related
+    /***************************************************
+     *  HTTP
+     ***************************************************/
+
     HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
     HTTP_ENDPOINT("endpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
-    // zookeeper discovery related
-    // not really used because i've separated into separate drivers
+    /***************************************************
+     *  ZOOKEEPER
+     ***************************************************/
+
+    // should not be used in URL becuase its coded into separate drivers
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
+
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
+    /***************************************************
+     *  KERBEROS
+     ***************************************************/
 
     KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), false, null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
@@ -54,12 +80,8 @@ public enum HiveDriverProperty {
 
     JAAS_DEBUG_ENABLED("jaasDebug", "true", false, null, null),
 
-    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), false, null, "hive.server2.authentication",
-            AuthenticationMode.NONE.name(),
-            AuthenticationMode.NOSASL.name(),
-            AuthenticationMode.KERBEROS.name(),
-            AuthenticationMode.LDAP.name(),
-            AuthenticationMode.PAM.name());
+    ;
+
 
     private final String key;
     private final String defaultValue;
