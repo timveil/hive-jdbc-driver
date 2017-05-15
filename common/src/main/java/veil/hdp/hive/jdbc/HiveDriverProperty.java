@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.security.KerberosMode;
 import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
 
 import java.sql.DriverPropertyInfo;
@@ -11,7 +12,7 @@ public enum HiveDriverProperty {
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
 
-    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored
+    // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored; can be principal
     USER("user", null, false, null, null),
 
     // this is not currently used; need to perhaps merge with kerberos. when authmode == none then this is ignored
@@ -36,14 +37,13 @@ public enum HiveDriverProperty {
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
 
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
+    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.toString(), false, null, null, KerberosMode.KEYTAB.toString(), KerberosMode.PASSWORD.toString(), KerberosMode.PREAUTH.toString()),
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
-    KERBEROS_LOCAL_PRINCIPAL("krb5LocalPrincipal", null, false, null, null),
     KERBEROS_LOCAL_KEYTAB("krb5LocalKeytab", null, false, null, null),
     // sun.security.krb5.debug
     KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
-    // javax.security.auth.useSubjectCredsOnly
+    // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property
     KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", "false", false, null, null),
-    KERBEROS_PRE_AUTHENTICATION_ENABLED("krb5PreAuth", "false", false, null, null),
 
     // Sasl.QOP
     SASL_QUALITY_OF_PROTECTION("saslQOP", "auth-conf,auth-int,auth", false, null, null),

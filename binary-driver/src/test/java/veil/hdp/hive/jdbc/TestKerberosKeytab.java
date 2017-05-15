@@ -16,8 +16,9 @@ public class TestKerberosKeytab extends BaseConnectionTest {
     @Override
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
+        properties.setProperty("user", "timve@LAB.LOCAL");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL&krb5LocalPrincipal=timve@LAB.LOCAL&krb5LocalKeytab=C:/temp/timve.keytab";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=KEYTAB&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL&krb5LocalKeytab=C:/temp/timve.keytab";
 
         return new BinaryHiveDriver().connect(url, properties);
     }

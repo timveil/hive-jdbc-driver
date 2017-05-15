@@ -1,6 +1,9 @@
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.security.KerberosService;
+
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
@@ -22,11 +25,10 @@ public class TestKerberosPreAuth extends BaseConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
 
-
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL&krb5PreAuth=true";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=PREAUTH&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
 
         try {
-            return Subject.doAs(new Subject(), new PrivilegedExceptionAction<Connection>() {
+            return Subject.doAs(KerberosService.loginWithPassword("timve@LAB.LOCAL", "password", true), new PrivilegedExceptionAction<Connection>() {
                 @Override
                 public Connection run() throws Exception {
                     return new BinaryHiveDriver().connect(url, properties);
@@ -34,7 +36,10 @@ public class TestKerberosPreAuth extends BaseConnectionTest {
             });
         } catch (PrivilegedActionException e) {
             throw new SQLException(e);
+        } catch (LoginException e) {
+            throw new SQLException(e);
         }
+
 
     }
 

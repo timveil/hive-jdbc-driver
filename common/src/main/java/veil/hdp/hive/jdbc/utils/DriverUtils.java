@@ -79,6 +79,10 @@ public class DriverUtils {
         Collections.sort(strings);
 
         for (String key : strings) {
+            if (key.equalsIgnoreCase("password")) {
+                continue;
+            }
+
             builder.append('\t').append(key).append(" : ").append(properties.getProperty(key)).append('\n');
         }
         builder.append("******************************************\n");
