@@ -1,5 +1,10 @@
 # hive-jdbc
 
+bugs:
+HiveConf.HIVE_SERVER2_USE_SSL("hive.server2.use.SSL", false,"Set this to true for using SSL encryption in HiveServer2.")
+    key should not be uppercase.
+
+
 
 hive-jdbc-1.2.1000.2.5.3.0-37-standalone.jar is 20,103,967 bytes
 
