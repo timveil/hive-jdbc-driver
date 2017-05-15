@@ -105,7 +105,10 @@ public class KerberosService {
                                                     boolean storePass, boolean clearPass) {
         Map<String, String> options = new HashMap<>(16);
         options.put(LoginModuleConstants.DEBUG, Boolean.toString(debug));
-        options.put(LoginModuleConstants.DEBUG_NATIVE, Boolean.toString(debug));
+
+        if (PlatformUtils.isWindows()) {
+            options.put(LoginModuleConstants.DEBUG_NATIVE, Boolean.toString(debug));
+        }
 
         options.put(LoginModuleConstants.REFRESH_KRB_5_CONFIG, Boolean.toString(refreshKrb5Config));
         options.put(LoginModuleConstants.USE_TICKET_CACHE, Boolean.toString(useTicketCache));

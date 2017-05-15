@@ -1,5 +1,5 @@
 package veil.hdp.hive.jdbc.security;
 
-public enum SASLMechanism {
+public enum SaslMechanism {
     PLAIN,GSSAPI
 }

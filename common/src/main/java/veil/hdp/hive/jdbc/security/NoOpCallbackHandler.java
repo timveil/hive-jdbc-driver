@@ -14,6 +14,10 @@ public class NoOpCallbackHandler implements CallbackHandler {
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        log.warn("this is not implemented and should not have been called.  this is a problem");
+        log.warn("this is not implemented and should not have been called.  this is a problem!");
+
+        for (Callback callback : callbacks) {
+            log.warn("callback with class name [{}] is ignored.", callback.getClass().getName());
+        }
     }
 }

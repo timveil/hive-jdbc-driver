@@ -29,7 +29,7 @@ public class UsernamePasswordCallbackHandler implements CallbackHandler {
                 PasswordCallback passwordCallback = (PasswordCallback) callback;
                 passwordCallback.setPassword(password.toCharArray());
             } else {
-                throw new UnsupportedCallbackException(callback);
+                throw new UnsupportedCallbackException(callback, "callback class is not supported [" + callback.getClass().getName() + ']');
             }
         }
     }

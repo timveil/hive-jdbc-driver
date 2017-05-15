@@ -65,7 +65,7 @@ public class BinaryUtils {
 
         try {
             // some userid must be specified.  it can really be anything when AuthenticationMode = NONE
-            return new TSaslClientTransport(SASLMechanism.PLAIN.name(),
+            return new TSaslClientTransport(SaslMechanism.PLAIN.name(),
                     null,
                     null,
                     null,
@@ -90,7 +90,7 @@ public class BinaryUtils {
             }
 
 
-            return new SecureTransport(saslTransport, subject);
+            return new JaasTransport(saslTransport, subject);
 
         } catch (SaslException | LoginException e) {
             throw new HiveException(e);
@@ -106,7 +106,7 @@ public class BinaryUtils {
         saslProps.put(Sasl.SERVER_AUTH, HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.get(properties));
 
         return new TSaslClientTransport(
-                SASLMechanism.GSSAPI.name(),
+                SaslMechanism.GSSAPI.name(),
                 null,
                 serverPrincipal.getService(),
                 serverPrincipal.getHost(),

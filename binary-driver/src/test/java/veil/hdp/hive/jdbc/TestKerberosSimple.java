@@ -7,9 +7,8 @@ import java.util.Properties;
 public class TestKerberosSimple extends BaseConnectionTest {
 
         /*
-        -Djava.security.krb5.conf=C:\ProgramData\MIT\Kerberos5\krb5.ini
-
-        must be kinited first locally
+        on windows:
+            -Djava.security.krb5.conf=C:\ProgramData\MIT\Kerberos5\krb5.ini
 
         must have JCE installed in proper directory <java_home>/jre/lib/security
 

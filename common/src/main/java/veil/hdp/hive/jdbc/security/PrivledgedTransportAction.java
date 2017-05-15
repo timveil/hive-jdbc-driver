@@ -4,11 +4,11 @@ import org.apache.thrift.transport.TTransport;
 
 import java.security.PrivilegedExceptionAction;
 
-public class TransportAction implements PrivilegedExceptionAction<Void> {
+public class PrivledgedTransportAction implements PrivilegedExceptionAction<Void> {
 
     private final TTransport transport;
 
-    public TransportAction(TTransport transport) {
+    public PrivledgedTransportAction(TTransport transport) {
         this.transport = transport;
     }
 
