@@ -48,6 +48,7 @@
                 <artifactId>thrift-maven-plugin</artifactId>
                 <version>0.10.0</version>
                 <configuration>
+                    <!-- todo: need to find a way to externalize this value -->
                     <thriftExecutable>E:\dev\tools\thrift\thrift-0.9.3.exe</thriftExecutable>
                     <thriftSourceRoot>${basedir}/src/main/thrift/${hive.version}</thriftSourceRoot>
                     <generator>java:beans</generator>
