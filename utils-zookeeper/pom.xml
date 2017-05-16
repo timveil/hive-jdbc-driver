@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>org.apache.curator</groupId>
-            <artifactId>curator-client</artifactId>
+            <artifactId>curator-framework</artifactId>
             <version>${curator.version}</version>
             <exclusions>
                 <exclusion>
@@ -45,12 +45,6 @@
                     <artifactId>netty</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>${curator.version}</version>
         </dependency>
 
     </dependencies>
