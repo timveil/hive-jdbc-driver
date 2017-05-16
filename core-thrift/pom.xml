@@ -40,4 +40,37 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- have to use the 0.10.0 version of the plugin eventhough the code uses 0.9.3 because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
+            <plugin>
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>thrift-maven-plugin</artifactId>
+                <version>0.10.0</version>
+                <configuration>
+                    <thriftExecutable>E:\dev\tools\thrift\thrift-0.9.3.exe</thriftExecutable>
+                    <thriftSourceRoot>${basedir}/src/main/thrift/${hive.version}</thriftSourceRoot>
+                    <generator>java:beans</generator>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>thrift-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>thrift-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
