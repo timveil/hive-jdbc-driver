@@ -43,7 +43,7 @@
 
     <profiles>
         <profile>
-            <id>hive-2.1</id>
+            <id>HDP-2.1.0.2.6.0.3-8</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -52,7 +52,7 @@
             </properties>
         </profile>
         <profile>
-            <id>hive-1.2</id>
+            <id>HDP-1.2.1000.2.6.0.3-8</id>
             <properties>
                 <hive.version>1.2.1000.2.6.0.3-8</hive.version>
             </properties>
