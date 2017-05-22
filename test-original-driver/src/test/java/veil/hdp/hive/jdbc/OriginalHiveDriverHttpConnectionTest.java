@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class OriginalHiveDriverConnectionTest extends BaseConnectionTest {
+public class OriginalHiveDriverHttpConnectionTest extends BaseConnectionTest {
 
     @Override
     public Connection createConnection(String host) throws SQLException {
@@ -15,7 +15,7 @@ public class OriginalHiveDriverConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
+        String url = "jdbc:hive2://" + host + ":10501/jdbc_test;transportMode=http;httpPath=cliservice";
 
         return new HiveDriver().connect(url, properties);
     }

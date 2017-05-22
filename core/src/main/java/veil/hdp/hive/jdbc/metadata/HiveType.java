@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 //import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
-import org.apache.hadoop.hive.common.type.HiveIntervalYearMonth;
+
 import veil.hdp.hive.jdbc.thrift.TTypeId;
 
 import java.math.BigDecimal;
@@ -27,14 +27,17 @@ public enum HiveType {
     DECIMAL("DECIMAL", TTypeId.DECIMAL_TYPE, JDBCType.DECIMAL, BigDecimal.class, false, 0, 0),
     BINARY("BINARY", TTypeId.BINARY_TYPE, JDBCType.BINARY, byte[].class, false, 0, 0),
 
-    // USER_DEFINED is not a valid column type
-    //USER_DEFINED("USER_DEFINED", TTypeId.USER_DEFINED_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
-
     // todo: don't understand UNION
     UNION("UNION", TTypeId.UNION_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
 
     // todo: don't understand MAP
     MAP("MAP", TTypeId.MAP_TYPE, JDBCType.JAVA_OBJECT, Map.class, true, 0, 0),
+
+    // todo: don't understand ARRAY
+    ARRAY("ARRAY", TTypeId.ARRAY_TYPE, JDBCType.ARRAY, Array.class, true, 0, 0),
+
+    // todo: don't understand STRUCT
+    STRUCT("STRUCT", TTypeId.STRUCT_TYPE, JDBCType.STRUCT, Struct.class, true, 0, 0);
 
     // INTERVAL_YEAR_MONTH is not a table column type but rather something found in predicates
     // https://issues.apache.org/jira/browse/HIVE-9792
@@ -44,11 +47,11 @@ public enum HiveType {
     // INTERVAL_DAY_TIME; same as INTERVAL_YEAR_MONTH; doesn't seem to exist in Hive 2.
     //INTERVAL_DAY_TIME("INTERVAL_DAY_TIME", TTypeId.INTERVAL_DAY_TIME_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalDayTime.class, true, 0, 0),
 
-    // todo: don't understand ARRAY
-    ARRAY("ARRAY", TTypeId.ARRAY_TYPE, JDBCType.ARRAY, Array.class, true, 0, 0),
+    // USER_DEFINED is not a valid column type
+    //USER_DEFINED("USER_DEFINED", TTypeId.USER_DEFINED_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
 
-    // todo: don't understand STRUCT
-    STRUCT("STRUCT", TTypeId.STRUCT_TYPE, JDBCType.STRUCT, Struct.class, true, 0, 0);
+
+
 
     private final String name;
     private final TTypeId thriftType;

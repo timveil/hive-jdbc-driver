@@ -1,10 +1,13 @@
 package veil.hdp.hive.jdbc;
 
+import org.apache.hive.jdbc.HiveDriver;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class HttpConnectionTest extends BaseConnectionTest {
+
+public class OriginalHiveDriverBinaryConnectionTest extends BaseConnectionTest {
 
     @Override
     public Connection createConnection(String host) throws SQLException {
@@ -12,9 +15,8 @@ public class HttpConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10501/jdbc_test";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
 
-        return new HttpHiveDriver().connect(url, properties);
+        return new HiveDriver().connect(url, properties);
     }
-
 }

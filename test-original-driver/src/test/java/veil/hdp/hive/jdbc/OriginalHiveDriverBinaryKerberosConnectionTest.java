@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class OriginalHiveDriverConnectionTestKerberos extends BaseConnectionTest {
+public class OriginalHiveDriverBinaryKerberosConnectionTest extends BaseConnectionTest {
 
     /*
         -Dsun.security.krb5.debug=true
