@@ -27,8 +27,8 @@ public enum HiveType {
     DECIMAL("DECIMAL", TTypeId.DECIMAL_TYPE, JDBCType.DECIMAL, BigDecimal.class, false, 0, 0),
     BINARY("BINARY", TTypeId.BINARY_TYPE, JDBCType.BINARY, byte[].class, false, 0, 0),
 
-    // todo: don't understand USER_DEFINED
-    USER_DEFINED("USER_DEFINED", TTypeId.USER_DEFINED_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
+    // USER_DEFINED is not a valid column type
+    //USER_DEFINED("USER_DEFINED", TTypeId.USER_DEFINED_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
 
     // todo: don't understand UNION
     UNION("UNION", TTypeId.UNION_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
@@ -36,10 +36,12 @@ public enum HiveType {
     // todo: don't understand MAP
     MAP("MAP", TTypeId.MAP_TYPE, JDBCType.JAVA_OBJECT, Map.class, true, 0, 0),
 
-    // todo: don't understand INTERVAL_YEAR_MONTH
-    INTERVAL_YEAR_MONTH("INTERVAL_YEAR_MONTH", TTypeId.INTERVAL_YEAR_MONTH_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalYearMonth.class, true, 0, 0),
+    // INTERVAL_YEAR_MONTH is not a table column type but rather something found in predicates
+    // https://issues.apache.org/jira/browse/HIVE-9792
+    // https://issues.apache.org/jira/browse/HIVE-13557
+    //INTERVAL_YEAR_MONTH("INTERVAL_YEAR_MONTH", TTypeId.INTERVAL_YEAR_MONTH_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalYearMonth.class, true, 0, 0),
 
-    // todo: don't understand INTERVAL_DAY_TIME; doesn't seem to exist in Hive 2.
+    // INTERVAL_DAY_TIME; same as INTERVAL_YEAR_MONTH; doesn't seem to exist in Hive 2.
     //INTERVAL_DAY_TIME("INTERVAL_DAY_TIME", TTypeId.INTERVAL_DAY_TIME_TYPE, JDBCType.JAVA_OBJECT, HiveIntervalDayTime.class, true, 0, 0),
 
     // todo: don't understand ARRAY
