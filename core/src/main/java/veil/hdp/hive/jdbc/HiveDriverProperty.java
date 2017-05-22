@@ -26,7 +26,6 @@ public enum HiveDriverProperty {
     // should not be used in URL because its coded into separate drivers
     TRANSPORT_MODE("transportMode", TransportMode.binary.name(), false, null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
 
-
     AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), false, null, "hive.server2.authentication",
             AuthenticationMode.NONE.name(),
             AuthenticationMode.NOSASL.name(),

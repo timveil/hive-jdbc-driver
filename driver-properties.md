@@ -16,7 +16,7 @@ The fully qualified domain name (FQDN) of the HS2 instance or, if Zookeeper disc
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| database | default | true |   |
+| database | default | true | none  |
 
 The database name used by the driver to establish a connection.
 
@@ -24,7 +24,7 @@ The database name used by the driver to establish a connection.
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| user |  | false |   |
+| user |  | false | none |
 
 When "Authentication Mode" equals "NONE" this property is ignored.  If "Authentication Mode" equals "KERBEROS" and "Kerberos Mode" equals "PASSWORD", this property can be the local Kerberos "principal"
 
@@ -32,7 +32,7 @@ When "Authentication Mode" equals "NONE" this property is ignored.  If "Authenti
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| password |  | false |   |
+| password |  | false | none |
 
 When "Authentication Mode" equals "NONE" this property is ignored.  If "Authentication Mode" equals "KERBEROS" and "Kerberos Mode" equals "PASSWORD", this property can be the password for the local Kerberos "principal"
 
