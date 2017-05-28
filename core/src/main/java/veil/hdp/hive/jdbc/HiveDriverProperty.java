@@ -48,6 +48,12 @@ public enum HiveDriverProperty {
     HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
     HTTP_ENDPOINT("endpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
+    // https://issues.apache.org/jira/browse/HIVE-9709
+    HTTP_COOKIE_REPLAY_ENABLED("cookieReplayEnabled", Boolean.TRUE.toString(), false, null, null),
+
+    // todo: this seems pretty hardcoded on the server side.  not sure how/why this would ever change
+    HTTP_COOKIE_NAME("cookieName", "hive.server2.auth", false, null, null),
+
     /***************************************************
      *  ZOOKEEPER
      ***************************************************/
@@ -68,16 +74,16 @@ public enum HiveDriverProperty {
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjuction with USER property
     KERBEROS_USER_KEYTAB("krb5UserKeytab", null, false, null, null),
     // sun.security.krb5.debug
-    KERBEROS_DEBUG_ENABLED("krb5Debug", "true", false, null, null),
+    KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.TRUE.toString(), false, null, null),
     // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property; see http://docs.oracle.com/javase/7/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html
-    KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", "false", false, null, null),
+    KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), false, null, null),
 
     // Sasl.QOP
     SASL_QUALITY_OF_PROTECTION("saslQOP", "auth-conf,auth-int,auth", false, null, null),
     // Sasl.SERVER_AUTH
-    SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", "true", false, null, null),
+    SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), false, null, null),
 
-    JAAS_DEBUG_ENABLED("jaasDebug", "true", false, null, null),
+    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.TRUE.toString(), false, null, null),
 
     ;
 
