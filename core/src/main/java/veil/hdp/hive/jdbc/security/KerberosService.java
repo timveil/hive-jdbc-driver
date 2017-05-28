@@ -1,8 +1,11 @@
 package veil.hdp.hive.jdbc.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ietf.jgss.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveException;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
@@ -11,12 +14,31 @@ import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
 
 public class KerberosService {
 
     private static final Logger log = LoggerFactory.getLogger(KerberosService.class);
+
+
+    private static final String KRB5_OID = "1.2.840.113554.1.2.2";
+    private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
+
+
+    private static Oid MECHANISM = null;
+    private static Oid NAME_TYPE = null;
+
+    static {
+        try {
+            MECHANISM = new Oid(KRB5_OID);
+            NAME_TYPE = new Oid(KRB5_NAME_OID);
+        } catch (GSSException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static Subject getPreAuthenticatedSubject() {
         AccessControlContext preAuthContext = AccessController.getContext();
@@ -25,6 +47,66 @@ public class KerberosService {
         log.debug("pre-auth subject [{}]", subject);
 
         return subject;
+    }
+
+    public static byte[] getToken(String serverPrincipal) {
+
+        GSSContext context = null;
+
+        try {
+
+            GSSManager manager = GSSManager.getInstance();
+            GSSName name = manager.createName(serverPrincipal, NAME_TYPE);
+
+            context = manager.createContext(name, MECHANISM, null, GSSContext.DEFAULT_LIFETIME);
+            context.requestMutualAuth(false);
+
+            byte[] inToken = new byte[0];
+
+            return context.initSecContext(inToken, 0, inToken.length);
+        } catch (GSSException e) {
+            throw new HiveException(e);
+        } finally {
+
+            if (context != null) {
+                try {
+                    context.dispose();
+                } catch (GSSException e) {
+
+                }
+            }
+        }
+
+    }
+
+    public static Subject getSubject(Properties properties) throws LoginException {
+
+        System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
+        System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+
+        KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
+
+        log.debug("kerberos mode [{}]", kerberosMode);
+
+        boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
+
+        switch (kerberosMode) {
+            case KEYTAB:
+                String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
+                String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
+
+                return loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);
+            case PREAUTH:
+                return getPreAuthenticatedSubject();
+            case PASSWORD:
+                String principal = HiveDriverProperty.USER.get(properties);
+                String password = HiveDriverProperty.PASSWORD.get(properties);
+
+                return loginWithPassword(principal, password, debugJaas);
+        }
+
+        throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
+
     }
 
     public static Subject loginWithPassword(String principal, String password, boolean debugJaas) throws LoginException {

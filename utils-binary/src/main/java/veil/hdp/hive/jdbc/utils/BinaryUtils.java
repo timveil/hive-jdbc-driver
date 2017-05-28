@@ -83,7 +83,7 @@ public class BinaryUtils {
 
             TTransport saslTransport = buildSaslTransport(properties, socket);
 
-            Subject subject = getSubject(properties);
+            Subject subject = KerberosService.getSubject(properties);
 
             if (subject == null) {
                 throw new HiveException("Subject is null.  This is likely an invalid configuration");
@@ -115,35 +115,7 @@ public class BinaryUtils {
                 socket);
     }
 
-    private static Subject getSubject(Properties properties) throws LoginException {
 
-        System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
-        System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
-
-        KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
-
-        log.debug("kerberos mode [{}]", kerberosMode);
-
-        boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
-
-        switch (kerberosMode) {
-            case KEYTAB:
-                String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
-                String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
-
-                return KerberosService.loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);
-            case PREAUTH:
-                return KerberosService.getPreAuthenticatedSubject();
-            case PASSWORD:
-                String principal = HiveDriverProperty.USER.get(properties);
-                String password = HiveDriverProperty.PASSWORD.get(properties);
-
-                return KerberosService.loginWithPassword(principal, password, debugJaas);
-        }
-
-        throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
-
-    }
 
 
 }
