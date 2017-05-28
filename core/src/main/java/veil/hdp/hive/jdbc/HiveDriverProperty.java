@@ -86,26 +86,26 @@ public enum HiveDriverProperty {
     private final String defaultValue;
     private final boolean required;
     private final String description;
-    private final String hiveConfName;
+    private final String hiveConfigurationKey;
     private final String[] choices;
 
 
-    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfName) {
-        this(key, defaultValue, required, description, hiveConfName, (String[]) null);
+    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfigurationKey) {
+        this(key, defaultValue, required, description, hiveConfigurationKey, (String[]) null);
     }
 
-    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfName, String... choices) {
+    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfigurationKey, String... choices) {
         this.key = key;
         this.defaultValue = defaultValue;
         this.required = required;
         this.description = description;
-        this.hiveConfName = hiveConfName;
+        this.hiveConfigurationKey = hiveConfigurationKey;
         this.choices = choices;
     }
 
     public static HiveDriverProperty forAlias(String alias) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.hiveConfName != null && property.hiveConfName.equalsIgnoreCase(alias)) {
+            if (property.hiveConfigurationKey != null && property.hiveConfigurationKey.equalsIgnoreCase(alias)) {
                 return property;
             }
         }
@@ -139,8 +139,8 @@ public enum HiveDriverProperty {
         return choices;
     }
 
-    public String getHiveConfName() {
-        return hiveConfName;
+    public String getHiveConfigurationKey() {
+        return hiveConfigurationKey;
     }
 
     public void set(Properties properties, String value) {
