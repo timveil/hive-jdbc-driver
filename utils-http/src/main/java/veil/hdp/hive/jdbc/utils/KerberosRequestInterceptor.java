@@ -18,6 +18,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -38,53 +39,59 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
 
-        String serverPrincipal = HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties);
+        boolean authenticate = true;
 
         if (cookieStore != null) {
             httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
-            for (Cookie c : cookieStore.getCookies()) {
-                log.debug("cookie name {}, cookie value {}", c.getName(), c.getValue());
+            String cookieName = HiveDriverProperty.HTTP_COOKIE_NAME.get(properties);
+
+            List<Cookie> cookies = cookieStore.getCookies();
+
+            if (cookies != null && !cookies.isEmpty()) {
+
+                for (Cookie c : cookies) {
+                    log.debug("cookie name [{}], cookie value [{}]", c.getName(), c.getValue());
+
+                    if (c.getName().equalsIgnoreCase(cookieName)) {
+
+                        log.debug("rety cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
+
+                        authenticate = false;
+                        break;
+                    }
+
+                }
             }
         }
-/*
 
-        boolean needToSendCredentials = Utils.needToSendCredentials(cookieStore, cookieName, isSSL);
-
-        if (!isCookieEnabled ||
-                (
-                        (
-                                httpContext.getAttribute("hive.server2.retryserver") == null &&
-                                        (cookieStore == null || (cookieStore != null && needToSendCredentials))
-                        ) ||
-                                (
-                                        httpContext.getAttribute("hive.server2.retryserver") != null &&
-                                                httpContext.getAttribute("hive.server2.retryserver").equals("true")
-                                )
-                )
-                ) {
-           // get token
+        if (log.isDebugEnabled()) {
+            log.debug("authenticate with kerberos and retrieve ticket [{}]", authenticate);
         }
-*/
 
-        try {
+        if (authenticate) {
 
-            Subject subject = KerberosService.getSubject(properties);
+            try {
 
-            String header = Subject.doAs(subject, new PrivilegedExceptionAction<String>() {
+                Subject subject = KerberosService.getSubject(properties);
 
-                @Override
-                public String run() throws Exception {
+                String header = Subject.doAs(subject, new PrivilegedExceptionAction<String>() {
 
-                    byte[] token = KerberosService.getToken(serverPrincipal);
+                    @Override
+                    public String run() throws Exception {
 
-                    return new String(BASE_64.encode(token));
-                }
-            });
+                        String serverPrincipal = HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties);
 
-            httpRequest.addHeader("Authorization: Negotiate ", header);
-        } catch (LoginException | PrivilegedActionException e) {
-            log.error(e.getMessage(), e);
+                        byte[] token = KerberosService.getToken(serverPrincipal);
+
+                        return new String(BASE_64.encode(token));
+                    }
+                });
+
+                httpRequest.addHeader("Authorization: Negotiate ", header);
+            } catch (LoginException | PrivilegedActionException e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
     }
