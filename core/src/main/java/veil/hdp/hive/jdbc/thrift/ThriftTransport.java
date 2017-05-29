@@ -33,7 +33,11 @@ public class ThriftTransport implements Closeable {
         ThriftUtils.closeTransport(transport);
 
         for (Closeable closeable : closeableList) {
-            closeable.close();
+            try {
+                closeable.close();
+            } catch (IOException ignore) {
+
+            }
         }
     }
 
