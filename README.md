@@ -1,8 +1,4 @@
-# hive-jdbc
-
-
-
-test
+# About
 
 
 
