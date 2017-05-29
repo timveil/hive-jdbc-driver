@@ -58,10 +58,9 @@ public class HttpUtils {
             throw new HiveSQLException(e);
         }
 
-        // todo: i'm really not sure what these values should be and they should probably be passed in configs
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        cm.setMaxTotal(100);
-        cm.setDefaultMaxPerRoute(20);
+        cm.setMaxTotal(HiveDriverProperty.HTTP_POOL_MAX_TOTAL.getInt(properties));
+        cm.setDefaultMaxPerRoute(HiveDriverProperty.HTTP_POOL_MAX_PER_ROUTE.getInt(properties));
 
         HttpClientBuilder clientBuilder = HttpClients.custom();
 

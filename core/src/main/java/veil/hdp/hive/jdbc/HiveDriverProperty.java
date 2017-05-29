@@ -48,6 +48,9 @@ public enum HiveDriverProperty {
     HTTP_SSL_ENABLED("httpsEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
     HTTP_ENDPOINT("httpEndpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
+    HTTP_POOL_MAX_TOTAL("httpMax", "", false, null, null),
+    HTTP_POOL_MAX_PER_ROUTE("httpMaxRoute", "20", false, null, null),
+
     // https://issues.apache.org/jira/browse/HIVE-9709
     HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), false, null, null),
 

@@ -28,7 +28,7 @@ The database name used by the driver to establish a connection.
 | :--- | :--- | :--- | :--- |
 | user |  | false | none |
 
-When "Authentication Mode" equals "NONE" this property is ignored.  If "Authentication Mode" equals "KERBEROS" and "Kerberos Mode" equals "PASSWORD", this property can be the local Kerberos "principal"
+When `authMode` equals `NONE` this property is ignored.  If `authMode` equals `KERBEROS` and `krb5Mode` equals `PASSWORD`, this property can be the local Kerberos "principal"
 
 ### Password
 
@@ -36,7 +36,7 @@ When "Authentication Mode" equals "NONE" this property is ignored.  If "Authenti
 | :--- | :--- | :--- | :--- |
 | password |  | false | none |
 
-When "Authentication Mode" equals "NONE" this property is ignored.  If "Authentication Mode" equals "KERBEROS" and "Kerberos Mode" equals "PASSWORD", this property can be the password for the local Kerberos "principal"
+When `authMode` equals `NONE` this property is ignored.  If `authMode` equals `KERBEROS` and `krb5Mode` equals `PASSWORD`, this property can be the password for the local Kerberos "principal"
 
 ### Port Number
 
@@ -61,11 +61,11 @@ Transport Mode specifies the Thrift transport interface used to communicate with
 | authMode | NONE | false | [hive.server2.authentication](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The Authentication Mode of the HS2 instance as specified by the Hive configuration property `hive.server2.authentication`.  The allowable values of this property are:
-* NONE - in the case of a `binary` connection, the Thrift socket uses plain SASL.  No user or password are required.  todo: need HTTP
-* NOSASL - in the case of a `binary` connection, a raw Thrift socket is used. todo: need HTTP and better explanation
-* KERBEROS - valid Kerberos principal is required to establish a connection to HS2
-* LDAP - Not currently supported
-* PAM - Not currently supported
+* `NONE` - No user or password are required.  In the case of a `binary` connection, the Thrift socket uses plain SASL.
+* `NOSASL` - In the case of a `binary` connection, a raw Thrift socket is used.  Not applicable to `http` connections.
+* `KERBEROS` - A valid Kerberos principal is required to establish a connection to HS2
+* `LDAP` - Not currently supported
+* `PAM` - Not currently supported
 
 ## Binary Properties
 
@@ -95,6 +95,39 @@ Instructs the driver to use SSL when communicating over HTTP.
 
 The path portion of the Thrift HTTP endpoint URL.
 
+### HTTP Max Pooled Connections
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| httpMax | 100 | false | none |
+
+The maximum number of connections in the pool
+
+### HTTP Max Pooled Connections per Route
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| httpMaxRoute | 20 | false | none |
+
+The maximum number of connections in the pool per route
+
+### HTTP Cookie Replay Enabled
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| httpCookieReplayEnabled | true | false | none |
+
+Enables cookie replay as described in https://issues.apache.org/jira/browse/HIVE-9709.  This prevents re-authentication on subsequent requests.
+
+### HTTP Cookie Name
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| httpCookieName | hive.server2.auth | false | none |
+
+When `httpCookieReplayEnabled` is `true`, this is the name of the cookie that must be present to prevent re-authentication.
+
+
 ## Zookeeper Properties
 
 ### Zookeeper Enabled
@@ -104,12 +137,12 @@ The path portion of the Thrift HTTP endpoint URL.
 | zkEnabled | false | false | none |
 
 Instructs the driver to lookup Hive configuration in Zookeeper.  Values returned from this lookup are then used to configure the driver connection.  The following Hive configuration properties may be returned by Zookeeper:
-*  hive.server2.authentication
-*  hive.server2.transport.mode
-*  hive.server2.thrift.sasl.qop
-*  hive.server2.thrift.bind.host
-*  hive.server2.thrift.port
-*  hive.server2.use.SSL
+*  `hive.server2.authentication`
+*  `hive.server2.transport.mode`
+*  `hive.server2.thrift.sasl.qop`
+*  `hive.server2.thrift.bind.host`
+*  `hive.server2.thrift.port`
+*  `hive.server2.use.SSL`
 
 ### Zookeeper Discovery Namespace
 
