@@ -154,20 +154,12 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
 
     @Test
     public void testLoadWithConcurrency() throws Exception {
-        DatabaseMetaData metaData = connection.getMetaData();
-
-        Assert.assertNotNull(metaData);
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         Runnable test = () -> {
-            log.debug("******************************** calling getColumns");
-
             try {
-                try (Statement statement = connection.createStatement();
-                     ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
-                    Printer.printResultSet(rs);
-                }
+                executeSimpleQuery(true);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -176,8 +168,6 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
         for (int i = 0; i < getTestRuns(); i++) {
             executorService.submit(test);
         }
-
-        log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ calling awaitTermination ");
 
         executorService.awaitTermination(2, TimeUnit.MINUTES);
 
@@ -245,7 +235,7 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     }
 
     @Test
-    public void testConcurrency() throws Exception {
+    public void testMetadataConcurrency() throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
 
         Assert.assertNotNull(metaData);
@@ -253,8 +243,6 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         Runnable test = () -> {
-            log.debug("******************************** calling getColumns");
-
             try {
                 try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
 
@@ -268,8 +256,6 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
         for (int i = 0; i < 10; i++) {
             executorService.submit(test);
         }
-
-        log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ calling awaitTermination ");
 
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
