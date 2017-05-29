@@ -83,7 +83,7 @@ The Thrift Protocol Version helps to define the features/functions available as 
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| sslEnabled | false | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| httpsEnabled | false | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 Instructs the driver to use SSL when communicating over HTTP.
 
@@ -91,7 +91,7 @@ Instructs the driver to use SSL when communicating over HTTP.
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| endpoint | cliservice | false | [hive.server2.thrift.http.path](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| httpEndpoint | cliservice | false | [hive.server2.thrift.http.path](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The path portion of the Thrift HTTP endpoint URL.
 

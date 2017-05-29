@@ -45,14 +45,14 @@ public enum HiveDriverProperty {
      *  HTTP
      ***************************************************/
 
-    HTTP_SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
-    HTTP_ENDPOINT("endpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
+    HTTP_SSL_ENABLED("httpsEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
+    HTTP_ENDPOINT("httpEndpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
     // https://issues.apache.org/jira/browse/HIVE-9709
-    HTTP_COOKIE_REPLAY_ENABLED("cookieReplayEnabled", Boolean.TRUE.toString(), false, null, null),
+    HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), false, null, null),
 
     // todo: this seems pretty hardcoded on the server side.  not sure how/why this would ever change
-    HTTP_COOKIE_NAME("cookieName", "hive.server2.auth", false, null, null),
+    HTTP_COOKIE_NAME("httpCookieName", "hive.server2.auth", false, null, null),
 
     /***************************************************
      *  ZOOKEEPER
