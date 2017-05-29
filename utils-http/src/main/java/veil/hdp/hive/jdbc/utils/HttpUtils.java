@@ -8,6 +8,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
@@ -56,8 +57,7 @@ public class HttpUtils {
             throw new HiveSQLException(e);
         }
 
-
-        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+        HttpClientBuilder clientBuilder = HttpClients.custom();
 
         clientBuilder.addInterceptorFirst(httpRequestInterceptor);
         clientBuilder.addInterceptorLast(new XsrfRequestInterceptor());
