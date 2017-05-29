@@ -8,6 +8,7 @@ import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -54,8 +55,13 @@ public class HiveStatement extends AbstractStatement {
         ThriftOperation operation = currentOperation.get();
 
         if (operation != null) {
-            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            operation.close();
+            try {
+                log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                operation.close();
+            } catch (IOException e) {
+                log.warn(e.getMessage(), e);
+            }
+
             currentOperation.compareAndSet(operation, null);
         }
 
@@ -206,7 +212,13 @@ public class HiveStatement extends AbstractStatement {
         ThriftOperation operation = currentOperation.get();
 
         if (operation != null) {
-            operation.close();
+
+            try {
+                operation.close();
+            } catch (IOException e) {
+                log.warn(e.getMessage(), e);
+            }
+
             currentOperation.set(null);
         }
     }

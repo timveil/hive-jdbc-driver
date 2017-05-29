@@ -1,6 +1,8 @@
 package veil.hdp.hive.jdbc.thrift;
 
 import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThriftTransport implements Closeable {
+
+    private static final Logger log = LoggerFactory.getLogger(ThriftTransport.class);
 
     private final TTransport transport;
 
@@ -35,8 +39,8 @@ public class ThriftTransport implements Closeable {
         for (Closeable closeable : closeableList) {
             try {
                 closeable.close();
-            } catch (IOException ignore) {
-
+            } catch (IOException e) {
+                log.warn(e.getMessage(), e);
             }
         }
     }

@@ -6,6 +6,7 @@ import veil.hdp.hive.jdbc.thrift.ThriftSession;
 import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
+import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -37,7 +38,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public void close() throws SQLException {
-        thriftSession.close();
+
+        try {
+            thriftSession.close();
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
     }
 
     @Override
