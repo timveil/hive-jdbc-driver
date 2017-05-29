@@ -15,6 +15,7 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.*;
+import veil.hdp.hive.jdbc.thrift.HiveThriftException;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -22,6 +23,18 @@ import java.util.Properties;
 public class HttpUtils {
 
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
+    /*
+        From Thrift THttpClient
+
+        * When using HttpClient, the following configuration leads to 5-15%
+        * better performance than the HttpURLConnection implementation:
+        *
+        * http.protocol.version=HttpVersion.HTTP_1_1
+        * http.protocol.content-charset=UTF-8
+        * http.protocol.expect-continue=false
+        * http.connection.stalecheck=false
+     */
 
     public static CloseableHttpClient buildClient(Properties properties) throws HiveSQLException {
 
@@ -79,17 +92,6 @@ public class HttpUtils {
         };
 
     }
-
-    public static void closeClient(CloseableHttpClient client) {
-        if (client != null) {
-            try {
-                client.close();
-            } catch (IOException e) {
-                log.warn(e.getMessage(), e);
-            }
-        }
-    }
-
 
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) {
         String host = HiveDriverProperty.HOST_NAME.get(properties);

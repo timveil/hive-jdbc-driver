@@ -65,7 +65,7 @@ public class ThriftUtils {
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
 
 
-        // todo: not requried when AuthenticationMode is NONE
+        // todo: not required when AuthenticationMode is NONE
         /*String username = HiveDriverProperty.USER.get(properties);
 
         if (username != null) {

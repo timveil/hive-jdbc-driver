@@ -1,25 +1,24 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.thrift;
 
 
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.thrift.TCLIService;
-import veil.hdp.hive.jdbc.thrift.TOpenSessionResp;
-import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
-import veil.hdp.hive.jdbc.thrift.TSessionHandle;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ThriftSession implements SQLCloseable {
+public class ThriftSession implements Closeable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
     // constructor
-    private final TTransport transport;
+    private final ThriftTransport thriftTransport;
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
     private final TProtocolVersion protocolVersion;
@@ -30,9 +29,9 @@ public class ThriftSession implements SQLCloseable {
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 
-    private ThriftSession(Properties properties, TTransport transport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
         this.properties = properties;
-        this.transport = transport;
+        this.thriftTransport = thriftTransport;
         this.client = client;
         this.sessionHandle = sessionHandle;
         this.protocolVersion = protocolVersion;
@@ -45,7 +44,7 @@ public class ThriftSession implements SQLCloseable {
     }
 
     public TTransport getTransport() {
-        return transport;
+        return thriftTransport.getTransport();
     }
 
     public TCLIService.Client getClient() {
@@ -73,7 +72,7 @@ public class ThriftSession implements SQLCloseable {
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
         if (closed.compareAndSet(false, true)) {
 
             if (log.isTraceEnabled()) {
@@ -81,13 +80,14 @@ public class ThriftSession implements SQLCloseable {
             }
 
             ThriftUtils.closeSession(this);
-            ThriftUtils.closeTransport(transport);
+
+            thriftTransport.close();
         }
     }
 
     public static class ThriftSessionBuilder implements Builder<ThriftSession> {
         private Properties properties;
-        private TTransport transport;
+        private ThriftTransport thriftTransport;
 
         private ThriftSessionBuilder() {
         }
@@ -97,13 +97,15 @@ public class ThriftSession implements SQLCloseable {
             return this;
         }
 
-        public ThriftSessionBuilder transport(TTransport transport) {
-            this.transport = transport;
+        public ThriftSessionBuilder thriftTransport(ThriftTransport thriftTransport) {
+            this.thriftTransport = thriftTransport;
             return this;
         }
 
         @Override
         public ThriftSession build() {
+
+            TTransport transport = thriftTransport.getTransport();
 
             ThriftUtils.openTransport(transport);
 
@@ -115,7 +117,7 @@ public class ThriftSession implements SQLCloseable {
 
             TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
 
-            return new ThriftSession(properties, transport, client, sessionHandle, protocolVersion);
+            return new ThriftSession(properties, thriftTransport, client, sessionHandle, protocolVersion);
         }
 
     }

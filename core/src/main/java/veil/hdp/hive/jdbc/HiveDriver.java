@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
@@ -41,10 +41,10 @@ public abstract class HiveDriver implements Driver {
     }
 
     private Connection connect(Properties properties) throws SQLException {
-        return HiveConnection.builder().properties(properties).transport(buildTransport(properties)).build();
+        return HiveConnection.builder().properties(properties).thriftTransport(buildTransport(properties)).build();
     }
 
-    abstract TTransport buildTransport(Properties properties) throws SQLException;
+    abstract ThriftTransport buildTransport(Properties properties) throws SQLException;
 
     abstract PropertiesCallback buildPropertiesCallback();
 

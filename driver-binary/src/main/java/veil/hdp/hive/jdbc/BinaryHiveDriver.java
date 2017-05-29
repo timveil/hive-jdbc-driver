@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.BinaryUtils;
 
 import java.sql.DriverManager;
@@ -29,8 +30,10 @@ public class BinaryHiveDriver extends HiveDriver {
 
 
     @Override
-    TTransport buildTransport(Properties properties) throws SQLException {
-        return BinaryUtils.createBinaryTransport(properties, getLoginTimeout());
+    ThriftTransport buildTransport(Properties properties) throws SQLException {
+        TTransport binaryTransport = BinaryUtils.createBinaryTransport(properties, getLoginTimeout());
+
+        return ThriftTransport.builder().transport(binaryTransport).build();
     }
 
     @Override

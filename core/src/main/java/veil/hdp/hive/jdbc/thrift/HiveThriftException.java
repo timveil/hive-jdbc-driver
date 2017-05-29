@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.thrift;
 
 import org.apache.thrift.TException;
 import veil.hdp.hive.jdbc.thrift.TGetOperationStatusResp;

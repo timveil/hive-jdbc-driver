@@ -4,6 +4,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.HttpUtils;
 import veil.hdp.hive.jdbc.utils.ZookeeperUtils;
 
@@ -31,11 +32,13 @@ public class HttpZookeeperHiveDriver extends HiveDriver {
 
 
     @Override
-    TTransport buildTransport(Properties properties) throws SQLException {
+    ThriftTransport buildTransport(Properties properties) throws SQLException {
 
         CloseableHttpClient client = HttpUtils.buildClient(properties);
 
-        return HttpUtils.createHttpTransport(properties, client);
+        TTransport httpTransport = HttpUtils.createHttpTransport(properties, client);
+
+        return ThriftTransport.builder().transport(httpTransport).addCloseable(client).build();
 
     }
 

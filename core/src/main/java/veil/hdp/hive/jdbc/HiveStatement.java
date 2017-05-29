@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;

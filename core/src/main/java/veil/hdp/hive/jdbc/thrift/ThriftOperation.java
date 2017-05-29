@@ -1,16 +1,22 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.thrift;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.HiveEmptyResultSet;
+import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
+import veil.hdp.hive.jdbc.HiveResultSet;
 import veil.hdp.hive.jdbc.thrift.TOperationHandle;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftOperation implements SQLCloseable {
+public class ThriftOperation implements Closeable {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
 
@@ -64,10 +70,15 @@ public class ThriftOperation implements SQLCloseable {
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() throws IOException {
         if (closed.compareAndSet(false, true)) {
             ThriftUtils.closeOperation(this);
-            resultSet.close();
+
+            try {
+                resultSet.close();
+            } catch (SQLException ignored) {
+
+            }
         }
     }
 
