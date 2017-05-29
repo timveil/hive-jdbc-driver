@@ -25,6 +25,8 @@ public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     /*
+        todo: see if any of these optimizations can/should be applied
+
         From Thrift THttpClient
 
         * When using HttpClient, the following configuration leads to 5-15%

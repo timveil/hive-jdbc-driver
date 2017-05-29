@@ -42,7 +42,7 @@
 
     <build>
         <plugins>
-            <!-- have to use the 0.10.0 version of the plugin eventhough the code uses 0.9.3 because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
+            <!-- have to use the 0.10.0 version of the plugin even though the code uses 0.9.3 because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
             <plugin>
                 <groupId>org.apache.thrift</groupId>
                 <artifactId>thrift-maven-plugin</artifactId>

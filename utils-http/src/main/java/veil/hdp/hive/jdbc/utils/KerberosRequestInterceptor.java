@@ -55,7 +55,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
                     if (cookie.getName().equalsIgnoreCase(cookieName)) {
 
-                        log.debug("rety cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
+                        log.debug("retry cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
 
                         authenticate = false;
                         break;

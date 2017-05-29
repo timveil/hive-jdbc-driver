@@ -20,7 +20,7 @@ public class JaasTransport extends WrappedTransport {
     public void open() throws TTransportException {
 
         try {
-            Subject.doAs(subject, new PrivledgedTransportAction(wrapped));
+            Subject.doAs(subject, new PrivilegedTransportAction(wrapped));
         } catch (PrivilegedActionException e) {
             throw new RuntimeException(e);
         }

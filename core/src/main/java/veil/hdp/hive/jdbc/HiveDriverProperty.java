@@ -37,7 +37,7 @@ public enum HiveDriverProperty {
      *  BINARY
      ***************************************************/
 
-    // make sure to spell out differnces in readme; look at *.thrift
+    // make sure to spell out differences in readme; look at *.thrift
     THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
 
 
@@ -58,7 +58,7 @@ public enum HiveDriverProperty {
      *  ZOOKEEPER
      ***************************************************/
 
-    // should not be used in URL becuase its coded into separate drivers
+    // should not be used in URL because its coded into separate drivers
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
 
     ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
@@ -71,7 +71,7 @@ public enum HiveDriverProperty {
     KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), false, null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
-    // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjuction with USER property
+    // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
     KERBEROS_USER_KEYTAB("krb5UserKeytab", null, false, null, null),
     // sun.security.krb5.debug
     KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.TRUE.toString(), false, null, null),
