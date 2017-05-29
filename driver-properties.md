@@ -18,7 +18,7 @@ The fully qualified domain name (FQDN) of the HS2 instance or, if Zookeeper disc
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| database | default | true | none  |
+| database | `default` | true | none  |
 
 The database name used by the driver to establish a connection.
 
@@ -42,7 +42,7 @@ When `authMode` equals `NONE` this property is ignored.  If `authMode` equals `K
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| port | 1000 | true | [hive.server2.thrift.port](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| port | `1000` | true | [hive.server2.thrift.port](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The port used to by the driver to establish a connection.  If Zookeeper discovery is enabled, this is the Zookeeper client port (e.g. 2181), otherwise it should be the value specified by `hive.server2.thrift.port` in Hive's configuration properties.  When Zookeeper discovery is enabled the value of `hive.server2.thrift.port` will be returned by Zookeeper and used by the driver as the `port` value.
 
@@ -50,7 +50,7 @@ The port used to by the driver to establish a connection.  If Zookeeper discover
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| transportMode | binary | false | [hive.server2.transport.mode](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| transportMode | `binary` | false | [hive.server2.transport.mode](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 Transport Mode specifies the Thrift transport interface used to communicate with the HS2 instance.  This driver supports both `binary` and `http` modes.  This value is specified in Hive with the property `hive.server2.transport.mode`.  Because this driver bundles its `http` and `binary` versions separately, it is not necessary to use the property.  The appropriate value is set depending on the driver version used.
 
@@ -58,7 +58,7 @@ Transport Mode specifies the Thrift transport interface used to communicate with
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| authMode | NONE | false | [hive.server2.authentication](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| authMode | `NONE` | false | [hive.server2.authentication](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The Authentication Mode of the HS2 instance as specified by the Hive configuration property `hive.server2.authentication`.  The allowable values of this property are:
 * `NONE` - No user or password are required.  In the case of a `binary` connection, the Thrift socket uses plain SASL.
@@ -73,9 +73,20 @@ The Authentication Mode of the HS2 instance as specified by the Hive configurati
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| thriftVersion | 9 or `TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10` | false | none |
+| thriftVersion | `9` | false | none |
 
 The Thrift Protocol Version helps to define the features/functions available as defined in the Thrift IDL or `.thrift` file.  This allows interoperability between Hive versions.
+
+*   0 = `HIVE_CLI_SERVICE_PROTOCOL_V1`, initial version
+*   1 = `HIVE_CLI_SERVICE_PROTOCOL_V2`, added support for asynchronous execution
+*   2 = `HIVE_CLI_SERVICE_PROTOCOL_V3`, added varchar type, primitive type qualifiers
+*   3 = `HIVE_CLI_SERVICE_PROTOCOL_V4`, added decimal precision/scale, char type
+*   4 = `HIVE_CLI_SERVICE_PROTOCOL_V5`, added error details when GetOperationStatus returns in error state
+*   5 = `HIVE_CLI_SERVICE_PROTOCOL_V6`, uses binary type for binary payload (was string) and uses columnar result set
+*   6 = `HIVE_CLI_SERVICE_PROTOCOL_V7`, added support for delegation token based connection
+*   7 = `HIVE_CLI_SERVICE_PROTOCOL_V8`, added support for interval types
+*   8 = `HIVE_CLI_SERVICE_PROTOCOL_V9`, added support for serializing ResultSets in SerDe
+*   9 = `HIVE_CLI_SERVICE_PROTOCOL_V10`, added support for in place updates via GetOperationStatus
 
 ## HTTP Properties
 
@@ -83,7 +94,7 @@ The Thrift Protocol Version helps to define the features/functions available as 
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpsEnabled | false | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| httpsEnabled | `false` | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 Instructs the driver to use SSL when communicating over HTTP.
 
@@ -91,7 +102,7 @@ Instructs the driver to use SSL when communicating over HTTP.
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpEndpoint | cliservice | false | [hive.server2.thrift.http.path](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| httpEndpoint | `cliservice` | false | [hive.server2.thrift.http.path](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The path portion of the Thrift HTTP endpoint URL.
 
@@ -99,7 +110,7 @@ The path portion of the Thrift HTTP endpoint URL.
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpMax | 100 | false | none |
+| httpMax | `100` | false | none |
 
 The maximum number of connections in the pool
 
@@ -107,7 +118,7 @@ The maximum number of connections in the pool
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpMaxRoute | 20 | false | none |
+| httpMaxRoute | `20` | false | none |
 
 The maximum number of connections in the pool per route
 
@@ -115,7 +126,7 @@ The maximum number of connections in the pool per route
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpCookieReplayEnabled | true | false | none |
+| httpCookieReplayEnabled | `true` | false | none |
 
 Enables cookie replay as described in https://issues.apache.org/jira/browse/HIVE-9709.  This prevents re-authentication on subsequent requests.
 
@@ -123,7 +134,7 @@ Enables cookie replay as described in https://issues.apache.org/jira/browse/HIVE
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpCookieName | hive.server2.auth | false | none |
+| httpCookieName | `hive.server2.auth` | false | none |
 
 When `httpCookieReplayEnabled` is `true`, this is the name of the cookie that must be present to prevent re-authentication.
 
@@ -134,7 +145,7 @@ When `httpCookieReplayEnabled` is `true`, this is the name of the cookie that mu
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| zkEnabled | false | false | none |
+| zkEnabled | `false` | false | none |
 
 Instructs the driver to lookup Hive configuration in Zookeeper.  Values returned from this lookup are then used to configure the driver connection.  The following Hive configuration properties may be returned by Zookeeper:
 *  `hive.server2.authentication`
@@ -148,7 +159,7 @@ Instructs the driver to lookup Hive configuration in Zookeeper.  Values returned
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| zkNamespace | hiveserver2 | false | [hive.server2.zookeeper.namespace](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| zkNamespace | `hiveserver2` | false | [hive.server2.zookeeper.namespace](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The root path or namespace in Zookeeper under which Hive configuration data is stored.  If LLAP is enabled this value may be `hiveserver2-hive2`.
 
@@ -156,6 +167,6 @@ The root path or namespace in Zookeeper under which Hive configuration data is s
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| zkRetry | 1000 | false | none |
+| zkRetry | `1000` | false | none |
 
 The amount of time, in milliseconds, that the Zookeeper client will wait before attempting a single retry.
