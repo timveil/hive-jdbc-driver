@@ -1,24 +1,23 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.CookieStore;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.*;
+import veil.hdp.hive.jdbc.AuthenticationMode;
+import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveException;
+import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.thrift.HiveThriftException;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class HttpUtils {
@@ -57,8 +56,14 @@ public class HttpUtils {
             throw new HiveSQLException(e);
         }
 
+        // todo: i'm really not sure what these values should be and they should probably be passed in configs
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(100);
+        cm.setDefaultMaxPerRoute(20);
+
         HttpClientBuilder clientBuilder = HttpClients.custom();
 
+        clientBuilder.setConnectionManager(cm);
         clientBuilder.addInterceptorFirst(httpRequestInterceptor);
         clientBuilder.addInterceptorLast(new XsrfRequestInterceptor());
 
