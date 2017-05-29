@@ -1,5 +1,4 @@
 # Summary
 
-* [Introduction what](README.md)
+* [Introduction](README.md)
 * [Driver Properties](driver-properties.md)
-
