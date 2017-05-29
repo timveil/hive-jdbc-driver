@@ -15,10 +15,10 @@ public enum HiveDriverProperty {
     HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
     DATABASE_NAME("database", "default", true, null, null),
 
-    // when authmode == none then this is ignored; can be principal when using KERBEROS_MODE = PASSWORD
+    // when AUTHENTICATION_MODE == NONE then this is ignored; can be principal when using KERBEROS_MODE = PASSWORD
     USER("user", null, false, null, null),
 
-    // when authmode == none then this is ignored
+    // when AUTHENTICATION_MODE == NONE then this is ignored
     PASSWORD("password", null, false, null, null),
 
     PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
