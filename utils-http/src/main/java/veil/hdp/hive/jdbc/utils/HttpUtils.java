@@ -83,14 +83,7 @@ public class HttpUtils {
     }
 
     private static HttpRequestInterceptor buildBasicInterceptor(Properties properties) {
-
-        return new HttpRequestInterceptor() {
-            @Override
-            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                request.addHeader(new BasicScheme().authenticate(new AnonymousCredentials(), request, context));
-            }
-        };
-
+        return new BasicRequestInterceptor(properties);
     }
 
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) {
