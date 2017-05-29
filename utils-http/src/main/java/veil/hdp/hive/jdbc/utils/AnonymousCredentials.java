@@ -7,7 +7,7 @@ import java.security.Principal;
 
 public class AnonymousCredentials implements Credentials {
 
-    private static String ANONYMOUS = "anonymous";
+    private static final String ANONYMOUS = "anonymous";
 
     @Override
     public Principal getUserPrincipal() {

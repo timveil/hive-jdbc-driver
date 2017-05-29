@@ -35,7 +35,7 @@ public class KerberosService {
             MECHANISM = new Oid(KRB5_OID);
             NAME_TYPE = new Oid(KRB5_NAME_OID);
         } catch (GSSException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -72,7 +72,7 @@ public class KerberosService {
                 try {
                     context.dispose();
                 } catch (GSSException e) {
-
+                    log.warn(e.getMessage(), e);
                 }
             }
         }

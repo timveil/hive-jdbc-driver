@@ -75,17 +75,13 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
                 Subject subject = KerberosService.getSubject(properties);
 
-                String header = Subject.doAs(subject, new PrivilegedExceptionAction<String>() {
+                String header = Subject.doAs(subject, (PrivilegedExceptionAction<String>) () -> {
 
-                    @Override
-                    public String run() throws Exception {
+                    String serverPrincipal = HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties);
 
-                        String serverPrincipal = HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties);
+                    byte[] token = KerberosService.getToken(serverPrincipal);
 
-                        byte[] token = KerberosService.getToken(serverPrincipal);
-
-                        return new String(BASE_64.encode(token));
-                    }
+                    return new String(BASE_64.encode(token));
                 });
 
                 httpRequest.addHeader("Authorization: Negotiate ", header);
