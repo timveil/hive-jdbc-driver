@@ -6,6 +6,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
@@ -58,13 +59,20 @@ public class HttpUtils {
             throw new HiveSQLException(e);
         }
 
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        cm.setMaxTotal(HiveDriverProperty.HTTP_POOL_MAX_TOTAL.getInt(properties));
-        cm.setDefaultMaxPerRoute(HiveDriverProperty.HTTP_POOL_MAX_PER_ROUTE.getInt(properties));
-
         HttpClientBuilder clientBuilder = HttpClients.custom();
 
-        clientBuilder.setConnectionManager(cm);
+        if (HiveDriverProperty.HTTP_POOL_ENABLED.getBoolean(properties)) {
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+            cm.setMaxTotal(HiveDriverProperty.HTTP_POOL_MAX_TOTAL.getInt(properties));
+            cm.setDefaultMaxPerRoute(HiveDriverProperty.HTTP_POOL_MAX_PER_ROUTE.getInt(properties));
+
+            clientBuilder.setConnectionManager(cm);
+        } else {
+            BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
+
+            clientBuilder.setConnectionManager(cm);
+        }
+
         clientBuilder.addInterceptorFirst(httpRequestInterceptor);
         clientBuilder.addInterceptorLast(new XsrfRequestInterceptor());
 

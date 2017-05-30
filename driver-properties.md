@@ -106,11 +106,19 @@ Instructs the driver to use SSL when communicating over HTTP.
 
 The path portion of the Thrift HTTP endpoint URL.
 
+### HTTP Connection Pool Enabled
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| httpPoolEnabled | `true` | false | none |
+
+Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) for HTTP Client
+
 ### HTTP Max Pooled Connections
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpMax | `100` | false | none |
+| httpPoolMax | `100` | false | none |
 
 The maximum number of connections in the pool
 
@@ -118,7 +126,7 @@ The maximum number of connections in the pool
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpMaxRoute | `20` | false | none |
+| httpPoolMaxRoute | `20` | false | none |
 
 The maximum number of connections in the pool per route
 
