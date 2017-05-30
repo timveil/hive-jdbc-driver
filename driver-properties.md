@@ -112,7 +112,7 @@ The path portion of the Thrift HTTP endpoint URL.
 | :--- | :--- | :--- | :--- |
 | httpPoolEnabled | `true` | false | none |
 
-Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) for HTTP Client
+Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) when building the [CloseableHttpClient](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/CloseableHttpClient.html) for use with Thrift
 
 ### HTTP Max Pooled Connections
 
@@ -120,7 +120,7 @@ Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.
 | :--- | :--- | :--- | :--- |
 | httpPoolMax | `100` | false | none |
 
-The maximum number of connections in the pool
+The maximum number of connections in the pool when `httpPoolEnabled` is `true`
 
 ### HTTP Max Pooled Connections per Route
 
@@ -128,7 +128,7 @@ The maximum number of connections in the pool
 | :--- | :--- | :--- | :--- |
 | httpPoolMaxRoute | `20` | false | none |
 
-The maximum number of connections in the pool per route
+The maximum number of connections in the pool per route when `httpPoolEnabled` is `true`
 
 ### HTTP Cookie Replay Enabled
 
