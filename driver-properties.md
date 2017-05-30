@@ -5,6 +5,7 @@ HS2 = Hiverserver2
 if property has a corresponding hive configuration property, it will likely be overwritten when zookeeper discovery is enabled
 
 ## Common Properties
+---
 
 ### Host
 
@@ -87,6 +88,7 @@ The Thrift Protocol Version helps to define the features/functions available as 
 *   9 = `HIVE_CLI_SERVICE_PROTOCOL_V10`, added support for in place updates via GetOperationStatus
 
 ## Binary Properties
+---
 
 ### Thrift Socket Timeout
 
@@ -104,8 +106,8 @@ The socket read timeout, in milliseconds, of Thrift's TSocket.  Default of `0` m
 
 The connection timeout, in milliseconds, of Thrift's TSocket.  Default of `0` means there is no timeout.
 
-
 ## HTTP Properties
+---
 
 ### SSL Enbled
 
@@ -163,8 +165,8 @@ Enables cookie replay as described in https://issues.apache.org/jira/browse/HIVE
 
 When `httpCookieReplayEnabled` is `true`, this is the name of the cookie that must be present to prevent re-authentication.
 
-
 ## Zookeeper Properties
+---
 
 ### Zookeeper Enabled
 
