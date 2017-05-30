@@ -43,7 +43,7 @@ When `authMode` equals `NONE` this property is ignored.  If `authMode` equals `K
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| port | `1000` | true | [hive.server2.thrift.port](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| port | `10000` | true | [hive.server2.thrift.port](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 The port used to by the driver to establish a connection.  If Zookeeper discovery is enabled, this is the Zookeeper client port (e.g. 2181), otherwise it should be the value specified by `hive.server2.thrift.port` in Hive's configuration properties.  When Zookeeper discovery is enabled the value of `hive.server2.thrift.port` will be returned by Zookeeper and used by the driver as the `port` value.
 
