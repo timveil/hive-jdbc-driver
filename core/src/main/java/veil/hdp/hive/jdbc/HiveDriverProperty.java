@@ -33,12 +33,17 @@ public enum HiveDriverProperty {
             AuthenticationMode.LDAP.name(),
             AuthenticationMode.PAM.name()),
 
+    // make sure to spell out differences in readme; look at *.thrift
+    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
+
+
     /***************************************************
      *  BINARY
      ***************************************************/
 
-    // make sure to spell out differences in readme; look at *.thrift
-    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
+    THRIFT_SOCKET_TIMEOUT("thriftSocketTimeout", "0", false, null, null),
+
+    THRIFT_CONNECTION_TIMEOUT("thriftConnectionTimeout", "0", false, null, null),
 
 
     /***************************************************

@@ -32,7 +32,7 @@ public class BinaryZookeeperHiveDriver extends HiveDriver {
 
     @Override
     ThriftTransport buildTransport(Properties properties) throws SQLException {
-        TTransport binaryTransport = BinaryUtils.createBinaryTransport(properties, getLoginTimeout());
+        TTransport binaryTransport = BinaryUtils.createBinaryTransport(properties);
 
         return ThriftTransport.builder().transport(binaryTransport).build();
     }

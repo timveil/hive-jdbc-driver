@@ -10,7 +10,6 @@ import veil.hdp.hive.jdbc.utils.DriverUtils;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 public abstract class HiveDriver implements Driver {
 
@@ -28,16 +27,6 @@ public abstract class HiveDriver implements Driver {
 
     public static SQLFeatureNotSupportedException notImplemented(Class<?> callClass) {
         return notImplemented(callClass, UNKNOWN);
-    }
-
-    static int getLoginTimeout() {
-        long timeOut = TimeUnit.SECONDS.toMillis(DriverManager.getLoginTimeout());
-
-        if (timeOut > Integer.MAX_VALUE) {
-            timeOut = Integer.MAX_VALUE;
-        }
-
-        return (int) timeOut;
     }
 
     private Connection connect(Properties properties) throws SQLException {

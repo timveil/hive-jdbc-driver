@@ -67,8 +67,6 @@ The Authentication Mode of the HS2 instance as specified by the Hive configurati
 * `LDAP` - Not currently supported
 * `PAM` - Not currently supported
 
-## Binary Properties
-
 ### Thrift Protocol Version
 
 | Property | Default Value | Required | Hive Configuration Property |
@@ -87,6 +85,25 @@ The Thrift Protocol Version helps to define the features/functions available as 
 *   7 = `HIVE_CLI_SERVICE_PROTOCOL_V8`, added support for interval types
 *   8 = `HIVE_CLI_SERVICE_PROTOCOL_V9`, added support for serializing ResultSets in SerDe
 *   9 = `HIVE_CLI_SERVICE_PROTOCOL_V10`, added support for in place updates via GetOperationStatus
+
+## Binary Properties
+
+### Thrift Socket Timeout
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| thriftSocketTimeout | `0` | false | none |
+
+The socket read timeout, in milliseconds, of Thrift's TSocket.  Default of `0` means there is no timeout.
+
+### Thrift Connection Timeout
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| thriftConnectionTimeout | `0` | false | none |
+
+The connection timeout, in milliseconds, of Thrift's TSocket.  Default of `0` means there is no timeout.
+
 
 ## HTTP Properties
 
@@ -112,7 +129,7 @@ The path portion of the Thrift HTTP endpoint URL.
 | :--- | :--- | :--- | :--- |
 | httpPoolEnabled | `true` | false | none |
 
-Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) when building the [CloseableHttpClient](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/CloseableHttpClient.html) for use with Thrift
+Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) when building the [CloseableHttpClient](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/CloseableHttpClient.html) for use with Thrift.
 
 ### HTTP Max Pooled Connections
 

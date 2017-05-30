@@ -25,22 +25,25 @@ public class BinaryUtils {
 
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
 
-    public static TSocket createSocket(Properties properties, int loginTimeoutMilliseconds) {
+    public static TSocket createSocket(Properties properties) {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
 
-        return new TSocket(host, port, loginTimeoutMilliseconds);
+        int socketTimeout = HiveDriverProperty.THRIFT_SOCKET_TIMEOUT.getInt(properties);
+        int connectionTimeout = HiveDriverProperty.THRIFT_CONNECTION_TIMEOUT.getInt(properties);
+
+        return new TSocket(host, port, socketTimeout, connectionTimeout);
 
     }
 
-    public static TTransport createBinaryTransport(Properties properties, int loginTimeoutMilliseconds) throws SQLException {
+    public static TTransport createBinaryTransport(Properties properties) throws SQLException {
         // todo: no support for delegation tokens or ssl yet
 
 
         AuthenticationMode authenticationMode = AuthenticationMode.valueOf(HiveDriverProperty.AUTHENTICATION_MODE.get(properties));
 
-        TSocket socket = createSocket(properties, loginTimeoutMilliseconds);
+        TSocket socket = createSocket(properties);
 
         try {
             switch (authenticationMode) {
