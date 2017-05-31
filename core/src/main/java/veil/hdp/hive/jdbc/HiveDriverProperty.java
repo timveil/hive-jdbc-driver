@@ -34,7 +34,7 @@ public enum HiveDriverProperty {
             AuthenticationMode.PAM.name()),
 
     // make sure to spell out differences in readme; look at *.thrift
-    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V10.getValue()), false, null, null),
+    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8.getValue()), false, null, null),
 
 
     /***************************************************
