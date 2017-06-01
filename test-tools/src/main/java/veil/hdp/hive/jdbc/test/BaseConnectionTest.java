@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.test;
 
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;

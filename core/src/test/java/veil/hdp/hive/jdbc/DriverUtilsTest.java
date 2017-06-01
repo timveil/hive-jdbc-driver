@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import veil.hdp.hive.jdbc.test.BaseUnitTest;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
 import java.sql.DriverPropertyInfo;

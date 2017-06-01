@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.test;
 
 import com.google.common.base.Joiner;
 import org.slf4j.Logger;
