@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
+import veil.hdp.hive.jdbc.utils.PropertyUtils;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -55,12 +56,18 @@ public abstract class HiveDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return Constants.DRIVER_MAJOR_VERSION;
+        return getVersionAtIndex(0);
     }
 
     @Override
     public int getMinorVersion() {
-        return Constants.DRIVER_MINOR_VERSION;
+        return getVersionAtIndex(1);
+    }
+
+    private int getVersionAtIndex(int index) {
+        String version = PropertyUtils.getInstance().getValue("driver.version", "0.0");
+        String[] parts = version.split("\\.");
+        return Integer.parseInt(parts[index]);
     }
 
     @Override

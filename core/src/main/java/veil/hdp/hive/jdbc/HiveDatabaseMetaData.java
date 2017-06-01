@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
@@ -8,7 +7,6 @@ import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
-import java.util.List;
 
 public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
@@ -17,12 +15,20 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     // constructor
     private final HiveConnection connection;
+    private final String productName;
+    private final String driverVersion;
+    private final int driverMajorVersion;
+    private final int driverMinorVersion;
     private final String hiveVersion;
     private final int hiveMajorVersion;
     private final int hiveMinorVersion;
 
-    private HiveDatabaseMetaData(HiveConnection connection, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
+    private HiveDatabaseMetaData(HiveConnection connection, String productName, String driverVersion, int driverMajorVersion, int driverMinorVersion, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
         this.connection = connection;
+        this.productName = productName;
+        this.driverVersion = driverVersion;
+        this.driverMajorVersion = driverMajorVersion;
+        this.driverMinorVersion = driverMinorVersion;
         this.hiveVersion = hiveVersion;
         this.hiveMajorVersion = hiveMajorVersion;
         this.hiveMinorVersion = hiveMinorVersion;
@@ -44,17 +50,17 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getDriverVersion() throws SQLException {
-        return getDriverMajorVersion() + "." + getDriverMinorVersion();
+        return driverVersion;
     }
 
     @Override
     public int getDriverMajorVersion() {
-        return Constants.DRIVER_MAJOR_VERSION;
+        return driverMajorVersion;
     }
 
     @Override
     public int getDriverMinorVersion() {
-        return Constants.DRIVER_MINOR_VERSION;
+        return driverMinorVersion;
     }
 
     @Override
@@ -69,7 +75,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        return Constants.DATABASE_PRODUCT_NAME;
+        return productName;
     }
 
     @Override
@@ -917,22 +923,14 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
         public HiveDatabaseMetaData build() {
 
-            final String hiveVersion = PropertyUtils.getInstance().getValue("hive.version");
+            final String hiveVersion = PropertyUtils.getInstance().getValue("hive.version", "0.0");
+            final String driverVersion = PropertyUtils.getInstance().getValue("driver.version", "0.0");
+            final String productName = PropertyUtils.getInstance().getValue("product.name");
 
-            int hiveMajorVersion = -1;
-            int hiveMinorVersion = -1;
+            String[] driverVersionParts = driverVersion.split("\\.");
+            String[] hiveVersionParts = hiveVersion.split("\\.");
 
-            if (hiveVersion != null) {
-                List<String> strings = Splitter.on('.').splitToList(hiveVersion);
-
-                if (strings.size() >= 1) {
-                    hiveMajorVersion = Integer.parseInt(strings.get(0));
-                    hiveMinorVersion = Integer.parseInt(strings.get(1));
-                }
-            }
-
-
-            return new HiveDatabaseMetaData(connection, hiveVersion, hiveMajorVersion, hiveMinorVersion);
+            return new HiveDatabaseMetaData(connection, productName, driverVersion, Integer.parseInt(driverVersionParts[0]), Integer.parseInt(driverVersionParts[1]), hiveVersion, Integer.parseInt(hiveVersionParts[0]), Integer.parseInt(hiveVersionParts[1]));
         }
     }
 
