@@ -14,12 +14,39 @@
 
     <packaging>jar</packaging>
 
+    <profiles>
+        <profile>
+            <id>Thirft Compiler - Windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <thrift.path>E:\dev\tools\thrift\thrift-0.9.3.exe</thrift.path>
+                <thrift.version>0.9.3</thrift.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>Thrift Compiler - Mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <thrift.path>/usr/local/bin/thrift</thrift.path>
+                <thrift.version>0.10.0</thrift.version>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <dependencies>
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
-            <version>${libthrift.version}</version>
+            <version>${thrift.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -48,8 +75,7 @@
                 <artifactId>thrift-maven-plugin</artifactId>
                 <version>0.10.0</version>
                 <configuration>
-                    <!-- todo: need to find a way to externalize this value -->
-                    <thriftExecutable>E:\dev\tools\thrift\thrift-0.9.3.exe</thriftExecutable>
+                    <thriftExecutable>${thrift.path}</thriftExecutable>
                     <thriftSourceRoot>${basedir}/src/main/thrift/${hive.version}</thriftSourceRoot>
                     <generator>java:beans</generator>
                 </configuration>
@@ -69,7 +95,6 @@
                         </goals>
                     </execution>
                 </executions>
-
             </plugin>
         </plugins>
     </build>
