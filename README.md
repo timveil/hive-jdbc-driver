@@ -22,7 +22,8 @@ todo: need a full comparison of size and dependency graph for both hive 1.x and 
 * difficult to embed in applications and 3rd party tools like DbViz, etc.
 
 ### Benefits
-* Extremely limited Hive/Hadoop dependencies thus greatly trimming the dependency graph and size
+* Extremely dependency graph thus trimming the jar size and complexity
+* Only dependency on Hive project is the *.thrift file that it defines.  all thrift client code is compiled directly in this project.
 * No UGI
 * Simplified implementation
 * Better documentation
