@@ -1,10 +1,10 @@
 package veil.hdp.hive.jdbc;
 
 import com.google.common.base.Splitter;
-import org.apache.hive.common.util.HiveVersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
+import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
@@ -917,7 +917,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
         public HiveDatabaseMetaData build() {
 
-            final String hiveVersion = HiveVersionInfo.getVersion();
+            final String hiveVersion = PropertyUtils.getInstance().getValue("hive.version");
 
             int hiveMajorVersion = -1;
             int hiveMinorVersion = -1;

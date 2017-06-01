@@ -10,5 +10,4 @@ public class BinaryDriverTest extends BaseDriverTest {
         return new BinaryHiveDriver();
     }
 
-
 }
