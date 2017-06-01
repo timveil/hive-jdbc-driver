@@ -65,8 +65,6 @@ public abstract class HiveDriver implements Driver {
         return VersionUtils.getDriverMinorVersion();
     }
 
-
-
     @Override
     public boolean jdbcCompliant() {
         return Boolean.FALSE;

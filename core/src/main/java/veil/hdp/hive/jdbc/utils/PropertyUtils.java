@@ -18,7 +18,7 @@ public class PropertyUtils {
     private PropertyUtils() throws IOException {
 
         properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/driver-version.properties"));
+        properties.load(getClass().getResourceAsStream("/driver-config.properties"));
 
     }
 
