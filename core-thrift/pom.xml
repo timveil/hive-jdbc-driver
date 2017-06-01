@@ -14,6 +14,16 @@
 
     <packaging>jar</packaging>
 
+    <!--
+        installing the thrift compiler is much more straight forward on windows than mac.
+
+        with windows it was trivial to download the compiler exe for the proper version (0.9.3).
+
+        with mac, i used homebrew to install thrift.  it seemed i could only install the latest (0.10.0).
+    -->
+
+    <!-- have to use the 0.10.0 version of the plugin regardless of actual thrift binary version because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
+
     <profiles>
         <profile>
             <id>Thirft Compiler - Windows</id>
@@ -25,6 +35,7 @@
             <properties>
                 <thrift.path>E:\dev\tools\thrift\thrift-0.9.3.exe</thrift.path>
                 <thrift.version>0.9.3</thrift.version>
+                <thrift.plugin.version>0.10.0</thrift.plugin.version>
             </properties>
         </profile>
         <profile>
@@ -37,6 +48,7 @@
             <properties>
                 <thrift.path>/usr/local/bin/thrift</thrift.path>
                 <thrift.version>0.10.0</thrift.version>
+                <thrift.plugin.version>0.10.0</thrift.plugin.version>
             </properties>
         </profile>
     </profiles>
@@ -69,11 +81,10 @@
 
     <build>
         <plugins>
-            <!-- have to use the 0.10.0 version of the plugin even though the code uses 0.9.3 because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
             <plugin>
                 <groupId>org.apache.thrift</groupId>
                 <artifactId>thrift-maven-plugin</artifactId>
-                <version>0.10.0</version>
+                <version>${thrift.plugin.version}</version>
                 <configuration>
                     <thriftExecutable>${thrift.path}</thriftExecutable>
                     <thriftSourceRoot>${basedir}/src/main/thrift/${hive.version}</thriftSourceRoot>
