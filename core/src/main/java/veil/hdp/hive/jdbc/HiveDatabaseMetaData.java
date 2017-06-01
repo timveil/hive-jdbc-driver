@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
+import veil.hdp.hive.jdbc.utils.VersionUtils;
 
 import java.sql.*;
 
@@ -923,14 +924,9 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
         public HiveDatabaseMetaData build() {
 
-            final String hiveVersion = PropertyUtils.getInstance().getValue("hive.version", "0.0");
-            final String driverVersion = PropertyUtils.getInstance().getValue("driver.version", "0.0");
             final String productName = PropertyUtils.getInstance().getValue("product.name");
 
-            String[] driverVersionParts = driverVersion.split("\\.");
-            String[] hiveVersionParts = hiveVersion.split("\\.");
-
-            return new HiveDatabaseMetaData(connection, productName, driverVersion, Integer.parseInt(driverVersionParts[0]), Integer.parseInt(driverVersionParts[1]), hiveVersion, Integer.parseInt(hiveVersionParts[0]), Integer.parseInt(hiveVersionParts[1]));
+            return new HiveDatabaseMetaData(connection, productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
         }
     }
 
