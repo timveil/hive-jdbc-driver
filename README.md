@@ -13,7 +13,7 @@ todo: need a full comparison of size and dependency graph for both hive 1.x and 
 * Unnecessary complexity
   * don't need embedded logic
   * don't need server side code
-  * relies on UGI - see book
+  * relies on UGI - see book (https://www.gitbook.com/book/steveloughran/kerberos_and_hadoop/details)
 * Poorly documented
 * Kerberos options are limited, require many outside the driver configs
 * URL options are inconsistent in name and style

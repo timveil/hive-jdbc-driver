@@ -223,21 +223,21 @@ public class KerberosService {
     }
 
     private class LoginModuleConstants {
-        public static final String DEBUG = "debug";
-        public static final String DEBUG_NATIVE = "debugNative";
-        public static final String DO_NOT_PROMPT = "doNotPrompt";
-        public static final String KEY_TAB = "keyTab";
-        public static final String PRINCIPAL = "principal";
-        public static final String USE_KEY_TAB = "useKeyTab";
-        public static final String STORE_KEY = "storeKey";
-        public static final String REFRESH_KRB_5_CONFIG = "refreshKrb5Config";
-        public static final String USE_TICKET_CACHE = "useTicketCache";
-        public static final String USE_FIRST_PASS = "useFirstPass";
-        public static final String TRY_FIRST_PASS = "tryFirstPass";
-        public static final String STORE_PASS = "storePass";
-        public static final String CLEAR_PASS = "clearPass";
-        public static final String RENEW_TGT = "renewTGT";
-        public static final String TICKET_CACHE = "ticketCache";
-        public static final String IS_INITIATOR = "isInitiator";
+        static final String DEBUG = "debug";
+        static final String DEBUG_NATIVE = "debugNative";
+        static final String DO_NOT_PROMPT = "doNotPrompt";
+        static final String KEY_TAB = "keyTab";
+        static final String PRINCIPAL = "principal";
+        static final String USE_KEY_TAB = "useKeyTab";
+        static final String STORE_KEY = "storeKey";
+        static final String REFRESH_KRB_5_CONFIG = "refreshKrb5Config";
+        static final String USE_TICKET_CACHE = "useTicketCache";
+        static final String USE_FIRST_PASS = "useFirstPass";
+        static final String TRY_FIRST_PASS = "tryFirstPass";
+        static final String STORE_PASS = "storePass";
+        static final String CLEAR_PASS = "clearPass";
+        static final String RENEW_TGT = "renewTGT";
+        static final String TICKET_CACHE = "ticketCache";
+        static final String IS_INITIATOR = "isInitiator";
     }
 }
