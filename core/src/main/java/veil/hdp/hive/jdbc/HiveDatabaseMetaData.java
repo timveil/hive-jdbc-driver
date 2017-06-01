@@ -161,7 +161,6 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getUserName() throws SQLException {
-        // todo: need to revisit this because USER is not required or used when AuthenticationMode = NONE; should probably be principal
         return HiveDriverProperty.USER.get(connection.getThriftSession().getProperties());
     }
 
