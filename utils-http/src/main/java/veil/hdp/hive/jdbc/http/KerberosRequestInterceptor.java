@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc.http;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpException;

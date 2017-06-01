@@ -5,7 +5,7 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.thrift.ThriftTransport;
-import veil.hdp.hive.jdbc.utils.HttpUtils;
+import veil.hdp.hive.jdbc.http.HttpUtils;
 import veil.hdp.hive.jdbc.zk.ZookeeperUtils;
 
 import java.sql.DriverManager;

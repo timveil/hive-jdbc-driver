@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc.http;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
