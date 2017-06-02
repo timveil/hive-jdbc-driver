@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.binding.TColumn;
+import veil.hdp.hive.jdbc.core.binding.TRowSet;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
-import veil.hdp.hive.jdbc.core.thrift.TColumn;
-import veil.hdp.hive.jdbc.core.thrift.TRowSet;
 
 import java.util.ArrayList;
 import java.util.List;

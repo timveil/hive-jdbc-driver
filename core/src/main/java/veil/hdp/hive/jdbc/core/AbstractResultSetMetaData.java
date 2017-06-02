@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc.core;
 
+import veil.hdp.hive.jdbc.HiveDriver;
+
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 

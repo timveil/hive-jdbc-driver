@@ -2,7 +2,8 @@ package veil.hdp.hive.jdbc.core.metadata;
 
 //import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 
-import veil.hdp.hive.jdbc.core.thrift.TTypeId;
+
+import veil.hdp.hive.jdbc.core.binding.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;

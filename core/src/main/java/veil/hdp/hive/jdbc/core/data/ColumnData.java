@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.binding.TColumn;
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
-import veil.hdp.hive.jdbc.core.thrift.TColumn;
 
 import java.text.MessageFormat;
 import java.util.BitSet;

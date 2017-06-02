@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.core.metadata;
 
 import org.apache.commons.lang3.builder.Builder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import veil.hdp.hive.jdbc.core.thrift.TColumnDesc;
+import veil.hdp.hive.jdbc.core.binding.TColumnDesc;
 
 public class ColumnDescriptor {
 

@@ -2,9 +2,9 @@ package veil.hdp.hive.jdbc.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.core.binding.TOperationHandle;
 import veil.hdp.hive.jdbc.core.data.Row;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
-import veil.hdp.hive.jdbc.core.thrift.TOperationHandle;
 import veil.hdp.hive.jdbc.core.thrift.ThriftSession;
 import veil.hdp.hive.jdbc.core.utils.Constants;
 import veil.hdp.hive.jdbc.core.utils.ThriftUtils;

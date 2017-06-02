@@ -5,6 +5,10 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.binding.TCLIService;
+import veil.hdp.hive.jdbc.core.binding.TOpenSessionResp;
+import veil.hdp.hive.jdbc.core.binding.TProtocolVersion;
+import veil.hdp.hive.jdbc.core.binding.TSessionHandle;
 import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.io.Closeable;
