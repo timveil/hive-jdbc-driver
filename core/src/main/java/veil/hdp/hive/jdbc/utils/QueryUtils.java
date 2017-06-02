@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.utils;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.HiveConnection;
 import veil.hdp.hive.jdbc.HiveEmptyResultSet;
-import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.core.metadata.Schema;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

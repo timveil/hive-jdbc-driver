@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc.utils;
 
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
-import veil.hdp.hive.jdbc.metadata.HiveType;
+import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
+import veil.hdp.hive.jdbc.core.metadata.ColumnTypeDescriptor;
+import veil.hdp.hive.jdbc.core.metadata.HiveType;
 
 import java.util.ArrayList;
 import java.util.List;

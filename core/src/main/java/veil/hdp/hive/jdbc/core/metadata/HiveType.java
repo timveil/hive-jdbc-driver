@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.metadata;
+package veil.hdp.hive.jdbc.core.metadata;
 
 //import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 

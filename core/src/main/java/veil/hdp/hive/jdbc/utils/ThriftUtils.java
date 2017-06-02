@@ -12,7 +12,7 @@ import veil.hdp.hive.jdbc.*;
 import veil.hdp.hive.jdbc.core.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.core.data.Row;
 import veil.hdp.hive.jdbc.core.data.RowBaseSet;
-import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.core.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 
 import java.text.MessageFormat;

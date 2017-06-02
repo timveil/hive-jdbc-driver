@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc.core.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
+import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
 
 public class VarcharColumn extends StringColumn {
 

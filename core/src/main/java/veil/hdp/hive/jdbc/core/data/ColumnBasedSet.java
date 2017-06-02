@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.core.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.TColumn;
 import veil.hdp.hive.jdbc.thrift.TRowSet;
 

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.metadata;
+package veil.hdp.hive.jdbc.core.metadata;
 
 import com.google.common.primitives.Ints;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.metadata;
+package veil.hdp.hive.jdbc.core.metadata;
 
 
 import org.apache.commons.lang3.builder.Builder;

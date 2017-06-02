@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.core.metadata.Schema;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

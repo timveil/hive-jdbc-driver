@@ -3,8 +3,8 @@ package veil.hdp.hive.jdbc.core.data;
 import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriver;
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-import veil.hdp.hive.jdbc.metadata.HiveType;
+import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
+import veil.hdp.hive.jdbc.core.metadata.HiveType;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.text.MessageFormat;
 import java.util.BitSet;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static veil.hdp.hive.jdbc.metadata.HiveType.*;
+import static veil.hdp.hive.jdbc.core.metadata.HiveType.*;
 
 public class BaseColumn<T> implements Column<T> {
 
