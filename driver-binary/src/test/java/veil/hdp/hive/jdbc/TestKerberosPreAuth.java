@@ -1,6 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.security.KerberosService;
+import veil.hdp.hive.jdbc.core.security.KerberosService;
 import veil.hdp.hive.jdbc.test.BaseConnectionTest;
 
 import javax.security.auth.Subject;

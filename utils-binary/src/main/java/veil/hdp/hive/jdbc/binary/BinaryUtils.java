@@ -9,7 +9,7 @@ import veil.hdp.hive.jdbc.AuthenticationMode;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.HiveSQLException;
-import veil.hdp.hive.jdbc.security.*;
+import veil.hdp.hive.jdbc.core.security.*;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;

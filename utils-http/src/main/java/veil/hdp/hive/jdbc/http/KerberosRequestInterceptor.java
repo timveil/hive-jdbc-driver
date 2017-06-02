@@ -11,7 +11,7 @@ import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.security.KerberosService;
+import veil.hdp.hive.jdbc.core.security.KerberosService;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;

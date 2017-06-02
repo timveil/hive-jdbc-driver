@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.security;
+package veil.hdp.hive.jdbc.core.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ietf.jgss.*;
