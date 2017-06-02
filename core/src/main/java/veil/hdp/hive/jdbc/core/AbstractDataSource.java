@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-class AbstractDataSource implements DataSource {
+public class AbstractDataSource implements DataSource {
     @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
