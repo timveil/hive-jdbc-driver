@@ -9,9 +9,9 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.*;
-import veil.hdp.hive.jdbc.data.ColumnBasedSet;
-import veil.hdp.hive.jdbc.data.Row;
-import veil.hdp.hive.jdbc.data.RowBaseSet;
+import veil.hdp.hive.jdbc.core.data.ColumnBasedSet;
+import veil.hdp.hive.jdbc.core.data.Row;
+import veil.hdp.hive.jdbc.core.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 

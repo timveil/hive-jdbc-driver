@@ -1,24 +1,29 @@
-package veil.hdp.hive.jdbc.data;
+package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.sql.SQLException;
 
-public class IntegerColumn extends BaseColumn<Integer> {
-    IntegerColumn(ColumnDescriptor descriptor, Integer value) {
+public class ShortColumn extends BaseColumn<Short> {
+
+    ShortColumn(ColumnDescriptor descriptor, Short value) {
         super(descriptor, value);
     }
 
     @Override
-    public Integer getValue() {
+    public Short getValue() {
         return value != null ? value : 0;
     }
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Short asShort() throws SQLException {
         return getValue();
     }
 
+    @Override
+    public String asString() throws SQLException {
+        return Short.toString(getValue());
+    }
 
     @Override
     public Boolean asBoolean() throws SQLException {
@@ -29,21 +34,16 @@ public class IntegerColumn extends BaseColumn<Integer> {
         return null;
     }
 
-
-    @Override
-    public String asString() throws SQLException {
-        return Integer.toString(getValue());
-    }
-
-
     @Override
     public Float asFloat() throws SQLException {
         return getValue().floatValue();
     }
 
+
     @Override
-    public Long asLong() throws SQLException {
-        return getValue().longValue();
+    public Integer asInt() throws SQLException {
+        return getValue().intValue();
+
     }
 
     @Override
@@ -52,16 +52,14 @@ public class IntegerColumn extends BaseColumn<Integer> {
     }
 
     @Override
-    public Short asShort() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Short.class, value);
-
-        return getValue().shortValue();
+    public Long asLong() throws SQLException {
+        return getValue().longValue();
     }
 
 
     @Override
     public Byte asByte() throws SQLException {
-        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Byte.class, value);
+        log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Byte.class, value);
 
         return getValue().byteValue();
     }

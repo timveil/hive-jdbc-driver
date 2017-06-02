@@ -32,7 +32,7 @@
 // * Service names begin with the letter "T", use a capital letter for each
 //   new word (with no underscores), and end with the word "Service".
 
-namespace java veil.hdp.hive.jdbc.thrift
+namespace java veil.hdp.hive.jdbc.core.binding
 //namespace cpp apache.hive.service.cli.thrift
 
 // List of protocol versions. A new token should be
