@@ -5,9 +5,9 @@ import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveSQLException;
-import veil.hdp.hive.jdbc.PropertiesCallback;
+import veil.hdp.hive.jdbc.core.HiveDriverProperty;
+import veil.hdp.hive.jdbc.core.HiveSQLException;
+import veil.hdp.hive.jdbc.core.PropertiesCallback;
 
 import java.net.URI;
 import java.sql.DriverPropertyInfo;

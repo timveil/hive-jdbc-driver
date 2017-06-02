@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 public enum AuthenticationMode {
     // SEE https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2

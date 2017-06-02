@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.ietf.jgss.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveException;
+import veil.hdp.hive.jdbc.core.HiveDriverProperty;
+import veil.hdp.hive.jdbc.core.HiveException;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;

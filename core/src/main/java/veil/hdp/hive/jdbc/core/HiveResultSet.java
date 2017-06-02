@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

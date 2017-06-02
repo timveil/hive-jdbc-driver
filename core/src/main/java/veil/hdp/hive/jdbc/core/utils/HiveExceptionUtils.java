@@ -4,7 +4,7 @@ package veil.hdp.hive.jdbc.core.utils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.StringUtils;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.core.HiveSQLException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

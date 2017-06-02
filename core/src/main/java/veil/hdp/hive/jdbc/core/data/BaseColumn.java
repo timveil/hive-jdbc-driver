@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.core.data;
 
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.core.Builder;
 import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.core.metadata.HiveType;

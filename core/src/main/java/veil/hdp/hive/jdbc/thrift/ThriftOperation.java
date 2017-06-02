@@ -2,10 +2,10 @@ package veil.hdp.hive.jdbc.thrift;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.HiveEmptyResultSet;
-import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
-import veil.hdp.hive.jdbc.HiveResultSet;
+import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.HiveEmptyResultSet;
+import veil.hdp.hive.jdbc.core.HiveMetaDataResultSet;
+import veil.hdp.hive.jdbc.core.HiveResultSet;
 import veil.hdp.hive.jdbc.core.utils.Constants;
 import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import veil.hdp.hive.jdbc.core.data.Row;
 import veil.hdp.hive.jdbc.core.metadata.Schema;

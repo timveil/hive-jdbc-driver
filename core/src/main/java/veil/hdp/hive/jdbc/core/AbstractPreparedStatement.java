@@ -1,4 +1,6 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
+
+import veil.hdp.hive.jdbc.HiveDriver;
 
 import java.io.InputStream;
 import java.io.Reader;

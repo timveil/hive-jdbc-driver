@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import java.io.InputStream;
 import java.io.Reader;

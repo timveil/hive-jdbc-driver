@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

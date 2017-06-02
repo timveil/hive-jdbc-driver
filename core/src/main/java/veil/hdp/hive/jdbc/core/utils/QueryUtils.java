@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc.core.utils;
 
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.HiveConnection;
-import veil.hdp.hive.jdbc.HiveEmptyResultSet;
+import veil.hdp.hive.jdbc.core.HiveConnection;
+import veil.hdp.hive.jdbc.core.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
 
 import java.sql.ResultSet;

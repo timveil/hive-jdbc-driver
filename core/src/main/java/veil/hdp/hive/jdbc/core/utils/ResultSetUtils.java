@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.core.utils;
 
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
 

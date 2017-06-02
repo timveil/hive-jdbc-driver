@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.thrift;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.core.Builder;
 import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.io.Closeable;

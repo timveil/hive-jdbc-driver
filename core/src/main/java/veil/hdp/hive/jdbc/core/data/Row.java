@@ -2,8 +2,8 @@ package veil.hdp.hive.jdbc.core.data;
 
 
 import com.google.common.primitives.Ints;
-import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.HiveSQLException;
+import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.HiveSQLException;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;

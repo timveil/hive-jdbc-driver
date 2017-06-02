@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;

@@ -10,7 +10,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.security.KerberosService;
 
 import javax.security.auth.Subject;

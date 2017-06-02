@@ -8,8 +8,8 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveException;
+import veil.hdp.hive.jdbc.core.HiveDriverProperty;
+import veil.hdp.hive.jdbc.core.HiveException;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 
 import java.nio.charset.Charset;

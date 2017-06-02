@@ -1,7 +1,8 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.core.utils.Constants;
 import veil.hdp.hive.jdbc.core.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.core.utils.QueryUtils;

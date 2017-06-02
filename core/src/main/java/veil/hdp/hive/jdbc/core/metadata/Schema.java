@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.core.metadata;
 import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.core.Builder;
 import veil.hdp.hive.jdbc.thrift.TColumnDesc;
 import veil.hdp.hive.jdbc.thrift.TTableSchema;
 

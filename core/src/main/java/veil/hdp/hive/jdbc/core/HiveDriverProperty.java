@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.core;
 
 import veil.hdp.hive.jdbc.core.security.KerberosMode;
 import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
