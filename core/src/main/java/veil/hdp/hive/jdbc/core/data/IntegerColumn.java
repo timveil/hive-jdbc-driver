@@ -1,0 +1,68 @@
+package veil.hdp.hive.jdbc.core.data;
+
+import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
+
+import java.sql.SQLException;
+
+public class IntegerColumn extends BaseColumn<Integer> {
+    IntegerColumn(ColumnDescriptor descriptor, Integer value) {
+        super(descriptor, value);
+    }
+
+    @Override
+    public Integer getValue() {
+        return value != null ? value : 0;
+    }
+
+    @Override
+    public Integer asInt() throws SQLException {
+        return getValue();
+    }
+
+
+    @Override
+    public Boolean asBoolean() throws SQLException {
+        if (value != null) {
+            return value == 1;
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public String asString() throws SQLException {
+        return Integer.toString(getValue());
+    }
+
+
+    @Override
+    public Float asFloat() throws SQLException {
+        return getValue().floatValue();
+    }
+
+    @Override
+    public Long asLong() throws SQLException {
+        return getValue().longValue();
+    }
+
+    @Override
+    public Double asDouble() throws SQLException {
+        return getValue().doubleValue();
+    }
+
+    @Override
+    public Short asShort() throws SQLException {
+        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Short.class, value);
+
+        return getValue().shortValue();
+    }
+
+
+    @Override
+    public Byte asByte() throws SQLException {
+        log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Byte.class, value);
+
+        return getValue().byteValue();
+    }
+}

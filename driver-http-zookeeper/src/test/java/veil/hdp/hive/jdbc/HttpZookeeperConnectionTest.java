@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.test.BaseConnectionTest;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
