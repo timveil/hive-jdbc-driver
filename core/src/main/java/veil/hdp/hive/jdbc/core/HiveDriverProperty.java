@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.core;
 
 import veil.hdp.hive.jdbc.core.security.KerberosMode;
-import veil.hdp.hive.jdbc.thrift.TProtocolVersion;
+import veil.hdp.hive.jdbc.core.thrift.TProtocolVersion;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;

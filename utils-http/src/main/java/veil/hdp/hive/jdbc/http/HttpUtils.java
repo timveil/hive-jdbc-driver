@@ -17,7 +17,7 @@ import veil.hdp.hive.jdbc.core.AuthenticationMode;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.HiveException;
 import veil.hdp.hive.jdbc.core.HiveSQLException;
-import veil.hdp.hive.jdbc.thrift.HiveThriftException;
+import veil.hdp.hive.jdbc.core.thrift.HiveThriftException;
 
 import java.util.Properties;
 

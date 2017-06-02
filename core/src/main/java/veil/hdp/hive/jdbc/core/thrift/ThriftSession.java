@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.thrift;
+package veil.hdp.hive.jdbc.core.thrift;
 
 
 import org.apache.thrift.transport.TTransport;

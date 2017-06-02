@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.HiveConnection;
 import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.PropertiesCallback;
-import veil.hdp.hive.jdbc.thrift.ThriftTransport;
+import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 import veil.hdp.hive.jdbc.core.utils.VersionUtils;
 

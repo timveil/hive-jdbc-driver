@@ -1,8 +1,8 @@
-package veil.hdp.hive.jdbc.thrift;
+package veil.hdp.hive.jdbc.core.thrift;
 
 import org.apache.thrift.TException;
-import veil.hdp.hive.jdbc.thrift.TGetOperationStatusResp;
-import veil.hdp.hive.jdbc.thrift.TStatus;
+import veil.hdp.hive.jdbc.core.thrift.TGetOperationStatusResp;
+import veil.hdp.hive.jdbc.core.thrift.TStatus;
 import veil.hdp.hive.jdbc.core.utils.HiveExceptionUtils;
 
 

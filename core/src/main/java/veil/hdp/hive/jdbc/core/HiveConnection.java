@@ -2,8 +2,8 @@ package veil.hdp.hive.jdbc.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.thrift.ThriftTransport;
+import veil.hdp.hive.jdbc.core.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.QueryUtils;
 
 import java.io.IOException;

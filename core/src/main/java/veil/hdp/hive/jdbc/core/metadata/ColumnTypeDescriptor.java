@@ -3,9 +3,9 @@ package veil.hdp.hive.jdbc.core.metadata;
 
 import org.apache.commons.lang3.builder.Builder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import veil.hdp.hive.jdbc.thrift.TPrimitiveTypeEntry;
-import veil.hdp.hive.jdbc.thrift.TTypeDesc;
-import veil.hdp.hive.jdbc.thrift.TTypeEntry;
+import veil.hdp.hive.jdbc.core.thrift.TPrimitiveTypeEntry;
+import veil.hdp.hive.jdbc.core.thrift.TTypeDesc;
+import veil.hdp.hive.jdbc.core.thrift.TTypeEntry;
 
 import java.util.List;
 
