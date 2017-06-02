@@ -47,10 +47,9 @@ public class ThriftTransport implements Closeable {
 
     public static class ThriftTransportBuilder implements Builder<ThriftTransport> {
 
-
         private TTransport transport;
 
-        private List<Closeable> closeableList = new ArrayList<>();
+        private final List<Closeable> closeableList = new ArrayList<>();
 
         private ThriftTransportBuilder() {
         }
