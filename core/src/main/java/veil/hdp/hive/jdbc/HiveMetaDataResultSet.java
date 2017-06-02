@@ -6,8 +6,8 @@ import veil.hdp.hive.jdbc.core.data.Row;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.TOperationHandle;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
+import veil.hdp.hive.jdbc.core.utils.Constants;
+import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.sql.SQLException;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.utils;
+package veil.hdp.hive.jdbc.core.utils;
 
 
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;

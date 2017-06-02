@@ -6,8 +6,8 @@ import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
 import veil.hdp.hive.jdbc.HiveResultSet;
-import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
+import veil.hdp.hive.jdbc.core.utils.Constants;
+import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.io.Closeable;
 import java.io.IOException;

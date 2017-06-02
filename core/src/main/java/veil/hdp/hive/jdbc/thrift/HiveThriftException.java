@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.thrift;
 import org.apache.thrift.TException;
 import veil.hdp.hive.jdbc.thrift.TGetOperationStatusResp;
 import veil.hdp.hive.jdbc.thrift.TStatus;
-import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
+import veil.hdp.hive.jdbc.core.utils.HiveExceptionUtils;
 
 
 public class HiveThriftException extends RuntimeException {

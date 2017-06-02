@@ -4,7 +4,7 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
+import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.io.Closeable;
 import java.io.IOException;

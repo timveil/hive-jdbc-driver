@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.thrift.ThriftTransport;
-import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.DriverUtils;
-import veil.hdp.hive.jdbc.utils.PropertyUtils;
-import veil.hdp.hive.jdbc.utils.VersionUtils;
+import veil.hdp.hive.jdbc.core.utils.DriverUtils;
+import veil.hdp.hive.jdbc.core.utils.VersionUtils;
 
 import java.sql.*;
 import java.text.MessageFormat;
