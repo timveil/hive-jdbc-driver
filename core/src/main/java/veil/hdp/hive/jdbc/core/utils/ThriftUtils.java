@@ -15,7 +15,9 @@ import veil.hdp.hive.jdbc.core.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.core.data.Row;
 import veil.hdp.hive.jdbc.core.data.RowBaseSet;
 import veil.hdp.hive.jdbc.core.metadata.Schema;
-import veil.hdp.hive.jdbc.core.thrift.*;
+import veil.hdp.hive.jdbc.core.thrift.HiveThriftException;
+import veil.hdp.hive.jdbc.core.thrift.ThriftOperation;
+import veil.hdp.hive.jdbc.core.thrift.ThriftSession;
 
 import java.text.MessageFormat;
 import java.util.*;

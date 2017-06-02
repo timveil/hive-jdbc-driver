@@ -50,7 +50,7 @@ public class HiveStatement extends AbstractStatement {
         return new HiveStatementBuilder();
     }
 
-    private void performThriftOperation(String sql) throws SQLException {
+    private void performThriftOperation(String sql) {
 
         ThriftOperation operation = currentOperation.get();
 

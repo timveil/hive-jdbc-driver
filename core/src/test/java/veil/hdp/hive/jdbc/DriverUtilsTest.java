@@ -4,8 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
-import veil.hdp.hive.jdbc.test.BaseUnitTest;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
+import veil.hdp.hive.jdbc.test.BaseUnitTest;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;
