@@ -2,6 +2,11 @@ package veil.hdp.hive.jdbc.http;
 
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.CookieStore;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -61,18 +66,25 @@ public class HttpUtils {
 
         HttpClientBuilder clientBuilder = HttpClients.custom();
 
+        // todo: register https when support is ready
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .build();
+
         if (HiveDriverProperty.HTTP_POOL_ENABLED.getBoolean(properties)) {
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(registry);
             cm.setMaxTotal(HiveDriverProperty.HTTP_POOL_MAX_TOTAL.getInt(properties));
             cm.setDefaultMaxPerRoute(HiveDriverProperty.HTTP_POOL_MAX_PER_ROUTE.getInt(properties));
 
             clientBuilder.setConnectionManager(cm);
         } else {
-            BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
+            BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager(registry);
 
             clientBuilder.setConnectionManager(cm);
         }
 
+
+        clientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
         clientBuilder.addInterceptorFirst(httpRequestInterceptor);
         clientBuilder.addInterceptorLast(new XsrfRequestInterceptor());
 
