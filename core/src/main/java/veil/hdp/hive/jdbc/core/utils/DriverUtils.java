@@ -32,7 +32,7 @@ public class DriverUtils {
     }
 
     public static String buildUrl(Properties properties) {
-        return JDBC_HIVE2_PREFIX +  HiveDriverProperty.HOST_NAME.get(properties) + ":" + HiveDriverProperty.PORT_NUMBER.getInt(properties) + "/" + HiveDriverProperty.DATABASE_NAME.get(properties);
+        return JDBC_HIVE2_PREFIX +  HiveDriverProperty.HOST_NAME.get(properties) + ':' + HiveDriverProperty.PORT_NUMBER.getInt(properties) + '/' + HiveDriverProperty.DATABASE_NAME.get(properties);
     }
 
 
