@@ -31,6 +31,10 @@ public class DriverUtils {
         return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 
+    public static String buildUrl(Properties properties) {
+        return JDBC_HIVE2_PREFIX +  HiveDriverProperty.HOST_NAME.get(properties) + ":" + HiveDriverProperty.PORT_NUMBER.getInt(properties) + "/" + HiveDriverProperty.DATABASE_NAME.get(properties);
+    }
+
 
     public static Properties buildProperties(String url, Properties suppliedProperties, PropertiesCallback callback) throws SQLException {
 

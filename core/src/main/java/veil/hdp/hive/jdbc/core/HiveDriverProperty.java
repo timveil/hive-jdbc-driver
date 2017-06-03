@@ -166,12 +166,12 @@ public enum HiveDriverProperty {
         }
     }
 
-    public void set(Properties properties, boolean value) {
-        properties.setProperty(key, Boolean.toString(value));
+    public void set(Properties properties, Boolean value) {
+        set(properties, value != null ? Boolean.toString(value) : null);
     }
 
-    public void set(Properties properties, int value) {
-        properties.setProperty(key, Integer.toString(value));
+    public void set(Properties properties, Integer value) {
+        set(properties, value != null ? Integer.toString(value) : null);
     }
 
     public String get(Properties properties) {
