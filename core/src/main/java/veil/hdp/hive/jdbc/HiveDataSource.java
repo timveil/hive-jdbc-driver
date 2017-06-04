@@ -17,7 +17,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDataSource.class);
 
-    abstract HiveDriver builDriver();
+    abstract HiveDriver buildDriver();
 
     private String host;
     private String database;
@@ -275,7 +275,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
     @Override
     public Connection getConnection() throws SQLException {
 
-        HiveDriver driver = builDriver();
+        HiveDriver driver = buildDriver();
 
         Properties properties = buildProperties();
 
@@ -287,7 +287,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
 
-        HiveDriver driver = builDriver();
+        HiveDriver driver = buildDriver();
 
         Properties properties = buildProperties();
 

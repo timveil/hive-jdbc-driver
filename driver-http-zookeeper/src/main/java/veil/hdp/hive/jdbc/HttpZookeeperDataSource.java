@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc;
 
 public class HttpZookeeperDataSource extends HiveDataSource {
     @Override
-    HiveDriver builDriver() {
+    HiveDriver buildDriver() {
         return new HttpZookeeperHiveDriver();
     }
 }

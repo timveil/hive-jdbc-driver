@@ -121,7 +121,7 @@ public class HttpUtils {
         return registryBuilder.build();
     }
 
-    private static SSLConnectionSocketFactory buildDefaultSSLSocketFactory() throws HiveSQLException {
+    private static SSLConnectionSocketFactory buildDefaultSSLSocketFactory() {
        return SSLConnectionSocketFactory.getSocketFactory();
     }
 
