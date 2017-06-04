@@ -7,7 +7,6 @@ import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -37,6 +36,9 @@ import java.util.Properties;
 public class HttpUtils {
 
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
 
     /*
         todo: see if any of these optimizations can/should be applied
@@ -73,26 +75,7 @@ public class HttpUtils {
         }
 
 
-        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
-        registryBuilder.register("http", PlainConnectionSocketFactory.getSocketFactory());
-
-
-        if (HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties)) {
-            SSLConnectionSocketFactory sslSocketFactory;
-
-            if (HiveDriverProperty.HTTP_SSL_TWO_WAY_ENABLED.getBoolean(properties)) {
-                sslSocketFactory = buildTwoWaySSLSocketFactory(properties);
-            } else if (HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.hasValue(properties)) {
-                sslSocketFactory = buildOneWaySSLSocketFactory(properties);
-            } else {
-                sslSocketFactory = SSLConnectionSocketFactory.getSocketFactory();
-            }
-
-            registryBuilder.register("https", sslSocketFactory);
-
-        }
-
-        Registry<ConnectionSocketFactory> registry = registryBuilder.build();
+        Registry<ConnectionSocketFactory> registry = buildConnectionSocketFactoryRegistry(properties);
 
         HttpClientBuilder clientBuilder = HttpClients.custom();
 
@@ -108,20 +91,46 @@ public class HttpUtils {
             clientBuilder.setConnectionManager(cm);
         }
 
-
-        clientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
         clientBuilder.addInterceptorFirst(httpRequestInterceptor);
         clientBuilder.addInterceptorLast(new XsrfRequestInterceptor());
 
         return clientBuilder.build();
     }
 
+    private static Registry<ConnectionSocketFactory> buildConnectionSocketFactoryRegistry(Properties properties) throws HiveSQLException {
+
+        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
+        registryBuilder.register(HTTP, PlainConnectionSocketFactory.getSocketFactory());
+
+
+        if (HiveDriverProperty.SSL_ENABLED.getBoolean(properties)) {
+            SSLConnectionSocketFactory sslSocketFactory;
+
+            if (HiveDriverProperty.SSL_TWO_WAY_ENABLED.getBoolean(properties)) {
+                sslSocketFactory = buildTwoWaySSLSocketFactory(properties);
+            } else if (HiveDriverProperty.SSL_TRUST_STORE_PATH.hasValue(properties)) {
+                sslSocketFactory = buildOneWaySSLSocketFactory(properties);
+            } else {
+                sslSocketFactory = buildDefaultSSLSocketFactory();
+            }
+
+            registryBuilder.register(HTTPS, sslSocketFactory);
+
+        }
+
+        return registryBuilder.build();
+    }
+
+    private static SSLConnectionSocketFactory buildDefaultSSLSocketFactory() throws HiveSQLException {
+       return SSLConnectionSocketFactory.getSocketFactory();
+    }
+
     private static SSLConnectionSocketFactory buildOneWaySSLSocketFactory(Properties properties) throws HiveSQLException {
 
         try {
-            char[] trustStorePassword = HiveDriverProperty.HTTP_SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
+            char[] trustStorePassword = HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
 
-            KeyStore trustStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
+            KeyStore trustStore = buildKeyStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
 
             SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(trustStore, null).build();
 
@@ -136,13 +145,13 @@ public class HttpUtils {
     private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties) throws HiveSQLException {
 
         try {
-            char[] trustStorePassword = HiveDriverProperty.HTTP_SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
+            char[] trustStorePassword = HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
 
-            KeyStore trustStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
+            KeyStore trustStore = buildKeyStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
 
-            char[] keystorePassword = HiveDriverProperty.HTTP_SSL_KEY_STORE_PASSWORD.get(properties).toCharArray();
+            char[] keystorePassword = HiveDriverProperty.SSL_KEY_STORE_PASSWORD.get(properties).toCharArray();
 
-            KeyStore keyStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_KEY_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_KEY_STORE_TYPE.get(properties), keystorePassword);
+            KeyStore keyStore = buildKeyStore(HiveDriverProperty.SSL_KEY_STORE_PATH.get(properties), HiveDriverProperty.SSL_KEY_STORE_TYPE.get(properties), keystorePassword);
 
             SSLContext sslContext = SSLContexts.custom().loadKeyMaterial(keyStore, keystorePassword).loadTrustMaterial(trustStore, null).build();
 
@@ -198,10 +207,10 @@ public class HttpUtils {
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) {
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
-        boolean sslEnabled = HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties);
+        boolean sslEnabled = HiveDriverProperty.SSL_ENABLED.getBoolean(properties);
         String endpoint = HiveDriverProperty.HTTP_ENDPOINT.get(properties);
 
-        String scheme = sslEnabled ? "https" : "http";
+        String scheme = sslEnabled ? HTTPS : HTTP;
 
         try {
             return new THttpClient(scheme + "://" + host + ':' + port + '/' + endpoint, httpClient);

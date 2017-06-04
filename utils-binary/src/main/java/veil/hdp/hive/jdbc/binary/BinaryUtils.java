@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc.binary;
 
+import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TSaslClientTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -32,6 +33,8 @@ public class BinaryUtils {
 
         int socketTimeout = HiveDriverProperty.THRIFT_SOCKET_TIMEOUT.getInt(properties);
         int connectionTimeout = HiveDriverProperty.THRIFT_CONNECTION_TIMEOUT.getInt(properties);
+
+        //TSocket clientSocket = TSSLTransportFactory.getClientSocket(host, port, socketTimeout);
 
         return new TSocket(host, port, socketTimeout, connectionTimeout);
 

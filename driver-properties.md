@@ -106,16 +106,19 @@ The socket read timeout, in milliseconds, of Thrift's TSocket.  Default of `0` m
 
 The connection timeout, in milliseconds, of Thrift's TSocket.  Default of `0` means there is no timeout.
 
-## HTTP Properties
+## SSL Properties
 ---
 
-### SSL Enbled
+### SSL Enabled
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| httpsEnabled | `false` | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+| sslEnabled | `false` | false | [hive.server2.use.ssl](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
-Instructs the driver to use SSL when communicating over HTTP.
+Instructs the driver to use SSL.  Applies to both `http` and `binary` transport mode.
+
+## HTTP Properties
+---
 
 ### HTTP Endpoint
 

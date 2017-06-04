@@ -29,7 +29,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
     private Integer thriftVersion;
     private Integer thriftSocketTimeout;
     private Integer thriftConnectionTimeout;
-    private Boolean httpsEnabled;
+    private Boolean sslEnabled;
     private String httpEndpoint;
     private Boolean httpPoolEnabled;
     private Integer httpPoolMax;
@@ -120,12 +120,12 @@ public abstract class HiveDataSource extends AbstractDataSource {
         this.thriftConnectionTimeout = thriftConnectionTimeout;
     }
 
-    public Boolean getHttpsEnabled() {
-        return httpsEnabled;
+    public Boolean getSslEnabled() {
+        return sslEnabled;
     }
 
-    public void setHttpsEnabled(Boolean httpsEnabled) {
-        this.httpsEnabled = httpsEnabled;
+    public void setSslEnabled(Boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
     }
 
     public String getHttpEndpoint() {
@@ -319,7 +319,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
         HiveDriverProperty.THRIFT_PROTOCOL_VERSION.set(properties, thriftVersion);
         HiveDriverProperty.THRIFT_SOCKET_TIMEOUT.set(properties, thriftSocketTimeout);
         HiveDriverProperty.THRIFT_CONNECTION_TIMEOUT.set(properties, thriftConnectionTimeout);
-        HiveDriverProperty.HTTP_SSL_ENABLED.set(properties, httpsEnabled);
+        HiveDriverProperty.SSL_ENABLED.set(properties, sslEnabled);
         HiveDriverProperty.HTTP_ENDPOINT.set(properties, httpEndpoint);
         HiveDriverProperty.HTTP_POOL_ENABLED.set(properties, httpPoolEnabled);
         HiveDriverProperty.HTTP_POOL_MAX_TOTAL.set(properties, httpPoolMax);

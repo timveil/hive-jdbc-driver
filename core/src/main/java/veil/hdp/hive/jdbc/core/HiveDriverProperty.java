@@ -46,25 +46,25 @@ public enum HiveDriverProperty {
 
     THRIFT_CONNECTION_TIMEOUT("thriftConnectionTimeout", "0", false, null, null),
 
+    /***************************************************
+     *  SSL
+     ***************************************************/
+
+    SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
+
+    SSL_TRUST_STORE_PATH("sslTrustStorePath", null, false, null, null),
+    SSL_TRUST_STORE_TYPE("sslTrustStoreType", "JKS", false, null, null),
+    SSL_TRUST_STORE_PASSWORD("sslTrustStorePassword", null, false, null, null),
+
+    SSL_TWO_WAY_ENABLED("sslTwoWayEnabled", Boolean.FALSE.toString(), false, null, null),
+
+    SSL_KEY_STORE_PATH("sslKeyStorePath", null, false, null, null),
+    SSL_KEY_STORE_TYPE("sslKeyStoreType", "JKS", false, null, null),
+    SSL_KEY_STORE_PASSWORD("sslKeyStorePassword", null, false, null, null),
 
     /***************************************************
      *  HTTP
      ***************************************************/
-
-    HTTP_SSL_ENABLED("httpsEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
-
-    HTTP_SSL_TRUST_STORE_PATH("", null, false, null, null),
-    HTTP_SSL_TRUST_STORE_TYPE("", "JKS", false, null, null),
-    HTTP_SSL_TRUST_STORE_PASSWORD("", null, false, null, null),
-
-    HTTP_SSL_TWO_WAY_ENABLED("", Boolean.FALSE.toString(), false, null, null),
-
-    HTTP_SSL_KEY_STORE_PATH("", null, false, null, null),
-    HTTP_SSL_KEY_STORE_TYPE("", "JKS", false, null, null),
-    HTTP_SSL_KEY_STORE_PASSWORD("", null, false, null, null),
-
-    HTTP_SSL_SUNX509_ALGORITHM("", "SunX509", false, null, null),
-    HTTP_SSL_SUNJSSE_ALGORITHM("", "SunJSSE", false, null, null),
 
     HTTP_ENDPOINT("httpEndpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
