@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc.core;
 
+import org.apache.commons.lang3.StringUtils;
 import veil.hdp.hive.jdbc.core.binding.TProtocolVersion;
 import veil.hdp.hive.jdbc.core.security.KerberosMode;
 
@@ -51,6 +52,20 @@ public enum HiveDriverProperty {
      ***************************************************/
 
     HTTP_SSL_ENABLED("httpsEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
+
+    HTTP_SSL_TRUST_STORE_PATH("", null, false, null, null),
+    HTTP_SSL_TRUST_STORE_TYPE("", "JKS", false, null, null),
+    HTTP_SSL_TRUST_STORE_PASSWORD("", null, false, null, null),
+
+    HTTP_SSL_TWO_WAY_ENABLED("", Boolean.FALSE.toString(), false, null, null),
+
+    HTTP_SSL_KEY_STORE_PATH("", null, false, null, null),
+    HTTP_SSL_KEY_STORE_TYPE("", "JKS", false, null, null),
+    HTTP_SSL_KEY_STORE_PASSWORD("", null, false, null, null),
+
+    HTTP_SSL_SUNX509_ALGORITHM("", "SunX509", false, null, null),
+    HTTP_SSL_SUNJSSE_ALGORITHM("", "SunJSSE", false, null, null),
+
     HTTP_ENDPOINT("httpEndpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
 
     HTTP_POOL_ENABLED("httpPoolEnabled", "false", false, null, null),
@@ -176,6 +191,10 @@ public enum HiveDriverProperty {
 
     public String get(Properties properties) {
         return properties.getProperty(key, defaultValue);
+    }
+
+    public boolean hasValue(Properties properties) {
+        return properties.containsKey(key) && StringUtils.isNotBlank(get(properties));
     }
 
     public boolean getBoolean(Properties properties) {
