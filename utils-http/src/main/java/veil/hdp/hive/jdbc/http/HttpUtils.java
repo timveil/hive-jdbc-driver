@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -26,7 +27,7 @@ import veil.hdp.hive.jdbc.core.HiveException;
 import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.thrift.HiveThriftException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.*;
@@ -72,17 +73,17 @@ public class HttpUtils {
         }
 
 
-        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
+        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
         registryBuilder.register("http", PlainConnectionSocketFactory.getSocketFactory());
 
 
         if (HiveDriverProperty.HTTP_SSL_ENABLED.getBoolean(properties)) {
-            SSLConnectionSocketFactory sslSocketFactory = null;
+            SSLConnectionSocketFactory sslSocketFactory;
 
             if (HiveDriverProperty.HTTP_SSL_TWO_WAY_ENABLED.getBoolean(properties)) {
                 sslSocketFactory = buildTwoWaySSLSocketFactory(properties);
             } else if (HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.hasValue(properties)) {
-
+                sslSocketFactory = buildOneWaySSLSocketFactory(properties);
             } else {
                 sslSocketFactory = SSLConnectionSocketFactory.getSocketFactory();
             }
@@ -115,78 +116,63 @@ public class HttpUtils {
         return clientBuilder.build();
     }
 
+    private static SSLConnectionSocketFactory buildOneWaySSLSocketFactory(Properties properties) throws HiveSQLException {
+
+        try {
+            char[] trustStorePassword = HiveDriverProperty.HTTP_SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
+
+            KeyStore trustStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
+
+            SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(trustStore, null).build();
+
+            return new SSLConnectionSocketFactory(sslContext);
+
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+            throw new HiveSQLException(e);
+        }
+    }
+
+
     private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties) throws HiveSQLException {
 
-        KeyManager[] keyManagers = getKeyManagers(properties);
-
-        TrustManager[] trustManagers = getTrustManagers(properties);
-
         try {
+            char[] trustStorePassword = HiveDriverProperty.HTTP_SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
 
-            SSLContext context = SSLContext.getInstance("TLS");
+            KeyStore trustStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_TRUST_STORE_TYPE.get(properties), trustStorePassword);
 
-            context.init(keyManagers, trustManagers, new SecureRandom());
+            char[] keystorePassword = HiveDriverProperty.HTTP_SSL_KEY_STORE_PASSWORD.get(properties).toCharArray();
 
-            return new SSLConnectionSocketFactory(context);
+            KeyStore keyStore = buildKeyStore(HiveDriverProperty.HTTP_SSL_KEY_STORE_PATH.get(properties), HiveDriverProperty.HTTP_SSL_KEY_STORE_TYPE.get(properties), keystorePassword);
 
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            SSLContext sslContext = SSLContexts.custom().loadKeyMaterial(keyStore, keystorePassword).loadTrustMaterial(trustStore, null).build();
+
+            return new SSLConnectionSocketFactory(sslContext);
+
+        } catch (NoSuchAlgorithmException | KeyManagementException | UnrecoverableKeyException | KeyStoreException e) {
             throw new HiveSQLException(e);
         }
     }
 
-    private static TrustManager[] getTrustManagers(Properties properties) throws HiveSQLException {
+    private static KeyStore buildKeyStore(String path, String type, char[] password) throws HiveSQLException {
 
-        String trustStorePath = HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.get(properties);
-        String trustStorePassword = HiveDriverProperty.HTTP_SSL_KEY_STORE_PASSWORD.get(properties);
-
-        if (StringUtils.isBlank(trustStorePath)) {
-            throw new IllegalArgumentException(HiveDriverProperty.HTTP_SSL_TRUST_STORE_PATH.getKey() + " is required when " + HiveDriverProperty.HTTP_SSL_TWO_WAY_ENABLED.getKey() + " is true");
+        if (StringUtils.isBlank(path)) {
+            throw new IllegalArgumentException("keystore path is null!");
         }
 
         try {
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(HiveDriverProperty.HTTP_SSL_SUNJSSE_ALGORITHM.get(properties));
 
-            KeyStore sslTrustStore = KeyStore.getInstance(HiveDriverProperty.HTTP_SSL_TRUST_STORE_TYPE.get(properties));
+            KeyStore keyStore = KeyStore.getInstance(type);
 
-            try (FileInputStream fis = new FileInputStream(trustStorePath)) {
-                sslTrustStore.load(fis, trustStorePassword.toCharArray());
+            try (FileInputStream fis = new FileInputStream(path)) {
+                keyStore.load(fis, password);
             }
 
-            trustManagerFactory.init(sslTrustStore);
-
-            return trustManagerFactory.getTrustManagers();
-
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+            return keyStore;
+        } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException e) {
             throw new HiveSQLException(e);
         }
     }
 
-    private static KeyManager[] getKeyManagers(Properties properties) throws HiveSQLException {
-
-        String keyStorePath = HiveDriverProperty.HTTP_SSL_KEY_STORE_PATH.get(properties);
-        String keyStorePassword = HiveDriverProperty.HTTP_SSL_KEY_STORE_PASSWORD.get(properties);
-
-        if (StringUtils.isBlank(keyStorePath)) {
-            throw new IllegalArgumentException(HiveDriverProperty.HTTP_SSL_KEY_STORE_PATH.getKey() + " is required when " + HiveDriverProperty.HTTP_SSL_TWO_WAY_ENABLED.getKey() + " is true");
-        }
-
-        try {
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(HiveDriverProperty.HTTP_SSL_SUNX509_ALGORITHM.get(properties), HiveDriverProperty.HTTP_SSL_SUNJSSE_ALGORITHM.get(properties));
-
-            KeyStore sslKeyStore = KeyStore.getInstance(HiveDriverProperty.HTTP_SSL_KEY_STORE_TYPE.get(properties));
-
-            try (FileInputStream fis = new FileInputStream(keyStorePath)) {
-                sslKeyStore.load(fis, keyStorePassword.toCharArray());
-            }
-
-            keyManagerFactory.init(sslKeyStore, keyStorePassword.toCharArray());
-
-            return keyManagerFactory.getKeyManagers();
-
-        } catch (IOException | CertificateException | UnrecoverableKeyException | KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException e) {
-            throw new HiveSQLException(e);
-        }
-    }
 
     private static HttpRequestInterceptor buildKerberosInterceptor(Properties properties) {
 
