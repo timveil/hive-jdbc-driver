@@ -1,9 +1,6 @@
 package veil.hdp.hive.jdbc.binary;
 
-import org.apache.thrift.transport.TSSLTransportFactory;
-import org.apache.thrift.transport.TSaslClientTransport;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.AuthenticationMode;
@@ -12,6 +9,8 @@ import veil.hdp.hive.jdbc.core.HiveException;
 import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.security.*;
 
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocket;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
@@ -25,8 +24,9 @@ import java.util.Properties;
 public class BinaryUtils {
 
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
+    private static final String ENDPOINT_IDENTIFICATION_ALGORITHM_NAME = "HTTPS";
 
-    public static TSocket createSocket(Properties properties) {
+    public static TSocket createSocket(Properties properties) throws HiveSQLException {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
@@ -34,10 +34,43 @@ public class BinaryUtils {
         int socketTimeout = HiveDriverProperty.THRIFT_SOCKET_TIMEOUT.getInt(properties);
         int connectionTimeout = HiveDriverProperty.THRIFT_CONNECTION_TIMEOUT.getInt(properties);
 
-        //TSocket clientSocket = TSSLTransportFactory.getClientSocket(host, port, socketTimeout);
+        if (HiveDriverProperty.SSL_ENABLED.getBoolean(properties)) {
 
-        return new TSocket(host, port, socketTimeout, connectionTimeout);
+            return buildSSLSocket(properties, host, port, socketTimeout);
 
+        } else {
+
+            return new TSocket(host, port, socketTimeout, connectionTimeout);
+        }
+
+    }
+
+    private static TSocket buildSSLSocket(Properties properties, String host, int port, int socketTimeout) throws HiveSQLException {
+        try {
+
+            TSocket socket;
+
+            if (HiveDriverProperty.SSL_TRUST_STORE_PATH.hasValue(properties)) {
+                TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
+                params.setTrustStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties));
+                params.requireClientAuth(true);
+
+                socket = TSSLTransportFactory.getClientSocket(host, port, socketTimeout, params);
+            } else {
+
+                socket = TSSLTransportFactory.getClientSocket(host, port, socketTimeout);
+            }
+
+            SSLSocket sslSocket = (SSLSocket) socket.getSocket();
+            SSLParameters sslParams = sslSocket.getSSLParameters();
+            sslParams.setEndpointIdentificationAlgorithm(ENDPOINT_IDENTIFICATION_ALGORITHM_NAME);
+            sslSocket.setSSLParameters(sslParams);
+
+            return new TSocket(sslSocket);
+
+        } catch (TTransportException e) {
+            throw new HiveSQLException(e);
+        }
     }
 
     public static TTransport createBinaryTransport(Properties properties) throws SQLException {
@@ -120,8 +153,6 @@ public class BinaryUtils {
                 null,
                 socket);
     }
-
-
 
 
 }
