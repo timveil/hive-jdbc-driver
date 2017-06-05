@@ -63,9 +63,18 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     @Test
     public void testSimpleQuery() throws SQLException {
         executeSimpleQuery(true);
-
-
     }
+
+    @Test
+    public void testStructQuery() throws SQLException {
+        executeStructQuery(true);
+    }
+
+    @Test
+    public void testMapQuery() throws SQLException {
+        executeMapQuery(true);
+    }
+
 
     private void executeSimpleQuery(boolean print) throws SQLException {
         try (Statement statement = connection.createStatement();
@@ -76,6 +85,32 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
             }
         }
     }
+
+    private void executeStructQuery(boolean print) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM struct_test")) {
+
+            Printer.printResultSetMetaData(rs.getMetaData());
+
+            if (print) {
+                Printer.printResultSet(rs);
+            }
+        }
+    }
+
+
+    private void executeMapQuery(boolean print) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM map_test")) {
+
+            Printer.printResultSetMetaData(rs.getMetaData());
+
+            if (print) {
+                Printer.printResultSet(rs);
+            }
+        }
+    }
+
 
     @Test
     public void testPreparedStatement() throws SQLException {

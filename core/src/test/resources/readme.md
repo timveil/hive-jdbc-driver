@@ -1,0 +1,1 @@
+i just updoaded the struct-data.csv using ambari and executed the create statement against the jdbc_test database using the hive2 view.  worked fine
