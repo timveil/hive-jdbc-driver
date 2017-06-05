@@ -37,6 +37,10 @@ public class PropertyUtils {
         return properties.getProperty(key);
     }
 
+    public int getIntValue(String key) {
+        return Integer.parseInt(properties.getProperty(key));
+    }
+
     public String getValue(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }

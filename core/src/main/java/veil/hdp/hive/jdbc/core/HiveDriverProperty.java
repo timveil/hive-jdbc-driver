@@ -1,13 +1,14 @@
 package veil.hdp.hive.jdbc.core;
 
 import org.apache.commons.lang3.StringUtils;
-import veil.hdp.hive.jdbc.core.binding.TProtocolVersion;
 import veil.hdp.hive.jdbc.core.security.KerberosMode;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;
 
 public enum HiveDriverProperty {
+
+
 
     /***************************************************
      *  COMMON
@@ -35,7 +36,7 @@ public enum HiveDriverProperty {
             AuthenticationMode.PAM.name()),
 
     // make sure to spell out differences in readme; look at *.thrift
-    THRIFT_PROTOCOL_VERSION("thriftVersion", Integer.toString(TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8.getValue()), false, null, null),
+    THRIFT_PROTOCOL_VERSION("thriftVersion", null, false, null, null),
 
 
     /***************************************************
@@ -118,6 +119,8 @@ public enum HiveDriverProperty {
     private final String description;
     private final String hiveConfigurationKey;
     private final String[] choices;
+
+
 
 
     HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfigurationKey) {

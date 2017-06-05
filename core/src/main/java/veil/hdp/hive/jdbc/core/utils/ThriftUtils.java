@@ -32,6 +32,7 @@ public class ThriftUtils {
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
 
+    private static final int DEFAULT_THRIFT_VERSION = PropertyUtils.getInstance().getIntValue("thrift.protocol.version.default");
 
     public static void openTransport(TTransport transport) throws HiveThriftException {
 
@@ -60,7 +61,11 @@ public class ThriftUtils {
 
     public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
 
-        TProtocolVersion protocolVersion = TProtocolVersion.findByValue(HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties));
+        TProtocolVersion protocolVersion = TProtocolVersion.findByValue(DEFAULT_THRIFT_VERSION);
+
+        if (HiveDriverProperty.THRIFT_PROTOCOL_VERSION.hasValue(properties)) {
+            protocolVersion = TProtocolVersion.findByValue(HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties));
+        }
 
         if (protocolVersion == null) {
             throw new HiveException("protocol version is not properly set");
