@@ -86,7 +86,7 @@
                 <version>${thrift.plugin.version}</version>
                 <configuration>
                     <thriftExecutable>${thrift.path}</thriftExecutable>
-                    <thriftSourceRoot>${basedir}/src/main/thrift/${hive.version}</thriftSourceRoot>
+                    <thriftSourceRoot>${basedir}/src/main/thrift</thriftSourceRoot>
                     <generator>java:beans</generator>
                 </configuration>
                 <executions>
