@@ -115,11 +115,6 @@ public class BaseColumn<T> implements Column<T> {
     }
 
     @Override
-    public Object asObject() {
-        return value;
-    }
-
-    @Override
     public Character asCharacter() throws SQLException {
         throw HiveDriver.notImplemented(this.getClass(), "asCharacter");
     }

@@ -15,8 +15,6 @@ public interface Column<T> {
 
     T getValue();
 
-    Object asObject();
-
     Boolean asBoolean() throws SQLException;
 
     Date asDate() throws SQLException;

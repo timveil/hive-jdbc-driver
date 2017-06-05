@@ -195,7 +195,7 @@ public class HiveBaseResultSet extends AbstractResultSet {
         Row row = currentRow.get();
 
         if (row != null) {
-            return checkValue(row.getColumn(columnIndex).asObject());
+            return checkValue(row.getColumn(columnIndex).getValue());
         }
 
         return null;
