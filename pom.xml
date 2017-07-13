@@ -32,8 +32,8 @@
 
         <junit.version>4.12</junit.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <guava.version>21.0</guava.version>
-        <commons-lang3.version>3.5</commons-lang3.version>
+        <guava.version>22.0</guava.version>
+        <commons-lang3.version>3.6</commons-lang3.version>
         <curator.version>2.12.0</curator.version>
         <http.version>4.5.3</http.version>
         <metrics.version>3.2.2</metrics.version>
