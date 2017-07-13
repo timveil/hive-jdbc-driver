@@ -59,7 +59,7 @@
                                     <includes>
                                         <include>**/*.class</include>
                                         <include>**/*.MF</include>
-                                        <include>**/driver-version.properties</include>
+                                        <include>**/driver-config.properties</include>
                                     </includes>
                                 </filter>
                             </filters>
