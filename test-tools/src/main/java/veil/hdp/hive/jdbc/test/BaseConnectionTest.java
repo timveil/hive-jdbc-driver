@@ -75,6 +75,11 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
         executeMapQuery(true);
     }
 
+    @Test
+    public void testArrayQuery() throws SQLException {
+        executeArrayQuery(true);
+    }
+
 
     private void executeSimpleQuery(boolean print) throws SQLException {
         try (Statement statement = connection.createStatement();
@@ -102,6 +107,19 @@ public abstract class BaseConnectionTest extends BaseUnitTest {
     private void executeMapQuery(boolean print) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM map_test")) {
+
+            Printer.printResultSetMetaData(rs.getMetaData());
+
+            if (print) {
+                Printer.printResultSet(rs);
+            }
+        }
+    }
+
+
+    private void executeArrayQuery(boolean print) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM array_test")) {
 
             Printer.printResultSetMetaData(rs.getMetaData());
 
