@@ -27,7 +27,12 @@ public class DriverUtils {
     private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile("/");
     private static final Pattern JDBC_PATTERN = Pattern.compile(DriverUtils.JDBC_PART, Pattern.LITERAL);
 
-    public static boolean acceptURL(String url) {
+    public static boolean acceptURL(String url) throws SQLException {
+
+        if (url == null) {
+            throw new HiveSQLException("url is null");
+        }
+
         return url.startsWith(JDBC_HIVE2_PREFIX);
     }
 

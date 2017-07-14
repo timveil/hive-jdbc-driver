@@ -52,7 +52,7 @@ public class BinaryUtils {
 
             if (HiveDriverProperty.SSL_TRUST_STORE_PATH.hasValue(properties)) {
                 TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
-                params.setTrustStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties));
+                params.setTrustStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties), null, HiveDriverProperty.SSL_TRUST_STORE_TYPE.get(properties));
                 params.requireClientAuth(true);
 
                 socket = TSSLTransportFactory.getClientSocket(host, port, socketTimeout, params);

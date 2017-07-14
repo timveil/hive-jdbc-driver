@@ -120,11 +120,15 @@ Instructs the driver to use SSL.  Applies to both `http` and `binary` transport 
 | :--- | :--- | :--- | :--- |
 | sslTrustStorePath |  | false | none |
 
+Location of the TrustStore on disk.
+
 ### TrustStore Type
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | sslTrustStoreType | `JKS` | false | none |
+
+Used to generate an instance of a [KeyStore](https://docs.oracle.com/javase/8/docs/api/java/security/KeyStore.html).  Possible values can be found [here](https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore).
 
 ### TrustStore Password
 
@@ -134,11 +138,13 @@ Instructs the driver to use SSL.  Applies to both `http` and `binary` transport 
 
 ### Two-way SSL Enabled
 
-todo: need very good explanation of this.
-
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | sslTwoWayEnabled | `false` | false | none |
+
+todo: need very good explanation of this.
+
+Only applicable when `transportMode` equals `http`
 
 ### KeyStore Path
 
@@ -146,11 +152,15 @@ todo: need very good explanation of this.
 | :--- | :--- | :--- | :--- |
 | sslKeyStorePath |  | false | none |
 
+Location of the KeyStore on disk.
+
 ### KeyStore Type
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | sslKeyStoreType | `JKS` | false | none |
+
+Used to generate an instance of a [KeyStore](https://docs.oracle.com/javase/8/docs/api/java/security/KeyStore.html).  Possible values can be found [here](https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#KeyStore).
 
 ### KeyStore Password
 

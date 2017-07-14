@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.HiveConnection;
-import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.PropertiesCallback;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
@@ -77,11 +76,6 @@ public abstract class HiveDriver implements Driver {
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-
-        if (url == null) {
-            throw new HiveSQLException("url is null");
-        }
-
         return DriverUtils.acceptURL(url);
     }
 
