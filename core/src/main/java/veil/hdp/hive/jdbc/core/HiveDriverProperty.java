@@ -146,6 +146,16 @@ public enum HiveDriverProperty {
         return null;
     }
 
+    public static HiveDriverProperty forKeyIgnoreCase(String key) {
+        for (HiveDriverProperty property : HiveDriverProperty.values()) {
+            if (property.key != null && property.key.equalsIgnoreCase(key)) {
+                return property;
+            }
+        }
+
+        return null;
+    }
+
     public String getKey() {
         return key;
     }

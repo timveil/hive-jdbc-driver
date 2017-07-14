@@ -37,7 +37,7 @@ public class DriverUtils {
     }
 
     public static String buildUrl(Properties properties) {
-        return JDBC_HIVE2_PREFIX +  HiveDriverProperty.HOST_NAME.get(properties) + ':' + HiveDriverProperty.PORT_NUMBER.getInt(properties) + '/' + HiveDriverProperty.DATABASE_NAME.get(properties);
+        return JDBC_HIVE2_PREFIX + HiveDriverProperty.HOST_NAME.get(properties) + ':' + HiveDriverProperty.PORT_NUMBER.getInt(properties) + '/' + HiveDriverProperty.DATABASE_NAME.get(properties);
     }
 
 
@@ -59,13 +59,30 @@ public class DriverUtils {
 
     }
 
+
+    private static String normalizeKey(String key) {
+
+        if (key == null) {
+            throw new RuntimeException("key is null");
+        }
+
+        HiveDriverProperty property = HiveDriverProperty.forKeyIgnoreCase(key);
+
+        if (property != null) {
+            return property.getKey();
+        }
+
+        return key;
+    }
+
+
     private static void loadSuppliedProperties(Properties suppliedProperties, Properties properties) {
         for (String key : suppliedProperties.stringPropertyNames()) {
 
             String value = StringUtils.trimToNull(suppliedProperties.getProperty(key));
 
             if (value != null) {
-                properties.setProperty(key, value);
+                properties.setProperty(normalizeKey(key), value);
             }
 
         }
@@ -120,11 +137,8 @@ public class DriverUtils {
 
             boolean valid = false;
 
-            for (HiveDriverProperty property : HiveDriverProperty.values()) {
-                if (property.getKey().equalsIgnoreCase(key)) {
-                    valid = true;
-                    break;
-                }
+            if (HiveDriverProperty.forKeyIgnoreCase(key) != null) {
+                valid = true;
             }
 
             if (key.startsWith("hive.")) {
@@ -132,7 +146,7 @@ public class DriverUtils {
             }
 
             if (!valid) {
-                log.warn("property [{}] is not valid", key);
+                log.warn("property [{}] is unknown and possibly invalid.  This could be a configuration issue (ie. wrong case, misspelling, etc.) or a custom property.  It is wise to double check this key/value pair", key);
             }
 
         }
@@ -174,7 +188,7 @@ public class DriverUtils {
             String value = StringUtils.trimToNull(entry.getValue());
 
             if (value != null) {
-                properties.setProperty(entry.getKey(), value);
+                properties.setProperty(normalizeKey(entry.getKey()), value);
             }
         }
 
