@@ -244,7 +244,7 @@ The amount of time, in milliseconds, that the Zookeeper client will wait before 
 
 The following properties only apply when `authMode` equals `KERBEROS`
 
-### Kerberos Mode
+### Client Kerberos Mode
 
 This defines how the driver authenticates on the client side.  This is not server side authentication.  In order to establish a jdbc connection using kerberos the client must be authenticated in one of the following ways so that a ticket can be shared with the server
 

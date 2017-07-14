@@ -150,7 +150,7 @@ public class BinaryUtils {
                 serverPrincipal.getService(),
                 serverPrincipal.getHost(),
                 saslProps,
-                null,
+                new TextCallbackHandler(),
                 socket);
     }
 
