@@ -114,6 +114,50 @@ The connection timeout, in milliseconds, of Thrift's TSocket.  Default of `0` me
 
 Instructs the driver to use SSL.  Applies to both `http` and `binary` transport mode.
 
+### TrustStore Path
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslTrustStorePath |  | false | none |
+
+### TrustStore Type
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslTrustStoreType | `JKS` | false | none |
+
+### TrustStore Password
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslTrustStorePassword |  | false | none |
+
+### Two-way SSL Enabled
+
+todo: need very good explanation of this.
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslTwoWayEnabled | `false` | false | none |
+
+### KeyStore Path
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslKeyStorePath |  | false | none |
+
+### KeyStore Type
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslKeyStoreType | `JKS` | false | none |
+
+### KeyStore Password
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| sslKeyStorePassword |  | false | none |
+
 ## HTTP Properties
 
 ### HTTP Endpoint
@@ -124,7 +168,7 @@ Instructs the driver to use SSL.  Applies to both `http` and `binary` transport 
 
 The path portion of the Thrift HTTP endpoint URL.
 
-### HTTP Connection Pool Enabled
+### Connection Pool Enabled
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -132,7 +176,7 @@ The path portion of the Thrift HTTP endpoint URL.
 
 Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.html) instead of [BasicHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/conn/BasicHttpClientConnectionManager.html) when building the [CloseableHttpClient](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/CloseableHttpClient.html) for use with Thrift.
 
-### HTTP Max Pooled Connections
+### Max Pooled Connections
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -140,7 +184,7 @@ Instructs the driver to use the [PoolingHttpClientConnectionManager](https://hc.
 
 The maximum number of connections in the pool when `httpPoolEnabled` is `true`
 
-### HTTP Max Pooled Connections per Route
+### Max Pooled Connections per Route
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -148,7 +192,7 @@ The maximum number of connections in the pool when `httpPoolEnabled` is `true`
 
 The maximum number of connections in the pool per route when `httpPoolEnabled` is `true`
 
-### HTTP Cookie Replay Enabled
+### Cookie Replay Enabled
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -156,7 +200,7 @@ The maximum number of connections in the pool per route when `httpPoolEnabled` i
 
 Enables cookie replay as described in https://issues.apache.org/jira/browse/HIVE-9709.  This prevents re-authentication on subsequent requests.
 
-### HTTP Cookie Name
+### Cookie Name
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -180,7 +224,7 @@ Instructs the driver to lookup Hive configuration in Zookeeper.  Values returned
 *  `hive.server2.thrift.port`
 *  `hive.server2.use.SSL`
 
-### Zookeeper Discovery Namespace
+### Discovery Namespace
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
@@ -188,10 +232,80 @@ Instructs the driver to lookup Hive configuration in Zookeeper.  Values returned
 
 The root path or namespace in Zookeeper under which Hive configuration data is stored.  If LLAP is enabled this value may be `hiveserver2-hive2`.
 
-### Zookeeper Retry Wait Time
+### Retry Wait Time
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | zkRetry | `1000` | false | none |
 
 The amount of time, in milliseconds, that the Zookeeper client will wait before attempting a single retry.
+
+## Kerberos Properties
+
+The following properties only apply when `authMode` equals `KERBEROS`
+
+### Kerberos Mode
+
+This defines how the driver authenticates on the client side.  This is not server side authentication.  In order to establish a jdbc connection using kerberos the client must be authenticated in one of the following ways so that a ticket can be shared with the server
+
+todo: these values need very thorough explanations and examples
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| krb5Mode | `PASSWORD` | false | none |
+
+* `PASSWORD` - must specify value for `user` and `password` properties
+* `PREAUTH` - assumes a valid Subject has already been authenticated.  This is typically done in external application code.  See example: todo
+* `KEYTAB` - must specify value for `user` and `krb5UserKeytab` properties
+
+### Server Principal
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| krb5ServerPrincipal |  | false | none |
+
+required when kerberos is enabled.  this is the service principal that
+
+### User Keytab
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| krb5UserKeytab |  | false | none |
+
+Path to valid keytab
+
+### Debug Enabled
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| krb5Debug | `true` | false | none |
+
+Sets value for `sun.security.krb5.debug` as a System property
+
+### Use Subject Credentials Only
+
+todo: need to better understand what the heck this means
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| krb5SubjectOnly | `false` | false | none |
+
+Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  See [here](http://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html#useSub) for more details.
+
+### SASL Quality of Protection
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| saslQOP | `auth-conf,auth-int,auth` | false | none |
+
+### SASL Server Authentication Enabled
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| saslAuth | `true` | false | none |
+
+### JAAS Debug Enabled
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| jaasDebug | `true` | false | none |

@@ -17,4 +17,13 @@ public class UserPrincipal {
     public String getRealm() {
         return realm;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("UserPrincipal{");
+        sb.append("user='").append(user).append('\'');
+        sb.append(", realm='").append(realm).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

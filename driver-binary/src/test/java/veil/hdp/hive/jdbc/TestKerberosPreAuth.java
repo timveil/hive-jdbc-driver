@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc;
 
 import veil.hdp.hive.jdbc.core.security.KerberosService;
+import veil.hdp.hive.jdbc.core.security.PrincipalUtils;
 import veil.hdp.hive.jdbc.test.BaseConnectionTest;
 
 import javax.security.auth.Subject;
@@ -28,7 +29,7 @@ public class TestKerberosPreAuth extends BaseConnectionTest {
         String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=PREAUTH&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
 
         try {
-            return Subject.doAs(KerberosService.loginWithPassword("timve@LAB.LOCAL", "password", true), new PrivilegedExceptionAction<Connection>() {
+            return Subject.doAs(KerberosService.loginWithPassword(PrincipalUtils.parseUserPrincipal("timve@LAB.LOCAL"), "password", true), new PrivilegedExceptionAction<Connection>() {
                 @Override
                 public Connection run() throws Exception {
                     return new BinaryHiveDriver().connect(url, properties);

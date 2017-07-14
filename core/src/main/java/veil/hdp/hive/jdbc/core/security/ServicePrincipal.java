@@ -23,4 +23,14 @@ public class ServicePrincipal {
     public String getRealm() {
         return realm;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServicePrincipal{");
+        sb.append("service='").append(service).append('\'');
+        sb.append(", host='").append(host).append('\'');
+        sb.append(", realm='").append(realm).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

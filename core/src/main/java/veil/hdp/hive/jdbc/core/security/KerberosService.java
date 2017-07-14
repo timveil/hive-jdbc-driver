@@ -25,6 +25,8 @@ public class KerberosService {
 
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
+    private static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
+    private static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
 
 
     private static Oid MECHANISM = null;
@@ -81,48 +83,65 @@ public class KerberosService {
 
     public static Subject getSubject(Properties properties) throws LoginException {
 
-        System.setProperty("sun.security.krb5.debug", HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
-        System.setProperty("javax.security.auth.useSubjectCredsOnly", HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+        String tempDebug = System.getProperty(SUN_SECURITY_KRB5_DEBUG);
+        String tempAuth = System.getProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY);
 
-        KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
+        try {
 
-        log.debug("kerberos mode [{}]", kerberosMode);
+            System.setProperty(SUN_SECURITY_KRB5_DEBUG, HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
+            System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
 
-        boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
+            KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
 
-        switch (kerberosMode) {
-            case KEYTAB:
-                String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
-                String keyTabPrincipal = HiveDriverProperty.USER.get(properties);
+            log.debug("kerberos mode [{}]", kerberosMode);
 
-                return loginWithKeytab(keyTab, keyTabPrincipal, debugJaas);
-            case PREAUTH:
-                return getPreAuthenticatedSubject();
-            case PASSWORD:
-                String principal = HiveDriverProperty.USER.get(properties);
-                String password = HiveDriverProperty.PASSWORD.get(properties);
+            boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
-                return loginWithPassword(principal, password, debugJaas);
+            UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
+
+            log.debug("user principal [{}]", userPrincipal);
+
+            switch (kerberosMode) {
+                case KEYTAB:
+                    String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
+
+                    return loginWithKeytab(userPrincipal, keyTab, debugJaas);
+                case PREAUTH:
+                    return getPreAuthenticatedSubject();
+                case PASSWORD:
+                    String password = HiveDriverProperty.PASSWORD.get(properties);
+
+                    return loginWithPassword(userPrincipal, password, debugJaas);
+            }
+
+            throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
+
+        } finally {
+            if (tempDebug != null) {
+                System.setProperty(SUN_SECURITY_KRB5_DEBUG, tempDebug);
+            }
+
+            if (tempAuth != null) {
+                System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, tempAuth);
+            }
         }
-
-        throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
 
     }
 
-    public static Subject loginWithPassword(String principal, String password, boolean debugJaas) throws LoginException {
+    public static Subject loginWithPassword(UserPrincipal principal, String password, boolean debugJaas) throws LoginException {
 
         String configName = "fromPassword";
 
         Map<String, String> options = buildOptions(debugJaas, false, false,
                 null, false, false,
-                false, null, false, null,
+                false, null, false, principal.getUser(),
                 true, false, false,
                 false, true);
 
         JaasConfiguration config = new JaasConfiguration();
         config.addAppConfigEntry(configName, PlatformUtils.getKrb5LoginModuleClassName(), REQUIRED, options);
 
-        LoginContext context = new LoginContext(configName, null, new UsernamePasswordCallbackHandler(principal, password), config);
+        LoginContext context = new LoginContext(configName, null, new UsernamePasswordCallbackHandler(principal.getUser(), password), config);
         context.login();
 
         Subject subject = context.getSubject();
@@ -132,9 +151,9 @@ public class KerberosService {
         return subject;
     }
 
-    public static Subject loginFromLocal(boolean debugJaas) throws LoginException {
+    public static Subject loginFromOperatingSystem(boolean debugJaas) throws LoginException {
 
-        String configName = "fromLocal";
+        String configName = "fromOS";
 
         Map<String, String> options = buildOptions(debugJaas, false, false,
                 null, false, false,
@@ -150,12 +169,12 @@ public class KerberosService {
 
         Subject subject = context.getSubject();
 
-        log.debug("successfully logged in subject with local login module [{}]", subject);
+        log.debug("successfully logged in subject with OS module [{}]", subject);
 
         return subject;
     }
 
-    public static Subject loginWithKeytab(String keyTab, String principal, boolean debugJaas) throws LoginException {
+    public static Subject loginWithKeytab(UserPrincipal principal, String keyTab, boolean debugJaas) throws LoginException {
 
 
         String configName = "fromKeytab";
@@ -163,7 +182,7 @@ public class KerberosService {
 
         Map<String, String> options = buildOptions(debugJaas, true, false,
                 null, false, true,
-                true, keyTab, true, principal,
+                true, keyTab, true, principal.getUser(),
                 true, false, false,
                 false, true);
 
