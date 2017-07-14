@@ -74,7 +74,7 @@ public class BinaryUtils {
     }
 
     public static TTransport createBinaryTransport(Properties properties) throws SQLException {
-        // todo: no support for delegation tokens or ssl yet
+        // todo: no support for delegation tokens
 
 
         AuthenticationMode authenticationMode = AuthenticationMode.valueOf(HiveDriverProperty.AUTHENTICATION_MODE.get(properties));
