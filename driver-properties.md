@@ -272,9 +272,11 @@ todo: these values need very thorough explanations and examples
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| krb5ServerPrincipal |  | false | none |
+| krb5ServerPrincipal |  | true<sup>*</sup> | none |
 
-required when kerberos is enabled.  this is the service principal that
+This is the Kerberos principal that is valid on the HS2 server.
+
+<sup>*</sup> required when `authMode` equals `KERBEROS`
 
 ### User Keytab
 
