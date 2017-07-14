@@ -162,12 +162,12 @@ public class DriverUtils {
 
     }
 
-    private static void parseQueryParameters(String path, Properties properties) {
+    private static void parseQueryParameters(String uriQuery, Properties properties) {
 
         Map<String, String> parameters = new HashMap<>();
 
-        if (path != null) {
-            parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(path));
+        if (uriQuery != null) {
+            parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(uriQuery));
         }
 
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
