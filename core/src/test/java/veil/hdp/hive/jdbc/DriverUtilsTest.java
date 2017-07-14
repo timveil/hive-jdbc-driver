@@ -8,6 +8,7 @@ import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 import veil.hdp.hive.jdbc.test.BaseUnitTest;
 
 import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DriverUtilsTest extends BaseUnitTest {
@@ -34,10 +35,20 @@ public class DriverUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void acceptURL() throws Exception {
-        String url = null;
+    public void acceptURL() throws SQLException {
 
-        boolean accepts = DriverUtils.acceptURL(url);
+
+        try {
+            // expect failure
+           DriverUtils.acceptURL(null);
+        } catch (SQLException e) {
+            log.warn("expected error because of null url", e);
+        }
+
+        // expect success
+        boolean accpeted = DriverUtils.acceptURL(url);
+
+        log.debug("accepted: {}", url);
     }
 
     @Test
