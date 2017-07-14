@@ -65,6 +65,10 @@ public class ZookeeperUtils {
 
                     String key = entry.getKey();
 
+                    if (log.isDebugEnabled()) {
+                        log.debug("found key [{}] and value [{}] in zookeeper", key, value);
+                    }
+
                     HiveDriverProperty hiveDriverProperty = HiveDriverProperty.forAlias(key);
 
                     if (hiveDriverProperty != null) {
