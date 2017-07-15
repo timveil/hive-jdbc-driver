@@ -51,14 +51,14 @@ public class KerberosService {
         return subject;
     }
 
-    public static byte[] getToken(String serverPrincipal) {
+    public static byte[] getToken(ServicePrincipal servicePrincipal) {
 
         GSSContext context = null;
 
         try {
 
             GSSManager manager = GSSManager.getInstance();
-            GSSName name = manager.createName(serverPrincipal, NAME_TYPE);
+            GSSName name = manager.createName(servicePrincipal.toString(), NAME_TYPE);
 
             context = manager.createContext(name, MECHANISM, null, GSSContext.DEFAULT_LIFETIME);
             context.requestMutualAuth(false);

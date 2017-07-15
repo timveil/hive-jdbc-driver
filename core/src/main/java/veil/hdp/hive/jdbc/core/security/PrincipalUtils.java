@@ -12,10 +12,14 @@ public class PrincipalUtils {
     private static final Logger log = LoggerFactory.getLogger(PrincipalUtils.class);
 
 
-    public static ServicePrincipal parseServicePrincipal(String principal) {
+    public static ServicePrincipal parseServicePrincipal(String principal, String hostname) {
 
         if (StringUtils.isBlank(principal)) {
             throw new RuntimeException("principal is null or empty");
+        }
+
+        if (StringUtils.isBlank(hostname)) {
+            throw new RuntimeException("host is null or empty");
         }
 
         List<String> strings = Splitter.on('@').splitToList(principal);
@@ -36,9 +40,14 @@ public class PrincipalUtils {
         }
 
         String service = serviceParts.get(0);
-        String host = serviceParts.get(1);
+        String serviceHost = serviceParts.get(1);
 
-        return new ServicePrincipal(service, StringUtils.lowerCase(host), realm);
+        if (serviceHost.equals("0.0.0.0") || serviceHost.equalsIgnoreCase("_HOST")) {
+            log.warn("serviceHost [{}] is being replaced by hostname [{}] in the ServicePrincipal because it is invalid!  Double check configuration", serviceHost, hostname);
+            serviceHost = hostname;
+        }
+
+        return new ServicePrincipal(service, StringUtils.lowerCase(serviceHost), realm);
 
     }
 
@@ -61,5 +70,15 @@ public class PrincipalUtils {
         return new UserPrincipal(user, realm);
 
     }
+
+    /*
+
+
+
+        if (StringUtils.containsIgnoreCase(principal, "_HOST")) {
+        principal = StringUtils.replaceIgnoreCase(principal, "_HOST", HiveDriverProperty.HOST_NAME.get(properties));
+        HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.set(properties, principal);
+    }
+     */
 
 }

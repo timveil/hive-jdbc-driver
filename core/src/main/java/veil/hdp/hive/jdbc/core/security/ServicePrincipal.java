@@ -26,11 +26,6 @@ public class ServicePrincipal {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ServicePrincipal{");
-        sb.append("service='").append(service).append('\'');
-        sb.append(", host='").append(host).append('\'');
-        sb.append(", realm='").append(realm).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return service + '/' + host + '@' + realm;
     }
 }
