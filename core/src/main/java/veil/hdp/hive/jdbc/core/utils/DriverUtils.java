@@ -173,13 +173,13 @@ public class DriverUtils {
         validateProperties(properties);
 
         // lets print the properties after validation.  we can print again after zookeeper
-        printProperties(properties, "post validation");
+        printProperties(properties, "after validation");
 
         // call zookeeper
         if (zookeeperDiscoveryProperties != null) {
             zookeeperDiscoveryProperties.load(uri, properties);
 
-            printProperties(properties, "post zookeeper discovery");
+            printProperties(properties, "after zookeeper discovery");
         }
 
 
