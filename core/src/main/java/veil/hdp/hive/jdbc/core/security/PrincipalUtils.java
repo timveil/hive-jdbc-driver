@@ -43,7 +43,7 @@ public class PrincipalUtils {
         String serviceHost = serviceParts.get(1);
 
         if (serviceHost.equals("0.0.0.0") || serviceHost.equalsIgnoreCase("_HOST")) {
-            log.warn("host part [{}] is being replaced by hostname [{}] in the service principal because it is invalid!  Double check configuration", serviceHost, hostname);
+            log.warn("service principal host part [{}] is being replaced by hostname [{}] because it is invalid.  This can happen if the service principal is retrieved using zookeeper.  If zookeeper discovery is not enabled, double check configuration.", serviceHost, hostname);
             serviceHost = hostname;
         }
 
