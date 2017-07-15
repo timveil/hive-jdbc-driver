@@ -25,7 +25,7 @@ public class PrincipalUtils {
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid service principal [" + principal + ']');
+            throw new RuntimeException("service principal is invalid [" + principal + ']');
         }
 
         String firstPart = strings.get(0);
@@ -36,7 +36,7 @@ public class PrincipalUtils {
         List<String> serviceParts = Splitter.on('/').splitToList(firstPart);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid first part [" + firstPart + "] of service principal [" + principal + ']');
+            throw new RuntimeException("service principal [" + principal + "] has invalid first part [" + firstPart + "].");
         }
 
         String service = serviceParts.get(0);
@@ -60,7 +60,7 @@ public class PrincipalUtils {
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid user principal [" + principal + ']');
+            throw new RuntimeException("user principal is invalid [" + principal + ']');
         }
 
         String user = strings.get(0);
