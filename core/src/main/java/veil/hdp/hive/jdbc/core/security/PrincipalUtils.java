@@ -15,17 +15,17 @@ public class PrincipalUtils {
     public static ServicePrincipal parseServicePrincipal(String principal, String hostname) {
 
         if (StringUtils.isBlank(principal)) {
-            throw new RuntimeException("principal is null or empty");
+            throw new RuntimeException("service principal is null or empty");
         }
 
         if (StringUtils.isBlank(hostname)) {
-            throw new RuntimeException("host is null or empty");
+            throw new RuntimeException("hostname is null or empty");
         }
 
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid principal [" + principal + ']');
+            throw new RuntimeException("invalid service principal [" + principal + ']');
         }
 
         String firstPart = strings.get(0);
@@ -36,14 +36,14 @@ public class PrincipalUtils {
         List<String> serviceParts = Splitter.on('/').splitToList(firstPart);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid first part [" + firstPart + "] of principal [" + principal + ']');
+            throw new RuntimeException("invalid first part [" + firstPart + "] of service principal [" + principal + ']');
         }
 
         String service = serviceParts.get(0);
         String serviceHost = serviceParts.get(1);
 
         if (serviceHost.equals("0.0.0.0") || serviceHost.equalsIgnoreCase("_HOST")) {
-            log.warn("serviceHost [{}] is being replaced by hostname [{}] in the ServicePrincipal because it is invalid!  Double check configuration", serviceHost, hostname);
+            log.warn("host part [{}] is being replaced by hostname [{}] in the service principal because it is invalid!  Double check configuration", serviceHost, hostname);
             serviceHost = hostname;
         }
 
@@ -54,13 +54,13 @@ public class PrincipalUtils {
     public static UserPrincipal parseUserPrincipal(String principal) {
 
         if (StringUtils.isBlank(principal)) {
-            throw new RuntimeException("principal is null or empty");
+            throw new RuntimeException("user principal is null or empty");
         }
 
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("invalid principal [" + principal + ']');
+            throw new RuntimeException("invalid user principal [" + principal + ']');
         }
 
         String user = strings.get(0);
@@ -70,15 +70,5 @@ public class PrincipalUtils {
         return new UserPrincipal(user, realm);
 
     }
-
-    /*
-
-
-
-        if (StringUtils.containsIgnoreCase(principal, "_HOST")) {
-        principal = StringUtils.replaceIgnoreCase(principal, "_HOST", HiveDriverProperty.HOST_NAME.get(properties));
-        HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.set(properties, principal);
-    }
-     */
 
 }
