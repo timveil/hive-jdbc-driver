@@ -1,5 +1,6 @@
 package veil.hdp.hive.jdbc.binary;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +139,25 @@ public class BinaryUtils {
     }
 
     private static TTransport buildSaslTransport(Properties properties, TSocket socket) throws SaslException {
-        ServicePrincipal serverPrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties));
+        String principal = HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties);
+
+        /*
+         todo: really don't like this hack.
+
+         would rather it be where we actually fetch the property from zookeeper.
+
+         this overcomes the problem where zookeeper returns the value for hive.server2.authentication.kerberos.principal that contains the
+         string _HOST.  for some reason this is not understood when establishing the binary connection.  doesn't help when using HTTP.  need to refactor
+
+          */
+
+
+        if (StringUtils.containsIgnoreCase(principal, "_HOST")) {
+            principal = StringUtils.replaceIgnoreCase(principal, "_HOST", HiveDriverProperty.HOST_NAME.get(properties));
+            HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.set(properties, principal);
+        }
+
+        ServicePrincipal serverPrincipal = PrincipalUtils.parseServicePrincipal(principal);
 
         Map<String, String> saslProps = new HashMap<>(2);
         saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));

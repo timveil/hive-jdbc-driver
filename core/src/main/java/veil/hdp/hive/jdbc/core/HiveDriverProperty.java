@@ -95,7 +95,7 @@ public enum HiveDriverProperty {
 
     KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
-    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, null),
+    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, "hive.server2.authentication.kerberos.principal"),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
     KERBEROS_USER_KEYTAB("krb5UserKeytab", null, null, null),
     // sun.security.krb5.debug

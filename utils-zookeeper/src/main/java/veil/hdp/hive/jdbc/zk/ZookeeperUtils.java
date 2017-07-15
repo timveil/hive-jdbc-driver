@@ -41,6 +41,9 @@ public class ZookeeperUtils {
           hive.server2.thrift.port=10000
           hive.server2.use.SSL=false
 
+          todo: hive.server2.thrift.http.path
+          todo: hive.server2.authentication.kerberos.principal
+            current code doesn't like _HOST returned by server
          */
 
 

@@ -272,7 +272,7 @@ todo: these values need very thorough explanations and examples
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| krb5ServerPrincipal |  | true<sup>*</sup> | none |
+| krb5ServerPrincipal |  | true<sup>*</sup> | [hive.server2.authentication.kerberos.principal](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 This is the Kerberos principal that is valid on the HS2 server.
 
