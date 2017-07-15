@@ -40,7 +40,7 @@ public class DriverUtilsTest extends BaseUnitTest {
 
         try {
             // expect failure
-           DriverUtils.acceptURL(null);
+            DriverUtils.acceptURL(null);
         } catch (SQLException e) {
             log.warn("expected error because of null url", e);
         }
@@ -55,8 +55,10 @@ public class DriverUtilsTest extends BaseUnitTest {
     public void buildDriverPropertyInfo() throws Exception {
 
 
-        DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties, (properties, uri) -> {
+        DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties, (properties) -> {
+        }, (uri, properties) -> {
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+        }, (uri, properties) -> {
         });
 
         for (DriverPropertyInfo info : driverPropertyInfos) {
@@ -69,8 +71,10 @@ public class DriverUtilsTest extends BaseUnitTest {
     public void buildProperties() throws Exception {
 
 
-        Properties newProperties = DriverUtils.buildProperties(url, suppliedProperties, (properties, uri) -> {
+        Properties newProperties = DriverUtils.buildProperties(url, suppliedProperties, (properties) -> {
+        }, (uri, properties) -> {
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+        }, (uri, properties) -> {
         });
 
         log.debug(newProperties.toString());

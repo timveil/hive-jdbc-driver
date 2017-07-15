@@ -13,8 +13,10 @@ public class BinaryZookeeperConnectionTest extends BaseConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
         properties.setProperty("zkNamespace", "hiveserver2-hive2");
+        properties.setProperty("ZKNAMESPACE", "hiveserver2-hive2");
+        properties.setProperty("ZKKNAMESPACE", "KKKK");
 
-        String url = "jdbc:hive2://" + host + ":2181/jdbc_test";
+        String url = "jdbc:hive2://" + host + ":2181,"+ host + ":2181/?";
 
         return new BinaryZookeeperHiveDriver().connect(url, properties);
     }

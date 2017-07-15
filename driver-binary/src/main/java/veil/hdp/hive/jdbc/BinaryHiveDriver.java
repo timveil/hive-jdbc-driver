@@ -4,11 +4,10 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.binary.BinaryUtils;
-import veil.hdp.hive.jdbc.core.HiveDriverProperty;
-import veil.hdp.hive.jdbc.core.PropertiesCallback;
-import veil.hdp.hive.jdbc.core.TransportMode;
+import veil.hdp.hive.jdbc.core.*;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 
+import java.net.URI;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -40,17 +39,29 @@ public class BinaryHiveDriver extends HiveDriver {
     }
 
     @Override
-    PropertiesCallback buildPropertiesCallback() {
-        return (properties, uri) -> {
+    DefaultDriverProperties defaultDriverProperties() {
+        return (properties) -> {
             HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.name());
+        };
+    }
 
-            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+    @Override
+    UriProperties uriProperties() {
+        return new UriProperties() {
+            @Override
+            public void load(URI uri, Properties properties) {
 
-            if (uri.getPort() != -1) {
-                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
+                HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+
+                if (uri.getPort() != -1) {
+                    HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
+                }
             }
         };
     }
 
-
+    @Override
+    ZookeeperDiscoveryProperties zookeeperDiscoveryProperties() {
+        return null;
+    }
 }

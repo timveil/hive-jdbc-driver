@@ -5,14 +5,11 @@ import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.core.HiveDriverProperty;
-import veil.hdp.hive.jdbc.core.HiveSQLException;
-import veil.hdp.hive.jdbc.core.PropertiesCallback;
+import veil.hdp.hive.jdbc.core.*;
 
 import java.net.URI;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,19 +38,21 @@ public class DriverUtils {
     }
 
 
-    public static Properties buildProperties(String url, Properties suppliedProperties, PropertiesCallback callback) throws SQLException {
+    public static Properties buildProperties(String url, Properties suppliedProperties, DefaultDriverProperties defaultDriverProperties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
 
         Properties properties = new Properties();
 
-        loadDefaultProperties(properties);
+        // load global defaults
+        loadGlobalDefaultProperties(properties);
 
+        // load driver specific properties; kind of like driver defaults; overrides global defaults above
+        defaultDriverProperties.load(properties);
+
+        // loads properties supplied by the JDBC api Driver.connect method
         loadSuppliedProperties(suppliedProperties, properties);
 
-        parseUrl(url, properties, callback);
-
-        validateProperties(properties);
-
-        printProperties(properties);
+        // parse the url supplied by the JDBC api Driver.connect method
+        parseUrl(url, properties, uriProperties, zookeeperDiscoveryProperties);
 
         return properties;
 
@@ -88,15 +87,15 @@ public class DriverUtils {
         }
     }
 
-    private static void loadDefaultProperties(Properties properties) {
+    private static void loadGlobalDefaultProperties(Properties properties) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
             property.setDefaultValue(properties);
         }
     }
 
-    private static void printProperties(Properties properties) {
+    private static void printProperties(Properties properties, String context) {
         StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("connection properties\n");
+        builder.append("connection properties - " + context + '\n');
         builder.append("******************************************\n");
 
         List<String> strings = new ArrayList<>(properties.stringPropertyNames());
@@ -115,8 +114,8 @@ public class DriverUtils {
         log.debug(builder.toString());
     }
 
-    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties, PropertiesCallback callback) throws SQLException {
-        Properties properties = buildProperties(url, suppliedProperties, callback);
+    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties, DefaultDriverProperties defaultDriverProperties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
+        Properties properties = buildProperties(url, suppliedProperties, defaultDriverProperties, uriProperties, zookeeperDiscoveryProperties);
 
         HiveDriverProperty[] driverProperties = HiveDriverProperty.values();
 
@@ -151,16 +150,10 @@ public class DriverUtils {
 
         }
 
-        for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.isRequired() && property.get(properties) == null) {
-                throw new HiveSQLException(MessageFormat.format("property [{0}] is required", property.getKey()));
-            }
-        }
-
     }
 
 
-    private static void parseUrl(String url, Properties properties, PropertiesCallback callback) {
+    private static void parseUrl(String url, Properties properties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
 
         URI uri = URI.create(stripPrefix(url));
 
@@ -172,7 +165,24 @@ public class DriverUtils {
 
         parseQueryParameters(uriQuery, properties);
 
-        callback.merge(properties, uri);
+        if (uriProperties != null) {
+            uriProperties.load(uri, properties);
+        }
+
+        // lets validate properties before we call zookeeper if configured
+        validateProperties(properties);
+
+        // lets print the properties after validation.  we can print again after zookeeper
+        printProperties(properties, "post validation");
+
+        // call zookeeper
+        if (zookeeperDiscoveryProperties != null) {
+            zookeeperDiscoveryProperties.load(uri, properties);
+
+            printProperties(properties, "post zookeeper discovery");
+        }
+
+
 
     }
 

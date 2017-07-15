@@ -308,7 +308,7 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| saslQOP | `auth-conf,auth-int,auth` | false | none |
+| saslQOP | `auth` | false | [hive.server2.thrift.sasl.qop](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
 
 ### SASL Server Authentication Enabled
 

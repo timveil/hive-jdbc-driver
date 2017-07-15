@@ -14,21 +14,21 @@ public enum HiveDriverProperty {
      *  COMMON
      ***************************************************/
     // required by JDBC Spec
-    HOST_NAME("host", null, true, null, "hive.server2.thrift.bind.host"),
-    DATABASE_NAME("database", "default", true, null, null),
+    HOST_NAME("host", null, null, "hive.server2.thrift.bind.host"),
+    DATABASE_NAME("database", "default", null, null),
 
     // when AUTHENTICATION_MODE == NONE then this is ignored; can be principal when using KERBEROS_MODE = PASSWORD
-    USER("user", null, false, null, null),
+    USER("user", null, null, null),
 
     // when AUTHENTICATION_MODE == NONE then this is ignored
-    PASSWORD("password", null, false, null, null),
+    PASSWORD("password", null, null, null),
 
-    PORT_NUMBER("port", "10000", true, null, "hive.server2.thrift.port"),
+    PORT_NUMBER("port", "10000", null, "hive.server2.thrift.port"),
 
     // should not be used in URL because its coded into separate drivers
-    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), false, null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
+    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
 
-    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), false, null, "hive.server2.authentication",
+    AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), null, "hive.server2.authentication",
             AuthenticationMode.NONE.name(),
             AuthenticationMode.NOSASL.name(),
             AuthenticationMode.KERBEROS.name(),
@@ -36,86 +36,85 @@ public enum HiveDriverProperty {
             AuthenticationMode.PAM.name()),
 
     // make sure to spell out differences in readme; look at *.thrift
-    THRIFT_PROTOCOL_VERSION("thriftVersion", null, false, null, null),
+    THRIFT_PROTOCOL_VERSION("thriftVersion", null, null, null),
 
 
     /***************************************************
      *  BINARY
      ***************************************************/
 
-    THRIFT_SOCKET_TIMEOUT("thriftSocketTimeout", "0", false, null, null),
+    THRIFT_SOCKET_TIMEOUT("thriftSocketTimeout", "0", null, null),
 
-    THRIFT_CONNECTION_TIMEOUT("thriftConnectionTimeout", "0", false, null, null),
+    THRIFT_CONNECTION_TIMEOUT("thriftConnectionTimeout", "0", null, null),
 
     /***************************************************
      *  SSL
      ***************************************************/
 
-    SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), false, null, "hive.server2.use.ssl"),
+    SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), null, "hive.server2.use.ssl"),
 
-    SSL_TRUST_STORE_PATH("sslTrustStorePath", null, false, null, null),
-    SSL_TRUST_STORE_TYPE("sslTrustStoreType", "JKS", false, null, null),
-    SSL_TRUST_STORE_PASSWORD("sslTrustStorePassword", null, false, null, null),
+    SSL_TRUST_STORE_PATH("sslTrustStorePath", null, null, null),
+    SSL_TRUST_STORE_TYPE("sslTrustStoreType", "JKS", null, null),
+    SSL_TRUST_STORE_PASSWORD("sslTrustStorePassword", null, null, null),
 
-    SSL_TWO_WAY_ENABLED("sslTwoWayEnabled", Boolean.FALSE.toString(), false, null, null),
+    SSL_TWO_WAY_ENABLED("sslTwoWayEnabled", Boolean.FALSE.toString(), null, null),
 
-    SSL_KEY_STORE_PATH("sslKeyStorePath", null, false, null, null),
-    SSL_KEY_STORE_TYPE("sslKeyStoreType", "JKS", false, null, null),
-    SSL_KEY_STORE_PASSWORD("sslKeyStorePassword", null, false, null, null),
+    SSL_KEY_STORE_PATH("sslKeyStorePath", null, null, null),
+    SSL_KEY_STORE_TYPE("sslKeyStoreType", "JKS", null, null),
+    SSL_KEY_STORE_PASSWORD("sslKeyStorePassword", null, null, null),
 
     /***************************************************
      *  HTTP
      ***************************************************/
 
-    HTTP_ENDPOINT("httpEndpoint", "cliservice", false, null, "hive.server2.thrift.http.path"),
+    HTTP_ENDPOINT("httpEndpoint", "cliservice", null, "hive.server2.thrift.http.path"),
 
-    HTTP_POOL_ENABLED("httpPoolEnabled", "false", false, null, null),
-    HTTP_POOL_MAX_TOTAL("httpPoolMax", "100", false, null, null),
-    HTTP_POOL_MAX_PER_ROUTE("httpPoolMaxRoute", "20", false, null, null),
+    HTTP_POOL_ENABLED("httpPoolEnabled", "false", null, null),
+    HTTP_POOL_MAX_TOTAL("httpPoolMax", "100", null, null),
+    HTTP_POOL_MAX_PER_ROUTE("httpPoolMaxRoute", "20", null, null),
 
     // https://issues.apache.org/jira/browse/HIVE-9709
-    HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), false, null, null),
+    HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), null, null),
 
     // todo: this seems pretty hardcoded on the server side.  not sure how/why this would ever change
-    HTTP_COOKIE_NAME("httpCookieName", "hive.server2.auth", false, null, null),
+    HTTP_COOKIE_NAME("httpCookieName", "hive.server2.auth", null, null),
 
     /***************************************************
      *  ZOOKEEPER
      ***************************************************/
 
     // should not be used in URL because its coded into separate drivers
-    ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), false, null, null),
+    ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), null, null),
 
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", false, null, null),
-    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", false, null, null),
+    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", null, null),
+    ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", null, null),
 
     /***************************************************
      *  KERBEROS
      ***************************************************/
 
-    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), false, null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
+    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
-    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, false, null, null),
+    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, null),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
-    KERBEROS_USER_KEYTAB("krb5UserKeytab", null, false, null, null),
+    KERBEROS_USER_KEYTAB("krb5UserKeytab", null, null, null),
     // sun.security.krb5.debug
-    KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.TRUE.toString(), false, null, null),
+    KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.TRUE.toString(), null, null),
     // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property; see http://docs.oracle.com/javase/7/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html
-    KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), false, null, null),
+    KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), null, null),
 
     // Sasl.QOP
-    SASL_QUALITY_OF_PROTECTION("saslQOP", "auth-conf,auth-int,auth", false, null, null),
+    SASL_QUALITY_OF_PROTECTION("saslQOP", "auth", null, "hive.server2.thrift.sasl.qop"),
     // Sasl.SERVER_AUTH
-    SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), false, null, null),
+    SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), null, null),
 
-    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.TRUE.toString(), false, null, null),
+    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.TRUE.toString(), null, null),
 
     ;
 
 
     private final String key;
     private final String defaultValue;
-    private final boolean required;
     private final String description;
     private final String hiveConfigurationKey;
     private final String[] choices;
@@ -123,14 +122,13 @@ public enum HiveDriverProperty {
 
 
 
-    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfigurationKey) {
-        this(key, defaultValue, required, description, hiveConfigurationKey, (String[]) null);
+    HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey) {
+        this(key, defaultValue, description, hiveConfigurationKey, (String[]) null);
     }
 
-    HiveDriverProperty(String key, String defaultValue, boolean required, String description, String hiveConfigurationKey, String... choices) {
+    HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey, String... choices) {
         this.key = key;
         this.defaultValue = defaultValue;
-        this.required = required;
         this.description = description;
         this.hiveConfigurationKey = hiveConfigurationKey;
         this.choices = choices;
@@ -168,10 +166,6 @@ public enum HiveDriverProperty {
         if (defaultValue != null) {
             properties.setProperty(key, defaultValue);
         }
-    }
-
-    public boolean isRequired() {
-        return required;
     }
 
     public String getDescription() {
@@ -232,7 +226,7 @@ public enum HiveDriverProperty {
 
     public DriverPropertyInfo toDriverPropertyInfo(Properties properties) {
         DriverPropertyInfo propertyInfo = new DriverPropertyInfo(key, get(properties));
-        propertyInfo.required = required;
+        propertyInfo.required = false;
         propertyInfo.description = description;
         propertyInfo.choices = choices;
 

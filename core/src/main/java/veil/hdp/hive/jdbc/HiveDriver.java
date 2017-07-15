@@ -3,8 +3,10 @@ package veil.hdp.hive.jdbc;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.core.DefaultDriverProperties;
 import veil.hdp.hive.jdbc.core.HiveConnection;
-import veil.hdp.hive.jdbc.core.PropertiesCallback;
+import veil.hdp.hive.jdbc.core.UriProperties;
+import veil.hdp.hive.jdbc.core.ZookeeperDiscoveryProperties;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 import veil.hdp.hive.jdbc.core.utils.VersionUtils;
@@ -37,14 +39,18 @@ public abstract class HiveDriver implements Driver {
 
     abstract ThriftTransport buildTransport(Properties properties) throws SQLException;
 
-    abstract PropertiesCallback buildPropertiesCallback();
+    abstract DefaultDriverProperties defaultDriverProperties();
+
+    abstract UriProperties uriProperties();
+
+    abstract ZookeeperDiscoveryProperties zookeeperDiscoveryProperties();
 
     public Connection connect(String url, Properties info) throws SQLException {
 
         url = StringUtils.trimToNull(url);
 
         if (acceptsURL(url)) {
-            return connect(DriverUtils.buildProperties(url, info, buildPropertiesCallback()));
+            return connect(DriverUtils.buildProperties(url, info, defaultDriverProperties(), uriProperties(), zookeeperDiscoveryProperties()));
         }
 
         return null;
@@ -52,7 +58,7 @@ public abstract class HiveDriver implements Driver {
 
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-        return DriverUtils.buildDriverPropertyInfo(url, info, buildPropertiesCallback());
+        return DriverUtils.buildDriverPropertyInfo(url, info, defaultDriverProperties(), uriProperties(), zookeeperDiscoveryProperties());
     }
 
     @Override
