@@ -18,7 +18,13 @@ public class BaseTest {
     }
 
     public static String getHost() {
-        return System.getProperty("test.host");
+        String host = System.getProperty("test.host");
+
+        if (host == null) {
+            throw new IllegalArgumentException("can't run test without a valid host.  You must set the property \"test.host\" before executing test.  For example: -Dtest.host=hdp1.lab.local");
+        }
+
+        return host;
     }
 
     public static int getTestRuns() {
