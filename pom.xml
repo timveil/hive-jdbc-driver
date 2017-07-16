@@ -39,6 +39,10 @@
         <metrics.version>3.2.2</metrics.version>
     </properties>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/timveil/hive-jdbc.git</developerConnection>
+    </scm>
+
     <profiles>
         <profile>
             <id>HDP-2.1.0.2.6.1.0-129</id>
@@ -110,6 +114,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
             </plugin>
         </plugins>
     </build>
