@@ -32,7 +32,7 @@ todo: need a full comparison of size and dependency graph for both hive 1.x and 
     * driver-http-1.0-SNAPSHOT.jar is 6.1mb
     * driver-http-zookeeper-1.0-SNAPSHOT.jar is 9.4mb
 * Only dependency on Hive project is the *.thrift file that it defines.  all thrift client code is compiled directly in this project.
-* No UGI
+* No UGI; reimplementaiton of all kerberos/jaas related code
 * Simplified implementation
 * Better documentation
 * Simpler and more complete URL config options
