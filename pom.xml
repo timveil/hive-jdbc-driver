@@ -63,7 +63,8 @@
                 <hive.version>1.2.1000.2.6.1.0-129</hive.version>
                 <thrift.protocol.version>7</thrift.protocol.version>
             </properties>
-        </profile>        <profile>
+        </profile>
+        <profile>
             <id>HDP-1.2.1000.2.6.0.3-8</id>
             <properties>
                 <hive.version>1.2.1000.2.6.0.3-8</hive.version>
