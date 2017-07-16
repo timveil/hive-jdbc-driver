@@ -4,7 +4,7 @@
 
     <groupId>veil.hdp.hive</groupId>
     <artifactId>hive-jdbc</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>Hive JDBC Driver</name>
     <packaging>pom</packaging>
@@ -39,7 +39,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/timveil/hive-jdbc.git</developerConnection>
-      <tag>hive-jdbc-1.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <profiles>
