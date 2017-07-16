@@ -1,3 +1,7 @@
 machine:
   java:
     version: oraclejdk8
+
+dependencies:
+  override:
+    - mvn -DskipTests clean install
