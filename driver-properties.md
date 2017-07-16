@@ -270,6 +270,8 @@ todo: these values need very thorough explanations and examples
 
 ### Server Principal
 
+todo: should this be named server or service?  also, not clear that the hive config property and the intent of this property are one in the same
+
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | krb5ServerPrincipal |  | true<sup>*</sup> | [hive.server2.authentication.kerberos.principal](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
