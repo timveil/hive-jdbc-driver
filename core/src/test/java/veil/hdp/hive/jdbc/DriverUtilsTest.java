@@ -5,13 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
-import veil.hdp.hive.jdbc.test.BaseUnitTest;
+import veil.hdp.hive.jdbc.test.BaseTest;
 
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DriverUtilsTest extends BaseUnitTest {
+public class DriverUtilsTest extends BaseTest {
 
 
     private Properties suppliedProperties;

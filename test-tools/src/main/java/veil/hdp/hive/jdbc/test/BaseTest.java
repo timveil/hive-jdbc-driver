@@ -6,17 +6,15 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
 
-public class BaseUnitTest {
+public class BaseTest {
 
-    protected static final Logger log = LoggerFactory.getLogger(BaseUnitTest.class);
+    protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
 
-    public BaseUnitTest() {
+    public BaseTest() {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
 
         java.util.logging.Logger.getLogger("javax.security.sasl").setLevel(java.util.logging.Level.FINEST);
-
-
     }
 
     public static String getHost() {

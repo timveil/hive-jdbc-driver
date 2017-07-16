@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public abstract class BaseConnectionTest extends BaseUnitTest {
+public abstract class BaseConnectionTest extends BaseTest {
 
     private static final MetricRegistry metrics = new MetricRegistry();
     private Connection connection;
