@@ -14,59 +14,6 @@
 
     <packaging>jar</packaging>
 
-    <!--
-        installing the thrift compiler is much more straight forward on windows than mac.
-
-        with windows it was trivial to download the compiler exe for the proper version (0.9.3).
-
-        with mac, i used homebrew to install thrift.  it seemed i could only install the latest (0.10.0).
-    -->
-
-    <!-- have to use the 0.10.0 version of the plugin regardless of actual thrift binary version because of https://issues.apache.org/jira/browse/THRIFT-3419 -->
-
-    <profiles>
-        <profile>
-            <id>Thirft Compiler - Windows</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <properties>
-                <thrift.path>E:\dev\tools\thrift\thrift-0.9.3.exe</thrift.path>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.plugin.version>0.10.0</thrift.plugin.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>Thrift Compiler - Mac</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <properties>
-                <thrift.path>/usr/local/bin/thrift</thrift.path>
-                <thrift.version>0.10.0</thrift.version>
-                <thrift.plugin.version>0.10.0</thrift.plugin.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>Thrift Compiler - Linux</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <properties>
-                <thrift.path>/usr/local/bin/thrift</thrift.path>
-                <thrift.version>0.10.0</thrift.version>
-                <thrift.plugin.version>0.10.0</thrift.plugin.version>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.thrift</groupId>
@@ -91,36 +38,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.thrift</groupId>
-                <artifactId>thrift-maven-plugin</artifactId>
-                <version>${thrift.plugin.version}</version>
-                <configuration>
-                    <thriftExecutable>${thrift.path}</thriftExecutable>
-                    <thriftSourceRoot>${basedir}/src/main/thrift</thriftSourceRoot>
-                    <generator>java:beans</generator>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>thrift-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>thrift-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
