@@ -26,7 +26,7 @@ todo: need a full comparison of size and dependency graph for both hive 1.x and 
 * difficult to embed in applications and 3rd party tools like DbViz, etc.
 
 ### Benefits
-* Extremely limited dependency graph thus trimming the jar size and complexity
+* Extremely limited dependency graph thus trimming the jar size and reducing classpath risks/issues
     * driver-binary-1.0-SNAPSHOT.jar is 4.9mb
     * driver-binary-zookeeper-1.0-SNAPSHOT.jar is 8.3mb
     * driver-http-1.0-SNAPSHOT.jar is 6.1mb
