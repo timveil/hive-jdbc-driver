@@ -9,6 +9,7 @@ import veil.hdp.hive.jdbc.core.UriProperties;
 import veil.hdp.hive.jdbc.core.ZookeeperDiscoveryProperties;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
+import veil.hdp.hive.jdbc.core.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.core.utils.VersionUtils;
 
 import java.sql.*;
@@ -46,6 +47,11 @@ public abstract class HiveDriver implements Driver {
     abstract ZookeeperDiscoveryProperties zookeeperDiscoveryProperties();
 
     public Connection connect(String url, Properties info) throws SQLException {
+
+
+        log.info("connecting to hive version [{}] with thrift protocol version [{}].  Please ensure these match your HiveServer2 instance or unexpected errors and behavior may occur.",
+                PropertyUtils.getInstance().getValue("hive.version"),
+                PropertyUtils.getInstance().getValue("thrift.protocol.version.default"));
 
         url = StringUtils.trimToNull(url);
 
