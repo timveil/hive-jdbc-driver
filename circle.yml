@@ -4,4 +4,4 @@ machine:
 
 dependencies:
   override:
-    - mvn -DskipTests clean install
+    - mvn -DskipTests clean package

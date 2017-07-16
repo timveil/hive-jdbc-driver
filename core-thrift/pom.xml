@@ -51,6 +51,20 @@
                 <thrift.plugin.version>0.10.0</thrift.plugin.version>
             </properties>
         </profile>
+
+        <profile>
+            <id>Thrift Compiler - Linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <thrift.path>/usr/local/bin/thrift</thrift.path>
+                <thrift.version>0.10.0</thrift.version>
+                <thrift.plugin.version>0.10.0</thrift.plugin.version>
+            </properties>
+        </profile>
     </profiles>
 
     <dependencies>
