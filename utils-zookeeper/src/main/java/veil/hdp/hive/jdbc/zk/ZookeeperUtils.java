@@ -68,15 +68,24 @@ public class ZookeeperUtils {
 
                     String key = entry.getKey();
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("found key [{}] and value [{}] in zookeeper", key, value);
-                    }
-
                     HiveDriverProperty hiveDriverProperty = HiveDriverProperty.forAlias(key);
 
                     if (hiveDriverProperty != null) {
-                        hiveDriverProperty.set(properties, value);
+
+                        String originalValue = hiveDriverProperty.get(properties);
+
+                        if (!value.equals(originalValue)) {
+
+                            if (log.isDebugEnabled()) {
+                                log.debug("updating existing property [{}] from zookeeper:  Old value [{}], New value [{}].  hive configuration parameter [{}].", hiveDriverProperty.getKey(), originalValue, value, key);
+                            }
+
+                            hiveDriverProperty.set(properties, value);
+                        }
                     } else {
+
+                        log.warn("adding new property [{}] with value [{}] from zookeeper. this could likely be handled better by the driver.  possible bug!", hiveDriverProperty.getKey(), value);
+
                         properties.setProperty(key, value);
                     }
                 }

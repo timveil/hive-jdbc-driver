@@ -93,9 +93,9 @@ public class DriverUtils {
         }
     }
 
-    private static void printProperties(Properties properties, String context) {
+    private static void printProperties(Properties properties) {
         StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("connection properties - " + context + '\n');
+        builder.append("connection properties\n");
         builder.append("******************************************\n");
 
         List<String> strings = new ArrayList<>(properties.stringPropertyNames());
@@ -173,13 +173,11 @@ public class DriverUtils {
         validateProperties(properties);
 
         // lets print the properties after validation.  we can print again after zookeeper
-        printProperties(properties, "after validation");
+        printProperties(properties);
 
         // call zookeeper
         if (zookeeperDiscoveryProperties != null) {
             zookeeperDiscoveryProperties.load(uri, properties);
-
-            printProperties(properties, "after zookeeper discovery");
         }
 
 
