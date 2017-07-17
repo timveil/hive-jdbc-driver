@@ -5,7 +5,7 @@
     <parent>
         <groupId>veil.hdp.hive</groupId>
         <artifactId>hive-jdbc</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
 
     <name>Driver - Binary</name>
@@ -17,13 +17,13 @@
         <dependency>
             <groupId>veil.hdp.hive</groupId>
             <artifactId>utils-binary</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>veil.hdp.hive</groupId>
             <artifactId>test-tools</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
