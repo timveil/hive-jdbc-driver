@@ -38,8 +38,8 @@
     </properties>
 
     <scm>
+        <connection>scm:git:https://github.com/timveil/hive-jdbc.git</connection>
         <developerConnection>scm:git:https://github.com/timveil/hive-jdbc.git</developerConnection>
-      <tag>HEAD</tag>
     </scm>
 
     <profiles>
