@@ -8,8 +8,10 @@ import java.sql.Timestamp;
 
 public class SqlDateTimeUtils {
 
-    public static Date convertStringToDate(String dateString) {
+    private static final char SPACE = ' ';
+    private static final char DOT = '.';
 
+    public static Date convertStringToDate(String dateString) {
         try {
             return Date.valueOf(dateString);
         } catch (Exception e) {
@@ -43,7 +45,7 @@ public class SqlDateTimeUtils {
 
         String timestampString = timestamp.toString();
 
-        String dateString = timestampString.substring(0, timestampString.indexOf(' '));
+        String dateString = timestampString.substring(0, timestampString.indexOf(SPACE));
 
         return convertStringToDate(dateString);
 
@@ -61,11 +63,11 @@ public class SqlDateTimeUtils {
 
         int lastIndex = timestampString.length();
 
-        if (timestampString.contains(".")) {
-            lastIndex = timestampString.lastIndexOf('.');
+        if (timestampString.indexOf(DOT) > -1) {
+            lastIndex = timestampString.lastIndexOf(DOT);
         }
 
-        String timeString = timestampString.substring(timestampString.indexOf(' ') + 1, lastIndex);
+        String timeString = timestampString.substring(timestampString.indexOf(SPACE) + 1, lastIndex);
 
         return convertStringToTime(timeString);
 
