@@ -150,7 +150,6 @@ public class BaseColumn<T> implements Column<T> {
             boolean isNull = bitSet.get(row);
 
             if (columnData instanceof BooleanColumnData) {
-
                 BooleanColumnData data = (BooleanColumnData) columnData;
 
                 return new BooleanColumn(descriptor, isNull ? null : data.getValues().get(row));
@@ -175,6 +174,11 @@ public class BaseColumn<T> implements Column<T> {
 
                 return new LongColumn(descriptor, isNull ? null : data.getValues().get(row));
 
+            } else if (columnData instanceof BinaryColumnData) {
+                BinaryColumnData data = (BinaryColumnData) columnData;
+
+                return new BinaryColumn(descriptor, isNull ? null : data.getValues().get(row));
+
             } else if (columnData instanceof DoubleColumnData) {
 
                 DoubleColumnData data = (DoubleColumnData) columnData;
@@ -186,13 +190,6 @@ public class BaseColumn<T> implements Column<T> {
                 } else {
                     return new DoubleColumn(descriptor, isNull ? null : value);
                 }
-
-
-            } else if (columnData instanceof BinaryColumnData) {
-
-                BinaryColumnData data = (BinaryColumnData) columnData;
-
-                return new BinaryColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof StringColumnData) {
                 //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL, CHAR, VARCHAR
@@ -210,7 +207,7 @@ public class BaseColumn<T> implements Column<T> {
                 } else if (hiveType.equals(TIMESTAMP)) {
                     return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(value));
                 } else if (hiveType.equals(DATE)) {
-                    return new DateColumn(descriptor, isNull ? null :SqlDateTimeUtils.convertStringToDate(value));
+                    return new DateColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToDate(value));
                 } else {
                     return new StringColumn(descriptor, isNull ? null : value);
                 }
