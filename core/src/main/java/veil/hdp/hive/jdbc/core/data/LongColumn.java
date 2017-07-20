@@ -2,10 +2,7 @@ package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 
 public class LongColumn extends BaseColumn<Long> {
             /*

@@ -9,7 +9,6 @@ import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.http.HttpUtils;
 import veil.hdp.hive.jdbc.zk.ZookeeperUtils;
 
-import java.net.URI;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -56,13 +55,10 @@ public class HttpZookeeperHiveDriver extends HiveDriver {
 
     @Override
     ZookeeperDiscoveryProperties zookeeperDiscoveryProperties() {
-        return new ZookeeperDiscoveryProperties() {
-            @Override
-            public void load(URI uri, Properties properties) {
-                String authority = uri.getAuthority();
+        return (uri, properties) -> {
+            String authority = uri.getAuthority();
 
-                ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
-            }
+            ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
         };
     }
 

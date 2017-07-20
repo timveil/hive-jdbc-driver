@@ -7,7 +7,6 @@ import veil.hdp.hive.jdbc.binary.BinaryUtils;
 import veil.hdp.hive.jdbc.core.*;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 
-import java.net.URI;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -40,22 +39,17 @@ public class BinaryHiveDriver extends HiveDriver {
 
     @Override
     DefaultDriverProperties defaultDriverProperties() {
-        return (properties) -> {
-            HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.name());
-        };
+        return (properties) -> HiveDriverProperty.TRANSPORT_MODE.set(properties, TransportMode.binary.name());
     }
 
     @Override
     UriProperties uriProperties() {
-        return new UriProperties() {
-            @Override
-            public void load(URI uri, Properties properties) {
+        return (uri, properties) -> {
 
-                HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
 
-                if (uri.getPort() != -1) {
-                    HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
-                }
+            if (uri.getPort() != -1) {
+                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
             }
         };
     }

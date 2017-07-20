@@ -84,7 +84,7 @@ public class ZookeeperUtils {
                         }
                     } else {
 
-                        log.warn("adding new property [{}] with value [{}] from zookeeper. this could likely be handled better by the driver.  possible bug!", hiveDriverProperty.getKey(), value);
+                        log.warn("adding new property [{}] with value [{}] from zookeeper. this could likely be handled better by the driver.  possible bug!", key, value);
 
                         properties.setProperty(key, value);
                     }
