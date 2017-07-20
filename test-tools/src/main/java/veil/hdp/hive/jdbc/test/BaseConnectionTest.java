@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -78,6 +80,27 @@ public abstract class BaseConnectionTest extends BaseTest {
     @Test
     public void testArrayQuery() throws SQLException {
         executeArrayQuery(true);
+    }
+
+    @Test
+    public void testDates() throws SQLException {
+
+        //get Calendar instance
+        Calendar now = Calendar.getInstance();
+
+        //get current TimeZone using getTimeZone method of Calendar class
+        TimeZone timeZone = now.getTimeZone();
+
+        //display current TimeZone using getDisplayName() method of TimeZone class
+        log.debug("Current TimeZone is: {}", timeZone.getDisplayName());
+
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("select col_date, col_timestamp from date_time_test")) {
+
+
+            Printer.printResultSetMetaData(rs.getMetaData());
+            Printer.printResultSet(rs);
+        }
     }
 
 

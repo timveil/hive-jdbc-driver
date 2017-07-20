@@ -172,16 +172,7 @@ public class BaseColumn<T> implements Column<T> {
             } else if (columnData instanceof LongColumnData) {
                 LongColumnData data = (LongColumnData) columnData;
 
-                Long value = data.getValues().get(row);
-
-                if (hiveType.equals(TIMESTAMP)) {
-                    return new TimestampColumn(descriptor, isNull ? null : new Timestamp(value));
-                } else if (hiveType.equals(DATE)) {
-                    return new DateColumn(descriptor, isNull ? null : new Date(value));
-                } else {
-                    return new LongColumn(descriptor, isNull ? null : value);
-                }
-
+                return new LongColumn(descriptor, isNull ? null : data.getValues().get(row));
 
             } else if (columnData instanceof DoubleColumnData) {
 
@@ -215,6 +206,10 @@ public class BaseColumn<T> implements Column<T> {
                     return new CharacterColumn(descriptor, isNull ? null : value.charAt(0));
                 } else if (hiveType.equals(VARCHAR)) {
                     return new VarcharColumn(descriptor, isNull ? null : value);
+                } else if (hiveType.equals(TIMESTAMP)) {
+                    return new TimestampColumn(descriptor, isNull ? null : Timestamp.valueOf(value));
+                } else if (hiveType.equals(DATE)) {
+                    return new DateColumn(descriptor, isNull ? null : Date.valueOf(value));
                 } else {
                     return new StringColumn(descriptor, isNull ? null : value);
                 }
