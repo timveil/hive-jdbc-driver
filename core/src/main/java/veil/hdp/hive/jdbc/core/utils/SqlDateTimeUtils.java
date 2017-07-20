@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc.core.utils;
 
+import veil.hdp.hive.jdbc.core.HiveException;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -7,15 +9,28 @@ import java.sql.Timestamp;
 public class SqlDateTimeUtils {
 
     public static Date convertStringToDate(String dateString) {
-        return Date.valueOf(dateString);
+
+        try {
+            return Date.valueOf(dateString);
+        } catch (Exception e) {
+            throw new HiveException("unable to convert string [" + dateString + "] to java.sql.Date.  must be in the following format yyyy-mm-dd", e);
+        }
     }
 
     public static Timestamp convertStringToTimestamp(String timestampString) {
-        return Timestamp.valueOf(timestampString);
+        try {
+            return Timestamp.valueOf(timestampString);
+        } catch (Exception e) {
+            throw new HiveException("unable to convert string [" + timestampString + "] to java.sql.Timestamp.  must be in the following format yyyy-mm-dd hh:mm:ss.[fff...]", e);
+        }
     }
 
     public static Time convertStringToTime(String timeString) {
-        return Time.valueOf(timeString);
+        try {
+            return Time.valueOf(timeString);
+        } catch (Exception e) {
+            throw new HiveException("unable to convert string [" + timeString + "] to java.sql.Time.  must be in the following format hh:mm:ss", e);
+        }
     }
 
     public static Date convertTimestampToDate(Timestamp timestamp) {
