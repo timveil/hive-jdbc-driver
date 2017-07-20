@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.core.data;
 
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
+import veil.hdp.hive.jdbc.core.utils.SqlDateTimeUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class StringColumn extends BaseColumn<String> {
     @Override
     public Date asDate() throws SQLException {
         if (value != null) {
-            return Date.valueOf(value);
+            return SqlDateTimeUtils.convertStringToDate(value);
         }
 
         return null;
@@ -44,7 +45,7 @@ public class StringColumn extends BaseColumn<String> {
     @Override
     public Timestamp asTimestamp() throws SQLException {
         if (value != null) {
-            return Timestamp.valueOf(value);
+            return SqlDateTimeUtils.convertStringToTimestamp(value);
         }
 
         return null;
@@ -116,7 +117,7 @@ public class StringColumn extends BaseColumn<String> {
     @Override
     public Time asTime() throws SQLException {
         if (value != null) {
-            return Time.valueOf(value);
+            return SqlDateTimeUtils.convertStringToTime(value);
         }
 
         return null;

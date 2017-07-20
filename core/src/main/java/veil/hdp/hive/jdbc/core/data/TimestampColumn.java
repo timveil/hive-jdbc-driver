@@ -37,11 +37,15 @@ public class TimestampColumn extends BaseColumn<Timestamp> {
 
     @Override
     public Date asDate() throws SQLException {
+        log.warn("will lose data going from {} to {}; value [{}]", Timestamp.class, Date.class, value);
+
         return SqlDateTimeUtils.convertTimestampToDate(value);
     }
 
     @Override
     public Time asTime() throws SQLException {
+        log.warn("will lose data going from {} to {}; value [{}]", Timestamp.class, Time.class, value);
+
         return SqlDateTimeUtils.convertTimestampToTime(value);
     }
 

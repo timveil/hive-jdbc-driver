@@ -6,6 +6,18 @@ import java.sql.Timestamp;
 
 public class SqlDateTimeUtils {
 
+    public static Date convertStringToDate(String dateString) {
+        return Date.valueOf(dateString);
+    }
+
+    public static Timestamp convertStringToTimestamp(String timestampString) {
+        return Timestamp.valueOf(timestampString);
+    }
+
+    public static Time convertStringToTime(String timeString) {
+        return Time.valueOf(timeString);
+    }
+
     public static Date convertTimestampToDate(Timestamp timestamp) {
 
         if (timestamp == null) {
@@ -18,7 +30,7 @@ public class SqlDateTimeUtils {
 
         String dateString = timestampString.substring(0, timestampString.indexOf(' '));
 
-        return Date.valueOf(dateString);
+        return convertStringToDate(dateString);
 
     }
 
@@ -40,7 +52,7 @@ public class SqlDateTimeUtils {
 
         String timeString = timestampString.substring(timestampString.indexOf(' ') + 1, lastIndex);
 
-        return Time.valueOf(timeString);
+        return convertStringToTime(timeString);
 
     }
 

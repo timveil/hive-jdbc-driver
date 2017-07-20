@@ -8,6 +8,13 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 public class LongColumn extends BaseColumn<Long> {
+            /*
+    resist temptation to convert long to timestamp/date/time.  java.sql.date does not need/want time and doesn't fit spec
+    furthermore, time as long assumes timezone as GMT and can cause unexpected results.
+    for hive always use string representation and static helpers on java.sql.Date to construct
+     */
+
+
     LongColumn(ColumnDescriptor descriptor, Long value) {
         super(descriptor, value);
     }
@@ -31,32 +38,6 @@ public class LongColumn extends BaseColumn<Long> {
         return null;
     }
 
-    @Override
-    public Date asDate() throws SQLException {
-        if (value != null) {
-            return new Date(value);
-        }
-
-        return null;
-    }
-
-    @Override
-    public Timestamp asTimestamp() throws SQLException {
-        if (value != null) {
-            return new Timestamp(value);
-        }
-
-        return null;
-    }
-
-    @Override
-    public Time asTime() throws SQLException {
-        if (value != null) {
-            return new Time(value);
-        }
-
-        return null;
-    }
 
     @Override
     public String asString() throws SQLException {

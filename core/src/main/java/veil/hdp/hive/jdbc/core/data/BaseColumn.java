@@ -5,6 +5,7 @@ import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.core.Builder;
 import veil.hdp.hive.jdbc.core.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.core.metadata.HiveType;
+import veil.hdp.hive.jdbc.core.utils.SqlDateTimeUtils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -207,9 +208,9 @@ public class BaseColumn<T> implements Column<T> {
                 } else if (hiveType.equals(VARCHAR)) {
                     return new VarcharColumn(descriptor, isNull ? null : value);
                 } else if (hiveType.equals(TIMESTAMP)) {
-                    return new TimestampColumn(descriptor, isNull ? null : Timestamp.valueOf(value));
+                    return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(value));
                 } else if (hiveType.equals(DATE)) {
-                    return new DateColumn(descriptor, isNull ? null : Date.valueOf(value));
+                    return new DateColumn(descriptor, isNull ? null :SqlDateTimeUtils.convertStringToDate(value));
                 } else {
                     return new StringColumn(descriptor, isNull ? null : value);
                 }
