@@ -331,22 +331,22 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 
 | Apache Driver Property | This Driver Property | Notes |
 | :--- | :--- | :--- |
-|transportMode|transportMode|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
-|hive.server2.transport.mode|transportMode|deprecated; see above|
-|httpPath|httpEndpoint| |
-|hive.server2.thrift.http.path|httpEndpoint|deprecated; see above|
-|ssl|sslEnabled| |
-|twoWay|sslTwoWayEnabled| |
-|sslTrustStore|sslTrustStorePath| |
-|trustStorePassword|sslTrustStorePassword| |
-|sslKeyStore|sslKeyStorePath| |
-|keyStorePassword|sslKeyStorePassword| |
-|serviceDiscoveryMode|zkEnabled| |
-|zooKeeperNamespace|zkNamespace| |
-|principal|krb5ServerPrincipal| |
-|saslQop|saslQOP| |
-|sasl.qop|saslQOP|deprecated; see above|
-|cookieAuth|httpCookieReplayEnabled| |
-|cookieName|httpCookieName| |
-|kerberosAuthType|krb5Mode| |
+|`transportMode`|`transportMode`|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
+|`hive.server2.transport.mode`|`transportMode`|deprecated in Apache; `transportMode` is recommended instead|
+|`httpPath`|`httpEndpoint`| |
+|`hive.server2.thrift.http.path`|`httpEndpoint`|deprecated in Apache; `httpPath` is recommended instead|
+|`ssl`|`sslEnabled`| |
+|`twoWay`|`sslTwoWayEnabled`| |
+|`sslTrustStore`|`sslTrustStorePath`| |
+|`trustStorePassword`|`sslTrustStorePassword`| |
+|`sslKeyStore`|`sslKeyStorePath`| |
+|`keyStorePassword`|`sslKeyStorePassword`| |
+|`serviceDiscoveryMode`|`zkEnabled`| |
+|`zooKeeperNamespace`|`zkNamespace`| |
+|`principal`|`krb5ServerPrincipal`| |
+|`saslQop`|`saslQOP`| |
+|`sasl.qop`|`saslQOP`|deprecated in Apache; `saslQop` is recommended instead|
+|`cookieAuth`|`httpCookieReplayEnabled`| |
+|`cookieName`|`httpCookieName`| |
+|`kerberosAuthType`|`krb5Mode`| |
 
