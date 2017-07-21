@@ -323,3 +323,29 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | jaasDebug | `true` | false | none |
+
+
+## Apache Driver Property Mapping
+
+
+| Apache Driver Property | This Driver Property | Notes |
+| :--- | :--- | :--- |
+|transportMode|transportMode|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
+|hive.server2.transport.mode|transportMode|deprecated; see above|
+|httpPath|httpEndpoint||
+|hive.server2.thrift.http.path|httpEndpoint|deprecated; see above|
+|ssl|sslEnabled||
+|twoWay|sslTwoWayEnabled||
+|sslTrustStore|sslTrustStorePath||
+|trustStorePassword|sslTrustStorePassword||
+|sslKeyStore|sslKeyStorePath||
+|keyStorePassword|sslKeyStorePassword||
+|serviceDiscoveryMode|zkEnabled||
+|zooKeeperNamespace|zkNamespace||
+|principal|krb5ServerPrincipal||
+|saslQop|saslQOP||
+|sasl.qop|saslQOP|deprecated; see above|
+|cookieAuth|httpCookieReplayEnabled||
+|cookieName|httpCookieName||
+|kerberosAuthType|krb5Mode||
+
