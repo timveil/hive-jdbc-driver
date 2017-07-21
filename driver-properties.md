@@ -77,7 +77,7 @@ The Thrift Protocol Version as defined in `TProtocolVersion` helps to define the
 
 #### TProtocolVersion values
 
-| Value | Enum | notes |
+| Value | Enum | Notes |
 | :--- | :--- | :--- |
 | `0` | `HIVE_CLI_SERVICE_PROTOCOL_V1` | initial version |
 | `1` | `HIVE_CLI_SERVICE_PROTOCOL_V2` | added support for asynchronous execution (added with [HIVE-4617](https://issues.apache.org/jira/browse/HIVE-4617), Hive 0.12.0)|
