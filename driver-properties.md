@@ -73,7 +73,7 @@ The Authentication Mode of the HS2 instance as specified by the Hive configurati
 | :--- | :--- | :--- | :--- |
 | thriftVersion | `7` | false | none |
 
-The Thrift Protocol Version as defined in `TProtocolVersion` helps to define the features/functions available as defined in the Thrift IDL or `.thrift` file.  This allows interoperability between Hive versions.
+The Thrift Protocol Version or `TProtocolVersion` is defined in the `TCLIService.thrift` file and allows interoperability between different Hive versions.  It is important that the value you specify is supported by your version of HS2.  The default value, `7`, will work with Hive 1.2.0 or greater.  If you specify a value greater than supported by HS2, you may get an exception with the following message: `HiveThriftException: org.apache.thrift.TApplicationException: Required field 'client_protocol' is unset!`.
 
 #### TProtocolVersion values
 
