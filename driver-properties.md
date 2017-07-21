@@ -73,9 +73,11 @@ The Authentication Mode of the HS2 instance as specified by the Hive configurati
 | :--- | :--- | :--- | :--- |
 | thriftVersion | `7` | false | none |
 
-The Thrift Protocol Version helps to define the features/functions available as defined in the Thrift IDL or `.thrift` file.  This allows interoperability between Hive versions.
+The Thrift Protocol Version as defined in `TProtocolVersion` helps to define the features/functions available as defined in the Thrift IDL or `.thrift` file.  This allows interoperability between Hive versions.
 
-| Integer Value | Thrift enum | notes |
+#### TProtocolVersion values
+
+| Value | Enum | notes |
 | :--- | :--- | :--- |
 | `0` | `HIVE_CLI_SERVICE_PROTOCOL_V1` | initial version |
 | `1` | `HIVE_CLI_SERVICE_PROTOCOL_V2` | added support for asynchronous execution (added with [HIVE-4617](https://issues.apache.org/jira/browse/HIVE-4617), Hive 0.12.0)|
