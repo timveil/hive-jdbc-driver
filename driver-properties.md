@@ -327,6 +327,7 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 
 ## Apache Driver Property Mapping
 
+This table outlines how the existing Apache Hive drivers properties map to this driver. You can use this to convert existing url's to a format consistent with this driver.  Many of the properties are similar but have been renamed slightly to improve consistency and clarity.
 
 | Apache Driver Property | This Driver Property | Notes |
 | :--- | :--- | :--- |
