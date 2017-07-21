@@ -75,16 +75,18 @@ The Authentication Mode of the HS2 instance as specified by the Hive configurati
 
 The Thrift Protocol Version helps to define the features/functions available as defined in the Thrift IDL or `.thrift` file.  This allows interoperability between Hive versions.
 
-*   0 = `HIVE_CLI_SERVICE_PROTOCOL_V1`, initial version
-*   1 = `HIVE_CLI_SERVICE_PROTOCOL_V2`, added support for asynchronous execution (added with [HIVE-4617](https://issues.apache.org/jira/browse/HIVE-4617), Hive 0.12.0)
-*   2 = `HIVE_CLI_SERVICE_PROTOCOL_V3`, added varchar type, primitive type qualifiers (added with [HIVE-5209](https://issues.apache.org/jira/browse/HIVE-5209), Hive 0.12.0)
-*   3 = `HIVE_CLI_SERVICE_PROTOCOL_V4`, added decimal precision/scale, char type (added with [HIVE-5780](https://issues.apache.org/jira/browse/HIVE-5780), Hive 0.13.0)
-*   4 = `HIVE_CLI_SERVICE_PROTOCOL_V5`, added error details when GetOperationStatus returns in error state (added with [HIVE-5230](https://issues.apache.org/jira/browse/HIVE-5230), Hive 0.13.0)
-*   5 = `HIVE_CLI_SERVICE_PROTOCOL_V6`, uses binary type for binary payload (was string) and uses columnar result set (added with [HIVE-3746](https://issues.apache.org/jira/browse/HIVE-3746), Hive 0.13.0)
-*   6 = `HIVE_CLI_SERVICE_PROTOCOL_V7`, added support for delegation token based connection (added with [HIVE-6647](https://issues.apache.org/jira/browse/HIVE-6647), Hive 0.13.0)
-*   7 = `HIVE_CLI_SERVICE_PROTOCOL_V8`, added support for interval types (added with [HIVE-10037](https://issues.apache.org/jira/browse/HIVE-10037), Hive 1.2.0)
-*   8 = `HIVE_CLI_SERVICE_PROTOCOL_V9`, added support for serializing ResultSets in SerDe (added with [HIVE-14191](https://issues.apache.org/jira/browse/HIVE-14191), Hive 2.1.1, 7/16)
-*   9 = `HIVE_CLI_SERVICE_PROTOCOL_V10`, added support for in place updates via GetOperationStatus (added with [HIVE-15473](https://issues.apache.org/jira/browse/HIVE-15473), Hive 2.2.0, 2/17)
+| Integer Value | Thrift enum | notes |
+| :--- | :--- | :--- |
+| `0` | `HIVE_CLI_SERVICE_PROTOCOL_V1` | initial version |
+| `1` | `HIVE_CLI_SERVICE_PROTOCOL_V2` | added support for asynchronous execution (added with [HIVE-4617](https://issues.apache.org/jira/browse/HIVE-4617), Hive 0.12.0)|
+| `2` | `HIVE_CLI_SERVICE_PROTOCOL_V3` | added varchar type, primitive type qualifiers (added with [HIVE-5209](https://issues.apache.org/jira/browse/HIVE-5209), Hive 0.12.0)|
+| `3` | `HIVE_CLI_SERVICE_PROTOCOL_V4` | added decimal precision/scale, char type (added with [HIVE-5780](https://issues.apache.org/jira/browse/HIVE-5780), Hive 0.13.0)|
+| `4` | `HIVE_CLI_SERVICE_PROTOCOL_V5` | added error details when GetOperationStatus returns in error state (added with [HIVE-5230](https://issues.apache.org/jira/browse/HIVE-5230), Hive 0.13.0)|
+| `5` | `HIVE_CLI_SERVICE_PROTOCOL_V6` | uses binary type for binary payload (was string) and uses columnar result set (added with [HIVE-3746](https://issues.apache.org/jira/browse/HIVE-3746), Hive 0.13.0)|
+| `6` | `HIVE_CLI_SERVICE_PROTOCOL_V7` | added support for delegation token based connection (added with [HIVE-6647](https://issues.apache.org/jira/browse/HIVE-6647), Hive 0.13.0)|
+| `7` | `HIVE_CLI_SERVICE_PROTOCOL_V8` | added support for interval types (added with [HIVE-10037](https://issues.apache.org/jira/browse/HIVE-10037), Hive 1.2.0)|
+| `8` | `HIVE_CLI_SERVICE_PROTOCOL_V9` | added support for serializing ResultSets in SerDe (added with [HIVE-14191](https://issues.apache.org/jira/browse/HIVE-14191), Hive 2.1.1, 7/16)|
+| `9` | `HIVE_CLI_SERVICE_PROTOCOL_V10` | added support for in place updates via GetOperationStatus (added with [HIVE-15473](https://issues.apache.org/jira/browse/HIVE-15473), Hive 2.2.0, 2/17)|
 
 ## Binary Properties
 
