@@ -332,9 +332,9 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 | Apache Driver Property | This Driver Property | Notes |
 | :--- | :--- | :--- |
 |`transportMode`|`transportMode`|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
-|`hive.server2.transport.mode`|`transportMode`|deprecated in Apache; `transportMode` is recommended instead|
+|`hive.server2.transport.mode`|`transportMode`|deprecated in Apache|
 |`httpPath`|`httpEndpoint`| |
-|`hive.server2.thrift.http.path`|`httpEndpoint`|deprecated in Apache; `httpPath` is recommended instead|
+|`hive.server2.thrift.http.path`|`httpEndpoint`|deprecated in Apache|
 |`ssl`|`sslEnabled`| |
 |`twoWay`|`sslTwoWayEnabled`| |
 |`sslTrustStore`|`sslTrustStorePath`| |
@@ -345,7 +345,7 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 |`zooKeeperNamespace`|`zkNamespace`| |
 |`principal`|`krb5ServerPrincipal`| |
 |`saslQop`|`saslQOP`| |
-|`sasl.qop`|`saslQOP`|deprecated in Apache; `saslQop` is recommended instead|
+|`sasl.qop`|`saslQOP`|deprecated in Apache|
 |`cookieAuth`|`httpCookieReplayEnabled`| |
 |`cookieName`|`httpCookieName`| |
 |`kerberosAuthType`|`krb5Mode`| |
