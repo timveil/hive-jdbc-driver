@@ -26,7 +26,7 @@ public class BinaryUtils {
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
     private static final String ENDPOINT_IDENTIFICATION_ALGORITHM_NAME = "HTTPS";
 
-    public static TSocket createSocket(Properties properties) throws HiveSQLException {
+    private static TSocket createSocket(Properties properties) throws HiveSQLException {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);

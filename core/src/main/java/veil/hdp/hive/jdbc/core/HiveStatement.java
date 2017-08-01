@@ -56,7 +56,7 @@ public class HiveStatement extends AbstractStatement {
 
         if (operation != null) {
             try {
-                log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! closing current thriftOperation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                log.warn("Closing current ThriftOperation before preforming another.  This is very unusual.  Possible Bug!");
                 operation.close();
             } catch (IOException e) {
                 log.warn(e.getMessage(), e);
