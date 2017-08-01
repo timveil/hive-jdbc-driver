@@ -7,10 +7,6 @@
 package veil.hdp.hive.jdbc.core.binding;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TStatusCode implements org.apache.thrift.TEnum {
   SUCCESS_STATUS(0),
   SUCCESS_WITH_INFO_STATUS(1),

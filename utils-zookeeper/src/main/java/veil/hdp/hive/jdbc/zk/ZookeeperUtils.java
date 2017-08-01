@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.HiveException;
-import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 
 import java.nio.charset.Charset;
 import java.util.List;
