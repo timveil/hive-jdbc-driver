@@ -97,7 +97,6 @@ public abstract class BaseConnectionTest extends BaseTest {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("select col_date, col_timestamp from date_time_test")) {
 
-
             Printer.printResultSetMetaData(rs.getMetaData());
             Printer.printResultSet(rs);
         }
@@ -109,6 +108,7 @@ public abstract class BaseConnectionTest extends BaseTest {
              ResultSet rs = statement.executeQuery("SELECT * FROM master_csv limit 10")) {
 
             if (print) {
+                Printer.printResultSetMetaData(rs.getMetaData());
                 Printer.printResultSet(rs);
             }
         }
@@ -118,9 +118,8 @@ public abstract class BaseConnectionTest extends BaseTest {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM struct_test")) {
 
-            Printer.printResultSetMetaData(rs.getMetaData());
-
             if (print) {
+                Printer.printResultSetMetaData(rs.getMetaData());
                 Printer.printResultSet(rs);
             }
         }
@@ -131,9 +130,8 @@ public abstract class BaseConnectionTest extends BaseTest {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM map_test")) {
 
-            Printer.printResultSetMetaData(rs.getMetaData());
-
             if (print) {
+                Printer.printResultSetMetaData(rs.getMetaData());
                 Printer.printResultSet(rs);
             }
         }
@@ -144,9 +142,8 @@ public abstract class BaseConnectionTest extends BaseTest {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM array_test")) {
 
-            Printer.printResultSetMetaData(rs.getMetaData());
-
             if (print) {
+                Printer.printResultSetMetaData(rs.getMetaData());
                 Printer.printResultSet(rs);
             }
         }
@@ -165,6 +162,7 @@ public abstract class BaseConnectionTest extends BaseTest {
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (print) {
+                    Printer.printResultSetMetaData(rs.getMetaData());
                     Printer.printResultSet(rs);
                 }
             }

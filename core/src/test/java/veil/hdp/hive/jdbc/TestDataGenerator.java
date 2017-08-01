@@ -45,12 +45,12 @@ public class TestDataGenerator {
             row.add(Boolean.toString(randomBoolean));
             row.add(Float.toString(randomFloat));
             row.add(Double.toString(randomDouble));
-            row.add("'" + randomString + "'");
-            row.add("'" + randomTimestamp.toString() + "'");
+            row.add(randomString);
+            row.add(randomTimestamp.toString());
             row.add(randomBig.toString());
-            row.add("'" + randomVarchar + "'");
-            row.add("'" + randomDate.toString() + "'");
-            row.add("'" + Character.toString(randomChar) + "'");
+            row.add(randomVarchar);
+            row.add(randomDate.toString());
+            row.add(Character.toString(randomChar));
 
             String rowString = Joiner.on(',').join(row);
 
