@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class ZookeeperUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(DriverUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(ZookeeperUtils.class);
 
 
     public static void loadPropertiesFromZookeeper(String authority, Properties properties) {

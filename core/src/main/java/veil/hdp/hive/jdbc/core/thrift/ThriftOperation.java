@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftOperation implements Closeable {
 
-    private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
+    private static final Logger log = LoggerFactory.getLogger(ThriftOperation.class);
 
     // constructor
     private final ThriftSession session;

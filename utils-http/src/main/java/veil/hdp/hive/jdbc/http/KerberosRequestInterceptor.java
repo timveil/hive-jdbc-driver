@@ -26,7 +26,7 @@ import java.util.Properties;
 
 public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(KerberosRequestInterceptor.class);
 
     private static final Base64 BASE_64 = new Base64(0);
 
