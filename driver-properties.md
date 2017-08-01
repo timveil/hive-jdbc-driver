@@ -345,7 +345,7 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 |`trustStorePassword`|`sslTrustStorePassword`| |
 |`sslKeyStore`|`sslKeyStorePath`| |
 |`keyStorePassword`|`sslKeyStorePassword`| |
-|`serviceDiscoveryMode`|`zkEnabled`| |
+|`serviceDiscoveryMode`|`zkEnabled`|Zookeeper enabled drivers have this enabled by default.  To use Zookeeper discovery, make sure you are using the appropriate driver jar|
 |`zooKeeperNamespace`|`zkNamespace`| |
 |`principal`|`krb5ServerPrincipal`| |
 |`saslQop`|`saslQOP`| |
