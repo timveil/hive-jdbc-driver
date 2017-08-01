@@ -20,6 +20,7 @@ import java.util.Random;
 public class ZookeeperUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ZookeeperUtils.class);
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 
     public static void loadPropertiesFromZookeeper(String authority, Properties properties) {
@@ -56,7 +57,7 @@ public class ZookeeperUtils {
 
             String randomHost = hosts.get(random.nextInt(hosts.size()));
 
-            String hostData = new String(zooKeeperClient.getData().forPath('/' + zooKeeperNamespace + '/' + randomHost), Charset.forName("UTF-8"));
+            String hostData = new String(zooKeeperClient.getData().forPath('/' + zooKeeperNamespace + '/' + randomHost), UTF_8);
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
