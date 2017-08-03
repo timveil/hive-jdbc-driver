@@ -156,8 +156,8 @@ public abstract class BaseConnectionTest extends BaseTest {
     }
 
     private void executePreparedStatement(boolean print) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_string = ?")) {
-            statement.setString(1, "test");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_boolean = ?")) {
+            statement.setBoolean(1, true);
 
             try (ResultSet rs = statement.executeQuery()) {
 

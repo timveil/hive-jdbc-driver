@@ -58,11 +58,6 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     }
 
     @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        return super.getMetaData();
-    }
-
-    @Override
     public void setByte(int parameterIndex, byte x) throws SQLException {
         parameterValues.put(parameterIndex, Byte.toString(x));
     }
@@ -90,6 +85,11 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     @Override
     public void setDouble(int parameterIndex, double x) throws SQLException {
         parameterValues.put(parameterIndex, Double.toString(x));
+    }
+
+    @Override
+    public void setBoolean(int parameterIndex, boolean x) throws SQLException {
+        parameterValues.put(parameterIndex, Boolean.toString(x));
     }
 
     @Override
