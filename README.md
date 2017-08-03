@@ -1,4 +1,12 @@
-# README
+# Hive JDBC Driver
+
+This project allows 
+
+
+disclaimer
+why/rationale
+how to build
+how to use
 
 todo: need a full comparison of size and dependency graph for both hive 1.x and 2.x; a chart would be cool here
 
