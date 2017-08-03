@@ -2,8 +2,10 @@ package veil.hdp.hive.jdbc.core;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,6 +106,11 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     }
 
     @Override
+    public void setTime(int parameterIndex, Time x) throws SQLException {
+        parameterValues.put(parameterIndex, StringUtils.wrap(x.toString(), SINGLE_QUOTE));
+    }
+
+    @Override
     public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
         parameterValues.put(parameterIndex, StringUtils.wrap(x.toString(), SINGLE_QUOTE));
     }
@@ -117,6 +124,56 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     public void setNull(int parameterIndex, int sqlType, String typeName) throws SQLException {
         parameterValues.put(parameterIndex, NULL_STRING);
     }
+
+
+
+    // todo
+
+    /*
+
+    @Override
+    public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
+        super.setObject(parameterIndex, x, targetSqlType);
+    }
+
+    @Override
+    public void setObject(int parameterIndex, Object x) throws SQLException {
+        super.setObject(parameterIndex, x);
+    }
+
+    @Override
+    public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
+        super.setBigDecimal(parameterIndex, x);
+    }
+
+    @Override
+    public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
+        super.setDate(parameterIndex, x, cal);
+    }
+
+    @Override
+    public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
+        super.setTime(parameterIndex, x, cal);
+    }
+
+    @Override
+    public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
+        super.setTimestamp(parameterIndex, x, cal);
+    }
+
+    @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return super.getMetaData();
+    }
+
+    @Override
+    public ParameterMetaData getParameterMetaData() throws SQLException {
+        return super.getParameterMetaData();
+    }
+
+
+
+    */
 
     private String updateSql(String originalSql) {
 
