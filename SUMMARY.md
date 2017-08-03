@@ -1,6 +1,6 @@
 # Summary
 
 * [About](README.md)
-* [Driver Properties](driver-properties.md)
-* Examples
+* [Driver Properties](DRIVER-PROPERTIES.md)
+* [Examples](EXAMPLES.md)
 
