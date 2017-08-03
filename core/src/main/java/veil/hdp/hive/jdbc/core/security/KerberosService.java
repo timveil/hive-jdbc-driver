@@ -33,6 +33,7 @@ public class KerberosService {
     private static Oid NAME_TYPE = null;
 
     static {
+        // todo: this strikes me as quite ugly.  probably should be moved into some sort of service method or constructor.  unfortunately Oid has a static method that swallows the GSSException but it is package-private
         try {
             MECHANISM = new Oid(KRB5_OID);
             NAME_TYPE = new Oid(KRB5_NAME_OID);
