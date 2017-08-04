@@ -13,5 +13,15 @@ The third significant deviation is the absence of Hadoop or Hive dependencies an
 
 ![](docs/sizes.png)
 
+## Areas of Focus
 
+The following are board areas where I have attempted expand or improve the existing Hive Driver:
+
+* Jar size - focused on creating smaller, more portable jars
+* Dependency graph - because JDBC drivers are often embedded in other applications it is important to limit the number of external dependencies that are shaded into the final jar.  Shaded dependencies are often the source of size bloat and classloader conflicts.  Every effort has been made to limit the number of external dependencies.
+* Logging - logging inside hadoop dependencies and Hive is often a confusing mix of logging frameworks.  This driver works to provide clearer logging thru the standard SLF4J api.
+* JDBC compatibility - it is doubtful that Hive will ever allow true JDBC spec compatibility... the underlying datastore simply doesn't yet (may never) provide many of the required concepts.  Having said that, there are plenty of methods and interfaces within the JDBC spec that have not been implemented by the Apache Driver that could have been.  I've attempted rectify that.
+* Documentation - the existing Hive documentation can be difficult to follow.  For example, there doesn't seem to be a good single point of reference for all supported URL parameters.  Instead the complete picture of options must be gleaned from a handful of examples and sources.  This makes setting up connections difficult.
+* Simplification - the existing driver supports concepts like "embedded mode" which adds complexity to connection logic and requires server side dependencies.  If you need "embedded mode", this driver is not for you.  
+* External Configuration - in my experience you often need to add Java VM options (`-Dsome_config`) to get JDBC working.  This is especially prevalent when dealing with Kerberos.  This driver moves some of those common configuration flags and adds them as URL parameters.
 
