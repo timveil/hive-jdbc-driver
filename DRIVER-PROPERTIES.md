@@ -333,7 +333,7 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 
 This table outlines how the existing Apache Hive drivers properties map to this driver. You can use this to convert existing url's to a format consistent with this driver.  Many of the properties are similar but have been renamed slightly to improve consistency and clarity.
 
-| Apache Driver Property | This Driver Property | Notes |
+| Apache Driver - OLD | This Driver - NEW | Notes |
 | :--- | :--- | :--- |
 |`transportMode`|`transportMode`|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
 |`hive.server2.transport.mode`|`transportMode`|deprecated in Apache|
