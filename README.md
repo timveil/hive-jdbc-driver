@@ -10,7 +10,7 @@ As I started building out this project I realized that I wanted to deviate signi
 - HTTP: for `http` connections without zookeeper discovery
 - HTTP + Zookeeper: for `http` connections that leverage zookeeper discovery
 
-The third significant deviation is the absence of Hadoop or Hive dependencies and their transitive dependency graphs.  The only bridge to Hive in this driver is the Thrift Interface Description Language (IDL) file.  All necessary code was rewritten from the ground up with an emphasis on eliminating external dependencies.  This, in combinaation with packaging, has the clear benefit of significantly reducing jar sizes.  For example:
+The third significant deviation is the absence of Hadoop or Hive dependencies and their transitive dependency graphs.  The only bridge to Hive in this driver is the Thrift Interface Description Language (IDL) file.  All necessary code was rewritten from the ground up with an emphasis on eliminating external dependencies.  This, in combination with packaging, has the clear benefit of significantly reducing jar sizes.  For example if you are connecting to Hive running LLAP using `binary` transport (the default) and not using Zookeeper, the jar is 92% smaller than the original or 60mb smaller!
 
 ![](docs/sizes.png)
 
