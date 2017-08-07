@@ -38,6 +38,9 @@ public enum HiveDriverProperty {
     // make sure to spell out differences in readme; look at *.thrift
     THRIFT_PROTOCOL_VERSION("thriftVersion", null, null, null),
 
+    // in milliseconds. time code will wait to open thrift transport
+    THRIFT_TRANSPORT_TIMEOUT("thriftTransportTimeout", "10000", null, null),
+
 
     /***************************************************
      *  BINARY
@@ -93,7 +96,7 @@ public enum HiveDriverProperty {
      *  KERBEROS
      ***************************************************/
 
-    KERBEROS_MODE("krb5Mode", KerberosMode.PASSWORD.name(), null, null, KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
+    KERBEROS_MODE("krb5Mode", KerberosMode.OS.name(), null, null, KerberosMode.OS.name(),KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, "hive.server2.authentication.kerberos.principal"),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property

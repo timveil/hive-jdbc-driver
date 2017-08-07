@@ -21,6 +21,7 @@ import veil.hdp.hive.jdbc.core.thrift.ThriftSession;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,13 +35,24 @@ public class ThriftUtils {
 
     private static final int DEFAULT_THRIFT_VERSION = PropertyUtils.getInstance().getIntValue("thrift.protocol.version.default");
 
-    public static void openTransport(TTransport transport) throws HiveThriftException {
+    public static void openTransport(TTransport transport, Properties properties) throws HiveThriftException {
 
         if (!transport.isOpen()) {
             try {
-                transport.open();
-            } catch (TTransportException e) {
-                throw new HiveThriftException(e);
+                ExecutorService executor = Executors.newFixedThreadPool(1);
+
+                Future<Boolean> future = executor.submit(() -> {
+                    transport.open();
+
+                    return true;
+                });
+
+                future.get(HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.getInt(properties), TimeUnit.MILLISECONDS);
+
+            } catch (InterruptedException | ExecutionException e) {
+               throw new HiveException(e);
+            } catch (TimeoutException e) {
+                throw new HiveException("The Thrift Transport did not open prior to Timeout.  If using Kerberos, double check that you have a valid client Principal by running klist.", e);
             }
         }
 

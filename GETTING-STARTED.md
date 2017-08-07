@@ -29,7 +29,13 @@ Notice the exclusive use of `;` to separate the `database` from Key/Value pairs 
 
 ## Binary Driver
 
-The Binary driver is intended to be used with clusters where `hive.server2.transport.mode` is set to `binary` and Zookeeper discovery is not enabled.  The classname for this driver is `veil.hdp.hive.jdbc.BinaryHiveDriver`
+The Binary driver is intended to be used with clusters where `hive.server2.transport.mode` is set to `binary` and Zookeeper discovery is not enabled.  The classname for this driver is `veil.hdp.hive.jdbc.BinaryHiveDriver`.
 
+### Example URLs
+```
+# simplest form
+jdbc:hive2://somehost:10000/default
+
+```
 
 

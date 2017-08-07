@@ -3,15 +3,13 @@ package veil.hdp.hive.jdbc;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.core.DefaultDriverProperties;
-import veil.hdp.hive.jdbc.core.HiveConnection;
-import veil.hdp.hive.jdbc.core.UriProperties;
-import veil.hdp.hive.jdbc.core.ZookeeperDiscoveryProperties;
+import veil.hdp.hive.jdbc.core.*;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 import veil.hdp.hive.jdbc.core.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.core.utils.VersionUtils;
 
+import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -35,7 +33,18 @@ public abstract class HiveDriver implements Driver {
     }
 
     private Connection connect(Properties properties) throws SQLException {
-        return HiveConnection.builder().properties(properties).thriftTransport(buildTransport(properties)).build();
+        ThriftTransport thriftTransport = buildTransport(properties);
+
+        try {
+            return HiveConnection.builder().properties(properties).thriftTransport(thriftTransport).build();
+        } catch (HiveException e) {
+            try {
+                thriftTransport.close();
+            } catch (IOException ignore) {
+            }
+
+            throw new HiveSQLException("There was a problem building the HiveConnection.", e);
+        }
     }
 
     abstract ThriftTransport buildTransport(Properties properties) throws SQLException;

@@ -101,6 +101,8 @@ public class KerberosService {
 
             if (kerberosMode.equals(KerberosMode.PREAUTH)) {
                 return getPreAuthenticatedSubject();
+            } else if (kerberosMode.equals(KerberosMode.OS)) {
+                return loginFromOperatingSystem(debugJaas);
             } else {
                 UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 

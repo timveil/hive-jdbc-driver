@@ -111,7 +111,7 @@ public class ThriftSession implements Closeable {
 
             TTransport transport = thriftTransport.getTransport();
 
-            ThriftUtils.openTransport(transport);
+            ThriftUtils.openTransport(transport, properties);
 
             TCLIService.Client client = ThriftUtils.createClient(transport);
 

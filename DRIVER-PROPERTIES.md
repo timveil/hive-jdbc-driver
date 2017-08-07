@@ -90,6 +90,14 @@ The Thrift Protocol Version or `TProtocolVersion` is defined in the `TCLIService
 | `8` | `HIVE_CLI_SERVICE_PROTOCOL_V9` | added support for serializing ResultSets in SerDe (added with [HIVE-14191](https://issues.apache.org/jira/browse/HIVE-14191), Hive 2.1.1, 7/16)|
 | `9` | `HIVE_CLI_SERVICE_PROTOCOL_V10` | added support for in place updates via GetOperationStatus (added with [HIVE-15473](https://issues.apache.org/jira/browse/HIVE-15473), Hive 2.2.0, 2/17)|
 
+### Thrift Transport Timeout
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| thriftTransportTimeout | `10000` | false | none |
+
+The amount of time, in milliseconds, that the driver will wait to open Thrift's Transport.
+
 ## Binary Properties
 
 ### Thrift Socket Timeout
@@ -266,8 +274,9 @@ todo: these values need very thorough explanations and examples
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| krb5Mode | `PASSWORD` | false | none |
+| krb5Mode | `OS` | false | none |
 
+* `OS` - Kerberos authentication has already happened at the OS level: todo better explanation
 * `PASSWORD` - must specify value for `user` and `password` properties
 * `PREAUTH` - assumes a valid Subject has already been authenticated.  This is typically done in external application code.  See example: todo
 * `KEYTAB` - must specify value for `user` and `krb5UserKeytab` properties
