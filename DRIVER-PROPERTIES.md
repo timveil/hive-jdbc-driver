@@ -96,7 +96,7 @@ The Thrift Protocol Version or `TProtocolVersion` is defined in the `TCLIService
 | :--- | :--- | :--- | :--- |
 | thriftTransportTimeout | `10000` | false | none |
 
-The amount of time, in milliseconds, that the driver will wait to open Thrift's Transport.
+The amount of time, in milliseconds, that the driver will wait for Thrift's `TTransport.open()` method to execute.
 
 ## Binary Properties
 

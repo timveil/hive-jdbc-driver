@@ -20,15 +20,11 @@ import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControl
 
 public class KerberosService {
 
+    public static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
+    public static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
     private static final Logger log = LoggerFactory.getLogger(KerberosService.class);
-
-
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
-    private static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
-    private static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
-
-
     private static Oid MECHANISM = null;
     private static Oid NAME_TYPE = null;
 
@@ -84,52 +80,34 @@ public class KerberosService {
 
     public static Subject getSubject(Properties properties) throws LoginException {
 
-        String tempDebug = System.getProperty(SUN_SECURITY_KRB5_DEBUG);
-        String tempAuth = System.getProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY);
+        KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
 
-        try {
+        log.debug("kerberos mode [{}]", kerberosMode);
 
-            System.setProperty(SUN_SECURITY_KRB5_DEBUG, HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
-            System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+        boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
-            KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
+        if (kerberosMode.equals(KerberosMode.PREAUTH)) {
+            return getPreAuthenticatedSubject();
+        } else if (kerberosMode.equals(KerberosMode.OS)) {
+            return loginFromOperatingSystem(debugJaas);
+        } else {
+            UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
-            log.debug("kerberos mode [{}]", kerberosMode);
+            log.debug("user principal [{}]", userPrincipal);
 
-            boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
+            if (kerberosMode.equals(KerberosMode.KEYTAB)) {
+                String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
 
+                return loginWithKeytab(userPrincipal, keyTab, debugJaas);
+            } else if (kerberosMode.equals(KerberosMode.PASSWORD)) {
+                String password = HiveDriverProperty.PASSWORD.get(properties);
 
-            if (kerberosMode.equals(KerberosMode.PREAUTH)) {
-                return getPreAuthenticatedSubject();
-            } else if (kerberosMode.equals(KerberosMode.OS)) {
-                return loginFromOperatingSystem(debugJaas);
-            } else {
-                UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
-
-                log.debug("user principal [{}]", userPrincipal);
-
-                if (kerberosMode.equals(KerberosMode.KEYTAB)) {
-                    String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
-
-                    return loginWithKeytab(userPrincipal, keyTab, debugJaas);
-                } else if (kerberosMode.equals(KerberosMode.PASSWORD)) {
-                    String password = HiveDriverProperty.PASSWORD.get(properties);
-
-                    return loginWithPassword(userPrincipal, password, debugJaas);
-                }
-            }
-
-            throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
-
-        } finally {
-            if (tempDebug != null) {
-                System.setProperty(SUN_SECURITY_KRB5_DEBUG, tempDebug);
-            }
-
-            if (tempAuth != null) {
-                System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, tempAuth);
+                return loginWithPassword(userPrincipal, password, debugJaas);
             }
         }
+
+        throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
+
 
     }
 

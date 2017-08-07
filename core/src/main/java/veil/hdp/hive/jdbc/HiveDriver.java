@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.*;
+import veil.hdp.hive.jdbc.core.security.KerberosService;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
 import veil.hdp.hive.jdbc.core.utils.PropertyUtils;
@@ -33,6 +34,10 @@ public abstract class HiveDriver implements Driver {
     }
 
     private Connection connect(Properties properties) throws SQLException {
+
+        System.setProperty(KerberosService.SUN_SECURITY_KRB5_DEBUG, HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
+        System.setProperty(KerberosService.JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
+
         ThriftTransport thriftTransport = buildTransport(properties);
 
         try {
