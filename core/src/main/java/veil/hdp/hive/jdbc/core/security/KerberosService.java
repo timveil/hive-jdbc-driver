@@ -98,21 +98,23 @@ public class KerberosService {
 
             boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
-            UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
-            log.debug("user principal [{}]", userPrincipal);
+            if (kerberosMode.equals(KerberosMode.PREAUTH)) {
+                return getPreAuthenticatedSubject();
+            } else {
+                UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
-            switch (kerberosMode) {
-                case KEYTAB:
+                log.debug("user principal [{}]", userPrincipal);
+
+                if (kerberosMode.equals(KerberosMode.KEYTAB)) {
                     String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
 
                     return loginWithKeytab(userPrincipal, keyTab, debugJaas);
-                case PREAUTH:
-                    return getPreAuthenticatedSubject();
-                case PASSWORD:
+                } else if (kerberosMode.equals(KerberosMode.PASSWORD)) {
                     String password = HiveDriverProperty.PASSWORD.get(properties);
 
                     return loginWithPassword(userPrincipal, password, debugJaas);
+                }
             }
 
             throw new IllegalArgumentException("kerberos mode [" + kerberosMode + "] is not supported!");
