@@ -20,21 +20,18 @@ import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControl
 
 public class KerberosService {
 
-    public static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
-    public static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
     private static final Logger log = LoggerFactory.getLogger(KerberosService.class);
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
-    private static Oid MECHANISM = null;
-    private static Oid NAME_TYPE = null;
 
-    static {
-        // todo: this strikes me as quite ugly.  probably should be moved into some sort of service method or constructor.  unfortunately Oid has a static method that swallows the GSSException but it is package-private
+    private static final Oid MECHANISM = KerberosService.buildOid(KRB5_OID);
+    private static final Oid NAME_TYPE = KerberosService.buildOid(KRB5_NAME_OID);
+
+    private static Oid buildOid(String name) {
         try {
-            MECHANISM = new Oid(KRB5_OID);
-            NAME_TYPE = new Oid(KRB5_NAME_OID);
+            return new Oid(name);
         } catch (GSSException e) {
-            log.error(e.getMessage(), e);
+            throw new HiveException("Unable to create Oid for name [" + name + "].  This is highly unusual.");
         }
     }
 

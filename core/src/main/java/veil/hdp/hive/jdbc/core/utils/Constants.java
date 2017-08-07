@@ -18,4 +18,7 @@ public class Constants {
     public static final char CATALOG_SEPARATOR = '.';
     public static final String CATALOG_TERM = "instance";
     public static final String SCHEMA_TERM = "database";
+
+    public static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
+    public static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
 }
