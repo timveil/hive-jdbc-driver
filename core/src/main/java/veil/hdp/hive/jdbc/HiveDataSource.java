@@ -27,9 +27,17 @@ public abstract class HiveDataSource extends AbstractDataSource {
     private TransportMode transportMode;
     private AuthenticationMode authMode;
     private Integer thriftVersion;
+    private Integer thriftTransportTimeout;
     private Integer thriftSocketTimeout;
     private Integer thriftConnectionTimeout;
     private Boolean sslEnabled;
+    private String sslTrustStorePath;
+    private String sslTrustStoreType;
+    private String sslTrustStorePassword;
+    private Boolean sslTwoWayEnabled;
+    private String sslKeyStorePath;
+    private String sslKeyStoreType;
+    private String sslKeyStorePassword;
     private String httpEndpoint;
     private Boolean httpPoolEnabled;
     private Integer httpPoolMax;
@@ -47,6 +55,8 @@ public abstract class HiveDataSource extends AbstractDataSource {
     private String saslQOP;
     private Boolean saslAuth;
     private Boolean jaasDebug;
+
+
 
     public String getHost() {
         return host;
@@ -272,6 +282,70 @@ public abstract class HiveDataSource extends AbstractDataSource {
         this.password = password;
     }
 
+    public Integer getThriftTransportTimeout() {
+        return thriftTransportTimeout;
+    }
+
+    public void setThriftTransportTimeout(Integer thriftTransportTimeout) {
+        this.thriftTransportTimeout = thriftTransportTimeout;
+    }
+
+    public String getSslTrustStorePath() {
+        return sslTrustStorePath;
+    }
+
+    public void setSslTrustStorePath(String sslTrustStorePath) {
+        this.sslTrustStorePath = sslTrustStorePath;
+    }
+
+    public String getSslTrustStoreType() {
+        return sslTrustStoreType;
+    }
+
+    public void setSslTrustStoreType(String sslTrustStoreType) {
+        this.sslTrustStoreType = sslTrustStoreType;
+    }
+
+    public String getSslTrustStorePassword() {
+        return sslTrustStorePassword;
+    }
+
+    public void setSslTrustStorePassword(String sslTrustStorePassword) {
+        this.sslTrustStorePassword = sslTrustStorePassword;
+    }
+
+    public String getSslKeyStorePath() {
+        return sslKeyStorePath;
+    }
+
+    public void setSslKeyStorePath(String sslKeyStorePath) {
+        this.sslKeyStorePath = sslKeyStorePath;
+    }
+
+    public String getSslKeyStoreType() {
+        return sslKeyStoreType;
+    }
+
+    public void setSslKeyStoreType(String sslKeyStoreType) {
+        this.sslKeyStoreType = sslKeyStoreType;
+    }
+
+    public String getSslKeyStorePassword() {
+        return sslKeyStorePassword;
+    }
+
+    public void setSslKeyStorePassword(String sslKeyStorePassword) {
+        this.sslKeyStorePassword = sslKeyStorePassword;
+    }
+
+    public Boolean getSslTwoWayEnabled() {
+        return sslTwoWayEnabled;
+    }
+
+    public void setSslTwoWayEnabled(Boolean sslTwoWayEnabled) {
+        this.sslTwoWayEnabled = sslTwoWayEnabled;
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
 
@@ -317,9 +391,17 @@ public abstract class HiveDataSource extends AbstractDataSource {
         }
 
         HiveDriverProperty.THRIFT_PROTOCOL_VERSION.set(properties, thriftVersion);
+        HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.set(properties, thriftTransportTimeout);
         HiveDriverProperty.THRIFT_SOCKET_TIMEOUT.set(properties, thriftSocketTimeout);
         HiveDriverProperty.THRIFT_CONNECTION_TIMEOUT.set(properties, thriftConnectionTimeout);
         HiveDriverProperty.SSL_ENABLED.set(properties, sslEnabled);
+        HiveDriverProperty.SSL_TRUST_STORE_PATH.set(properties, sslTrustStorePath);
+        HiveDriverProperty.SSL_TRUST_STORE_TYPE.set(properties, sslTrustStoreType);
+        HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.set(properties, sslTrustStorePassword);
+        HiveDriverProperty.SSL_TWO_WAY_ENABLED.set(properties, sslTwoWayEnabled);
+        HiveDriverProperty.SSL_KEY_STORE_PATH.set(properties, sslKeyStorePath);
+        HiveDriverProperty.SSL_KEY_STORE_TYPE.set(properties, sslKeyStoreType);
+        HiveDriverProperty.SSL_KEY_STORE_PASSWORD.set(properties, sslKeyStorePassword);
         HiveDriverProperty.HTTP_ENDPOINT.set(properties, httpEndpoint);
         HiveDriverProperty.HTTP_POOL_ENABLED.set(properties, httpPoolEnabled);
         HiveDriverProperty.HTTP_POOL_MAX_TOTAL.set(properties, httpPoolMax);
