@@ -102,7 +102,7 @@ public enum HiveDriverProperty {
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
     KERBEROS_USER_KEYTAB("krb5UserKeytab", null, null, null),
     // sun.security.krb5.debug
-    KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.TRUE.toString(), null, null),
+    KERBEROS_DEBUG_ENABLED("krb5Debug", Boolean.FALSE.toString(), null, null),
     // javax.security.auth.useSubjectCredsOnly; todo: i really don't get this property; see http://docs.oracle.com/javase/7/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html
     KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), null, null),
 
@@ -111,7 +111,7 @@ public enum HiveDriverProperty {
     // Sasl.SERVER_AUTH
     SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), null, null),
 
-    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.TRUE.toString(), null, null),
+    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.FALSE.toString(), null, null),
 
     ;
 

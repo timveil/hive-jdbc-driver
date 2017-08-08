@@ -305,7 +305,7 @@ Path to valid keytab
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| krb5Debug | `true` | false | none |
+| krb5Debug | `false` | false | none |
 
 Sets value for `sun.security.krb5.debug` as a System property
 
@@ -335,7 +335,7 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
-| jaasDebug | `true` | false | none |
+| jaasDebug | `false` | false | none |
 
 
 ## Apache Driver Property Mapping
