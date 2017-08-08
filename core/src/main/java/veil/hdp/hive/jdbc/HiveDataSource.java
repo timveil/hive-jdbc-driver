@@ -19,6 +19,9 @@ public abstract class HiveDataSource extends AbstractDataSource {
 
     abstract HiveDriver buildDriver();
 
+    // required for all DataSource Implementations per JDBC Spec
+    private String description;
+
     private String host;
     private String database;
     private String user;
@@ -56,7 +59,13 @@ public abstract class HiveDataSource extends AbstractDataSource {
     private Boolean saslAuth;
     private Boolean jaasDebug;
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getHost() {
         return host;
