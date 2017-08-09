@@ -187,7 +187,7 @@ public class HiveConnection extends AbstractConnection {
             throw new SQLDataException(MessageFormat.format("timeout must be greater than or equal to 0.  Current value is {0}", timeout));
         }
 
-        return QueryUtils.isValid(this, timeout);
+        return thriftSession.isValid();
     }
 
     @Override

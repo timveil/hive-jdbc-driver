@@ -135,19 +135,6 @@ public class QueryUtils {
         return schema;
     }
 
-
-    public static boolean isValid(HiveConnection connection, int timeout) {
-
-        try (Statement statement = connection.createStatement()) {
-            statement.setQueryTimeout(timeout);
-            try (ResultSet ignored = statement.executeQuery("SELECT current_database()")) {
-                return true;
-            }
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
     public static void setDatabaseSchema(HiveConnection connection, String schema) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("USE " + schema);

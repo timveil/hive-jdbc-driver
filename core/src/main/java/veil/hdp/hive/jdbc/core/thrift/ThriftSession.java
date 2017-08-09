@@ -75,6 +75,14 @@ public class ThriftSession implements Closeable {
         return properties;
     }
 
+    /**
+     * Determines if the ThriftSession is in a valid state to execute another Thrift call. It checks both the closed flag as well as the underlying thrift transport status.
+     * @return true if valid, false if not valid
+     */
+    public boolean isValid() {
+        return !isClosed() && thriftTransport.getTransport().isOpen();
+    }
+
     @Override
     public void close() throws IOException {
         if (closed.compareAndSet(false, true)) {
