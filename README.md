@@ -23,5 +23,8 @@ The following are board areas where I have attempted expand or improve the exist
 * __JDBC Compatibility__ - it is doubtful that Hive will ever allow true JDBC spec compatibility... the underlying datastore simply doesn't yet (may never) provide many of the required concepts.  Having said that, there are plenty of methods and interfaces within the JDBC spec that have not been implemented by the Apache Driver that could have been.  I've attempted rectify that.
 * __Documentation__ - the existing Hive documentation can be difficult to follow.  For example, there doesn't seem to be a good single point of reference for all supported URL parameters.  Instead the complete picture of options must be gleaned from a handful of examples and sources.  This makes setting up connections difficult.
 * __Simplification__ - the existing driver supports concepts like "embedded mode" which adds complexity to connection logic and requires server side dependencies.  If you need "embedded mode", this driver is not for you.  
-* __External Configuration__ - in my experience you often need to add Java VM options (`-Dsome_config`) to get Hive JDBC working or for debugging.  This is especially prevalent when dealing with Kerberos.  This driver moves some of those common configuration flags to URL properties.
+* __External Configuration__ - in my experience you often need to add Java VM options (`-Dsome_config`) to get Hive JDBC working or to enable debugging.  This is especially prevalent when dealing with Kerberos.  This driver moves some of those common configuration flags to URL properties.
 
+## Current State
+
+// talk about the fact that this is a small experimental project
