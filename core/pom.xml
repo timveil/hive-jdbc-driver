@@ -27,9 +27,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!--
+            switch slf4j-log4j12 for slf4j-api if you don't want to include logging implementation in final jar.  having log4j makes it easier to debug dbviz and other tools
+
+            todo: i may want to do this switch via profile or someother solution
+        -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
