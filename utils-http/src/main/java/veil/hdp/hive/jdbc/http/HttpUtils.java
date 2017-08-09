@@ -74,6 +74,9 @@ public class HttpUtils {
             throw new HiveSQLException(e);
         }
 
+        if (httpRequestInterceptor == null) {
+            throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported when creating an HTTP Client!");
+        }
 
         Registry<ConnectionSocketFactory> registry = buildConnectionSocketFactoryRegistry(properties);
 

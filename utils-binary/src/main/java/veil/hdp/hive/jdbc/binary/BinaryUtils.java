@@ -96,7 +96,7 @@ public class BinaryUtils {
             throw new HiveSQLException(e);
         }
 
-        throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported!");
+        throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported when creating a Binary Transport!");
 
     }
 
