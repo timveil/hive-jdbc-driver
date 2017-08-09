@@ -10,7 +10,9 @@ import veil.hdp.hive.jdbc.core.*;
 import java.net.URI;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,27 +95,6 @@ public class DriverUtils {
         }
     }
 
-    private static void printProperties(Properties properties) {
-        StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("connection properties\n");
-        builder.append("******************************************\n");
-
-        List<String> strings = new ArrayList<>(properties.stringPropertyNames());
-
-        Collections.sort(strings);
-
-        for (String key : strings) {
-            if (key.equalsIgnoreCase("password")) {
-                continue;
-            }
-
-            builder.append('\t').append(key).append(" : ").append(properties.getProperty(key)).append('\n');
-        }
-        builder.append("******************************************\n");
-
-        log.debug(builder.toString());
-    }
-
     public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties, DefaultDriverProperties defaultDriverProperties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
         Properties properties = buildProperties(url, suppliedProperties, defaultDriverProperties, uriProperties, zookeeperDiscoveryProperties);
 
@@ -171,9 +152,6 @@ public class DriverUtils {
 
         // lets validate properties before we call zookeeper if configured
         validateProperties(properties);
-
-        // lets print the properties after validation.  we can print again after zookeeper
-        printProperties(properties);
 
         // call zookeeper
         if (zookeeperDiscoveryProperties != null) {
