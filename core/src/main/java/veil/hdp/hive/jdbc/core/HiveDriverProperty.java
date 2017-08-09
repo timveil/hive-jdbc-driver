@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc.core;
 
 import org.apache.commons.lang3.StringUtils;
 import veil.hdp.hive.jdbc.core.security.KerberosMode;
+import veil.hdp.hive.jdbc.core.utils.PropertyUtils;
 
 import java.sql.DriverPropertyInfo;
 import java.util.Properties;
@@ -36,7 +37,7 @@ public enum HiveDriverProperty {
             AuthenticationMode.PAM.name()),
 
     // make sure to spell out differences in readme; look at *.thrift
-    THRIFT_PROTOCOL_VERSION("thriftVersion", null, null, null),
+    THRIFT_PROTOCOL_VERSION("thriftVersion", PropertyUtils.getInstance().getValue("thrift.protocol.version.default"), null, null),
 
     // in milliseconds. time code will wait to open thrift transport
     THRIFT_TRANSPORT_TIMEOUT("thriftTransportTimeout", "10000", null, null),
