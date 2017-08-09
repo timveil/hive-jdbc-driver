@@ -360,6 +360,30 @@ public class ThriftUtils {
 
     }
 
+    public static TGetInfoValue getServerInfo(ThriftSession session, TGetInfoType type) {
+        TGetInfoReq req = new TGetInfoReq(session.getSessionHandle(), type);
+
+        TGetInfoResp resp;
+
+        ReentrantLock lock = session.getSessionLock();
+        TCLIService.Client client = session.getClient();
+
+        lock.lock();
+
+        try {
+            resp = client.GetInfo(req);
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        } finally {
+            lock.unlock();
+        }
+
+        checkStatus(resp.getStatus());
+
+        return resp.getInfoValue();
+
+    }
+
     static ThriftOperation getTableTypesOperation(ThriftSession session) {
         TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
 
