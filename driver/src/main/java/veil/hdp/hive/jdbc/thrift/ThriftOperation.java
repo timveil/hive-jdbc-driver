@@ -6,7 +6,7 @@ import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
 import veil.hdp.hive.jdbc.HiveResultSet;
-import veil.hdp.hive.jdbc.core.binding.TOperationHandle;
+import veil.hdp.hive.jdbc.bindings.TOperationHandle;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 

@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.core.binding.TColumn;
+import veil.hdp.hive.jdbc.bindings.TColumn;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.text.MessageFormat;

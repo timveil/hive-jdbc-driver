@@ -4,8 +4,8 @@ import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.core.binding.TColumnDesc;
-import veil.hdp.hive.jdbc.core.binding.TTableSchema;
+import veil.hdp.hive.jdbc.bindings.TColumnDesc;
+import veil.hdp.hive.jdbc.bindings.TTableSchema;
 
 import java.util.ArrayList;
 import java.util.List;

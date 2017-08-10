@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
-import veil.hdp.hive.jdbc.core.binding.*;
+import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.data.RowBaseSet;
