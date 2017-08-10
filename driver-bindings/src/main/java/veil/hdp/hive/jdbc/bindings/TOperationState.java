@@ -7,10 +7,6 @@
 package veil.hdp.hive.jdbc.bindings;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TOperationState implements org.apache.thrift.TEnum {
   INITIALIZED_STATE(0),
   RUNNING_STATE(1),

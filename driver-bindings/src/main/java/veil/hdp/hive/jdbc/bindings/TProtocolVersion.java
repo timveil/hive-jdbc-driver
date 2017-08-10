@@ -7,10 +7,6 @@
 package veil.hdp.hive.jdbc.bindings;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TProtocolVersion implements org.apache.thrift.TEnum {
   HIVE_CLI_SERVICE_PROTOCOL_V1(0),
   HIVE_CLI_SERVICE_PROTOCOL_V2(1),

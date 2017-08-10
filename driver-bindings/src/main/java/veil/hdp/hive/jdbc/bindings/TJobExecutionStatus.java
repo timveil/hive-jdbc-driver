@@ -7,10 +7,6 @@
 package veil.hdp.hive.jdbc.bindings;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TJobExecutionStatus implements org.apache.thrift.TEnum {
   IN_PROGRESS(0),
   COMPLETE(1),

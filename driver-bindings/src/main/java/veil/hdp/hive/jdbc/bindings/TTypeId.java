@@ -7,10 +7,6 @@
 package veil.hdp.hive.jdbc.bindings;
 
 
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 public enum TTypeId implements org.apache.thrift.TEnum {
   BOOLEAN_TYPE(0),
   TINYINT_TYPE(1),
