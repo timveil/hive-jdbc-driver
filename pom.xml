@@ -10,15 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>driver-binary</module>
-        <module>driver-http</module>
-        <module>driver-binary-zookeeper</module>
-        <module>driver-http-zookeeper</module>
-        <module>core-thrift</module>
-        <module>core</module>
-        <module>utils-zookeeper</module>
-        <module>test-original-driver</module>
-        <module>test-tools</module>
+        <module>thrift-bindings</module>
+        <module>driver</module>
+        <module>original-driver</module>
     </modules>
 
     <properties>

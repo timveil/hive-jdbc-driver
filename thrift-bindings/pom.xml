@@ -7,8 +7,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Core - Thrift</name>
-    <artifactId>core-thrift</artifactId>
+    <name>Thrift Bindings</name>
+    <artifactId>thrift-bindings</artifactId>
 
     <packaging>jar</packaging>
 
