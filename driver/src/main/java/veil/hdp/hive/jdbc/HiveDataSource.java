@@ -2,12 +2,8 @@ package veil.hdp.hive.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.core.AbstractDataSource;
-import veil.hdp.hive.jdbc.core.AuthenticationMode;
-import veil.hdp.hive.jdbc.core.HiveDriverProperty;
-import veil.hdp.hive.jdbc.core.TransportMode;
-import veil.hdp.hive.jdbc.core.security.KerberosMode;
-import veil.hdp.hive.jdbc.core.utils.DriverUtils;
+import veil.hdp.hive.jdbc.security.KerberosMode;
+import veil.hdp.hive.jdbc.utils.DriverUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
