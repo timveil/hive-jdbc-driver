@@ -4,7 +4,7 @@ This module contains the Thrift generated classes based on the TCLIService.thrif
 
 ```thrift
 // current
-namespace java veil.hdp.hive.jdbc.core.binding
+namespace java veil.hdp.hive.jdbc.bindings
 
 // original
 namespace java apache.hive.service.rpc.thrift
