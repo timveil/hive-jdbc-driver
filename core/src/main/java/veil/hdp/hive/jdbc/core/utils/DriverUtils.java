@@ -40,21 +40,18 @@ public class DriverUtils {
     }
 
 
-    public static Properties buildProperties(String url, Properties suppliedProperties, DefaultDriverProperties defaultDriverProperties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
+    public static Properties buildProperties(String url, Properties suppliedProperties) throws SQLException {
 
         Properties properties = new Properties();
 
         // load global defaults
         loadGlobalDefaultProperties(properties);
 
-        // load driver specific properties; kind of like driver defaults; overrides global defaults above
-        defaultDriverProperties.load(properties);
-
         // loads properties supplied by the JDBC api Driver.connect method
         loadSuppliedProperties(suppliedProperties, properties);
 
         // parse the url supplied by the JDBC api Driver.connect method
-        parseUrl(url, properties, uriProperties, zookeeperDiscoveryProperties);
+        parseUrl(url, properties);
 
         return properties;
 
@@ -95,8 +92,8 @@ public class DriverUtils {
         }
     }
 
-    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties, DefaultDriverProperties defaultDriverProperties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
-        Properties properties = buildProperties(url, suppliedProperties, defaultDriverProperties, uriProperties, zookeeperDiscoveryProperties);
+    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
+        Properties properties = buildProperties(url, suppliedProperties);
 
         HiveDriverProperty[] driverProperties = HiveDriverProperty.values();
 
@@ -134,7 +131,7 @@ public class DriverUtils {
     }
 
 
-    private static void parseUrl(String url, Properties properties, UriProperties uriProperties, ZookeeperDiscoveryProperties zookeeperDiscoveryProperties) throws SQLException {
+    private static void parseUrl(String url, Properties properties) throws SQLException {
 
         URI uri = URI.create(stripPrefix(url));
 
@@ -146,19 +143,24 @@ public class DriverUtils {
 
         parseQueryParameters(uriQuery, properties);
 
-        if (uriProperties != null) {
-            uriProperties.load(uri, properties);
+        boolean zookeeperDiscoveryEnabled = HiveDriverProperty.ZOOKEEPER_DISCOVERY_ENABLED.getBoolean(properties);
+
+        if (zookeeperDiscoveryEnabled) {
+
+            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
+
+            if (uri.getPort() != -1) {
+                HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
+            }
+
+        } else {
+            String authority = uri.getAuthority();
+
+            ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
         }
 
         // lets validate properties before we call zookeeper if configured
         validateProperties(properties);
-
-        // call zookeeper
-        if (zookeeperDiscoveryProperties != null) {
-            zookeeperDiscoveryProperties.load(uri, properties);
-        }
-
-
 
     }
 

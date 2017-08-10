@@ -13,11 +13,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public abstract class HiveDataSource extends AbstractDataSource {
+public class HiveDataSource extends AbstractDataSource {
 
     private static final Logger log = LoggerFactory.getLogger(HiveDataSource.class);
 
-    abstract HiveDriver buildDriver();
 
     // required for all DataSource Implementations per JDBC Spec
     private String description;
@@ -358,7 +357,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
     @Override
     public Connection getConnection() throws SQLException {
 
-        HiveDriver driver = buildDriver();
+        HiveDriver driver = new HiveDriver();
 
         Properties properties = buildProperties();
 
@@ -370,7 +369,7 @@ public abstract class HiveDataSource extends AbstractDataSource {
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
 
-        HiveDriver driver = buildDriver();
+        HiveDriver driver = new HiveDriver();
 
         Properties properties = buildProperties();
 

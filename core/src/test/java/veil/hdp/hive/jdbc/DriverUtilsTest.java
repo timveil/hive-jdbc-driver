@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.utils.DriverUtils;
-import veil.hdp.hive.jdbc.test.BaseTest;
 
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
@@ -55,11 +54,7 @@ public class DriverUtilsTest extends BaseTest {
     public void buildDriverPropertyInfo() throws Exception {
 
 
-        DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties, (properties) -> {
-        }, (uri, properties) -> {
-            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
-        }, (uri, properties) -> {
-        });
+        DriverPropertyInfo[] driverPropertyInfos = DriverUtils.buildDriverPropertyInfo(url, suppliedProperties);
 
         for (DriverPropertyInfo info : driverPropertyInfos) {
             log.debug("info.name [{}], info.value [{}]", info.name, info.value);
@@ -71,11 +66,7 @@ public class DriverUtilsTest extends BaseTest {
     public void buildProperties() throws Exception {
 
 
-        Properties newProperties = DriverUtils.buildProperties(url, suppliedProperties, (properties) -> {
-        }, (uri, properties) -> {
-            HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
-        }, (uri, properties) -> {
-        });
+        Properties newProperties = DriverUtils.buildProperties(url, suppliedProperties);
 
         log.debug(newProperties.toString());
 

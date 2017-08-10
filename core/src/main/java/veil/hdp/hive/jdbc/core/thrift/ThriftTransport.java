@@ -1,15 +1,21 @@
 package veil.hdp.hive.jdbc.core.thrift;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.Builder;
+import veil.hdp.hive.jdbc.core.HiveDriverProperty;
+import veil.hdp.hive.jdbc.core.TransportMode;
+import veil.hdp.hive.jdbc.core.utils.BinaryUtils;
+import veil.hdp.hive.jdbc.core.utils.HttpUtils;
 import veil.hdp.hive.jdbc.core.utils.ThriftUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class ThriftTransport implements Closeable {
 
@@ -47,24 +53,36 @@ public class ThriftTransport implements Closeable {
 
     public static class ThriftTransportBuilder implements Builder<ThriftTransport> {
 
-        private TTransport transport;
 
-        private final List<Closeable> closeableList = new ArrayList<>();
+        private Properties properties;
 
         private ThriftTransportBuilder() {
         }
 
-        public ThriftTransportBuilder transport(TTransport transport) {
-            this.transport = transport;
-            return this;
-        }
-
-        public ThriftTransportBuilder addCloseable(Closeable closeable) {
-            closeableList.add(closeable);
+        public ThriftTransportBuilder properties(Properties properties) {
+            this.properties = properties;
             return this;
         }
 
         public ThriftTransport build() {
+
+            TransportMode mode = TransportMode.valueOf(HiveDriverProperty.TRANSPORT_MODE.get(properties));
+
+            TTransport transport = null;
+
+            List<Closeable> closeableList = new ArrayList<>();
+
+            if (mode.equals(TransportMode.binary)) {
+                transport = BinaryUtils.createBinaryTransport(properties);
+            } else if (mode.equals(TransportMode.http)) {
+                CloseableHttpClient client = HttpUtils.buildClient(properties);
+
+                closeableList.add(client);
+
+                transport = HttpUtils.createHttpTransport(properties, client);
+            }
+
+
             return new ThriftTransport(transport, closeableList);
         }
 

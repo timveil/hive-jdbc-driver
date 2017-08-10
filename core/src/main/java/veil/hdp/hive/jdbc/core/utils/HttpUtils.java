@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.AuthenticationMode;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.HiveException;
-import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.security.http.BasicRequestInterceptor;
 import veil.hdp.hive.jdbc.core.security.http.KerberosRequestInterceptor;
 import veil.hdp.hive.jdbc.core.security.http.XsrfRequestInterceptor;
@@ -57,28 +56,24 @@ public class HttpUtils {
         * http.connection.stalecheck=false
      */
 
-    public static CloseableHttpClient buildClient(Properties properties) throws HiveSQLException {
+    public static CloseableHttpClient buildClient(Properties properties) {
 
         AuthenticationMode authenticationMode = AuthenticationMode.valueOf(HiveDriverProperty.AUTHENTICATION_MODE.get(properties));
 
         HttpRequestInterceptor httpRequestInterceptor = null;
 
-        try {
-            switch (authenticationMode) {
+        switch (authenticationMode) {
 
-                case NONE:
-                    httpRequestInterceptor = buildBasicInterceptor(properties);
-                    break;
-                case KERBEROS:
-                    httpRequestInterceptor = buildKerberosInterceptor(properties);
-                    break;
-            }
-        } catch (HiveException e) {
-            throw new HiveSQLException(e);
+            case NONE:
+                httpRequestInterceptor = buildBasicInterceptor(properties);
+                break;
+            case KERBEROS:
+                httpRequestInterceptor = buildKerberosInterceptor(properties);
+                break;
         }
 
         if (httpRequestInterceptor == null) {
-            throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported when creating an HTTP Client!");
+            throw new HiveException("Authentication Mode [" + authenticationMode + "] is not supported when creating an HTTP Client!");
         }
 
         Registry<ConnectionSocketFactory> registry = buildConnectionSocketFactoryRegistry(properties);
@@ -103,7 +98,7 @@ public class HttpUtils {
         return clientBuilder.build();
     }
 
-    private static Registry<ConnectionSocketFactory> buildConnectionSocketFactoryRegistry(Properties properties) throws HiveSQLException {
+    private static Registry<ConnectionSocketFactory> buildConnectionSocketFactoryRegistry(Properties properties) {
 
         RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
         registryBuilder.register(HTTP, PlainConnectionSocketFactory.getSocketFactory());
@@ -128,10 +123,10 @@ public class HttpUtils {
     }
 
     private static SSLConnectionSocketFactory buildDefaultSSLSocketFactory() {
-       return SSLConnectionSocketFactory.getSocketFactory();
+        return SSLConnectionSocketFactory.getSocketFactory();
     }
 
-    private static SSLConnectionSocketFactory buildOneWaySSLSocketFactory(Properties properties) throws HiveSQLException {
+    private static SSLConnectionSocketFactory buildOneWaySSLSocketFactory(Properties properties) {
 
         try {
             char[] trustStorePassword = HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
@@ -143,12 +138,12 @@ public class HttpUtils {
             return new SSLConnectionSocketFactory(sslContext);
 
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-            throw new HiveSQLException(e);
+            throw new HiveException(e);
         }
     }
 
 
-    private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties) throws HiveSQLException {
+    private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties)  {
 
         try {
             char[] trustStorePassword = HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
@@ -164,11 +159,11 @@ public class HttpUtils {
             return new SSLConnectionSocketFactory(sslContext);
 
         } catch (NoSuchAlgorithmException | KeyManagementException | UnrecoverableKeyException | KeyStoreException e) {
-            throw new HiveSQLException(e);
+            throw new HiveException(e);
         }
     }
 
-    private static KeyStore buildKeyStore(String path, String type, char[] password) throws HiveSQLException {
+    private static KeyStore buildKeyStore(String path, String type, char[] password)  {
 
         if (StringUtils.isBlank(path)) {
             throw new IllegalArgumentException("keystore path is null!");
@@ -184,7 +179,7 @@ public class HttpUtils {
 
             return keyStore;
         } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException e) {
-            throw new HiveSQLException(e);
+            throw new HiveException(e);
         }
     }
 

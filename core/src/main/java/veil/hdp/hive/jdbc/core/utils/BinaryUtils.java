@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.AuthenticationMode;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.HiveException;
-import veil.hdp.hive.jdbc.core.HiveSQLException;
 import veil.hdp.hive.jdbc.core.security.*;
 
 import javax.net.ssl.SSLParameters;
@@ -15,7 +14,6 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
 import javax.security.sasl.SaslException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -26,7 +24,7 @@ public class BinaryUtils {
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
     private static final String ENDPOINT_IDENTIFICATION_ALGORITHM_NAME = "HTTPS";
 
-    private static TSocket createSocket(Properties properties) throws HiveSQLException {
+    private static TSocket createSocket(Properties properties) {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
@@ -45,7 +43,7 @@ public class BinaryUtils {
 
     }
 
-    private static TSocket buildSSLSocket(Properties properties, String host, int port, int socketTimeout) throws HiveSQLException {
+    private static TSocket buildSSLSocket(Properties properties, String host, int port, int socketTimeout) {
         try {
 
             TSocket socket;
@@ -69,11 +67,11 @@ public class BinaryUtils {
             return new TSocket(sslSocket);
 
         } catch (TTransportException e) {
-            throw new HiveSQLException(e);
+            throw new HiveException(e);
         }
     }
 
-    public static TTransport createBinaryTransport(Properties properties) throws SQLException {
+    public static TTransport createBinaryTransport(Properties properties) {
         // todo: no support for delegation tokens
 
 
@@ -81,22 +79,19 @@ public class BinaryUtils {
 
         TSocket socket = createSocket(properties);
 
-        try {
-            switch (authenticationMode) {
+        switch (authenticationMode) {
 
-                case NONE:
-                    return buildSocketWithSASL(properties, socket);
-                case NOSASL:
-                    return socket;
-                case KERBEROS:
-                    return buildSocketWithKerberos(properties, socket);
+            case NONE:
+                return buildSocketWithSASL(properties, socket);
+            case NOSASL:
+                return socket;
+            case KERBEROS:
+                return buildSocketWithKerberos(properties, socket);
 
-            }
-        } catch (HiveException e) {
-            throw new HiveSQLException(e);
         }
 
-        throw new HiveSQLException("Authentication Mode [" + authenticationMode + "] is not supported when creating a Binary Transport!");
+
+        throw new HiveException("Authentication Mode [" + authenticationMode + "] is not supported when creating a Binary Transport!");
 
     }
 
