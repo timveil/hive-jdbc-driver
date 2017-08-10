@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc;
 
 import veil.hdp.hive.jdbc.security.KerberosService;
-import veil.hdp.hive.jdbc.security.PrincipalUtils;
+import veil.hdp.hive.jdbc.utils.PrincipalUtils;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;

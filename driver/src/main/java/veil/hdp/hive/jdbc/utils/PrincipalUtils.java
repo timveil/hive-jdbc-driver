@@ -1,9 +1,11 @@
-package veil.hdp.hive.jdbc.security;
+package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import veil.hdp.hive.jdbc.security.ServicePrincipal;
+import veil.hdp.hive.jdbc.security.UserPrincipal;
 
 import java.util.List;
 

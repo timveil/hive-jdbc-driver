@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.security;
+package veil.hdp.hive.jdbc.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

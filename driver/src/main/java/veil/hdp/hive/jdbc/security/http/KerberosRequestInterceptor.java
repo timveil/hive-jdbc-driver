@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.security.KerberosService;
-import veil.hdp.hive.jdbc.security.PrincipalUtils;
+import veil.hdp.hive.jdbc.utils.PrincipalUtils;
 import veil.hdp.hive.jdbc.security.ServicePrincipal;
 
 import javax.security.auth.Subject;
