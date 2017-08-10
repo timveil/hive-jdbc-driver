@@ -7,8 +7,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Thrift Bindings</name>
-    <artifactId>thrift-bindings</artifactId>
+    <name>Driver Bindings</name>
+    <artifactId>driver-bindings</artifactId>
 
     <packaging>jar</packaging>
 

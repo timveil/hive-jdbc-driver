@@ -7,8 +7,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Original Driver</name>
-    <artifactId>original-driver</artifactId>
+    <name>Apache Driver</name>
+    <artifactId>apache-driver</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

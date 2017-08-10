@@ -10,9 +10,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>thrift-bindings</module>
+        <module>driver-bindings</module>
         <module>driver</module>
-        <module>original-driver</module>
+        <module>apache-driver</module>
+        <module>driver-test-tools</module>
     </modules>
 
     <properties>
