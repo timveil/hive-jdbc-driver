@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.core.*;
 import veil.hdp.hive.jdbc.core.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.core.utils.HttpUtils;
-import veil.hdp.hive.jdbc.zk.ZookeeperUtils;
+import veil.hdp.hive.jdbc.core.utils.ZookeeperUtils;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;

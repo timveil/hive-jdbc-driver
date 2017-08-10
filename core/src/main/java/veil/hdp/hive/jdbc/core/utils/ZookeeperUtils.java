@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.zk;
+package veil.hdp.hive.jdbc.core.utils;
 
 
 import com.google.common.base.Splitter;

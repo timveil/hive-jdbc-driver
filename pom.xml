@@ -16,8 +16,6 @@
         <module>driver-http-zookeeper</module>
         <module>core-thrift</module>
         <module>core</module>
-        <module>utils-binary</module>
-        <module>utils-http</module>
         <module>utils-zookeeper</module>
         <module>test-original-driver</module>
         <module>test-tools</module>

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.binary;
+package veil.hdp.hive.jdbc.core.utils;
 
 import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
