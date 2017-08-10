@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.http;
+package veil.hdp.hive.jdbc.core.security.http;
 
 
 import org.apache.http.HttpException;

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc.http;
+package veil.hdp.hive.jdbc.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpRequestInterceptor;
@@ -24,6 +24,9 @@ import veil.hdp.hive.jdbc.core.AuthenticationMode;
 import veil.hdp.hive.jdbc.core.HiveDriverProperty;
 import veil.hdp.hive.jdbc.core.HiveException;
 import veil.hdp.hive.jdbc.core.HiveSQLException;
+import veil.hdp.hive.jdbc.core.security.http.BasicRequestInterceptor;
+import veil.hdp.hive.jdbc.core.security.http.KerberosRequestInterceptor;
+import veil.hdp.hive.jdbc.core.security.http.XsrfRequestInterceptor;
 import veil.hdp.hive.jdbc.core.thrift.HiveThriftException;
 
 import javax.net.ssl.SSLContext;
