@@ -147,16 +147,17 @@ public class DriverUtils {
 
         if (zookeeperDiscoveryEnabled) {
 
+            String authority = uri.getAuthority();
+
+            ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
+
+        } else {
+
             HiveDriverProperty.HOST_NAME.set(properties, uri.getHost());
 
             if (uri.getPort() != -1) {
                 HiveDriverProperty.PORT_NUMBER.set(properties, uri.getPort());
             }
-
-        } else {
-            String authority = uri.getAuthority();
-
-            ZookeeperUtils.loadPropertiesFromZookeeper(authority, properties);
         }
 
         // lets validate properties before we call zookeeper if configured
