@@ -4,18 +4,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class HttpZookeeperConnectionTest extends BaseConnectionTest {
+public class BinaryTest extends AbstractConnectionTest {
 
 
     @Override
     public Connection createConnection(String host) throws SQLException {
-        Properties properties = new Properties();
-        properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":2181/default";
+
+        Properties properties = new Properties();
+
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
 
         return new HiveDriver().connect(url, properties);
     }
-
 
 }

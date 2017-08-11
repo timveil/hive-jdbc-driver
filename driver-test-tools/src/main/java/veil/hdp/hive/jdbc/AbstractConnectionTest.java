@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public abstract class BaseConnectionTest extends BaseTest {
+public abstract class AbstractConnectionTest extends BaseTest {
 
     private static final MetricRegistry metrics = new MetricRegistry();
     private Connection connection;
@@ -105,7 +105,7 @@ public abstract class BaseConnectionTest extends BaseTest {
 
     private void executeSimpleQuery(boolean print) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM master_csv limit 10")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM test_table limit 10")) {
 
             if (print) {
                 Printer.printResultSetMetaData(rs.getMetaData());

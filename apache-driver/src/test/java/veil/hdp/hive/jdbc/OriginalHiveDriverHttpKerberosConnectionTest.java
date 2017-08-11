@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class OriginalHiveDriverHttpKerberosConnectionTest extends BaseConnectionTest {
+public class OriginalHiveDriverHttpKerberosConnectionTest extends AbstractConnectionTest {
 
     @Override
     public Connection createConnection(String host) throws SQLException {

@@ -10,7 +10,7 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public abstract class BaseDriverTest extends BaseTest {
+public abstract class AbstractDriverTest extends BaseTest {
 
     private Driver driver;
 

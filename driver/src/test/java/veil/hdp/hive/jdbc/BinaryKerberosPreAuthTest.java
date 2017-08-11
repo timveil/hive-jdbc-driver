@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class TestKerberosPreAuth extends BaseConnectionTest {
+public class BinaryKerberosPreAuthTest extends AbstractConnectionTest {
 
         /*
         on windows:

@@ -45,8 +45,8 @@ public class DriverUtils {
 
         Properties properties = new Properties();
 
-        // load global defaults
-        loadGlobalDefaultProperties(properties);
+        // load defaults
+        loadDefaultProperties(properties);
 
         // loads properties supplied by the JDBC api Driver.connect method
         loadSuppliedProperties(suppliedProperties, properties);
@@ -87,7 +87,7 @@ public class DriverUtils {
         }
     }
 
-    private static void loadGlobalDefaultProperties(Properties properties) {
+    private static void loadDefaultProperties(Properties properties) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
             property.setDefaultValue(properties);
         }
@@ -161,7 +161,6 @@ public class DriverUtils {
             }
         }
 
-        // lets validate properties before we call zookeeper if configured
         validateProperties(properties);
 
     }

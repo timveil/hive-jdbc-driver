@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class OriginalHiveDriverBinaryConnectionTest extends BaseConnectionTest {
+public class OriginalHiveDriverBinaryConnectionTest extends AbstractConnectionTest {
 
     @Override
     public Connection createConnection(String host) throws SQLException {

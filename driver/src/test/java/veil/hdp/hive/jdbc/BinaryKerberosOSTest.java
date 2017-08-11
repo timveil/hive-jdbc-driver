@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class TestKerberosOS extends BaseConnectionTest {
+public class BinaryKerberosOSTest extends AbstractConnectionTest {
 
         /*
         on windows:

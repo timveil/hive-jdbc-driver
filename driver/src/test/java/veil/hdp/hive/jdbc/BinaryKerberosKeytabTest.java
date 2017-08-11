@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class TestKerberosSimple extends BaseConnectionTest {
+public class BinaryKerberosKeytabTest extends AbstractConnectionTest {
 
         /*
         on windows:
@@ -18,9 +18,8 @@ public class TestKerberosSimple extends BaseConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", "timve@LAB.LOCAL");
-        properties.setProperty("password", "password");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=PASSWORD&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
+        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=KEYTAB&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL&krb5UserKeytab=C:/temp/timve.keytab";
 
         return new HiveDriver().connect(url, properties);
     }

@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class BinaryDataSourceTest extends BaseConnectionTest {
+public class DataSourceTest extends AbstractConnectionTest {
     @Override
     public Connection createConnection(String host) throws SQLException {
 
