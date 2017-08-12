@@ -38,7 +38,7 @@ public class PropertyUtils {
 
     public static void printProperties(Properties properties, String label) {
         StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("*** " + label + "\n");
+        builder.append("*** ").append(label).append("\n");
         builder.append("******************************************\n");
 
         List<String> strings = new ArrayList<>(properties.stringPropertyNames());

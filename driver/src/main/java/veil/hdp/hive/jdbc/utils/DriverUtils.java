@@ -109,7 +109,7 @@ public class DriverUtils {
     }
 
 
-    private static void validateProperties(Properties properties) throws SQLException {
+    private static void validateProperties(Properties properties) {
 
         for (String key : properties.stringPropertyNames()) {
 

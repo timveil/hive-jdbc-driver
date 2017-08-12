@@ -44,7 +44,7 @@ public class HiveDriver implements Driver {
         return notImplemented(callClass, UNKNOWN);
     }
 
-    private Connection connect(Properties properties) throws SQLException {
+    private Connection connect(Properties properties) {
 
         PropertyUtils.printProperties(properties, "HiveDriver connection properties");
 
