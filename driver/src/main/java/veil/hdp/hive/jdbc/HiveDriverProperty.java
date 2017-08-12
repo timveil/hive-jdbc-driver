@@ -10,7 +10,6 @@ import java.util.Properties;
 public enum HiveDriverProperty {
 
 
-
     /***************************************************
      *  COMMON
      ***************************************************/
@@ -97,7 +96,7 @@ public enum HiveDriverProperty {
      *  KERBEROS
      ***************************************************/
 
-    KERBEROS_MODE("krb5Mode", KerberosMode.OS.name(), null, null, KerberosMode.OS.name(),KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
+    KERBEROS_MODE("krb5Mode", KerberosMode.OS.name(), null, null, KerberosMode.OS.name(), KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
     KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, "hive.server2.authentication.kerberos.principal"),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
@@ -112,9 +111,7 @@ public enum HiveDriverProperty {
     // Sasl.SERVER_AUTH
     SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), null, null),
 
-    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.FALSE.toString(), null, null),
-
-    ;
+    JAAS_DEBUG_ENABLED("jaasDebug", Boolean.FALSE.toString(), null, null),;
 
 
     private final String key;
@@ -122,8 +119,6 @@ public enum HiveDriverProperty {
     private final String description;
     private final String hiveConfigurationKey;
     private final String[] choices;
-
-
 
 
     HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey) {

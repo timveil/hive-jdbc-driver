@@ -3,7 +3,6 @@ package veil.hdp.hive.jdbc.metadata;
 //import org.apache.hadoop.hive.common.type.HiveIntervalDayTime;
 
 
-
 import veil.hdp.hive.jdbc.bindings.TTypeId;
 
 import java.math.BigDecimal;
@@ -51,8 +50,6 @@ public enum HiveType {
 
     // USER_DEFINED is not a valid column type
     //USER_DEFINED("USER_DEFINED", TTypeId.USER_DEFINED_TYPE, JDBCType.JAVA_OBJECT, Object.class, true, 0, 0),
-
-
 
 
     private final String name;

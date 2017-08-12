@@ -58,12 +58,12 @@ public class WrappedTransport extends TTransport {
 
     @Override
     public byte[] getBuffer() {
-       return wrapped.getBuffer();
+        return wrapped.getBuffer();
     }
 
     @Override
     public int getBufferPosition() {
-       return wrapped.getBufferPosition();
+        return wrapped.getBufferPosition();
     }
 
     @Override

@@ -124,7 +124,6 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     }
 
 
-
     // todo
 
     /*
@@ -171,7 +170,7 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
     /**
      * per the jdbc spec, if the driver cannot compute the results ResultSetMetaData before executing the statment, then return null.
-     *
+     * <p>
      * do not have a way in hive to determine the true metadata before query execution
      *
      * @return null

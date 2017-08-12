@@ -74,7 +74,6 @@ public class ColumnDescriptor {
         private int position;
 
 
-
         private ColumnDescriptorBuilder() {
         }
 
@@ -112,7 +111,7 @@ public class ColumnDescriptor {
                 if (rawName.contains(".")) {
                     columnName = rawName.substring(rawName.lastIndexOf('.') + 1);
                     tableName = rawName.substring(0, rawName.lastIndexOf('.'));
-                } else{
+                } else {
                     columnName = rawName;
                 }
 

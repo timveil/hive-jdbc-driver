@@ -143,7 +143,7 @@ public class HttpUtils {
     }
 
 
-    private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties)  {
+    private static SSLConnectionSocketFactory buildTwoWaySSLSocketFactory(Properties properties) {
 
         try {
             char[] trustStorePassword = HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties).toCharArray();
@@ -163,7 +163,7 @@ public class HttpUtils {
         }
     }
 
-    private static KeyStore buildKeyStore(String path, String type, char[] password)  {
+    private static KeyStore buildKeyStore(String path, String type, char[] password) {
 
         if (StringUtils.isBlank(path)) {
             throw new IllegalArgumentException("keystore path is null!");

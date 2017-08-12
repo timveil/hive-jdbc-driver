@@ -36,22 +36,9 @@ public class PropertyUtils {
         return instance;
     }
 
-    public String getValue(String key) {
-        return properties.getProperty(key);
-    }
-
-    public int getIntValue(String key) {
-        return Integer.parseInt(properties.getProperty(key));
-    }
-
-    public String getValue(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
-    }
-
-
     public static void printProperties(Properties properties, String label) {
         StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("*** " + label  + "\n");
+        builder.append("*** " + label + "\n");
         builder.append("******************************************\n");
 
         List<String> strings = new ArrayList<>(properties.stringPropertyNames());
@@ -68,6 +55,18 @@ public class PropertyUtils {
         builder.append("******************************************\n");
 
         log.debug(builder.toString());
+    }
+
+    public String getValue(String key) {
+        return properties.getProperty(key);
+    }
+
+    public int getIntValue(String key) {
+        return Integer.parseInt(properties.getProperty(key));
+    }
+
+    public String getValue(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 
 }

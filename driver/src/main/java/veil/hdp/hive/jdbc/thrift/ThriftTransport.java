@@ -51,6 +51,7 @@ public class ThriftTransport implements Closeable {
 
     /**
      * Determines if the ThriftTransport is in a valid state to execute another Thrift call. It checks both the closed flag as well as the underlying thrift transport status.
+     *
      * @return true if valid, false if not valid
      */
 
