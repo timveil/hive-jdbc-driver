@@ -15,10 +15,7 @@ import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
-import veil.hdp.hive.jdbc.thrift.HiveThriftException;
-import veil.hdp.hive.jdbc.thrift.ThriftOperation;
-import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.thrift.ThriftTransport;
+import veil.hdp.hive.jdbc.thrift.*;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -61,12 +58,10 @@ public class ThriftUtils {
     }
 
 
-    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client) throws HiveThriftException {
+    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client, TProtocolVersion protocolVersion) throws HiveThriftException, InvalidProtocolException {
 
-        TProtocolVersion protocolVersion = TProtocolVersion.findByValue(HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties));
 
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
-
 
         // todo: not required when AuthenticationMode is NONE
         /*String username = HiveDriverProperty.USER.get(properties);
@@ -88,7 +83,12 @@ public class ThriftUtils {
 
             return resp;
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            if (StringUtils.containsIgnoreCase(e.getMessage(), "'client_protocol' is unset")) {
+                // this often happens when the protocl of the driver is higher than supported by the server.  in otherwords, driver is newer than server.  handle this gracefully
+                throw new InvalidProtocolException(e);
+            } else {
+                throw new HiveThriftException(e);
+            }
         }
 
     }

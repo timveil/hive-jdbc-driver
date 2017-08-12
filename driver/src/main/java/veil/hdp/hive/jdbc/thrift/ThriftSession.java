@@ -1,10 +1,11 @@
 package veil.hdp.hive.jdbc.thrift;
 
 
-import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.bindings.TCLIService;
 import veil.hdp.hive.jdbc.bindings.TOpenSessionResp;
 import veil.hdp.hive.jdbc.bindings.TProtocolVersion;
@@ -67,6 +68,7 @@ public class ThriftSession implements Closeable {
 
     /**
      * Determines if the ThriftSession is in a valid state to execute another Thrift call. It checks both the closed flag as well as the underlying thrift transport status.
+     *
      * @return true if valid, false if not valid
      */
     public boolean isValid() {
@@ -102,15 +104,41 @@ public class ThriftSession implements Closeable {
         @Override
         public ThriftSession build() {
 
-            ThriftTransport thriftTransport = ThriftTransport.builder().properties(properties).build();
+            ThriftTransport thriftTransport = null;
 
-            TCLIService.Client client = ThriftUtils.createClient(thriftTransport);
+            int protocol = HiveDriverProperty.THRIFT_PROTOCOL_VERSION.getInt(properties);
 
-            TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client);
+            while (protocol >= TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8.getValue()) {
 
-            TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
+                TProtocolVersion protocolVersion = TProtocolVersion.findByValue(protocol);
 
-            return new ThriftSession(properties, thriftTransport, client, sessionHandle);
+                log.debug("trying protocol {}", protocolVersion);
+
+                try {
+                    thriftTransport = ThriftTransport.builder().properties(properties).build();
+
+                    TCLIService.Client client = ThriftUtils.createClient(thriftTransport);
+
+                    TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client, protocolVersion);
+
+                    TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
+
+                    log.debug("opened session with protocol {}", openSessionResp.getServerProtocolVersion());
+
+                    return new ThriftSession(properties, thriftTransport, client, sessionHandle);
+
+                } catch (InvalidProtocolException e) {
+                    protocol--;
+
+                    try {
+                        thriftTransport.close();
+                    } catch (IOException io) {
+                        log.warn(io.getMessage(), io);
+                    }
+                }
+            }
+
+            throw new HiveException("cannot build ThriftSession.  check that the thrift protocol version on the server is compatible with this driver.");
         }
 
     }
