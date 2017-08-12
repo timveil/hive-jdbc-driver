@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.HiveDriver;
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;

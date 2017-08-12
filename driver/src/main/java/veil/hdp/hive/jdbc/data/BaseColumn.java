@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc.data;
 
 import org.slf4j.Logger;
-import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.HiveType;
 import veil.hdp.hive.jdbc.utils.SqlDateTimeUtils;

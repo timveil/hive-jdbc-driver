@@ -3,10 +3,7 @@ package veil.hdp.hive.jdbc.data;
 
 import com.google.common.primitives.Ints;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.HiveSQLException;
 
-import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 

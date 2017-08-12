@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.HiveDriver;
-
 import java.sql.*;
 
 abstract class AbstractDatabaseMetaData implements DatabaseMetaData {
