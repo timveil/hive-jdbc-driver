@@ -294,9 +294,6 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 String colChar = rs.getString("col_char");
                 log.debug("colChar [{}]", colChar);
 
-                Object colBinary = rs.getBytes("col_binary");
-                log.debug("colBinary [{}]", colBinary);
-
                 byte[] stringAsBytes = rs.getBytes("col_string");
                 log.debug("col_string as bytes [{}]", stringAsBytes);
 
