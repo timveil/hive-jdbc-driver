@@ -38,6 +38,10 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void close() throws SQLException {
 
+        if (log.isTraceEnabled()) {
+            log.trace("attempting to close {}", this.getClass().getName());
+        }
+
         try {
             thriftSession.close();
         } catch (IOException e) {

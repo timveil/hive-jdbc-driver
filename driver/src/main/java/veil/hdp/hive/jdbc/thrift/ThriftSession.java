@@ -86,6 +86,7 @@ public class ThriftSession implements Closeable {
             ThriftUtils.closeSession(this);
 
             thriftTransport.close();
+
         }
     }
 

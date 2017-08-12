@@ -40,12 +40,11 @@ public class HiveEmptyResultSet extends AbstractResultSet {
     @Override
     public void close() throws SQLException {
 
+        if (log.isTraceEnabled()) {
+            log.trace("attempting to close {}", this.getClass().getName());
+        }
+
         if (schema != null) {
-
-            if (log.isTraceEnabled()) {
-                log.trace("attempting to close {}", this.getClass().getName());
-            }
-
             schema.clear();
         }
     }
