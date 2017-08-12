@@ -88,6 +88,11 @@ public class ThriftOperation implements Closeable {
 
     public void cancel() {
         if (!closed.get()) {
+
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to cancel {}", this.getClass().getName());
+            }
+
             ThriftUtils.cancelOperation(this);
         }
     }

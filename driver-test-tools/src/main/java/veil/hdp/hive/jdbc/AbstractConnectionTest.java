@@ -54,6 +54,55 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     @Test
+    public void testCancel() throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM test_table limit 10")) {
+
+
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        log.error(e.getMessage(), e);
+                    }
+
+                    try {
+                        Printer.printResultSetMetaData(rs.getMetaData());
+                    } catch (SQLException e) {
+                        log.error(e.getMessage(), e);
+                    }
+
+                    Printer.printResultSet(rs);
+                }
+            });
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        statement.cancel();
+                    } catch (SQLException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            });
+
+
+            try {
+                executorService.awaitTermination(20, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+
+        }
+    }
+
+    @Test
     public void isValid() throws SQLException {
         log.debug("is valid {}", connection.isValid(1));
 
