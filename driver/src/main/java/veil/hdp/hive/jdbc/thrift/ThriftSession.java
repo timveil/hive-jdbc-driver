@@ -27,17 +27,19 @@ public class ThriftSession implements Closeable {
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
     private final Properties properties;
+    private final TProtocolVersion protocol;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 
-    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
         this.properties = properties;
         this.thriftTransport = thriftTransport;
         this.client = client;
         this.sessionHandle = sessionHandle;
+        this.protocol = protocol;
 
         closed.set(false);
     }
@@ -64,6 +66,10 @@ public class ThriftSession implements Closeable {
 
     public Properties getProperties() {
         return properties;
+    }
+
+    public TProtocolVersion getProtocol() {
+        return protocol;
     }
 
     /**
@@ -124,9 +130,11 @@ public class ThriftSession implements Closeable {
 
                     TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
 
-                    log.debug("opened session with protocol {}", openSessionResp.getServerProtocolVersion());
+                    TProtocolVersion serverProtocolVersion = openSessionResp.getServerProtocolVersion();
 
-                    return new ThriftSession(properties, thriftTransport, client, sessionHandle);
+                    log.debug("opened session with protocol {}", serverProtocolVersion);
+
+                    return new ThriftSession(properties, thriftTransport, client, sessionHandle, serverProtocolVersion);
 
                 } catch (InvalidProtocolException e) {
                     protocol--;
