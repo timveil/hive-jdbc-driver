@@ -213,6 +213,10 @@ public class HiveStatement extends AbstractStatement {
 
         if (operation != null) {
 
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
+            }
+
             try {
                 operation.close();
             } catch (IOException e) {

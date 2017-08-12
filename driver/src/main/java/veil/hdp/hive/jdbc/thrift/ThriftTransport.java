@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
+import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.TransportMode;
 import veil.hdp.hive.jdbc.utils.BinaryUtils;
 import veil.hdp.hive.jdbc.utils.HttpUtils;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftTransport implements Closeable {
 
@@ -25,9 +27,14 @@ public class ThriftTransport implements Closeable {
 
     private final List<Closeable> closeableList;
 
+    // atomic
+    private final AtomicBoolean closed = new AtomicBoolean(true);
+
     private ThriftTransport(TTransport transport, List<Closeable> closeableList) {
         this.transport = transport;
         this.closeableList = closeableList;
+
+        closed.set(false);
     }
 
     public static ThriftTransportBuilder builder() {
@@ -38,16 +45,48 @@ public class ThriftTransport implements Closeable {
         return transport;
     }
 
+    public boolean isClosed() {
+        return closed.get();
+    }
+
+    /**
+     * Determines if the ThriftTransport is in a valid state to execute another Thrift call. It checks both the closed flag as well as the underlying thrift transport status.
+     * @return true if valid, false if not valid
+     */
+
+    public boolean isValid() {
+        return !closed.get() && transport.isOpen();
+    }
+
     @Override
     public void close() throws IOException {
-        ThriftUtils.closeTransport(transport);
 
-        for (Closeable closeable : closeableList) {
+        if (closed.compareAndSet(false, true)) {
+
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
+            }
+
+
+            for (Closeable closeable : closeableList) {
+
+                if (log.isTraceEnabled()) {
+                    log.trace("attempting to close {}", closeable.getClass().getName());
+                }
+
+                try {
+                    closeable.close();
+                } catch (IOException e) {
+                    log.warn(e.getMessage(), e);
+                }
+            }
+
             try {
-                closeable.close();
-            } catch (IOException e) {
+                transport.close();
+            } catch (Exception e) {
                 log.warn(e.getMessage(), e);
             }
+
         }
     }
 
@@ -82,6 +121,11 @@ public class ThriftTransport implements Closeable {
                 transport = HttpUtils.createHttpTransport(properties, client);
             }
 
+            if (transport == null) {
+                throw new HiveException("invalid transport mode [" + mode + "]");
+            }
+
+            ThriftUtils.openTransport(transport, HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.getInt(properties));
 
             return new ThriftTransport(transport, closeableList);
         }

@@ -1,5 +1,7 @@
 package veil.hdp.hive.jdbc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.ResultSetMetaData;
@@ -7,6 +9,8 @@ import java.sql.SQLException;
 
 
 public class HiveEmptyResultSet extends AbstractResultSet {
+
+    private static final Logger log = LoggerFactory.getLogger(HiveResultSet.class);
 
     // constructor
     private final Schema schema;
@@ -37,6 +41,11 @@ public class HiveEmptyResultSet extends AbstractResultSet {
     public void close() throws SQLException {
 
         if (schema != null) {
+
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
+            }
+
             schema.clear();
         }
     }

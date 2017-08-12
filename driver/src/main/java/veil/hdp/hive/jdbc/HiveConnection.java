@@ -3,7 +3,6 @@ package veil.hdp.hive.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.io.IOException;
@@ -211,8 +210,6 @@ public class HiveConnection extends AbstractConnection {
 
         private Properties properties;
 
-        private ThriftTransport thriftTransport;
-
         private HiveConnectionBuilder() {
         }
 
@@ -221,15 +218,11 @@ public class HiveConnection extends AbstractConnection {
             return this;
         }
 
-        public HiveConnectionBuilder thriftTransport(ThriftTransport thriftTransport) {
-            this.thriftTransport = thriftTransport;
-            return this;
-        }
 
         public HiveConnection build() {
+
             ThriftSession thriftSession = ThriftSession.builder()
                     .properties(properties)
-                    .thriftTransport(thriftTransport)
                     .build();
 
             return new HiveConnection(thriftSession);

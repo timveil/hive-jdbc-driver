@@ -72,6 +72,10 @@ public class ThriftOperation implements Closeable {
     @Override
     public void close() throws IOException {
         if (closed.compareAndSet(false, true)) {
+            if (log.isTraceEnabled()) {
+                log.trace("attempting to close {}", this.getClass().getName());
+            }
+
             ThriftUtils.closeOperation(this);
 
             try {

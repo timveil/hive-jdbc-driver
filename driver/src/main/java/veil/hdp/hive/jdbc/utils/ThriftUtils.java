@@ -18,6 +18,7 @@ import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.HiveThriftException;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -33,39 +34,30 @@ public class ThriftUtils {
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
 
-    public static void openTransport(TTransport transport, Properties properties) throws HiveThriftException {
+    public static void openTransport(TTransport transport, int timeout) throws HiveThriftException {
 
-        if (!transport.isOpen()) {
-            try {
-                ExecutorService executor = Executors.newFixedThreadPool(1);
+        try {
+            ExecutorService executor = Executors.newFixedThreadPool(1);
 
-                Future<Boolean> future = executor.submit(() -> {
-                    transport.open();
+            Future<Boolean> future = executor.submit(() -> {
+                transport.open();
 
-                    return true;
-                });
+                return true;
+            });
 
-                future.get(HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.getInt(properties), TimeUnit.MILLISECONDS);
+            future.get(timeout, TimeUnit.MILLISECONDS);
 
-            } catch (InterruptedException | ExecutionException e) {
-               throw new HiveException(e);
-            } catch (TimeoutException e) {
-                throw new HiveException("The Thrift Transport did not open prior to Timeout.  If using Kerberos, double check that you have a valid client Principal by running klist.", e);
-            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new HiveException(e);
+        } catch (TimeoutException e) {
+            throw new HiveException("The Thrift Transport did not open prior to Timeout.  If using Kerberos, double check that you have a valid client Principal by running klist.", e);
         }
 
     }
 
-    public static void closeTransport(TTransport transport) {
 
-        if (transport.isOpen()) {
-            transport.close();
-        }
-
-    }
-
-    public static TCLIService.Client createClient(TTransport transport) {
-        return new TCLIService.Client(new TBinaryProtocol(transport));
+    public static TCLIService.Client createClient(ThriftTransport transport) {
+        return new TCLIService.Client(new TBinaryProtocol(transport.getTransport()));
     }
 
 

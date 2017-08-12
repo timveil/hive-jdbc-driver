@@ -25,7 +25,6 @@ public class ThriftSession implements Closeable {
     private final ThriftTransport thriftTransport;
     private final TCLIService.Client client;
     private final TSessionHandle sessionHandle;
-    private final TProtocolVersion protocolVersion;
     private final Properties properties;
 
     // atomic
@@ -33,12 +32,11 @@ public class ThriftSession implements Closeable {
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 
-    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocolVersion) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle) {
         this.properties = properties;
         this.thriftTransport = thriftTransport;
         this.client = client;
         this.sessionHandle = sessionHandle;
-        this.protocolVersion = protocolVersion;
 
         closed.set(false);
     }
@@ -47,20 +45,12 @@ public class ThriftSession implements Closeable {
         return new ThriftSessionBuilder();
     }
 
-    public TTransport getTransport() {
-        return thriftTransport.getTransport();
-    }
-
     public TCLIService.Client getClient() {
         return client;
     }
 
     public TSessionHandle getSessionHandle() {
         return sessionHandle;
-    }
-
-    public TProtocolVersion getProtocolVersion() {
-        return protocolVersion;
     }
 
     public boolean isClosed() {
@@ -80,7 +70,7 @@ public class ThriftSession implements Closeable {
      * @return true if valid, false if not valid
      */
     public boolean isValid() {
-        return !isClosed() && thriftTransport.getTransport().isOpen();
+        return !closed.get() && thriftTransport.isValid();
     }
 
     @Override
@@ -99,7 +89,6 @@ public class ThriftSession implements Closeable {
 
     public static class ThriftSessionBuilder implements Builder<ThriftSession> {
         private Properties properties;
-        private ThriftTransport thriftTransport;
 
         private ThriftSessionBuilder() {
         }
@@ -109,27 +98,19 @@ public class ThriftSession implements Closeable {
             return this;
         }
 
-        public ThriftSessionBuilder thriftTransport(ThriftTransport thriftTransport) {
-            this.thriftTransport = thriftTransport;
-            return this;
-        }
 
         @Override
         public ThriftSession build() {
 
-            TTransport transport = thriftTransport.getTransport();
+            ThriftTransport thriftTransport = ThriftTransport.builder().properties(properties).build();
 
-            ThriftUtils.openTransport(transport, properties);
-
-            TCLIService.Client client = ThriftUtils.createClient(transport);
+            TCLIService.Client client = ThriftUtils.createClient(thriftTransport);
 
             TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client);
 
-            TProtocolVersion protocolVersion = openSessionResp.getServerProtocolVersion();
-
             TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
 
-            return new ThriftSession(properties, thriftTransport, client, sessionHandle, protocolVersion);
+            return new ThriftSession(properties, thriftTransport, client, sessionHandle);
         }
 
     }

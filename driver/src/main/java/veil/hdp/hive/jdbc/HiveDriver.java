@@ -3,13 +3,11 @@ package veil.hdp.hive.jdbc;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import veil.hdp.hive.jdbc.thrift.ThriftTransport;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.VersionUtils;
 
-import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -53,18 +51,7 @@ public class HiveDriver implements Driver {
         System.setProperty(Constants.SUN_SECURITY_KRB5_DEBUG, HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
         System.setProperty(Constants.JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
 
-        ThriftTransport thriftTransport = ThriftTransport.builder().properties(properties).build();
-
-        try {
-            return HiveConnection.builder().properties(properties).thriftTransport(thriftTransport).build();
-        } catch (HiveException e) {
-            try {
-                thriftTransport.close();
-            } catch (IOException ignore) {
-            }
-
-            throw new HiveSQLException("There was a problem building the HiveConnection.", e);
-        }
+        return HiveConnection.builder().properties(properties).build();
     }
 
 
