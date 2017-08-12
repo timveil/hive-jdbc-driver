@@ -253,7 +253,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 log.debug("run # {}", i);
 
                 try (Timer.Context queryContext = timer.time()) {
-                    executeSimpleQuery(true);
+                    executeSimpleQuery(false);
                 }
             }
 
@@ -281,7 +281,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 log.debug("run # {}", i);
 
                 try (Timer.Context queryContext = timer.time()) {
-                    executePreparedStatement(true);
+                    executePreparedStatement(false);
                 }
             }
 
@@ -298,9 +298,9 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         Runnable test = () -> {
             try {
-                executeSimpleQuery(true);
+                executeSimpleQuery(false);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         };
 
@@ -385,7 +385,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                     Printer.printResultSet(columns);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         };
 

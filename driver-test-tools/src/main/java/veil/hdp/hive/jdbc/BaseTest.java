@@ -28,7 +28,7 @@ public class BaseTest {
     }
 
     public static int getTestRuns() {
-        return Integer.parseInt(System.getProperty("test.runs", "20"));
+        return Integer.parseInt(System.getProperty("test.runs", "10"));
     }
 
 }
