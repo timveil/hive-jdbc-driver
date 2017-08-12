@@ -8,16 +8,18 @@ import veil.hdp.hive.jdbc.bindings.TColumnDesc;
 public class ColumnDescriptor {
 
     private final String name;
-    private final String normalizedName;
+    private final String label;
+    private final String tableName;
     private final String comment;
     private final ColumnTypeDescriptor columnTypeDescriptor;
 
     // should be 1 based to match ResultSet
     private final int position;
 
-    private ColumnDescriptor(String name, String normalizedName, String comment, ColumnTypeDescriptor columnTypeDescriptor, int position) {
+    private ColumnDescriptor(String name, String label, String tableName, String comment, ColumnTypeDescriptor columnTypeDescriptor, int position) {
         this.name = name;
-        this.normalizedName = normalizedName;
+        this.label = label;
+        this.tableName = tableName;
         this.comment = comment;
         this.columnTypeDescriptor = columnTypeDescriptor;
         this.position = position;
@@ -32,12 +34,16 @@ public class ColumnDescriptor {
         return name;
     }
 
-    public String getNormalizedName() {
-        return normalizedName;
-    }
-
     public String getComment() {
         return comment;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     public ColumnTypeDescriptor getColumnType() {
@@ -52,7 +58,8 @@ public class ColumnDescriptor {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
-                .append("normalizedName", normalizedName)
+                .append("label", label)
+                .append("tableName", tableName)
                 .append("comment", comment)
                 .append("columnTypeDescriptor", columnTypeDescriptor)
                 .append("position", position)
@@ -61,8 +68,8 @@ public class ColumnDescriptor {
 
     public static class ColumnDescriptorBuilder implements Builder<ColumnDescriptor> {
 
-        private TColumnDesc columnDesc;
-        private ColumnTypeDescriptor typeDescriptor;
+        private TColumnDesc thriftColumnDescriptor;
+        private ColumnTypeDescriptor columnTypeDescriptor;
         private String name;
         private int position;
 
@@ -72,12 +79,12 @@ public class ColumnDescriptor {
         }
 
         public ColumnDescriptorBuilder thriftColumn(TColumnDesc columnDesc) {
-            this.columnDesc = columnDesc;
+            this.thriftColumnDescriptor = columnDesc;
             return this;
         }
 
         public ColumnDescriptorBuilder typeDescriptor(ColumnTypeDescriptor typeDescriptor) {
-            this.typeDescriptor = typeDescriptor;
+            this.columnTypeDescriptor = typeDescriptor;
             return this;
         }
 
@@ -93,23 +100,32 @@ public class ColumnDescriptor {
 
         public ColumnDescriptor build() {
 
-            if (columnDesc != null) {
-                String name = columnDesc.getColumnName();
+            if (thriftColumnDescriptor != null) {
+                String rawName = thriftColumnDescriptor.getColumnName();
 
-                return new ColumnDescriptor(name, normalizeName(name), columnDesc.getComment(), ColumnTypeDescriptor.builder().thriftType(columnDesc.getTypeDesc()).build(), columnDesc.getPosition());
+                String columnName;
+                String tableName = null;
+
+                // when select statement uses AS keyword, HS2/thrift simply returns this as the columnName without anyway to determine table.  this is really a bug on the HS2/Thrift side
+                // when AS is not used, the columnName returned from HS2/Thrift is a `.` separated string with table-name.column-name syntax.
+
+                if (rawName.contains(".")) {
+                    columnName = rawName.substring(rawName.lastIndexOf('.') + 1);
+                    tableName = rawName.substring(0, rawName.lastIndexOf('.'));
+                } else{
+                    columnName = rawName;
+                }
+
+                return new ColumnDescriptor(columnName,
+                        null,
+                        tableName,
+                        thriftColumnDescriptor.getComment(),
+                        ColumnTypeDescriptor.builder().thriftType(thriftColumnDescriptor.getTypeDesc()).build(),
+                        thriftColumnDescriptor.getPosition());
             } else {
-                return new ColumnDescriptor(name, normalizeName(name), null, typeDescriptor, position);
+                return new ColumnDescriptor(name, null, null, null, columnTypeDescriptor, position);
             }
         }
 
-
-        private static String normalizeName(String name) {
-
-            if (name.contains(".")) {
-                name = name.substring(name.lastIndexOf('.') + 1);
-            }
-
-            return name.toLowerCase();
-        }
     }
 }

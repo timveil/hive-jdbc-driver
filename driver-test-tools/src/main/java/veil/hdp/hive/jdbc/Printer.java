@@ -25,6 +25,7 @@ class Printer {
                         "column display size [" + rsmd.getColumnDisplaySize(i + 1) + "], " +
                         "column label [" + rsmd.getColumnLabel(i + 1) + "], " +
                         "column name [" + rsmd.getColumnName(i + 1) + "], " +
+                        "table name [" + rsmd.getTableName(i + 1) + "], " +
                         "column type [" + rsmd.getColumnType(i + 1) + "], " +
                         "column type name [" + rsmd.getColumnTypeName(i + 1) + "], " +
                         "precision [" + rsmd.getPrecision(i + 1) + "], " +

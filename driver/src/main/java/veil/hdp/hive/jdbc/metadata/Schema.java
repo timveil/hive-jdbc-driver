@@ -32,7 +32,7 @@ public class Schema {
 
         for (ColumnDescriptor columnDescriptor : columnDescriptors) {
 
-            if (columnDescriptor.getNormalizedName().equalsIgnoreCase(columnName)) {
+            if (columnDescriptor.getName().equalsIgnoreCase(columnName)) {
                 return columnDescriptor;
             }
         }
@@ -56,7 +56,7 @@ public class Schema {
         StringBuilder stringBuilder = new StringBuilder("\nSchema {\n");
 
         for (ColumnDescriptor descriptor : columnDescriptors) {
-            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", normalizedName: ").append(descriptor.getNormalizedName()).append(", type: ").append(descriptor.getColumnType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
+            stringBuilder.append("\tcolumn {").append("name: ").append(descriptor.getName()).append(", label: ").append(descriptor.getLabel()).append(", table name: ").append(descriptor.getTableName()).append(", type: ").append(descriptor.getColumnType()).append(", position: ").append(descriptor.getPosition()).append("}\n");
         }
 
         stringBuilder.append('}');

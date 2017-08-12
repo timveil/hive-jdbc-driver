@@ -63,14 +63,6 @@ public class ThriftUtils {
 
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
 
-        // todo: not required when AuthenticationMode is NONE
-        /*String username = HiveDriverProperty.USER.get(properties);
-
-        if (username != null) {
-            openSessionReq.setUsername(username);
-            openSessionReq.setPassword(HiveDriverProperty.PASSWORD.get(properties));
-        }*/
-
         // set properties for session
         Map<String, String> configuration = buildSessionConfig(properties);
 
@@ -84,7 +76,7 @@ public class ThriftUtils {
             return resp;
         } catch (TException e) {
             if (StringUtils.containsIgnoreCase(e.getMessage(), "'client_protocol' is unset")) {
-                // this often happens when the protocl of the driver is higher than supported by the server.  in otherwords, driver is newer than server.  handle this gracefully
+                // this often happens when the protocol of the driver is higher than supported by the server.  in other words, driver is newer than server.  handle this gracefully.
                 throw new InvalidProtocolException(e);
             } else {
                 throw new HiveThriftException(e);

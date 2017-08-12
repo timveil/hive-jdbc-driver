@@ -83,6 +83,11 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     @Test
+    public void testASQuery() throws SQLException {
+        executeAsQuery(true);
+    }
+
+    @Test
     public void testDates() throws SQLException {
 
         //get Calendar instance
@@ -99,6 +104,17 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
             Printer.printResultSetMetaData(rs.getMetaData());
             Printer.printResultSet(rs);
+        }
+    }
+
+    private void executeAsQuery(boolean print) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT col_string as `String Column` FROM test_table limit 10")) {
+
+            if (print) {
+                Printer.printResultSetMetaData(rs.getMetaData());
+                Printer.printResultSet(rs);
+            }
         }
     }
 
@@ -243,7 +259,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
             executorService.submit(test);
         }
 
-        executorService.awaitTermination(2, TimeUnit.MINUTES);
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
 
     }
 

@@ -42,7 +42,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        return schema.getColumn(column).getNormalizedName();
+        return schema.getColumn(column).getLabel();
     }
 
     @Override
@@ -112,10 +112,9 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
         return "";
     }
 
-    // todo: need to research this more; where would i get this from
     @Override
     public String getTableName(int column) throws SQLException {
-        return "";
+        return schema.getColumn(column).getTableName();
     }
 
     // todo: need to research this more; where would i get this from

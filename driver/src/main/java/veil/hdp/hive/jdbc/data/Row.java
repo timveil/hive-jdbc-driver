@@ -22,24 +22,8 @@ public class Row {
         return new RowBuilder();
     }
 
-    public List<Column> getColumns() {
-        return columns;
-    }
-
     public Column getColumn(int position) {
         return columns.get(position - 1);
-    }
-
-    public Column getColumn(String name) throws SQLException {
-
-
-        for (Column column : columns) {
-            if (column.getDescriptor().getNormalizedName().equalsIgnoreCase(name)) {
-                return column;
-            }
-        }
-
-        throw new HiveSQLException(MessageFormat.format("invalid column name [{0}] for row;", name));
     }
 
     public static class RowBuilder implements Builder<Row> {
