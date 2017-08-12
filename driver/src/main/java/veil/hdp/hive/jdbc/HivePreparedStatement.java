@@ -159,10 +159,6 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         super.setTimestamp(parameterIndex, x, cal);
     }
 
-    @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        return super.getMetaData();
-    }
 
     @Override
     public ParameterMetaData getParameterMetaData() throws SQLException {
@@ -172,6 +168,19 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
 
     */
+
+    /**
+     * per the jdbc spec, if the driver cannot compute the results ResultSetMetaData before executing the statment, then return null.
+     *
+     * do not have a way in hive to determine the true metadata before query execution
+     *
+     * @return null
+     * @throws SQLException
+     */
+    @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return null;
+    }
 
     private String updateSql(String originalSql) {
 

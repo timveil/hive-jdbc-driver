@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.HiveDriver;
-
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
