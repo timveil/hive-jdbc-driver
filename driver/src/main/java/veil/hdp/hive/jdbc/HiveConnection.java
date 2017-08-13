@@ -170,17 +170,6 @@ public class HiveConnection extends AbstractConnection {
     }
 
     @Override
-    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        // no-op; todo:need to better understand how this differs from DriverManager.getLoginTimeout()
-        log.warn("no-op for method setNetworkTimeout()");
-    }
-
-    @Override
-    public int getNetworkTimeout() throws SQLException {
-        return 0;
-    }
-
-    @Override
     public String getSchema() throws SQLException {
         return QueryUtils.getDatabaseSchema(this);
     }
