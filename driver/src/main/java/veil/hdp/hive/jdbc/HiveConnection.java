@@ -92,6 +92,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         // no-op; don't support setting this value
+        log.warn("no-op for method setAutoCommit()");
     }
 
     @Override
@@ -122,6 +123,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void setHoldability(int holdability) throws SQLException {
         // no-op; don't support setting this value
+        log.warn("no-op for method setHoldability()");
     }
 
     @Override
@@ -132,6 +134,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
         // no-op; connection does not use
+        log.warn("no-op for method setReadOnly()");
     }
 
     @Override
@@ -142,6 +145,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void setCatalog(String catalog) throws SQLException {
         // no-op; no catalog in hive
+        log.warn("no-op for method setCatalog()");
     }
 
     @Override
@@ -162,11 +166,13 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
         // no-op; don't support transactions yet
+        log.warn("no-op for method setTransactionIsolation()");
     }
 
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-        // no-op; need to better understand how this differs from DriverManager.getLoginTimeout()
+        // no-op; todo:need to better understand how this differs from DriverManager.getLoginTimeout()
+        log.warn("no-op for method setNetworkTimeout()");
     }
 
     @Override

@@ -237,11 +237,13 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void setMaxFieldSize(int max) throws SQLException {
         // no-op; don't support setting this value
+        log.warn("no-op for method setMaxFieldSize()");
     }
 
     @Override
     public void setEscapeProcessing(boolean enable) throws SQLException {
         // no-op; don't support setting this value
+        log.warn("no-op for method setEscapeProcessing()");
     }
 
     @Override
@@ -263,6 +265,7 @@ public class HiveStatement extends AbstractStatement {
     public void setPoolable(boolean poolable) throws SQLException {
         // no-op; don't support pooling statements
         // todo: should consider pooling statements
+        log.warn("no-op for method setPoolable()");
     }
 
     @Override
@@ -278,6 +281,7 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void closeOnCompletion() throws SQLException {
         // no-op; don't support setting this value
+        log.warn("no-op for method closeOnCompletion()");
     }
 
     public static class HiveStatementBuilder implements Builder<HiveStatement> {
