@@ -92,7 +92,7 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
             Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
 
-            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, Constants.DEFAULT_FETCH_SIZE, schema);
+            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, HiveDriverProperty.FETCH_SIZE.getInt(thriftSession.getProperties()), schema);
 
             return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }

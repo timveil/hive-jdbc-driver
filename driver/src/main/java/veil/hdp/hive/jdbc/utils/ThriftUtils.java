@@ -17,6 +17,7 @@ import veil.hdp.hive.jdbc.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -486,9 +487,30 @@ public class ThriftUtils {
 
         checkStatus(executeStatementResp.getStatus());
 
-        waitForStatementToComplete(session, executeStatementResp.getOperationHandle());
+        TOperationHandle operationHandle = executeStatementResp.getOperationHandle();
 
-        return ThriftOperation.builder().session(session).handle(executeStatementResp.getOperationHandle()).maxRows(maxRows).fetchSize(fetchSize).build();
+        if (HiveDriverProperty.FETCH_SERVER_LOGS.getBoolean(session.getProperties())) {
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+            executorService.submit(() -> {
+                List<Row> rows = ThriftUtils.fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build());
+
+                for (Row row : rows) {
+                    try {
+                        log.debug(row.getColumn(1).asString());
+                    } catch (SQLException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            });
+        }
+
+
+
+        waitForStatementToComplete(session, operationHandle);
+
+        return ThriftOperation.builder().session(session).handle(operationHandle).maxRows(maxRows).fetchSize(fetchSize).build();
 
     }
 

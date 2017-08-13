@@ -98,6 +98,24 @@ The Thrift Protocol Version or `TProtocolVersion` is defined in the `TCLIService
 
 The amount of time, in milliseconds, that the driver will wait for Thrift's `TTransport.open()` method to execute.
 
+### Fetch Size
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| fetchSize | `1000` | false | none |
+
+The default fetch size for a ResultSet.
+
+### Fetch Server Logs
+
+| Property | Default Value | Required | Hive Configuration Property |
+| :--- | :--- | :--- | :--- |
+| fetchLogs | `false` | false | none |
+
+Attempts to grab the query logs from the server.
+
+
+
 ## Binary Properties
 
 ### Thrift Socket Timeout

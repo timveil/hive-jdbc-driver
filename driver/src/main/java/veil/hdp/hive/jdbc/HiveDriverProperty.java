@@ -41,6 +41,10 @@ public enum HiveDriverProperty {
     // in milliseconds. time code will wait to open thrift transport
     THRIFT_TRANSPORT_TIMEOUT("thriftTransportTimeout", "10000", null, null),
 
+    FETCH_SIZE("fetchSize", "1000", null, null),
+
+    FETCH_SERVER_LOGS("fetchLogs", "false", null, null),
+
 
     /***************************************************
      *  BINARY

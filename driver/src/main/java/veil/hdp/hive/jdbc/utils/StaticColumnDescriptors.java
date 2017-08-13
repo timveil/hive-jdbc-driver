@@ -467,4 +467,10 @@ class StaticColumnDescriptors {
     static {
         GENERATED_KEYS.add(ColumnDescriptor.builder().name("GENERATED_KEY").typeDescriptor(STRING).position(1).build());
     }
+
+    public static final List<ColumnDescriptor> QUERY_LOG = new ArrayList<>(1);
+
+    static {
+        QUERY_LOG.add(ColumnDescriptor.builder().name("STRING_VAL").typeDescriptor(STRING).position(1).build());
+    }
 }
