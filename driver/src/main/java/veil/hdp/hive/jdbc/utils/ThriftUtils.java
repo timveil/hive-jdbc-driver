@@ -35,7 +35,7 @@ public class ThriftUtils {
     public static void openTransport(TTransport transport, int timeout) throws HiveThriftException {
 
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
+            ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
 
             Future<Boolean> future = executor.submit(() -> {
                 transport.open();
@@ -491,7 +491,7 @@ public class ThriftUtils {
 
         if (HiveDriverProperty.FETCH_SERVER_LOGS.getBoolean(session.getProperties())) {
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "fetch-logs-thread"));
 
             executorService.submit(() -> {
                 List<Row> rows = ThriftUtils.fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build(), fetchSize);
