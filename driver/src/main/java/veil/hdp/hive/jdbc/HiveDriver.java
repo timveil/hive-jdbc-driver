@@ -46,7 +46,7 @@ public class HiveDriver implements Driver {
 
     private Connection connect(Properties properties) {
 
-        PropertyUtils.printProperties(properties, "HiveDriver connection properties");
+        PropertyUtils.printProperties(properties);
 
         System.setProperty(Constants.SUN_SECURITY_KRB5_DEBUG, HiveDriverProperty.KERBEROS_DEBUG_ENABLED.get(properties));
         System.setProperty(Constants.JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.get(properties));
