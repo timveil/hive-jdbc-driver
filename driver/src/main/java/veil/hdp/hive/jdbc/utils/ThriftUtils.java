@@ -463,7 +463,7 @@ public class ThriftUtils {
         return fetchResults.getResults();
     }
 
-    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows) {
+    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows, int resultSetConcurrency, int resultSetHoldability, int resultSetType, int fetchDirection) {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), StringUtils.trim(sql));
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
@@ -510,7 +510,16 @@ public class ThriftUtils {
 
         waitForStatementToComplete(session, operationHandle);
 
-        return ThriftOperation.builder().session(session).handle(operationHandle).maxRows(maxRows).fetchSize(fetchSize).build();
+        return ThriftOperation.builder()
+                .session(session)
+                .handle(operationHandle)
+                .resultSetConcurrency(resultSetConcurrency)
+                .resultSetHoldability(resultSetHoldability)
+                .maxRows(maxRows)
+                .fetchSize(fetchSize)
+                .fetchDirection(fetchDirection)
+                .resultSetType(resultSetType)
+                .build();
 
     }
 

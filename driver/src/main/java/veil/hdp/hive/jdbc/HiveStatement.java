@@ -31,6 +31,7 @@ public class HiveStatement extends AbstractStatement {
     private int queryTimeout;
     private int maxRows;
     private int fetchSize;
+    private int fetchDirection;
     private SQLWarning sqlWarning;
 
 
@@ -39,7 +40,8 @@ public class HiveStatement extends AbstractStatement {
 
         this.queryTimeout = Constants.DEFAULT_QUERY_TIMEOUT;
         this.maxRows = Constants.DEFAULT_MAX_ROWS;
-        this.fetchSize = Constants.DEFAULT_FETCH_SIZE;
+        this.fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+        this.fetchDirection = ResultSet.FETCH_FORWARD;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
@@ -65,7 +67,7 @@ public class HiveStatement extends AbstractStatement {
             currentOperation.compareAndSet(operation, null);
         }
 
-        currentOperation.compareAndSet(null, ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows));
+        currentOperation.compareAndSet(null, ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows, resultSetConcurrency, resultSetHoldability, resultSetType, fetchDirection));
     }
 
     @Override
@@ -105,12 +107,12 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getFetchDirection() throws SQLException {
-        return ResultSet.FETCH_FORWARD;
+        return fetchDirection;
     }
 
     @Override
     public void setFetchDirection(int direction) throws SQLException {
-        // no-op; don't support setting a different direction
+        this.fetchDirection = direction;
     }
 
     @Override

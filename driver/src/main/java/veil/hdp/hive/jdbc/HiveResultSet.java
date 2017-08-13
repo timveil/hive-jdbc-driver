@@ -135,12 +135,12 @@ public class HiveResultSet extends HiveBaseResultSet {
 
         private ThriftSession thriftSession;
         private TOperationHandle operationHandle;
-        private int maxRows = Constants.DEFAULT_MAX_ROWS;
-        private int fetchSize = Constants.DEFAULT_FETCH_SIZE;
-        private int fetchDirection = ResultSet.FETCH_FORWARD;
-        private int resultSetType = ResultSet.TYPE_FORWARD_ONLY;
-        private int resultSetConcurrency = ResultSet.CONCUR_READ_ONLY;
-        private int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
+        private int maxRows = -1;
+        private int fetchSize = -1;
+        private int fetchDirection = -1;
+        private int resultSetType = -1;
+        private int resultSetConcurrency = -1;
+        private int resultSetHoldability = -1;
 
         private HiveResultSetBuilder() {
         }
