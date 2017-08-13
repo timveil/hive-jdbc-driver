@@ -381,7 +381,6 @@ public abstract class AbstractConnectionTest extends BaseTest {
         Runnable test = () -> {
             try {
                 try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
-
                     Printer.printResultSet(columns);
                 }
             } catch (SQLException e) {
