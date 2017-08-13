@@ -61,34 +61,28 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
             ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
+            executorService.submit(() -> {
 
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        log.error(e.getMessage(), e);
-                    }
-
-                    try {
-                        Printer.printResultSetMetaData(rs.getMetaData());
-                    } catch (SQLException e) {
-                        log.error(e.getMessage(), e);
-                    }
-
-                    Printer.printResultSet(rs);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
                 }
+
+                try {
+                    Printer.printResultSetMetaData(rs.getMetaData());
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
+                }
+
+                Printer.printResultSet(rs);
             });
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        statement.cancel();
-                    } catch (SQLException e) {
-                        log.error(e.getMessage(), e);
-                    }
+            executorService.submit(() -> {
+                try {
+                    statement.cancel();
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
                 }
             });
 

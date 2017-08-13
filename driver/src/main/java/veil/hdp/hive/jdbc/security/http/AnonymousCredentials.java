@@ -5,7 +5,7 @@ import org.apache.http.auth.Credentials;
 
 import java.security.Principal;
 
-public class AnonymousCredentials implements Credentials {
+class AnonymousCredentials implements Credentials {
 
     private static final String ANONYMOUS = "anonymous";
 

@@ -8,7 +8,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import java.io.IOException;
 
-public class NoOpCallbackHandler implements CallbackHandler {
+class NoOpCallbackHandler implements CallbackHandler {
 
     private static final Logger log = LoggerFactory.getLogger(NoOpCallbackHandler.class);
 

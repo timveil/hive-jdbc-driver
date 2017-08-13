@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.callback.*;
 import java.io.IOException;
 
-public class UsernamePasswordCallbackHandler implements CallbackHandler {
+class UsernamePasswordCallbackHandler implements CallbackHandler {
 
     private static final Logger log = LoggerFactory.getLogger(UsernamePasswordCallbackHandler.class);
 

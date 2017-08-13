@@ -9,7 +9,7 @@ import javax.security.auth.login.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JaasConfiguration extends Configuration {
+class JaasConfiguration extends Configuration {
 
     private static final Logger log = LoggerFactory.getLogger(JaasConfiguration.class);
 

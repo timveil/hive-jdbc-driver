@@ -7,7 +7,7 @@ public class WrappedTransport extends TTransport {
 
     protected final TTransport wrapped;
 
-    public WrappedTransport(TTransport wrapped) {
+    protected WrappedTransport(TTransport wrapped) {
         this.wrapped = wrapped;
     }
 

@@ -23,7 +23,7 @@ public class BaseColumn<T> implements Column<T> {
 
     static final Logger log = getLogger(BaseColumn.class);
 
-    final ColumnDescriptor descriptor;
+    private final ColumnDescriptor descriptor;
 
     final T value;
 
