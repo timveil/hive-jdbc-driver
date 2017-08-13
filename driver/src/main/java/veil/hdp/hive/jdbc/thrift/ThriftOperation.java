@@ -173,6 +173,7 @@ public class ThriftOperation implements Closeable {
                     resultSet = HiveMetaDataResultSet.builder()
                             .handle(operationHandle)
                             .thriftSession(session)
+                            .fetchSize(fetchSize)
                             .build();
                 } else {
                     resultSet = HiveResultSet.builder()
