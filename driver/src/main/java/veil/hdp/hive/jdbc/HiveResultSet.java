@@ -201,6 +201,8 @@ public class HiveResultSet extends HiveBaseResultSet {
 
             Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
 
+            log.debug("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
+
             return new HiveResultSet(schema,
                     maxRows,
                     fetchSize,
