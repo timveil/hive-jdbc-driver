@@ -65,6 +65,8 @@ public class Schema {
 
     public static class SchemaBuilder implements Builder<Schema> {
 
+        private static final Comparator<ColumnDescriptor> COLUMN_DESCRIPTOR_COMPARATOR = (o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition());
+
         private TTableSchema tableSchema;
         private List<ColumnDescriptor> columnDescriptors;
 
@@ -99,7 +101,7 @@ public class Schema {
 
             List<ColumnDescriptor> columns = new ArrayList<>(mapping.values());
 
-            columns.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
+            columns.sort(COLUMN_DESCRIPTOR_COMPARATOR);
 
             return new Schema(mapping, columns, columns.size());
         }

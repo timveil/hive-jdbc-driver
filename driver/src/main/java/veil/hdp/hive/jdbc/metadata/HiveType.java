@@ -7,8 +7,7 @@ import veil.hdp.hive.jdbc.bindings.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public enum HiveType {
@@ -61,7 +60,7 @@ public enum HiveType {
     private final int precision;
     private final int scale;
 
-    private static final Map<TTypeId, HiveType> mapping = new HashMap<>();
+    private static final Map<TTypeId, HiveType> mapping = new EnumMap<>(TTypeId.class);
 
     static {
         mapping.put(TTypeId.NULL_TYPE, VOID);

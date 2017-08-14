@@ -3,6 +3,8 @@ package veil.hdp.hive.jdbc;
 import java.sql.SQLException;
 
 public class HiveSQLException extends SQLException {
+    private static final long serialVersionUID = -7971777991465574600L;
+
     public HiveSQLException(String reason, String SQLState, int vendorCode) {
         super(reason, SQLState, vendorCode);
     }

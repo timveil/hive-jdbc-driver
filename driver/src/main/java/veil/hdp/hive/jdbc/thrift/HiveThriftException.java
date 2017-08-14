@@ -1,12 +1,17 @@
 package veil.hdp.hive.jdbc.thrift;
 
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.bindings.TGetOperationStatusResp;
 import veil.hdp.hive.jdbc.bindings.TStatus;
 import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
 
 
 public class HiveThriftException extends RuntimeException {
+
+    private static final Logger log = LoggerFactory.getLogger(HiveThriftException.class);
+    private static final long serialVersionUID = 1700514420277606047L;
 
 
     public HiveThriftException(TException cause) {
@@ -18,7 +23,7 @@ public class HiveThriftException extends RuntimeException {
         super();
 
         // todo - need to understand whats available here
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + operationStatusResp);
+        log.warn("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + operationStatusResp);
     }
 
     public HiveThriftException(TStatus status) {

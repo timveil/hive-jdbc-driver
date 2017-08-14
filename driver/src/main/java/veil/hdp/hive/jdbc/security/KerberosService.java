@@ -223,7 +223,7 @@ public class KerberosService {
         return options;
     }
 
-    private class LoginModuleConstants {
+    private static class LoginModuleConstants {
         static final String DEBUG = "debug";
         static final String DEBUG_NATIVE = "debugNative";
         static final String DO_NOT_PROMPT = "doNotPrompt";

@@ -247,7 +247,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 log.debug("run # {}", i);
 
                 try (Timer.Context queryContext = timer.time()) {
-                    executeSimpleQuery(false);
+                    executeSimpleQuery(true);
                 }
             }
 

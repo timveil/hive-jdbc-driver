@@ -110,7 +110,7 @@ public class ThriftTransport implements Closeable {
 
             TTransport transport = null;
 
-            List<Closeable> closeableList = new ArrayList<>();
+            List<Closeable> closeableList = new ArrayList<>(1);
 
             if (mode.equals(TransportMode.binary)) {
                 transport = BinaryUtils.createBinaryTransport(properties);
@@ -123,7 +123,7 @@ public class ThriftTransport implements Closeable {
             }
 
             if (transport == null) {
-                throw new HiveException("invalid transport mode [" + mode + "]");
+                throw new HiveException("invalid transport mode [" + mode + ']');
             }
 
             ThriftUtils.openTransport(transport, HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.getInt(properties));

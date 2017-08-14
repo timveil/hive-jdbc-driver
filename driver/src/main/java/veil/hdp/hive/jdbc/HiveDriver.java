@@ -44,7 +44,7 @@ public class HiveDriver implements Driver {
         return notImplemented(callClass, UNKNOWN);
     }
 
-    private Connection connect(Properties properties) {
+    private static Connection connect(Properties properties) {
 
         PropertyUtils.printProperties(properties);
 
