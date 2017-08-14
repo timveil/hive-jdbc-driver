@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveStatement extends AbstractStatement {
 
-    protected static final Logger log = LoggerFactory.getLogger(HiveStatement.class);
+    private static final Logger log = LoggerFactory.getLogger(HiveStatement.class);
 
     // constructor
     private final HiveConnection connection;

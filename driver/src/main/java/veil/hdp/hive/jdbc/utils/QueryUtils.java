@@ -47,7 +47,7 @@ public final class QueryUtils {
         return ThriftUtils.getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern, HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
     }
 
-
+    //TODO - NOW AVAILABLE
     public static ResultSet getPrimaryKeys(HiveConnection connection, String catalog, String schema, String table) {
         return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PRIMARY_KEYS).build()).build();
     }
@@ -84,6 +84,7 @@ public final class QueryUtils {
         return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.EXPORTED_KEYS).build()).build();
     }
 
+    //TODO - NOW AVAILABLE
     public static ResultSet getCrossReference(HiveConnection connection, String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) {
         return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.CROSS_REFERENCE).build()).build();
     }
@@ -121,7 +122,7 @@ public final class QueryUtils {
     }
 
     public static ResultSet getGeneratedKeys(HiveConnection connection) {
-        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PSEUDO_COLUMNS).build()).build();
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.GENERATED_KEYS).build()).build();
     }
 
     public static String getDatabaseSchema(HiveConnection connection) throws SQLException {
