@@ -13,6 +13,7 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +26,7 @@ public final class DriverUtils {
     private static final String HIVE2_PART = "hive2:";
     private static final String JDBC_HIVE2_PREFIX = JDBC_PART + HIVE2_PART + "//";
     private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile("/");
-    private static final Pattern JDBC_PATTERN = Pattern.compile(DriverUtils.JDBC_PART, Pattern.LITERAL);
+    private static final Pattern JDBC_PATTERN = Pattern.compile(JDBC_PART, Pattern.LITERAL);
 
     private DriverUtils() {
     }
@@ -176,7 +177,7 @@ public final class DriverUtils {
             parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(uriQuery));
         }
 
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        for (Entry<String, String> entry : parameters.entrySet()) {
             String value = StringUtils.trimToNull(entry.getValue());
 
             if (value != null) {

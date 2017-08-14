@@ -25,7 +25,7 @@ public class HiveBaseResultSet extends AbstractResultSet {
     final AtomicReference<Row> currentRow = new AtomicReference<>();
 
     // public getter & setter
-    SQLWarning sqlWarning = null;
+    SQLWarning sqlWarning;
 
     HiveBaseResultSet(Schema schema) {
         this.schema = schema;

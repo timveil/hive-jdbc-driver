@@ -26,8 +26,8 @@ public final class KerberosService {
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
 
-    private static final Oid MECHANISM = KerberosService.buildOid(KRB5_OID);
-    private static final Oid NAME_TYPE = KerberosService.buildOid(KRB5_NAME_OID);
+    private static final Oid MECHANISM = buildOid(KRB5_OID);
+    private static final Oid NAME_TYPE = buildOid(KRB5_NAME_OID);
 
     private KerberosService() {
     }
@@ -88,20 +88,20 @@ public final class KerberosService {
 
         boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
-        if (kerberosMode.equals(KerberosMode.PREAUTH)) {
+        if (kerberosMode == KerberosMode.PREAUTH) {
             return getPreAuthenticatedSubject();
-        } else if (kerberosMode.equals(KerberosMode.OS)) {
+        } else if (kerberosMode == KerberosMode.OS) {
             return loginFromOperatingSystem(debugJaas);
         } else {
             UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
             log.debug("user principal [{}]", userPrincipal);
 
-            if (kerberosMode.equals(KerberosMode.KEYTAB)) {
+            if (kerberosMode == KerberosMode.KEYTAB) {
                 String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
 
                 return loginWithKeytab(userPrincipal, keyTab, debugJaas);
-            } else if (kerberosMode.equals(KerberosMode.PASSWORD)) {
+            } else if (kerberosMode == KerberosMode.PASSWORD) {
                 String password = HiveDriverProperty.PASSWORD.get(properties);
 
                 return loginWithPassword(userPrincipal, password, debugJaas);

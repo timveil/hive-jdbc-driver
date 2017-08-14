@@ -112,9 +112,9 @@ public class ThriftTransport implements Closeable {
 
             List<Closeable> closeableList = new ArrayList<>(1);
 
-            if (mode.equals(TransportMode.binary)) {
+            if (mode == TransportMode.binary) {
                 transport = BinaryUtils.createBinaryTransport(properties);
-            } else if (mode.equals(TransportMode.http)) {
+            } else if (mode == TransportMode.http) {
                 CloseableHttpClient client = HttpUtils.buildClient(properties);
 
                 closeableList.add(client);

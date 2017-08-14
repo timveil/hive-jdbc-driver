@@ -923,7 +923,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
         public HiveDatabaseMetaData build() {
 
-            final String productName = PropertyUtils.getInstance().getValue("product.name");
+            String productName = PropertyUtils.getInstance().getValue("product.name");
 
             return new HiveDatabaseMetaData(connection, productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
         }

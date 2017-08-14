@@ -185,7 +185,7 @@ public class BaseColumn<T> implements Column<T> {
 
                 Double value = data.getValues().get(row);
 
-                if (hiveType.equals(FLOAT)) {
+                if (hiveType == FLOAT) {
                     return new FloatColumn(descriptor, isNull ? null : new Float(value));
                 } else {
                     return new DoubleColumn(descriptor, isNull ? null : value);
@@ -198,15 +198,15 @@ public class BaseColumn<T> implements Column<T> {
 
                 String value = data.getValues().get(row);
 
-                if (hiveType.equals(DECIMAL)) {
+                if (hiveType == DECIMAL) {
                     return new DecimalColumn(descriptor, isNull ? null : new BigDecimal(value));
-                } else if (hiveType.equals(CHAR)) {
+                } else if (hiveType == CHAR) {
                     return new CharacterColumn(descriptor, isNull ? null : value.charAt(0));
-                } else if (hiveType.equals(VARCHAR)) {
+                } else if (hiveType == VARCHAR) {
                     return new VarcharColumn(descriptor, isNull ? null : value);
-                } else if (hiveType.equals(TIMESTAMP)) {
+                } else if (hiveType == TIMESTAMP) {
                     return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(value));
-                } else if (hiveType.equals(DATE)) {
+                } else if (hiveType == DATE) {
                     return new DateColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToDate(value));
                 } else {
                     return new StringColumn(descriptor, isNull ? null : value);

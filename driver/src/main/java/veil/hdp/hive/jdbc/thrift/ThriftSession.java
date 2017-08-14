@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
-import veil.hdp.hive.jdbc.bindings.TCLIService;
+import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.bindings.TOpenSessionResp;
 import veil.hdp.hive.jdbc.bindings.TProtocolVersion;
 import veil.hdp.hive.jdbc.bindings.TSessionHandle;
@@ -24,7 +24,7 @@ public class ThriftSession implements Closeable {
 
     // constructor
     private final ThriftTransport thriftTransport;
-    private final TCLIService.Client client;
+    private final Client client;
     private final TSessionHandle sessionHandle;
     private final Properties properties;
     private final TProtocolVersion protocol;
@@ -34,7 +34,7 @@ public class ThriftSession implements Closeable {
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
 
-    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Client client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, Client client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
         this.properties = properties;
         this.thriftTransport = thriftTransport;
         this.client = client;
@@ -48,7 +48,7 @@ public class ThriftSession implements Closeable {
         return new ThriftSessionBuilder();
     }
 
-    public TCLIService.Client getClient() {
+    public Client getClient() {
         return client;
     }
 
@@ -124,7 +124,7 @@ public class ThriftSession implements Closeable {
                 try {
                     thriftTransport = ThriftTransport.builder().properties(properties).build();
 
-                    TCLIService.Client client = ThriftUtils.createClient(thriftTransport);
+                    Client client = ThriftUtils.createClient(thriftTransport);
 
                     TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client, protocolVersion);
 

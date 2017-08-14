@@ -21,7 +21,7 @@ public class HiveConnection extends AbstractConnection {
     private final ThriftSession thriftSession;
 
     // public getter & setter
-    private SQLWarning sqlWarning = null;
+    private SQLWarning sqlWarning;
 
     private HiveConnection(ThriftSession thriftSession) {
         this.thriftSession = thriftSession;

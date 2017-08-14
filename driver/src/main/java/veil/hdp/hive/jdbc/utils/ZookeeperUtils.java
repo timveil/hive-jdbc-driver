@@ -14,6 +14,7 @@ import veil.hdp.hive.jdbc.HiveException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
 
@@ -64,7 +65,7 @@ public final class ZookeeperUtils {
 
             Map<String, String> config = Splitter.on(";").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(hostData);
 
-            for (Map.Entry<String, String> entry : config.entrySet()) {
+            for (Entry<String, String> entry : config.entrySet()) {
                 String value = StringUtils.trimToNull(entry.getValue());
 
                 if (value != null) {

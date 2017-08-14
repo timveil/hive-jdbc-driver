@@ -127,11 +127,11 @@ public enum HiveType {
     }
 
     public boolean isSigned() {
-        return this.equals(SMALL_INT) || this.equals(INTEGER) || this.equals(BIG_INT);
+        return this == SMALL_INT || this == INTEGER || this == BIG_INT;
     }
 
     public boolean isCaseSensitive() {
-        return this.equals(STRING);
+        return this == STRING;
     }
 
     public boolean isSearchable() {

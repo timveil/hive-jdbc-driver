@@ -93,7 +93,7 @@ public class HiveDriver implements Driver {
 
     @Override
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw HiveDriver.notImplemented(this.getClass(), "getParentLogger", "This driver uses SLF4J instead of JUL directly for performance reasons");
+        throw notImplemented(this.getClass(), "getParentLogger", "This driver uses SLF4J instead of JUL directly for performance reasons");
     }
 
     public boolean acceptsURL(String url) throws SQLException {

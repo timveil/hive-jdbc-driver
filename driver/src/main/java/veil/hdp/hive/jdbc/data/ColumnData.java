@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ColumnData<T> {
 
-    private static final byte[] MASKS = new byte[]{
+    private static final byte[] MASKS = {
             0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
     };
 

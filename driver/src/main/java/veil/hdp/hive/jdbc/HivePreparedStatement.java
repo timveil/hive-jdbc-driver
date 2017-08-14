@@ -16,7 +16,7 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     private static final char BACKSLASH = '\\';
     private static final String NULL_STRING = "NULL";
 
-    private static final char[] ESCAPE_CHARS = new char[]{SINGLE_QUOTE, BACKSLASH, DOUBLE_QUOTE};
+    private static final char[] ESCAPE_CHARS = {SINGLE_QUOTE, BACKSLASH, DOUBLE_QUOTE};
 
     static {
         Arrays.sort(ESCAPE_CHARS);

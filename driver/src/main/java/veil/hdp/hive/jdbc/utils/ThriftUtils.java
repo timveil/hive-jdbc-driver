@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
+import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
@@ -57,12 +58,12 @@ public final class ThriftUtils {
     }
 
 
-    public static TCLIService.Client createClient(ThriftTransport transport) {
-        return new TCLIService.Client(new TBinaryProtocol(transport.getTransport()));
+    public static Client createClient(ThriftTransport transport) {
+        return new Client(new TBinaryProtocol(transport.getTransport()));
     }
 
 
-    public static TOpenSessionResp openSession(Properties properties, TCLIService.Client client, TProtocolVersion protocolVersion) throws HiveThriftException, InvalidProtocolException {
+    public static TOpenSessionResp openSession(Properties properties, Client client, TProtocolVersion protocolVersion) throws InvalidProtocolException {
 
 
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
@@ -111,7 +112,7 @@ public final class ThriftUtils {
         TCloseSessionResp resp = null;
 
         ReentrantLock lock = thriftSession.getSessionLock();
-        TCLIService.Client client = thriftSession.getClient();
+        Client client = thriftSession.getClient();
 
         lock.lock();
 
@@ -145,7 +146,7 @@ public final class ThriftUtils {
         TCloseOperationResp resp = null;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -175,7 +176,7 @@ public final class ThriftUtils {
         TCancelOperationResp resp = null;
 
         ReentrantLock lock = operation.getSession().getSessionLock();
-        TCLIService.Client client = operation.getSession().getClient();
+        Client client = operation.getSession().getClient();
 
         lock.lock();
 
@@ -204,7 +205,7 @@ public final class ThriftUtils {
         TGetCatalogsResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -233,7 +234,7 @@ public final class ThriftUtils {
         TGetColumnsResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -261,7 +262,7 @@ public final class ThriftUtils {
         TGetFunctionsResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -294,7 +295,7 @@ public final class ThriftUtils {
         TGetTablesResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -319,7 +320,7 @@ public final class ThriftUtils {
         TGetTypeInfoResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -344,7 +345,7 @@ public final class ThriftUtils {
         TGetInfoResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -368,7 +369,7 @@ public final class ThriftUtils {
         TGetTableTypesResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -394,7 +395,7 @@ public final class ThriftUtils {
         TGetSchemasResp resp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -428,7 +429,7 @@ public final class ThriftUtils {
         TGetResultSetMetadataResp metadataResp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -449,7 +450,7 @@ public final class ThriftUtils {
         TFetchResultsResp fetchResults;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -476,7 +477,7 @@ public final class ThriftUtils {
         TExecuteStatementResp executeStatementResp;
 
         ReentrantLock lock = session.getSessionLock();
-        TCLIService.Client client = session.getClient();
+        Client client = session.getClient();
 
         lock.lock();
 
@@ -497,7 +498,7 @@ public final class ThriftUtils {
             ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "fetch-logs-thread"));
 
             executorService.submit(() -> {
-                List<Row> rows = ThriftUtils.fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build(), fetchSize);
+                List<Row> rows = fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build(), fetchSize);
 
                 for (Row row : rows) {
                     try {
@@ -537,7 +538,7 @@ public final class ThriftUtils {
             TGetOperationStatusResp statusResp;
 
             ReentrantLock lock = session.getSessionLock();
-            TCLIService.Client client = session.getClient();
+            Client client = session.getClient();
 
             lock.lock();
 

@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
 import org.apache.thrift.transport.*;
+import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.AuthenticationMode;
@@ -52,7 +53,7 @@ public final class BinaryUtils {
             TSocket socket;
 
             if (HiveDriverProperty.SSL_TRUST_STORE_PATH.hasValue(properties)) {
-                TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
+                TSSLTransportParameters params = new TSSLTransportParameters();
                 params.setTrustStore(HiveDriverProperty.SSL_TRUST_STORE_PATH.get(properties), HiveDriverProperty.SSL_TRUST_STORE_PASSWORD.get(properties), null, HiveDriverProperty.SSL_TRUST_STORE_TYPE.get(properties));
                 params.requireClientAuth(true);
 
