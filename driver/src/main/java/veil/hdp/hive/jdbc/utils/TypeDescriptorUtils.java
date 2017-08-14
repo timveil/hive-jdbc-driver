@@ -27,8 +27,6 @@ public class TypeDescriptorUtils {
         if (entry.isSetPrimitiveEntry()) {
             TPrimitiveTypeEntry primitiveEntry = entry.getPrimitiveEntry();
 
-            log.debug("primitive entry {}", primitiveEntry);
-
             if (primitiveEntry.isSetTypeQualifiers()) {
                 TTypeQualifiers typeQualifiers = primitiveEntry.getTypeQualifiers();
                 Map<String, TTypeQualifierValue> map = typeQualifiers.getQualifiers();
@@ -46,9 +44,6 @@ public class TypeDescriptorUtils {
         if (hiveType == null) {
             throw new HiveException("unable to determine type for entry [" + entry + "]");
         }
-
-        log.debug("new way hive type is {}", hiveType);
-
 
         return ColumnTypeDescriptor.builder().hiveType(hiveType).scale(scale).precision(precision).maxLength(maxLength).build();
     }
