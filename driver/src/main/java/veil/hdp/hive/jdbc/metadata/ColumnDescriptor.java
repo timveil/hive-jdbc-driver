@@ -1,8 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
-import org.apache.commons.lang3.builder.Builder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
 
 public class ColumnDescriptor {
@@ -56,14 +55,14 @@ public class ColumnDescriptor {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("name", name)
-                .append("label", label)
-                .append("tableName", tableName)
-                .append("comment", comment)
-                .append("columnTypeDescriptor", columnTypeDescriptor)
-                .append("position", position)
-                .toString();
+        return "ColumnDescriptor{" +
+                "name='" + name + '\'' +
+                ", label='" + label + '\'' +
+                ", tableName='" + tableName + '\'' +
+                ", comment='" + comment + '\'' +
+                ", columnTypeDescriptor=" + columnTypeDescriptor +
+                ", position=" + position +
+                '}';
     }
 
     public static class ColumnDescriptorBuilder implements Builder<ColumnDescriptor> {

@@ -1,8 +1,7 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
-import org.apache.commons.lang3.builder.Builder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TPrimitiveTypeEntry;
 import veil.hdp.hive.jdbc.bindings.TTypeDesc;
 import veil.hdp.hive.jdbc.bindings.TTypeEntry;
@@ -27,9 +26,9 @@ public class ColumnTypeDescriptor {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("hiveType", hiveType)
-                .toString();
+        return "ColumnTypeDescriptor{" +
+                "hiveType=" + hiveType +
+                '}';
     }
 
     public static class ColumnTypeDescriptorBuilder implements Builder<ColumnTypeDescriptor> {
