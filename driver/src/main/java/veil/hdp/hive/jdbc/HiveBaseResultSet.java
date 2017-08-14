@@ -19,13 +19,14 @@ public class HiveBaseResultSet extends AbstractResultSet {
 
 
     // atomic
+    private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
+
     final AtomicBoolean closed = new AtomicBoolean(true);
-    final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
     final AtomicInteger rowCount = new AtomicInteger(0);
     final AtomicReference<Row> currentRow = new AtomicReference<>();
 
     // public getter & setter
-    SQLWarning sqlWarning;
+    private SQLWarning sqlWarning;
 
     HiveBaseResultSet(Schema schema) {
         this.schema = schema;

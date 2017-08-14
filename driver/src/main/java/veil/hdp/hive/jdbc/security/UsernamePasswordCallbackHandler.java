@@ -1,14 +1,9 @@
 package veil.hdp.hive.jdbc.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.security.auth.callback.*;
 import java.io.IOException;
 
 class UsernamePasswordCallbackHandler implements CallbackHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(UsernamePasswordCallbackHandler.class);
 
     private final String username;
     private final String password;

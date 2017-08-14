@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
@@ -10,9 +8,6 @@ import veil.hdp.hive.jdbc.utils.VersionUtils;
 import java.sql.*;
 
 public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
-
-    private static final Logger log = LoggerFactory.getLogger(HiveDatabaseMetaData.class);
-
 
     // constructor
     private final HiveConnection connection;

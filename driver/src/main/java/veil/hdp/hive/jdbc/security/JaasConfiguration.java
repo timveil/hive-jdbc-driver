@@ -15,7 +15,7 @@ class JaasConfiguration extends Configuration {
 
     private final Map<String, AppConfigurationEntry[]> entries = new HashMap<>(1);
 
-    public void addAppConfigEntry(String configurationName, String loginModuleClassName, LoginModuleControlFlag controlFlag, Map<String, ?> options) {
+    void addAppConfigEntry(String configurationName, String loginModuleClassName, LoginModuleControlFlag controlFlag, Map<String, ?> options) {
 
         log.debug("config name [{}], classname [{}], control flag [{}], options [{}]", configurationName, loginModuleClassName, controlFlag, options);
 

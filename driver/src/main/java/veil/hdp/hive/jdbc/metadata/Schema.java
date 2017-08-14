@@ -1,8 +1,6 @@
 package veil.hdp.hive.jdbc.metadata;
 
 import com.google.common.primitives.Ints;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
 import veil.hdp.hive.jdbc.bindings.TTableSchema;
@@ -10,8 +8,6 @@ import veil.hdp.hive.jdbc.bindings.TTableSchema;
 import java.util.*;
 
 public class Schema {
-
-    private static final Logger log = LoggerFactory.getLogger(Schema.class);
 
     private final List<ColumnDescriptor> columnDescriptors;
     private final Map<String, ColumnDescriptor> columnMapping;

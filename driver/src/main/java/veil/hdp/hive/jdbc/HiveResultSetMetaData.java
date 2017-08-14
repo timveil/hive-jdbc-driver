@@ -1,15 +1,11 @@
 package veil.hdp.hive.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class HiveResultSetMetaData extends AbstractResultSetMetaData {
-
-    private static final Logger log = LoggerFactory.getLogger(HiveResultSetMetaData.class);
 
     // constructor
     private final Schema schema;

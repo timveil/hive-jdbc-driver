@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
 
-public final class ZookeeperUtils {
+final class ZookeeperUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ZookeeperUtils.class);
     private static final Charset UTF_8 = Charset.forName("UTF-8");
@@ -27,7 +27,7 @@ public final class ZookeeperUtils {
     }
 
 
-    public static void loadPropertiesFromZookeeper(String authority, Properties properties) {
+    static void loadPropertiesFromZookeeper(String authority, Properties properties) {
 
         String zooKeeperNamespace = HiveDriverProperty.ZOOKEEPER_DISCOVERY_NAMESPACE.get(properties);
         int retry = HiveDriverProperty.ZOOKEEPER_DISCOVERY_RETRY.getInt(properties);

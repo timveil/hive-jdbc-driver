@@ -34,7 +34,7 @@ public class Row {
         private RowBuilder() {
         }
 
-        public RowBuilder columnBasedSet(ColumnBasedSet columnBasedSet) {
+        RowBuilder columnBasedSet(ColumnBasedSet columnBasedSet) {
             this.columnBasedSet = columnBasedSet;
             return this;
         }

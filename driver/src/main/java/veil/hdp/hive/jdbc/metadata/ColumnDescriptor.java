@@ -33,10 +33,6 @@ public class ColumnDescriptor {
         return name;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
     public String getLabel() {
         return label;
     }
@@ -76,7 +72,7 @@ public class ColumnDescriptor {
         private ColumnDescriptorBuilder() {
         }
 
-        public ColumnDescriptorBuilder thriftColumn(TColumnDesc columnDesc) {
+        ColumnDescriptorBuilder thriftColumn(TColumnDesc columnDesc) {
             this.thriftColumnDescriptor = columnDesc;
             return this;
         }

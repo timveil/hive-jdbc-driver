@@ -86,7 +86,7 @@ public final class BinaryUtils {
         switch (authenticationMode) {
 
             case NONE:
-                return buildSocketWithSASL(properties, socket);
+                return buildSocketWithSASL(socket);
             case NOSASL:
                 return socket;
             case KERBEROS:
@@ -99,7 +99,7 @@ public final class BinaryUtils {
 
     }
 
-    private static TTransport buildSocketWithSASL(Properties properties, TSocket socket) {
+    private static TTransport buildSocketWithSASL(TSocket socket) {
 
         try {
             // some userid must be specified.  it can really be anything when AuthenticationMode = NONE

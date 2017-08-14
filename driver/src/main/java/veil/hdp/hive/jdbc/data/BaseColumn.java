@@ -128,7 +128,7 @@ public class BaseColumn<T> implements Column<T> {
         private BaseColumnBuilder() {
         }
 
-        public BaseColumnBuilder columnData(ColumnData columnData) {
+        BaseColumnBuilder columnData(ColumnData columnData) {
             this.columnData = columnData;
             return this;
         }

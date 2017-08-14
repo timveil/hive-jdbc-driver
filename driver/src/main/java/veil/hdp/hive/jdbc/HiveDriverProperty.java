@@ -161,26 +161,10 @@ public enum HiveDriverProperty {
         return key;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
     public void setDefaultValue(Properties properties) {
         if (defaultValue != null) {
             properties.setProperty(key, defaultValue);
         }
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String[] getChoices() {
-        return choices;
-    }
-
-    public String getHiveConfigurationKey() {
-        return hiveConfigurationKey;
     }
 
     public void set(Properties properties, String value) {
@@ -209,16 +193,6 @@ public enum HiveDriverProperty {
 
     public boolean getBoolean(Properties properties) {
         return Boolean.valueOf(get(properties));
-    }
-
-    public Integer getInteger(Properties properties) {
-        String value = get(properties);
-
-        if (value == null) {
-            return null;
-        }
-
-        return Integer.parseInt(value);
     }
 
     public int getInt(Properties properties) {

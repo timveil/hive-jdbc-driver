@@ -7,7 +7,7 @@ import veil.hdp.hive.jdbc.bindings.TTypeId;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.EnumMap;
+import java.text.MessageFormat;
 import java.util.Map;
 
 public enum HiveType {
@@ -60,30 +60,6 @@ public enum HiveType {
     private final int precision;
     private final int scale;
 
-    private static final Map<TTypeId, HiveType> mapping = new EnumMap<>(TTypeId.class);
-
-    static {
-        mapping.put(TTypeId.NULL_TYPE, VOID);
-        mapping.put(TTypeId.BOOLEAN_TYPE, BOOLEAN);
-        mapping.put(TTypeId.TINYINT_TYPE, TINY_INT);
-        mapping.put(TTypeId.SMALLINT_TYPE, SMALL_INT);
-        mapping.put(TTypeId.INT_TYPE, INTEGER);
-        mapping.put(TTypeId.BIGINT_TYPE, BIG_INT);
-        mapping.put(TTypeId.FLOAT_TYPE, FLOAT);
-        mapping.put(TTypeId.DOUBLE_TYPE, DOUBLE);
-        mapping.put(TTypeId.STRING_TYPE, STRING);
-        mapping.put(TTypeId.CHAR_TYPE, CHAR);
-        mapping.put(TTypeId.VARCHAR_TYPE, VARCHAR);
-        mapping.put(TTypeId.DATE_TYPE, DATE);
-        mapping.put(TTypeId.TIMESTAMP_TYPE, TIMESTAMP);
-        mapping.put(TTypeId.DECIMAL_TYPE, DECIMAL);
-        mapping.put(TTypeId.BINARY_TYPE, BINARY);
-        mapping.put(TTypeId.UNION_TYPE, UNION);
-        mapping.put(TTypeId.MAP_TYPE, MAP);
-        mapping.put(TTypeId.ARRAY_TYPE, ARRAY);
-        mapping.put(TTypeId.STRUCT_TYPE, STRUCT);
-    }
-
     HiveType(String name, TTypeId thriftType, JDBCType jdbcType, Class javaType, boolean complex, int precision, int scale) {
         this.name = name;
         this.thriftType = thriftType;
@@ -95,7 +71,13 @@ public enum HiveType {
     }
 
     public static HiveType valueOf(TTypeId tTypeId) {
-        return mapping.get(tTypeId);
+        for (HiveType hiveType : values()) {
+            if (hiveType.thriftType == tTypeId) {
+                return hiveType;
+            }
+        }
+
+        throw new IllegalArgumentException(MessageFormat.format("Unrecognized TTypeId [{0}]", tTypeId));
     }
 
     public String getName() {

@@ -39,7 +39,7 @@ public class ColumnTypeDescriptor {
         private ColumnTypeDescriptorBuilder() {
         }
 
-        public ColumnTypeDescriptorBuilder thriftType(TTypeDesc typeDesc) {
+        ColumnTypeDescriptorBuilder thriftType(TTypeDesc typeDesc) {
             this.typeDesc = typeDesc;
             return this;
         }

@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.slf4j.Logger;
 import veil.hdp.hive.jdbc.HiveSQLException;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.Schema;
@@ -8,11 +7,7 @@ import veil.hdp.hive.jdbc.metadata.Schema;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public final class ResultSetUtils {
-
-    private static final Logger log = getLogger(ResultSetUtils.class);
 
     private ResultSetUtils() {
     }

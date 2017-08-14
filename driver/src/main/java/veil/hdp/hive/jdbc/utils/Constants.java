@@ -1,12 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
-import java.text.SimpleDateFormat;
-
 public final class Constants {
 
-    public static final SimpleDateFormat HIVE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
-    public static final int DEFAULT_FETCH_SIZE = 1000;
     public static final int DEFAULT_MAX_ROWS = 0;
     public static final int DEFAULT_QUERY_TIMEOUT = 0;
 

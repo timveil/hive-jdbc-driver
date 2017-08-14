@@ -25,7 +25,7 @@ final class StaticColumnDescriptors {
         KEY_SEQ short => sequence number within primary key( a value of 1 represents the first column of the primary key, a value of 2 would represent the second column within the primary key).
         PK_NAME String => primary key name (may be null)
      */
-    public static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<>(6);
+    static final List<ColumnDescriptor> PRIMARY_KEYS = new ArrayList<>(6);
 
 
     static {
@@ -49,7 +49,7 @@ final class StaticColumnDescriptors {
         PROCEDURE_TYPE short => kind of procedure:
         SPECIFIC_NAME String => The name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURES = new ArrayList<>(9);
+    static final List<ColumnDescriptor> PROCEDURES = new ArrayList<>(9);
 
     static {
         PROCEDURES.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(9).build());
@@ -85,7 +85,7 @@ final class StaticColumnDescriptors {
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
         SPECIFIC_NAME String => the name which uniquely identifies this procedure within its schema.
      */
-    public static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<>(20);
+    static final List<ColumnDescriptor> PROCEDURE_COLUMNS = new ArrayList<>(20);
 
     static {
         PROCEDURE_COLUMNS.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(20).build());
@@ -120,7 +120,7 @@ final class StaticColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<>(8);
+    static final List<ColumnDescriptor> COLUMN_PRIVILEGES = new ArrayList<>(8);
 
     static {
         COLUMN_PRIVILEGES.add(ColumnDescriptor.builder().name("IS_GRANTABLE").typeDescriptor(STRING).position(8).build());
@@ -143,7 +143,7 @@ final class StaticColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => is this a pseudo column like an Oracle ROWID
      */
-    public static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<>(8);
+    static final List<ColumnDescriptor> BEST_ROW_IDENTIFIER = new ArrayList<>(8);
 
     static {
         BEST_ROW_IDENTIFIER.add(ColumnDescriptor.builder().name("PSEUDO_COLUMN").typeDescriptor(SMALL_INT).position(8).build());
@@ -165,7 +165,7 @@ final class StaticColumnDescriptors {
         PRIVILEGE String => name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
         IS_GRANTABLE String => "YES" if grantee is permitted to grant to others; "NO" if not; null if unknown
      */
-    public static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<>(7);
+    static final List<ColumnDescriptor> TABLE_PRIVILEGES = new ArrayList<>(7);
 
     static {
         TABLE_PRIVILEGES.add(ColumnDescriptor.builder().name("IS_GRANTABLE").typeDescriptor(STRING).position(7).build());
@@ -187,7 +187,7 @@ final class StaticColumnDescriptors {
         DECIMAL_DIGITS short => scale - Null is returned for data types where DECIMAL_DIGITS is not applicable.
         PSEUDO_COLUMN short => whether this is pseudo column like an Oracle ROWID
      */
-    public static final List<ColumnDescriptor> VERSION_COLUMNS = BEST_ROW_IDENTIFIER;
+    static final List<ColumnDescriptor> VERSION_COLUMNS = BEST_ROW_IDENTIFIER;
 
     /*
         PKTABLE_CAT String => primary key table catalog being imported (may be null)
@@ -205,7 +205,7 @@ final class StaticColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<>(14);
+    static final List<ColumnDescriptor> IMPORTED_KEYS = new ArrayList<>(14);
 
     static {
         IMPORTED_KEYS.add(ColumnDescriptor.builder().name("DEFERRABILITY").typeDescriptor(SMALL_INT).position(14).build());
@@ -240,7 +240,7 @@ final class StaticColumnDescriptors {
         PK_NAME String => primary key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> EXPORTED_KEYS = IMPORTED_KEYS;
+    static final List<ColumnDescriptor> EXPORTED_KEYS = IMPORTED_KEYS;
 
     /*
         PKTABLE_CAT String => parent key table catalog (may be null)
@@ -258,7 +258,7 @@ final class StaticColumnDescriptors {
         PK_NAME String => parent key name (may be null)
         DEFERRABILITY short => can the evaluation of foreign key constraints be deferred until commit
      */
-    public static final List<ColumnDescriptor> CROSS_REFERENCE = IMPORTED_KEYS;
+    static final List<ColumnDescriptor> CROSS_REFERENCE = IMPORTED_KEYS;
 
     /*
         TABLE_CAT String => table catalog (may be null)
@@ -275,7 +275,7 @@ final class StaticColumnDescriptors {
         PAGES long => When TYPE is tableIndexStatisic then this is the number of pages used for the table, otherwise it is the number of pages used for the current index.
         FILTER_CONDITION String => Filter condition, if any. (may be null)
      */
-    public static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<>(13);
+    static final List<ColumnDescriptor> INDEX_INFO = new ArrayList<>(13);
 
     static {
         INDEX_INFO.add(ColumnDescriptor.builder().name("FILTER_CONDITION").typeDescriptor(STRING).position(13).build());
@@ -302,7 +302,7 @@ final class StaticColumnDescriptors {
         REMARKS String => explanatory comment on the type
         BASE_TYPE short => type code of the source type of a DISTINCT type or the type
      */
-    public static final List<ColumnDescriptor> UDT = new ArrayList<>(7);
+    static final List<ColumnDescriptor> UDT = new ArrayList<>(7);
 
     static {
         UDT.add(ColumnDescriptor.builder().name("BASE_TYPE").typeDescriptor(SMALL_INT).position(7).build());
@@ -322,7 +322,7 @@ final class StaticColumnDescriptors {
         SUPERTYPE_SCHEM String => the direct super type's schema (may be null)
         SUPERTYPE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<>(6);
+    static final List<ColumnDescriptor> SUPER_TYPES = new ArrayList<>(6);
 
     static {
         SUPER_TYPES.add(ColumnDescriptor.builder().name("SUPERTYPE_NAME").typeDescriptor(STRING).position(6).build());
@@ -339,7 +339,7 @@ final class StaticColumnDescriptors {
         TABLE_NAME String => type name
         SUPERTABLE_NAME String => the direct super type's name
      */
-    public static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<>(4);
+    static final List<ColumnDescriptor> SUPER_TABLES = new ArrayList<>(4);
 
     static {
         SUPER_TABLES.add(ColumnDescriptor.builder().name("SUPERTABLE_NAME").typeDescriptor(STRING).position(4).build());
@@ -371,7 +371,7 @@ final class StaticColumnDescriptors {
         SCOPE_TABLE String => table name that is the scope of a reference attribute (null if the DATA_TYPE isn't REF)
         SOURCE_DATA_TYPE short => source type of a distinct type or user-generated Ref type,SQL type from java.sql.Types (null if DATA_TYPE isn't DISTINCT or user-generated REF)
      */
-    public static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<>(21);
+    static final List<ColumnDescriptor> ATTRIBUTES = new ArrayList<>(21);
 
     static {
         ATTRIBUTES.add(ColumnDescriptor.builder().name("SOURCE_DATA_TYPE").typeDescriptor(SMALL_INT).position(21).build());
@@ -403,7 +403,7 @@ final class StaticColumnDescriptors {
         DEFAULT_VALUE String=> The default value of the property
         DESCRIPTION String=> A description of the property. This will typically contain information as to where this property is stored in the database.
      */
-    public static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<>(4);
+    static final List<ColumnDescriptor> CLIENT_INFO_PROPERTIES = new ArrayList<>(4);
 
     static {
         CLIENT_INFO_PROPERTIES.add(ColumnDescriptor.builder().name("DESCRIPTION").typeDescriptor(STRING).position(4).build());
@@ -420,7 +420,7 @@ final class StaticColumnDescriptors {
         FUNCTION_TYPE short => kind of function:
         SPECIFIC_NAME String => the name which uniquely identifies this function within its schema. This is a user specified, or DBMS generated, name that may be different then the FUNCTION_NAME for example with overload functions
      */
-    public static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<>(6);
+    static final List<ColumnDescriptor> FUNCTION_COLUMNS = new ArrayList<>(6);
 
     static {
         FUNCTION_COLUMNS.add(ColumnDescriptor.builder().name("SPECIFIC_NAME").typeDescriptor(STRING).position(6).build());
@@ -445,7 +445,7 @@ final class StaticColumnDescriptors {
         CHAR_OCTET_LENGTH int => for char types the maximum number of bytes in the column
         IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
      */
-    public static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<>(12);
+    static final List<ColumnDescriptor> PSEUDO_COLUMNS = new ArrayList<>(12);
 
     static {
         PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("IS_NULLABLE").typeDescriptor(STRING).position(12).build());
@@ -462,13 +462,13 @@ final class StaticColumnDescriptors {
         PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position( 1).build());
     }
 
-    public static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<>(1);
+    static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<>(1);
 
     static {
         GENERATED_KEYS.add(ColumnDescriptor.builder().name("GENERATED_KEY").typeDescriptor(STRING).position(1).build());
     }
 
-    public static final List<ColumnDescriptor> QUERY_LOG = new ArrayList<>(1);
+    static final List<ColumnDescriptor> QUERY_LOG = new ArrayList<>(1);
 
     static {
         QUERY_LOG.add(ColumnDescriptor.builder().name("STRING_VAL").typeDescriptor(STRING).position(1).build());
