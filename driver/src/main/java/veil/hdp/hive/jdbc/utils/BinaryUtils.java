@@ -19,10 +19,13 @@ import java.util.Map;
 import java.util.Properties;
 
 
-public class BinaryUtils {
+public final class BinaryUtils {
 
     private static final Logger log = LoggerFactory.getLogger(BinaryUtils.class);
     private static final String ENDPOINT_IDENTIFICATION_ALGORITHM_NAME = "HTTPS";
+
+    private BinaryUtils() {
+    }
 
     private static TSocket createSocket(Properties properties) {
 

@@ -8,7 +8,7 @@ import veil.hdp.hive.jdbc.metadata.HiveType;
 import java.util.ArrayList;
 import java.util.List;
 
-class StaticColumnDescriptors {
+final class StaticColumnDescriptors {
 
 
     private static final ColumnTypeDescriptor STRING = ColumnTypeDescriptor.builder().hiveType(HiveType.STRING).build();
@@ -472,5 +472,8 @@ class StaticColumnDescriptors {
 
     static {
         QUERY_LOG.add(ColumnDescriptor.builder().name("STRING_VAL").typeDescriptor(STRING).position(1).build());
+    }
+
+    private StaticColumnDescriptors() {
     }
 }

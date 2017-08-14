@@ -17,10 +17,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
-public class ZookeeperUtils {
+public final class ZookeeperUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ZookeeperUtils.class);
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+
+    private ZookeeperUtils() {
+    }
 
 
     public static void loadPropertiesFromZookeeper(String authority, Properties properties) {

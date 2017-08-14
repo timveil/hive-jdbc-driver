@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.utils;
 
 import java.text.SimpleDateFormat;
 
-public class Constants {
+public final class Constants {
 
     public static final SimpleDateFormat HIVE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -21,4 +21,7 @@ public class Constants {
 
     public static final String SUN_SECURITY_KRB5_DEBUG = "sun.security.krb5.debug";
     public static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
+
+    private Constants() {
+    }
 }

@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HiveExceptionUtils {
+public final class HiveExceptionUtils {
+
+    private HiveExceptionUtils() {
+    }
 
     public static Throwable toStackTrace(List<String> details) {
 

@@ -25,12 +25,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public class ThriftUtils {
+public final class ThriftUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ThriftUtils.class);
 
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
+
+    private ThriftUtils() {
+    }
 
     public static void openTransport(TTransport transport, int timeout) {
 

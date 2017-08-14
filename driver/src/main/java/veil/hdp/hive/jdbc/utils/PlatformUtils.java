@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PlatformUtils {
+public final class PlatformUtils {
 
     private static final Logger log = LoggerFactory.getLogger(PlatformUtils.class);
 
@@ -13,6 +13,9 @@ public class PlatformUtils {
     private static final String JAVA_VENDOR_NAME = System.getProperty("java.vendor");
 
     private static final boolean isWindows = StringUtils.startsWithIgnoreCase(OS_NAME, "windows");
+
+    private PlatformUtils() {
+    }
 
 
     public static boolean isWindows() {

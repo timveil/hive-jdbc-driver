@@ -13,7 +13,7 @@ class UsernamePasswordCallbackHandler implements CallbackHandler {
     private final String username;
     private final String password;
 
-    public UsernamePasswordCallbackHandler(String username, String password) {
+    UsernamePasswordCallbackHandler(String username, String password) {
         this.username = username;
         this.password = password;
     }

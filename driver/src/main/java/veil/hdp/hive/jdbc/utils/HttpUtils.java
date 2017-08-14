@@ -35,12 +35,15 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Properties;
 
-public class HttpUtils {
+public final class HttpUtils {
 
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
+
+    private HttpUtils() {
+    }
 
     /*
         todo: see if any of these optimizations can/should be applied

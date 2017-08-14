@@ -10,9 +10,12 @@ import java.text.MessageFormat;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ResultSetUtils {
+public final class ResultSetUtils {
 
     private static final Logger log = getLogger(ResultSetUtils.class);
+
+    private ResultSetUtils() {
+    }
 
     public static int findColumnIndex(Schema schema, String columnLabel) throws SQLException {
         ColumnDescriptor columnDescriptor = schema.getColumn(columnLabel);

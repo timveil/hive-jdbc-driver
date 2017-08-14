@@ -6,10 +6,13 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-public class SqlDateTimeUtils {
+public final class SqlDateTimeUtils {
 
     private static final char SPACE = ' ';
     private static final char DOT = '.';
+
+    private SqlDateTimeUtils() {
+    }
 
     public static Date convertStringToDate(String dateString) {
         try {

@@ -17,7 +17,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DriverUtils {
+public final class DriverUtils {
 
     private static final Logger log = LoggerFactory.getLogger(DriverUtils.class);
 
@@ -26,6 +26,9 @@ public class DriverUtils {
     private static final String JDBC_HIVE2_PREFIX = JDBC_PART + HIVE2_PART + "//";
     private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile("/");
     private static final Pattern JDBC_PATTERN = Pattern.compile(DriverUtils.JDBC_PART, Pattern.LITERAL);
+
+    private DriverUtils() {
+    }
 
     public static boolean acceptURL(String url) throws SQLException {
 

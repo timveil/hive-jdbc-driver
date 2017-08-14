@@ -12,9 +12,12 @@ import java.sql.Statement;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class QueryUtils {
+public final class QueryUtils {
 
     private static final Logger log = getLogger(QueryUtils.class);
+
+    private QueryUtils() {
+    }
 
     public static ResultSet getCatalogs(HiveConnection connection) {
         return ThriftUtils.getCatalogsOperation(connection.getThriftSession(), HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();

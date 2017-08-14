@@ -20,7 +20,7 @@ import java.util.Properties;
 
 import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
 
-public class KerberosService {
+public final class KerberosService {
 
     private static final Logger log = LoggerFactory.getLogger(KerberosService.class);
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
@@ -28,6 +28,9 @@ public class KerberosService {
 
     private static final Oid MECHANISM = KerberosService.buildOid(KRB5_OID);
     private static final Oid NAME_TYPE = KerberosService.buildOid(KRB5_NAME_OID);
+
+    private KerberosService() {
+    }
 
     private static Oid buildOid(String name) {
         try {
@@ -223,7 +226,7 @@ public class KerberosService {
         return options;
     }
 
-    private static class LoginModuleConstants {
+    private static final class LoginModuleConstants {
         static final String DEBUG = "debug";
         static final String DEBUG_NATIVE = "debugNative";
         static final String DO_NOT_PROMPT = "doNotPrompt";

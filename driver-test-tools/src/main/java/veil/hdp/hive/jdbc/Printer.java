@@ -10,8 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-class Printer {
+final class Printer {
     private static final Logger log = LoggerFactory.getLogger(Printer.class);
+
+    private Printer() {
+    }
 
 
     static void printResultSetMetaData(ResultSetMetaData rsmd) {

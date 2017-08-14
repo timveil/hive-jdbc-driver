@@ -9,9 +9,12 @@ import veil.hdp.hive.jdbc.security.UserPrincipal;
 
 import java.util.List;
 
-public class PrincipalUtils {
+public final class PrincipalUtils {
 
     private static final Logger log = LoggerFactory.getLogger(PrincipalUtils.class);
+
+    private PrincipalUtils() {
+    }
 
 
     public static ServicePrincipal parseServicePrincipal(String principal, String hostname) {

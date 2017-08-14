@@ -8,7 +8,7 @@ class PrivilegedTransportAction implements PrivilegedExceptionAction<Void> {
 
     private final TTransport transport;
 
-    public PrivilegedTransportAction(TTransport transport) {
+    PrivilegedTransportAction(TTransport transport) {
         this.transport = transport;
     }
 

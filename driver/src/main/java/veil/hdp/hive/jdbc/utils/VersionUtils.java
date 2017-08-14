@@ -1,9 +1,12 @@
 package veil.hdp.hive.jdbc.utils;
 
-public class VersionUtils {
+public final class VersionUtils {
 
     public static final String HIVE_VERSION = PropertyUtils.getInstance().getValue("hive.version", "0.0");
     public static final String DRIVER_VERSION = PropertyUtils.getInstance().getValue("driver.version", "0.0");
+
+    private VersionUtils() {
+    }
 
 
     public static int getDriverMajorVersion() {
