@@ -423,7 +423,7 @@ public final class ThriftUtils {
         throw new HiveThriftException(status);
     }
 
-    private static TTableSchema getTableSchema(ThriftSession session, TOperationHandle handle) {
+    public static TTableSchema getTableSchema(ThriftSession session, TOperationHandle handle) {
         TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(handle);
 
         TGetResultSetMetadataResp metadataResp;
@@ -615,14 +615,6 @@ public final class ThriftUtils {
 
     }
 
-    public static Schema getSchema(ThriftSession session, TOperationHandle handle) {
-
-        TTableSchema schema = getTableSchema(session, handle);
-
-        return Schema.builder().schema(schema).build();
-
-
-    }
 
     public static Iterable<Row> getResults(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
         return () -> {

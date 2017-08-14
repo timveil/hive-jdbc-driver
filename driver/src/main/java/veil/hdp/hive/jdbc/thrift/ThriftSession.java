@@ -1,6 +1,9 @@
 package veil.hdp.hive.jdbc.thrift;
 
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
@@ -10,11 +13,15 @@ import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.bindings.TOpenSessionResp;
 import veil.hdp.hive.jdbc.bindings.TProtocolVersion;
 import veil.hdp.hive.jdbc.bindings.TSessionHandle;
+import veil.hdp.hive.jdbc.bindings.TTypeDesc;
+import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
+import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,6 +40,16 @@ public class ThriftSession implements Closeable {
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final ReentrantLock sessionLock = new ReentrantLock(true);
 
+    private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .recordStats()
+            .build(new CacheLoader<TTypeDesc, ColumnTypeDescriptor>() {
+                @Override
+                public ColumnTypeDescriptor load(TTypeDesc tTypeDesc) throws Exception {
+                    return TypeDescriptorUtils.getDescriptor(tTypeDesc);
+                }
+            });
+
 
     private ThriftSession(Properties properties, ThriftTransport thriftTransport, Client client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
         this.properties = properties;
@@ -46,6 +63,16 @@ public class ThriftSession implements Closeable {
 
     public static ThriftSessionBuilder builder() {
         return new ThriftSessionBuilder();
+    }
+
+    public ColumnTypeDescriptor getCachedDescriptor(TTypeDesc type) {
+        try {
+            return cache.get(type);
+        } catch (ExecutionException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return null;
     }
 
     public Client getClient() {
@@ -92,6 +119,8 @@ public class ThriftSession implements Closeable {
             ThriftUtils.closeSession(this);
 
             thriftTransport.close();
+
+            cache.invalidateAll();
 
         }
     }

@@ -3,7 +3,10 @@ package veil.hdp.hive.jdbc.metadata;
 import com.google.common.primitives.Ints;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
+import veil.hdp.hive.jdbc.bindings.TOperationHandle;
 import veil.hdp.hive.jdbc.bindings.TTableSchema;
+import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.util.*;
 
@@ -63,14 +66,22 @@ public class Schema {
 
         private static final Comparator<ColumnDescriptor> COLUMN_DESCRIPTOR_COMPARATOR = (o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition());
 
-        private TTableSchema tableSchema;
+        private ThriftSession thriftSession;
+
+        private TOperationHandle operationHandle;
+
         private List<ColumnDescriptor> columnDescriptors;
 
         private SchemaBuilder() {
         }
 
-        public SchemaBuilder schema(TTableSchema tTableSchema) {
-            this.tableSchema = tTableSchema;
+        public SchemaBuilder session(ThriftSession thriftSession) {
+            this.thriftSession = thriftSession;
+            return this;
+        }
+
+        public SchemaBuilder handle(TOperationHandle operationHandle) {
+            this.operationHandle = operationHandle;
             return this;
         }
 
@@ -84,15 +95,19 @@ public class Schema {
 
             Map<String, ColumnDescriptor> mapping = new HashMap<>();
 
-            if (tableSchema != null) {
-                for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-                    ColumnDescriptor descriptor = ColumnDescriptor.builder().thriftColumn(columnDesc).build();
-                    mapping.put(descriptor.getName(), descriptor);
-                }
-            } else{
+            if (columnDescriptors != null) {
                 for (ColumnDescriptor descriptor : columnDescriptors) {
                     mapping.put(descriptor.getName(), descriptor);
                 }
+            } else {
+
+                TTableSchema tableSchema = ThriftUtils.getTableSchema(thriftSession, operationHandle);
+
+                for (TColumnDesc columnDesc : tableSchema.getColumns()) {
+                    ColumnDescriptor descriptor = ColumnDescriptor.builder().session(thriftSession).thriftColumn(columnDesc).build();
+                    mapping.put(descriptor.getName(), descriptor);
+                }
+
             }
 
             List<ColumnDescriptor> columns = new ArrayList<>(mapping.values());

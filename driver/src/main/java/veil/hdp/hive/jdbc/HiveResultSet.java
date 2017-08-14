@@ -191,7 +191,7 @@ public class HiveResultSet extends HiveBaseResultSet {
         public HiveResultSet build() {
 
 
-            Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
+            Schema schema = Schema.builder().session(thriftSession).handle(operationHandle).build();
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;

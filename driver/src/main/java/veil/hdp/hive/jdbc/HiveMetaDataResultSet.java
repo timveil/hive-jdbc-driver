@@ -94,7 +94,7 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
         public HiveMetaDataResultSet build() {
 
-            Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
+            Schema schema = Schema.builder().session(thriftSession).handle(operationHandle).build();
 
             Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
 
