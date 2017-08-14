@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,23 +37,22 @@ public class PropertyUtils {
         return instance;
     }
 
-    public static void printProperties(Properties properties, String label) {
-        StringBuilder builder = new StringBuilder("\n******************************************\n");
-        builder.append("*** ").append(label).append("\n");
-        builder.append("******************************************\n");
+    public static void printProperties(Properties properties) {
+        StringBuilder builder = new StringBuilder("\n");
+        builder.append(" -------------------------------------------------------------\n");
 
         List<String> strings = new ArrayList<>(properties.stringPropertyNames());
 
         Collections.sort(strings);
 
         for (String key : strings) {
-            if (key.equalsIgnoreCase("password")) {
+            if (StringUtils.containsIgnoreCase(key, "password")) {
                 continue;
             }
 
             builder.append('\t').append(key).append(" : ").append(properties.getProperty(key)).append('\n');
         }
-        builder.append("******************************************\n");
+        builder.append(" -------------------------------------------------------------\n");
 
         log.debug(builder.toString());
     }

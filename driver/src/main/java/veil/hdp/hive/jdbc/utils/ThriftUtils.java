@@ -35,7 +35,7 @@ public class ThriftUtils {
     public static void openTransport(TTransport transport, int timeout) throws HiveThriftException {
 
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
+            ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
 
             Future<Boolean> future = executor.submit(() -> {
                 transport.open();
@@ -195,7 +195,7 @@ public class ThriftUtils {
         }
     }
 
-    static ThriftOperation getCatalogsOperation(ThriftSession session) {
+    static ThriftOperation getCatalogsOperation(ThriftSession session, int fetchSize) {
         TGetCatalogsReq req = new TGetCatalogsReq(session.getSessionHandle());
 
         TGetCatalogsResp resp;
@@ -215,12 +215,12 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
 
     }
 
-    static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
+    static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, int fetchSize) {
         TGetColumnsReq req = new TGetColumnsReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -244,11 +244,11 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
     }
 
-    static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) {
+    static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern, int fetchSize) {
         TGetFunctionsReq req = new TGetFunctionsReq();
         req.setSessionHandle(session.getSessionHandle());
         req.setCatalogName(catalog);
@@ -272,12 +272,12 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
 
     }
 
-    static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
+    static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String[] types, int fetchSize) {
         TGetTablesReq req = new TGetTablesReq(session.getSessionHandle());
 
         req.setCatalogName(catalog);
@@ -305,12 +305,12 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
 
     }
 
-    static ThriftOperation getTypeInfoOperation(ThriftSession session) {
+    static ThriftOperation getTypeInfoOperation(ThriftSession session, int fetchSize) {
         TGetTypeInfoReq req = new TGetTypeInfoReq(session.getSessionHandle());
 
         TGetTypeInfoResp resp;
@@ -330,7 +330,7 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
 
     }
@@ -359,7 +359,7 @@ public class ThriftUtils {
 
     }
 
-    static ThriftOperation getTableTypesOperation(ThriftSession session) {
+    static ThriftOperation getTableTypesOperation(ThriftSession session, int fetchSize) {
         TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
 
         TGetTableTypesResp resp;
@@ -379,11 +379,11 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
     }
 
-    static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern) {
+    static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern, int fetchSize) {
         TGetSchemasReq req = new TGetSchemasReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -405,7 +405,7 @@ public class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
 
 
     }
@@ -491,10 +491,10 @@ public class ThriftUtils {
 
         if (HiveDriverProperty.FETCH_SERVER_LOGS.getBoolean(session.getProperties())) {
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "fetch-logs-thread"));
 
             executorService.submit(() -> {
-                List<Row> rows = ThriftUtils.fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build());
+                List<Row> rows = ThriftUtils.fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build(), fetchSize);
 
                 for (Row row : rows) {
                     try {
@@ -578,12 +578,12 @@ public class ThriftUtils {
         return getRows(session, schema, fetchReq);
     }
 
-    private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema) {
+    private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema, int fetchSize) {
 
-        TFetchResultsReq tFetchResultsReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, Integer.MAX_VALUE);
-        tFetchResultsReq.setFetchType(FETCH_TYPE_LOG);
+        TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, fetchSize);
+        fetchReq.setFetchType(FETCH_TYPE_LOG);
 
-        return getRows(session, schema, tFetchResultsReq);
+        return getRows(session, schema, fetchReq);
 
     }
 

@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc;
 import java.sql.ParameterMetaData;
 import java.sql.SQLException;
 
-public class AbstractParameterMetaData implements ParameterMetaData {
+class AbstractParameterMetaData implements ParameterMetaData {
     @Override
     public int getParameterCount() throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());

@@ -5,7 +5,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import java.util.BitSet;
 import java.util.List;
 
-public class ByteColumnData extends ColumnData<Byte> {
+class ByteColumnData extends ColumnData<Byte> {
     ByteColumnData(ColumnDescriptor descriptor, List<Byte> values, BitSet nulls) {
         super(descriptor, values, nulls);
     }

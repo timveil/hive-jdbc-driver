@@ -7,7 +7,6 @@ import veil.hdp.hive.jdbc.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
 import veil.hdp.hive.jdbc.HiveResultSet;
 import veil.hdp.hive.jdbc.bindings.TOperationHandle;
-import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.io.Closeable;
@@ -173,6 +172,7 @@ public class ThriftOperation implements Closeable {
                     resultSet = HiveMetaDataResultSet.builder()
                             .handle(operationHandle)
                             .thriftSession(session)
+                            .fetchSize(fetchSize)
                             .build();
                 } else {
                     resultSet = HiveResultSet.builder()

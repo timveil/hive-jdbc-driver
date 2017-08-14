@@ -6,7 +6,6 @@ import veil.hdp.hive.jdbc.bindings.TOperationHandle;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.SQLException;
@@ -73,6 +72,7 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
         private ThriftSession thriftSession;
         private TOperationHandle operationHandle;
+        private int fetchSize;
 
         private HiveMetaDataResultSetBuilder() {
         }
@@ -87,12 +87,16 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
             return this;
         }
 
+        public HiveMetaDataResultSetBuilder fetchSize(int fetchSize) {
+            this.fetchSize = fetchSize;
+            return this;
+        }
 
         public HiveMetaDataResultSet build() {
 
             Schema schema = ThriftUtils.getSchema(thriftSession, operationHandle);
 
-            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, HiveDriverProperty.FETCH_SIZE.getInt(thriftSession.getProperties()), schema);
+            Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
 
             return new HiveMetaDataResultSet(thriftSession, operationHandle, schema, results.iterator());
         }

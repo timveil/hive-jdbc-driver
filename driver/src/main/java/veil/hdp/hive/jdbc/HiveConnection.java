@@ -122,12 +122,12 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public void setHoldability(int holdability) throws SQLException {
-        // no-op; don't support setting this value
-        log.warn("no-op for method setHoldability()");
-
         if (holdability != ResultSet.CLOSE_CURSORS_AT_COMMIT) {
             throw HiveDriver.notImplemented(this.getClass(), "setHoldability", "holdability is not supported");
         }
+
+        // no-op; don't support setting this value
+        log.warn("no-op for method setHoldability()");
     }
 
     @Override

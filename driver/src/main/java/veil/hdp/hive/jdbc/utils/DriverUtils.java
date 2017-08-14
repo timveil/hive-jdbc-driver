@@ -41,7 +41,7 @@ public class DriverUtils {
     }
 
 
-    public static Properties buildProperties(String url, Properties suppliedProperties) throws SQLException {
+    public static Properties buildProperties(String url, Properties suppliedProperties) {
 
         Properties properties = new Properties();
 
@@ -93,7 +93,7 @@ public class DriverUtils {
         }
     }
 
-    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) throws SQLException {
+    public static DriverPropertyInfo[] buildDriverPropertyInfo(String url, Properties suppliedProperties) {
         Properties properties = buildProperties(url, suppliedProperties);
 
         HiveDriverProperty[] driverProperties = HiveDriverProperty.values();
@@ -132,7 +132,7 @@ public class DriverUtils {
     }
 
 
-    private static void parseUrl(String url, Properties properties) throws SQLException {
+    private static void parseUrl(String url, Properties properties) {
 
         URI uri = URI.create(stripPrefix(url));
 

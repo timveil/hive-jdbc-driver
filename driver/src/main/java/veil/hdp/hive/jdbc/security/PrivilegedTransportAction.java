@@ -4,7 +4,7 @@ import org.apache.thrift.transport.TTransport;
 
 import java.security.PrivilegedExceptionAction;
 
-public class PrivilegedTransportAction implements PrivilegedExceptionAction<Void> {
+class PrivilegedTransportAction implements PrivilegedExceptionAction<Void> {
 
     private final TTransport transport;
 
