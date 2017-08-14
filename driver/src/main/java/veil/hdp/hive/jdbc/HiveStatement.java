@@ -286,30 +286,30 @@ public class HiveStatement extends AbstractStatement {
 
     public static class HiveStatementBuilder implements Builder<HiveStatement> {
 
-        private HiveConnection connection;
-        private int resultSetType;
-        private int resultSetConcurrency;
-        private int resultSetHoldability;
+        HiveConnection connection;
+        int resultSetType;
+        int resultSetConcurrency;
+        int resultSetHoldability;
 
-        private HiveStatementBuilder() {
+        HiveStatementBuilder() {
         }
 
-        public HiveStatementBuilder connection(HiveConnection connection) {
+        HiveStatementBuilder connection(HiveConnection connection) {
             this.connection = connection;
             return this;
         }
 
-        public HiveStatementBuilder type(int resultSetType) {
+        HiveStatementBuilder type(int resultSetType) {
             this.resultSetType = resultSetType;
             return this;
         }
 
-        public HiveStatementBuilder concurrency(int resultSetConcurrency) {
+        HiveStatementBuilder concurrency(int resultSetConcurrency) {
             this.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
-        public HiveStatementBuilder holdability(int resultSetHoldability) {
+        HiveStatementBuilder holdability(int resultSetHoldability) {
             this.resultSetHoldability = resultSetHoldability;
             return this;
         }

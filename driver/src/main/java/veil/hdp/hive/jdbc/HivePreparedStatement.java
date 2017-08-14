@@ -27,13 +27,13 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     private final Map<Integer, String> parameterValues;
 
 
-    private HivePreparedStatement(HiveConnection connection, String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    private HivePreparedStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, String sql) {
         super(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
         this.sql = sql;
         parameterValues = new HashMap<>();
     }
 
-    public static PreparedStatementBuilder preparedStatementBuilder() {
+    public static PreparedStatementBuilder builder() {
         return new PreparedStatementBuilder();
     }
 
@@ -168,19 +168,6 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
     */
 
-    /**
-     * per the jdbc spec, if the driver cannot compute the results ResultSetMetaData before executing the statment, then return null.
-     * <p>
-     * do not have a way in hive to determine the true metadata before query execution
-     *
-     * @return null
-     * @throws SQLException
-     */
-    @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        return null;
-    }
-
     private String updateSql(String originalSql) {
 
         if (!originalSql.contains(String.valueOf(PLACEHOLDER))) {
@@ -210,45 +197,44 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
 
     }
 
-    public static class PreparedStatementBuilder implements Builder<HivePreparedStatement> {
+    public static class PreparedStatementBuilder extends HiveStatementBuilder {
 
-        private HiveConnection connection;
         private String sql;
-        private int resultSetType;
-        private int resultSetConcurrency;
-        private int resultSetHoldability;
 
         private PreparedStatementBuilder() {
         }
 
-        public PreparedStatementBuilder connection(HiveConnection connection) {
-            this.connection = connection;
-            return this;
-        }
-
-        public PreparedStatementBuilder sql(String sql) {
+        PreparedStatementBuilder sql(String sql) {
             this.sql = sql;
             return this;
         }
 
-        public PreparedStatementBuilder type(int resultSetType) {
-            this.resultSetType = resultSetType;
+        @Override
+        PreparedStatementBuilder connection(HiveConnection connection) {
+            super.connection = connection;
             return this;
         }
 
-        public PreparedStatementBuilder concurrency(int resultSetConcurrency) {
-            this.resultSetConcurrency = resultSetConcurrency;
+        @Override
+        PreparedStatementBuilder type(int resultSetType) {
+            super.resultSetType = resultSetType;
             return this;
         }
 
-        public PreparedStatementBuilder holdability(int resultSetHoldability) {
-            this.resultSetHoldability = resultSetHoldability;
+        @Override
+        PreparedStatementBuilder concurrency(int resultSetConcurrency) {
+            super.resultSetConcurrency = resultSetConcurrency;
             return this;
         }
 
+        @Override
+        PreparedStatementBuilder holdability(int resultSetHoldability) {
+            super.resultSetHoldability = resultSetHoldability;
+            return this;
+        }
 
         public HivePreparedStatement build() {
-            return new HivePreparedStatement(connection, StringUtils.trim(sql), resultSetType, resultSetConcurrency, resultSetHoldability);
+            return new HivePreparedStatement(connection, resultSetType, resultSetConcurrency, resultSetHoldability, StringUtils.trim(sql));
         }
     }
 }
