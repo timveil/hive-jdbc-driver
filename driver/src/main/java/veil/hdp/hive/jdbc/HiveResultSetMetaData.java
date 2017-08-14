@@ -147,11 +147,7 @@ public class HiveResultSetMetaData extends AbstractResultSetMetaData {
 
         public HiveResultSetMetaData build() {
 
-            int columnCount = 0;
-
-            if (schema.getColumns() != null) {
-                columnCount = schema.getColumns().size();
-            }
+            int columnCount = schema.getColumnCount();
 
             return new HiveResultSetMetaData(schema, columnCount);
         }

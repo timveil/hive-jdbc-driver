@@ -7,37 +7,32 @@ import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
 import veil.hdp.hive.jdbc.bindings.TTableSchema;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Schema {
 
     private static final Logger log = LoggerFactory.getLogger(Schema.class);
 
     private final List<ColumnDescriptor> columnDescriptors;
+    private final Map<String, ColumnDescriptor> columnMapping;
+    private final int columnCount;
 
-    private Schema(List<ColumnDescriptor> columnDescriptors) {
+    private Schema(Map<String, ColumnDescriptor> columnMapping, List<ColumnDescriptor> columnDescriptors, int columnCount) {
+        this.columnMapping = columnMapping;
         this.columnDescriptors = columnDescriptors;
+        this.columnCount = columnCount;
     }
 
     public static SchemaBuilder builder() {
         return new SchemaBuilder();
     }
 
-    public List<ColumnDescriptor> getColumns() {
-        return columnDescriptors;
+    public int getColumnCount() {
+        return columnCount;
     }
 
     public ColumnDescriptor getColumn(String columnName) {
-
-        for (ColumnDescriptor columnDescriptor : columnDescriptors) {
-
-            if (columnDescriptor.getName().equalsIgnoreCase(columnName)) {
-                return columnDescriptor;
-            }
-        }
-
-        return null;
+        return columnMapping.get(columnName);
     }
 
     public ColumnDescriptor getColumn(int position) {
@@ -47,6 +42,10 @@ public class Schema {
     public void clear() {
         if (columnDescriptors != null && !columnDescriptors.isEmpty()) {
             columnDescriptors.clear();
+        }
+
+        if (columnMapping != null && !columnMapping.isEmpty()) {
+            columnMapping.clear();
         }
     }
 
@@ -85,18 +84,24 @@ public class Schema {
 
         public Schema build() {
 
+            Map<String, ColumnDescriptor> mapping = new HashMap<>();
+
             if (tableSchema != null) {
-
-                columnDescriptors = new ArrayList<>(tableSchema.getColumnsSize());
-
                 for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-                    columnDescriptors.add(ColumnDescriptor.builder().thriftColumn(columnDesc).build());
+                    ColumnDescriptor descriptor = ColumnDescriptor.builder().thriftColumn(columnDesc).build();
+                    mapping.put(descriptor.getName(), descriptor);
+                }
+            } else{
+                for (ColumnDescriptor descriptor : columnDescriptors) {
+                    mapping.put(descriptor.getName(), descriptor);
                 }
             }
 
-            columnDescriptors.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
+            List<ColumnDescriptor> columns = new ArrayList<>(mapping.values());
 
-            return new Schema(columnDescriptors);
+            columns.sort((o1, o2) -> Ints.compare(o1.getPosition(), o2.getPosition()));
+
+            return new Schema(mapping, columns, columns.size());
         }
     }
 }
