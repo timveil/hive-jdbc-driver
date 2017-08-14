@@ -63,7 +63,9 @@ public class ColumnDescriptor {
 
     public static class ColumnDescriptorBuilder implements Builder<ColumnDescriptor> {
 
-        private TColumnDesc thriftColumnDescriptor;
+        private static final String DOT = ".";
+
+        private TColumnDesc tColumnDesc;
         private ColumnTypeDescriptor columnTypeDescriptor;
         private String name;
         private int position;
@@ -73,7 +75,7 @@ public class ColumnDescriptor {
         }
 
         ColumnDescriptorBuilder thriftColumn(TColumnDesc columnDesc) {
-            this.thriftColumnDescriptor = columnDesc;
+            this.tColumnDesc = columnDesc;
             return this;
         }
 
@@ -94,8 +96,8 @@ public class ColumnDescriptor {
 
         public ColumnDescriptor build() {
 
-            if (thriftColumnDescriptor != null) {
-                String rawName = thriftColumnDescriptor.getColumnName();
+            if (tColumnDesc != null) {
+                String rawName = tColumnDesc.getColumnName();
 
                 String columnName;
                 String tableName = null;
@@ -103,9 +105,10 @@ public class ColumnDescriptor {
                 // when select statement uses AS keyword, HS2/thrift simply returns this as the columnName without anyway to determine table.  this is really a bug on the HS2/Thrift side
                 // when AS is not used, the columnName returned from HS2/Thrift is a `.` separated string with table-name.column-name syntax.
 
-                if (rawName.contains(".")) {
-                    columnName = rawName.substring(rawName.lastIndexOf('.') + 1);
-                    tableName = rawName.substring(0, rawName.lastIndexOf('.'));
+                if (rawName.contains(DOT)) {
+                    int index = rawName.lastIndexOf(DOT);
+                    columnName = rawName.substring(index + 1);
+                    tableName = rawName.substring(0, index);
                 } else {
                     columnName = rawName;
                 }
@@ -113,9 +116,9 @@ public class ColumnDescriptor {
                 return new ColumnDescriptor(columnName,
                         null,
                         tableName,
-                        thriftColumnDescriptor.getComment(),
-                        ColumnTypeDescriptor.builder().thriftType(thriftColumnDescriptor.getTypeDesc()).build(),
-                        thriftColumnDescriptor.getPosition());
+                        tColumnDesc.getComment(),
+                        ColumnTypeDescriptor.builder().thriftType(tColumnDesc.getTypeDesc()).build(),
+                        tColumnDesc.getPosition());
             } else {
                 return new ColumnDescriptor(name, null, null, null, columnTypeDescriptor, position);
             }
