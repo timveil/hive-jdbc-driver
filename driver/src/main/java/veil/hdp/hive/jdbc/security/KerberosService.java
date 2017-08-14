@@ -33,7 +33,7 @@ public class KerberosService {
         try {
             return new Oid(name);
         } catch (GSSException e) {
-            throw new HiveException("Unable to create Oid for name [" + name + "].  This is highly unusual.");
+            throw new HiveException("Unable to create Oid for name [" + name + "].  This is highly unusual.", e);
         }
     }
 

@@ -62,7 +62,7 @@ public class DriverUtils {
     private static String normalizeKey(String key) {
 
         if (key == null) {
-            throw new RuntimeException("key is null");
+            throw new IllegalArgumentException("key is null");
         }
 
         HiveDriverProperty property = HiveDriverProperty.forKeyIgnoreCase(key);

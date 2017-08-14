@@ -17,17 +17,17 @@ public class PrincipalUtils {
     public static ServicePrincipal parseServicePrincipal(String principal, String hostname) {
 
         if (StringUtils.isBlank(principal)) {
-            throw new RuntimeException("service principal is null or empty");
+            throw new IllegalArgumentException("service principal is null or empty");
         }
 
         if (StringUtils.isBlank(hostname)) {
-            throw new RuntimeException("hostname is null or empty");
+            throw new IllegalArgumentException("hostname is null or empty");
         }
 
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("service principal is invalid [" + principal + ']');
+            throw new IllegalArgumentException("service principal is invalid [" + principal + ']');
         }
 
         String firstPart = strings.get(0);
@@ -38,7 +38,7 @@ public class PrincipalUtils {
         List<String> serviceParts = Splitter.on('/').splitToList(firstPart);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("service principal [" + principal + "] has invalid first part [" + firstPart + "].");
+            throw new IllegalArgumentException("service principal [" + principal + "] has invalid first part [" + firstPart + "].");
         }
 
         String service = serviceParts.get(0);
@@ -56,13 +56,13 @@ public class PrincipalUtils {
     public static UserPrincipal parseUserPrincipal(String principal) {
 
         if (StringUtils.isBlank(principal)) {
-            throw new RuntimeException("user principal is null or empty");
+            throw new IllegalArgumentException("user principal is null or empty");
         }
 
         List<String> strings = Splitter.on('@').splitToList(principal);
 
         if (strings.size() != 2) {
-            throw new RuntimeException("user principal is invalid [" + principal + ']');
+            throw new IllegalArgumentException("user principal is invalid [" + principal + ']');
         }
 
         String user = strings.get(0);

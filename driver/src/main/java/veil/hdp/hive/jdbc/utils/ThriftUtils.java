@@ -32,7 +32,7 @@ public class ThriftUtils {
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
 
-    public static void openTransport(TTransport transport, int timeout) throws HiveThriftException {
+    public static void openTransport(TTransport transport, int timeout) {
 
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
@@ -623,7 +623,7 @@ public class ThriftUtils {
     public static Iterable<Row> getResults(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
         return () -> {
 
-            final Iterator<List<Row>> fetchIterator = fetchIterator(session, handle, fetchSize, schema);
+            Iterator<List<Row>> fetchIterator = fetchIterator(session, handle, fetchSize, schema);
 
             return new AbstractIterator<Row>() {
 
