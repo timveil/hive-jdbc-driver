@@ -68,7 +68,7 @@ public final class HttpUtils {
         switch (authenticationMode) {
 
             case NONE:
-                httpRequestInterceptor = buildBasicInterceptor(properties);
+                httpRequestInterceptor = buildBasicInterceptor();
                 break;
             case KERBEROS:
                 httpRequestInterceptor = buildKerberosInterceptor(properties);
@@ -204,8 +204,8 @@ public final class HttpUtils {
         return new KerberosRequestInterceptor(properties, cookieStore);
     }
 
-    private static HttpRequestInterceptor buildBasicInterceptor(Properties properties) {
-        return new BasicRequestInterceptor(properties);
+    private static HttpRequestInterceptor buildBasicInterceptor() {
+        return new BasicRequestInterceptor();
     }
 
     public static TTransport createHttpTransport(Properties properties, CloseableHttpClient httpClient) {
