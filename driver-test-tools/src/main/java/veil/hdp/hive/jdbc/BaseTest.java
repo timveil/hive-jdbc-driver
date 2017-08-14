@@ -6,7 +6,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
 
-public class BaseTest {
+public abstract class BaseTest {
 
     protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
 
@@ -17,7 +17,7 @@ public class BaseTest {
         java.util.logging.Logger.getLogger("javax.security.sasl").setLevel(java.util.logging.Level.FINEST);
     }
 
-    public static String getHost() {
+    public final String getHost() {
         String host = System.getProperty("test.host");
 
         if (host == null) {
@@ -27,7 +27,7 @@ public class BaseTest {
         return host;
     }
 
-    public static int getTestRuns() {
+    public final int getTestRuns() {
         return Integer.parseInt(System.getProperty("test.runs", "10"));
     }
 

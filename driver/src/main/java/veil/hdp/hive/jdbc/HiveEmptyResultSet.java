@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class HiveEmptyResultSet extends AbstractResultSet {
 
-    private static final Logger log = LoggerFactory.getLogger(HiveResultSet.class);
+    private static final Logger log = LoggerFactory.getLogger(HiveEmptyResultSet.class);
 
     // constructor
     private final Schema schema;

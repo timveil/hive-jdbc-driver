@@ -56,7 +56,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
                     log.debug("cookie name [{}], cookie value [{}]", cookie.getName(), cookie.getValue());
 
                     if (cookie.isSecure() && !HiveDriverProperty.SSL_ENABLED.getBoolean(properties)) {
-                        log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName(), cookie.getValue());
+                        log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName());
                         continue;
                     }
 
