@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc.thrift;
 
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.thrift.transport.TTransport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftTransport implements Closeable {
 
-    private static final Logger log = LoggerFactory.getLogger(ThriftTransport.class);
+    private static final Logger log =  LogManager.getLogger(ThriftTransport.class);
 
     private final TTransport transport;
 

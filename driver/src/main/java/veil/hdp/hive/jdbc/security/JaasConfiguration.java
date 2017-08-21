@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 class JaasConfiguration extends Configuration {
 
-    private static final Logger log = LoggerFactory.getLogger(JaasConfiguration.class);
+    private static final Logger log =  LogManager.getLogger(JaasConfiguration.class);
 
     private final Map<String, AppConfigurationEntry[]> entries = new HashMap<>(1);
 

@@ -2,8 +2,8 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.security.ServicePrincipal;
 import veil.hdp.hive.jdbc.security.UserPrincipal;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 public final class PrincipalUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(PrincipalUtils.class);
+    private static final Logger log =  LogManager.getLogger(PrincipalUtils.class);
 
     private PrincipalUtils() {
     }

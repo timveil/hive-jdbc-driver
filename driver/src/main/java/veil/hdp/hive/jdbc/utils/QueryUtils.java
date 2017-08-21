@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveConnection;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveEmptyResultSet;
@@ -10,11 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.slf4j.LoggerFactory.getLogger;
 
 public final class QueryUtils {
 
-    private static final Logger log = getLogger(QueryUtils.class);
+    private static final Logger log =  LogManager.getLogger(QueryUtils.class);
 
     private QueryUtils() {
     }

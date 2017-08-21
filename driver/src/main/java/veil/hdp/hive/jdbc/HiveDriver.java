@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class HiveDriver implements Driver {
 
-    private static final Logger log = LoggerFactory.getLogger(HiveDriver.class);
+    private static final Logger log =  LogManager.getLogger(HiveDriver.class);
     private static final String NOT_PROVIDED = "NOT PROVIDED";
     private static final String UNKNOWN = "UNKNOWN";
 

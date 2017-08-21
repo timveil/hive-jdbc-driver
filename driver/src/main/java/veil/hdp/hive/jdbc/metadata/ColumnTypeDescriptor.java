@@ -1,14 +1,14 @@
 package veil.hdp.hive.jdbc.metadata;
 
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class ColumnTypeDescriptor {
 
-    private static final Logger log = getLogger(ColumnTypeDescriptor.class);
+    private static final Logger log =  LogManager.getLogger(ColumnTypeDescriptor.class);
 
     private final HiveType hiveType;
 

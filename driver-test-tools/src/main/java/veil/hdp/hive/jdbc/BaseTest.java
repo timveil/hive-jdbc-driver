@@ -1,19 +1,14 @@
 package veil.hdp.hive.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class BaseTest {
 
-    protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
+    protected static final Logger log = LogManager.getLogger(BaseTest.class);
 
     public BaseTest() {
-        SLF4JBridgeHandler.removeHandlersForRootLogger();
-        SLF4JBridgeHandler.install();
-
         java.util.logging.Logger.getLogger("javax.security.sasl").setLevel(java.util.logging.Level.FINEST);
     }
 

@@ -4,8 +4,8 @@ package veil.hdp.hive.jdbc.thrift;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ThriftSession implements Closeable {
 
-    private static final Logger log = LoggerFactory.getLogger(ThriftSession.class);
+    private static final Logger log =  LogManager.getLogger(ThriftSession.class);
 
     // constructor
     private final ThriftTransport thriftTransport;

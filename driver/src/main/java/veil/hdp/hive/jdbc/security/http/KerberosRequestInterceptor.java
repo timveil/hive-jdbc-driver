@@ -8,8 +8,8 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.protocol.HttpContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.security.KerberosService;
 import veil.hdp.hive.jdbc.security.ServicePrincipal;
@@ -26,7 +26,7 @@ import java.util.Properties;
 
 public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(KerberosRequestInterceptor.class);
+    private static final Logger log =  LogManager.getLogger(KerberosRequestInterceptor.class);
 
     private static final Base64 BASE_64 = new Base64(0);
 

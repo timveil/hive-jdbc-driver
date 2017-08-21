@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.utils;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
@@ -8,11 +9,9 @@ import veil.hdp.hive.jdbc.metadata.HiveType;
 
 import java.util.Map;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class TypeDescriptorUtils {
 
-    private static final Logger log = getLogger(TypeDescriptorUtils.class);
+    private static final Logger log =  LogManager.getLogger(TypeDescriptorUtils.class);
 
     public static ColumnTypeDescriptor getDescriptor(TTypeDesc typeDesc) {
 

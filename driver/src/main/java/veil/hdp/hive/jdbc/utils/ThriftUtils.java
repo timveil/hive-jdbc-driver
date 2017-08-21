@@ -2,12 +2,12 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.collect.AbstractIterator;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
@@ -28,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public final class ThriftUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(ThriftUtils.class);
+    private static final Logger log =  LogManager.getLogger(ThriftUtils.class);
 
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;

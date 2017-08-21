@@ -1,6 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriver;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
@@ -16,12 +17,11 @@ import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.BitSet;
 
-import static org.slf4j.LoggerFactory.getLogger;
 import static veil.hdp.hive.jdbc.metadata.HiveType.*;
 
 public class BaseColumn<T> implements Column<T> {
 
-    static final Logger log = getLogger(BaseColumn.class);
+    static final Logger log =  LogManager.getLogger(BaseColumn.class);
 
     private final ColumnDescriptor descriptor;
 

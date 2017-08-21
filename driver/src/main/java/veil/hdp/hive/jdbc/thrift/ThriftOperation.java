@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.thrift;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveEmptyResultSet;
 import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftOperation implements Closeable {
 
-    private static final Logger log = LoggerFactory.getLogger(ThriftOperation.class);
+    private static final Logger log =  LogManager.getLogger(ThriftOperation.class);
 
     // constructor
     private final ThriftSession session;

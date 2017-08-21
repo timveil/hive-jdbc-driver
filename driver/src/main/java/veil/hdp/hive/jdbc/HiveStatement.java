@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveStatement extends AbstractStatement {
 
-    private static final Logger log = LoggerFactory.getLogger(HiveStatement.class);
+    private static final Logger log =  LogManager.getLogger(HiveStatement.class);
 
     // constructor
     private final HiveConnection connection;

@@ -3,8 +3,8 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveSQLException;
 
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public final class DriverUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(DriverUtils.class);
+    private static final Logger log =  LogManager.getLogger(DriverUtils.class);
 
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";

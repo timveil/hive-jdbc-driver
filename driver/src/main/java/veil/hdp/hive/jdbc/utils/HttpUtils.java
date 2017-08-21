@@ -15,11 +15,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.AuthenticationMode;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
@@ -37,7 +37,7 @@ import java.util.Properties;
 
 public final class HttpUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+    private static final Logger log =  LogManager.getLogger(HttpUtils.class);
 
     private static final String HTTP = "http";
     private static final String HTTPS = "https";

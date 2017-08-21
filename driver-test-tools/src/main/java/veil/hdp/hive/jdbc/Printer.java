@@ -1,8 +1,8 @@
 package veil.hdp.hive.jdbc;
 
 import com.google.common.base.Joiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class Printer {
-    private static final Logger log = LoggerFactory.getLogger(Printer.class);
+    private static final Logger log = LogManager.getLogger(Printer.class);
 
     private Printer() {
     }

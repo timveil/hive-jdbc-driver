@@ -1,9 +1,9 @@
 package veil.hdp.hive.jdbc.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ietf.jgss.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.utils.PlatformUtils;
@@ -22,7 +22,7 @@ import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControl
 
 public final class KerberosService {
 
-    private static final Logger log = LoggerFactory.getLogger(KerberosService.class);
+    private static final Logger log =  LogManager.getLogger(KerberosService.class);
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
 

@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 
@@ -20,7 +20,7 @@ import java.util.Random;
 
 final class ZookeeperUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(ZookeeperUtils.class);
+    private static final Logger log =  LogManager.getLogger(ZookeeperUtils.class);
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private ZookeeperUtils() {
