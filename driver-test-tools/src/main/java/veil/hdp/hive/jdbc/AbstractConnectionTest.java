@@ -266,7 +266,6 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 }
             }
 
-
             reporter.report();
         }
 
