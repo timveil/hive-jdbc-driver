@@ -35,8 +35,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-            <!-- this is provided because all referring projects already have as a dependency -->
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
