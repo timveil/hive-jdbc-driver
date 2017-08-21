@@ -69,13 +69,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                     log.error(e.getMessage(), e);
                 }
 
-                try {
-                    Printer.printResultSetMetaData(rs.getMetaData());
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-
-                Printer.printResultSet(rs);
+                Printer.printResultSet(rs, true);
             });
 
             executorService.submit(() -> {
@@ -107,27 +101,27 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     @Test
     public void testSimpleQuery() throws SQLException {
-        executeSimpleQuery(true);
+        executeSimpleQuery(true, true);
     }
 
     @Test
     public void testStructQuery() throws SQLException {
-        executeStructQuery(true);
+        executeStructQuery(true, true);
     }
 
     @Test
     public void testMapQuery() throws SQLException {
-        executeMapQuery(true);
+        executeMapQuery(true, true);
     }
 
     @Test
     public void testArrayQuery() throws SQLException {
-        executeArrayQuery(true);
+        executeArrayQuery(true, true);
     }
 
     @Test
     public void testASQuery() throws SQLException {
-        executeAsQuery(true);
+        executeAsQuery(true, true);
     }
 
     @Test
@@ -145,65 +139,59 @@ public abstract class AbstractConnectionTest extends BaseTest {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("select col_date, col_timestamp from date_time_test")) {
 
-            Printer.printResultSetMetaData(rs.getMetaData());
-            Printer.printResultSet(rs);
+            Printer.printResultSet(rs, false);
         }
     }
 
-    private void executeAsQuery(boolean print) throws SQLException {
+    private void executeAsQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT col_string as `String Column` FROM test_table limit 10")) {
 
-            if (print) {
-                Printer.printResultSetMetaData(rs.getMetaData());
-                Printer.printResultSet(rs);
+            if (printResults) {
+                Printer.printResultSet(rs, printMetaData);
             }
         }
     }
 
 
-    private void executeSimpleQuery(boolean print) throws SQLException {
+    private void executeSimpleQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM test_table limit 10")) {
 
-            if (print) {
-                Printer.printResultSetMetaData(rs.getMetaData());
-                Printer.printResultSet(rs);
+            if (printResults) {
+                Printer.printResultSet(rs, printMetaData);
             }
         }
     }
 
-    private void executeStructQuery(boolean print) throws SQLException {
+    private void executeStructQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM struct_test")) {
 
-            if (print) {
-                Printer.printResultSetMetaData(rs.getMetaData());
-                Printer.printResultSet(rs);
+            if (printResults) {
+                Printer.printResultSet(rs, printMetaData);
             }
         }
     }
 
 
-    private void executeMapQuery(boolean print) throws SQLException {
+    private void executeMapQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM map_test")) {
 
-            if (print) {
-                Printer.printResultSetMetaData(rs.getMetaData());
-                Printer.printResultSet(rs);
+            if (printResults) {
+                Printer.printResultSet(rs, printMetaData);
             }
         }
     }
 
 
-    private void executeArrayQuery(boolean print) throws SQLException {
+    private void executeArrayQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery("SELECT * FROM array_test")) {
 
-            if (print) {
-                Printer.printResultSetMetaData(rs.getMetaData());
-                Printer.printResultSet(rs);
+            if (printResults) {
+                Printer.printResultSet(rs, printMetaData);
             }
         }
     }
@@ -211,18 +199,17 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     @Test
     public void testPreparedStatement() throws SQLException {
-        executePreparedStatement(true);
+        executePreparedStatement(true, false);
     }
 
-    private void executePreparedStatement(boolean print) throws SQLException {
+    private void executePreparedStatement(boolean printResults, boolean printMetaData) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_boolean = ? limit 10")) {
             statement.setBoolean(1, true);
 
             try (ResultSet rs = statement.executeQuery()) {
 
-                if (print) {
-                    Printer.printResultSetMetaData(rs.getMetaData());
-                    Printer.printResultSet(rs);
+                if (printResults) {
+                    Printer.printResultSet(rs, printMetaData);
                 }
             }
         }
@@ -233,7 +220,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         // warm-up
         for (int i = 0; i < 10; i++) {
-            executeSimpleQuery(false);
+            executeSimpleQuery(false, false);
         }
 
         try (ConsoleReporter reporter = ConsoleReporter
@@ -247,7 +234,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 log.debug("run # {}", i);
 
                 try (Timer.Context queryContext = timer.time()) {
-                    executeSimpleQuery(true);
+                    executeSimpleQuery(true, false);
                 }
             }
 
@@ -261,7 +248,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         // warm-up
         for (int i = 0; i < 10; i++) {
-            executePreparedStatement(false);
+            executePreparedStatement(false, false);
         }
 
         try (ConsoleReporter reporter = ConsoleReporter
@@ -275,7 +262,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
                 log.debug("run # {}", i);
 
                 try (Timer.Context queryContext = timer.time()) {
-                    executePreparedStatement(false);
+                    executePreparedStatement(true, false);
                 }
             }
 
@@ -292,7 +279,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         Runnable test = () -> {
             try {
-                executeSimpleQuery(false);
+                executeSimpleQuery(true, false);
             } catch (SQLException e) {
                 log.error(e.getMessage(), e);
             }
@@ -375,7 +362,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
         Runnable test = () -> {
             try {
                 try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
-                    Printer.printResultSet(columns);
+                    Printer.printResultSet(columns, false);
                 }
             } catch (SQLException e) {
                 log.error(e.getMessage(), e);
@@ -406,49 +393,49 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         try (ResultSet catalogs = metaData.getCatalogs()) {
 
-            Printer.printResultSet(catalogs);
+            Printer.printResultSet(catalogs, false);
         }
 
         log.debug("******************************** calling getSchemas");
 
         try (ResultSet schemas = metaData.getSchemas()) {
 
-            Printer.printResultSet(schemas);
+            Printer.printResultSet(schemas, false);
         }
 
         log.debug("******************************** calling getTypeInfo");
 
         try (ResultSet typeInfo = metaData.getTypeInfo()) {
 
-            Printer.printResultSet(typeInfo);
+            Printer.printResultSet(typeInfo, false);
         }
 
         log.debug("******************************** calling getTables");
 
         try (ResultSet tables = metaData.getTables(null, null, null, null)) {
 
-            Printer.printResultSet(tables);
+            Printer.printResultSet(tables, false);
         }
 
         log.debug("******************************** calling getTableTypes");
 
         try (ResultSet tableTypes = metaData.getTableTypes()) {
 
-            Printer.printResultSet(tableTypes);
+            Printer.printResultSet(tableTypes, false);
         }
 
         log.debug("******************************** calling getFunctions");
 
         try (ResultSet functions = metaData.getFunctions(null, null, "%")) {
 
-            Printer.printResultSet(functions);
+            Printer.printResultSet(functions, false);
         }
 
         log.debug("******************************** calling getColumns");
 
         try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
 
-            Printer.printResultSet(columns);
+            Printer.printResultSet(columns, false);
         }
     }
 

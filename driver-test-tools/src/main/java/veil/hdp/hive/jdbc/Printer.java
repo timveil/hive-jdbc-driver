@@ -17,7 +17,7 @@ final class Printer {
     }
 
 
-    static void printResultSetMetaData(ResultSetMetaData rsmd) {
+    private static void printResultSetMetaData(ResultSetMetaData rsmd) {
 
         try {
             int columnCount = rsmd.getColumnCount();
@@ -48,11 +48,15 @@ final class Printer {
 
     }
 
-    static void printResultSet(ResultSet rs) {
+    static void printResultSet(ResultSet rs, boolean printMetaData) {
 
 
         try {
             ResultSetMetaData metaData = rs.getMetaData();
+
+            if (printMetaData) {
+                printResultSetMetaData(metaData);
+            }
 
             int columnCount = metaData.getColumnCount();
             int counter = 0;
