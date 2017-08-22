@@ -15,6 +15,7 @@ import veil.hdp.hive.jdbc.bindings.TProtocolVersion;
 import veil.hdp.hive.jdbc.bindings.TSessionHandle;
 import veil.hdp.hive.jdbc.bindings.TTypeDesc;
 import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
+import veil.hdp.hive.jdbc.utils.StopWatch;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
@@ -146,22 +147,47 @@ public class ThriftSession implements Closeable {
 
             while (protocol >= TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8.getValue()) {
 
+                StopWatch sw = new StopWatch("open session");
+                sw.start("find protocol");
+
                 TProtocolVersion protocolVersion = TProtocolVersion.findByValue(protocol);
+
+                sw.stop();
+
 
                 log.debug("trying protocol {}", protocolVersion);
 
                 try {
+
+                    sw.start("build transport");
+
                     thriftTransport = ThriftTransport.builder().properties(properties).build();
+
+                    sw.stop();
+
+                    sw.start("create client");
 
                     Client client = ThriftUtils.createClient(thriftTransport);
 
+                    sw.stop();
+
+                    sw.start("open session");
+
                     TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client, protocolVersion);
+
+                    sw.stop();
+
+                    sw.start("get properties");
 
                     TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
 
                     TProtocolVersion serverProtocolVersion = openSessionResp.getServerProtocolVersion();
 
                     log.debug("opened session with protocol {}", serverProtocolVersion);
+
+                    sw.stop();
+
+                    log.debug(sw.prettyPrint());
 
                     return new ThriftSession(properties, thriftTransport, client, sessionHandle, serverProtocolVersion);
 

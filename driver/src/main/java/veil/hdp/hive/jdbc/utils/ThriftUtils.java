@@ -42,7 +42,13 @@ public final class ThriftUtils {
             ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
 
             Future<Boolean> future = executor.submit(() -> {
+
+                StopWatch sw = new StopWatch("open transport");
+                sw.start();
                 transport.open();
+                sw.stop();
+
+                log.debug(sw.prettyPrint());
 
                 return true;
             });
@@ -416,7 +422,9 @@ public final class ThriftUtils {
 
     private static void checkStatus(TStatus status) {
 
-        if (status.getStatusCode() == TStatusCode.SUCCESS_STATUS || status.getStatusCode() == TStatusCode.SUCCESS_WITH_INFO_STATUS) {
+        TStatusCode statusCode = status.getStatusCode();
+
+        if (statusCode == TStatusCode.SUCCESS_STATUS || statusCode == TStatusCode.SUCCESS_WITH_INFO_STATUS) {
             return;
         }
 
@@ -605,9 +613,16 @@ public final class ThriftUtils {
 
         if (rowSet != null && rowSet.isSetColumns()) {
 
+            StopWatch sw = new StopWatch();
+            sw.start("building cbs");
             ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(schema).build();
+            sw.stop();
 
+            sw.start("building rows");
             rows = RowBaseSet.builder().columnBaseSet(cbs).build().getRows();
+            sw.stop();
+
+            log.debug(sw.prettyPrint());
 
         }
 

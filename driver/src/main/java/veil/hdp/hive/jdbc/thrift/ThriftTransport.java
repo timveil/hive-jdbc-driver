@@ -10,6 +10,7 @@ import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.TransportMode;
 import veil.hdp.hive.jdbc.utils.BinaryUtils;
 import veil.hdp.hive.jdbc.utils.HttpUtils;
+import veil.hdp.hive.jdbc.utils.StopWatch;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.io.Closeable;
@@ -112,6 +113,10 @@ public class ThriftTransport implements Closeable {
 
             List<Closeable> closeableList = new ArrayList<>(1);
 
+            StopWatch sw = new StopWatch();
+
+            sw.start("build transport");
+
             if (mode == TransportMode.binary) {
                 transport = BinaryUtils.createBinaryTransport(properties);
             } else if (mode == TransportMode.http) {
@@ -122,11 +127,18 @@ public class ThriftTransport implements Closeable {
                 transport = HttpUtils.createHttpTransport(properties, client);
             }
 
+            sw.stop();
+
             if (transport == null) {
                 throw new HiveException("invalid transport mode [" + mode + ']');
             }
+            sw.start("open transport");
 
             ThriftUtils.openTransport(transport, HiveDriverProperty.THRIFT_TRANSPORT_TIMEOUT.getInt(properties));
+
+            sw.stop();
+
+            log.debug(sw.prettyPrint());
 
             return new ThriftTransport(transport, closeableList);
         }

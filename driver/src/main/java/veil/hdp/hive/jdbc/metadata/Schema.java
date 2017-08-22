@@ -1,16 +1,21 @@
 package veil.hdp.hive.jdbc.metadata;
 
 import com.google.common.primitives.Ints;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
 import veil.hdp.hive.jdbc.bindings.TOperationHandle;
 import veil.hdp.hive.jdbc.bindings.TTableSchema;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.utils.StopWatch;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.util.*;
 
 public class Schema {
+
+    private static final Logger log =  LogManager.getLogger(Schema.class);
 
     private final List<ColumnDescriptor> columnDescriptors;
     private final Map<String, ColumnDescriptor> columnMapping;
@@ -95,24 +100,34 @@ public class Schema {
 
             Map<String, ColumnDescriptor> mapping = new HashMap<>();
 
+            StopWatch sw = new StopWatch();
+
             if (columnDescriptors != null) {
                 for (ColumnDescriptor descriptor : columnDescriptors) {
                     mapping.put(descriptor.getName(), descriptor);
                 }
             } else {
 
+                sw.start("get schema");
                 TTableSchema tableSchema = ThriftUtils.getTableSchema(thriftSession, operationHandle);
+                sw.stop();
 
+                sw.start("building mapping");
                 for (TColumnDesc columnDesc : tableSchema.getColumns()) {
                     ColumnDescriptor descriptor = ColumnDescriptor.builder().session(thriftSession).thriftColumn(columnDesc).build();
                     mapping.put(descriptor.getName(), descriptor);
                 }
+                sw.stop();
 
             }
 
             List<ColumnDescriptor> columns = new ArrayList<>(mapping.values());
 
+            sw.start("sorting");
             columns.sort(COLUMN_DESCRIPTOR_COMPARATOR);
+            sw.stop();
+
+            log.debug(sw.prettyPrint());
 
             return new Schema(mapping, columns, columns.size());
         }
