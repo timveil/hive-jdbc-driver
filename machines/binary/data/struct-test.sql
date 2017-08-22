@@ -1,4 +1,4 @@
-create table struct_test(
+CREATE TABLE IF NOT EXISTS struct_test(
   code int,
   area_name string,
   male_0_4 STRUCT<num:double, total:double, perc:double>,

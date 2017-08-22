@@ -13,10 +13,10 @@ public abstract class BaseTest {
     }
 
     public final String getHost() {
-        String host = System.getProperty("test.host");
+        String host = System.getProperty("test.host", "jdbc-binary.hdp.local");
 
         if (host == null) {
-            throw new IllegalArgumentException("can't run test without a valid host.  You must set the property \"test.host\" before executing test.  For example: -Dtest.host=hdp1.lab.local");
+            throw new IllegalArgumentException("can't run test without a valid host.  You must set the property \"test.host\" before executing test.  For example: -Dtest.host=jdbc-binary.hdp.local");
         }
 
         return host;

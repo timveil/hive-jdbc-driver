@@ -5,4 +5,6 @@
 
 *.log
 
+.vagrant
+
 dependency-reduced-pom.xml

@@ -56,7 +56,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     @Test
     public void testCancel() throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM test_table limit 10")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test limit 10")) {
 
 
             ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -145,7 +145,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     private void executeAsQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT col_string as `String Column` FROM test_table limit 10")) {
+             ResultSet rs = statement.executeQuery("SELECT col_string as `String Column` FROM data_type_test limit 10")) {
 
             if (printResults) {
                 Printer.printResultSet(rs, printMetaData);
@@ -156,7 +156,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     private void executeSimpleQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM test_table limit 10")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test limit 10")) {
 
             if (printResults) {
                 Printer.printResultSet(rs, printMetaData);
@@ -203,7 +203,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     private void executePreparedStatement(boolean printResults, boolean printMetaData) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM test_table where col_boolean = ? limit 10")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM data_type_test where col_boolean = ? limit 10")) {
             statement.setBoolean(1, true);
 
             try (ResultSet rs = statement.executeQuery()) {
@@ -296,7 +296,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     @Test
     public void testColumnTypes() throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM test_table")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test")) {
 
             while (rs.next()) {
 
@@ -360,7 +360,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         Runnable test = () -> {
             try {
-                try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
+                try (ResultSet columns = metaData.getColumns(null, "tests", "data_type_test", "%")) {
                     Printer.printResultSet(columns, false);
                 }
             } catch (SQLException e) {
@@ -432,7 +432,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
         log.debug("******************************** calling getColumns");
 
-        try (ResultSet columns = metaData.getColumns(null, "default", "test_table", "%")) {
+        try (ResultSet columns = metaData.getColumns(null, "tests", "data_type_test", "%")) {
 
             Printer.printResultSet(columns, false);
         }

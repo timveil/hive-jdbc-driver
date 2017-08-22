@@ -1,4 +1,4 @@
-create table array_test(
+CREATE TABLE IF NOT EXISTS array_test(
   code int,
   area_name string,
   array_col array<string>
