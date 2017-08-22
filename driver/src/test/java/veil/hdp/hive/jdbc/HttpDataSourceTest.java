@@ -11,7 +11,7 @@ public class HttpDataSourceTest extends AbstractConnectionTest {
         ds.setHost(host);
         ds.setPort(10501);
         ds.setTransportMode(TransportMode.http);
-        ds.setDatabase("jdbc_test");
+        ds.setDatabase("tests");
 
         return ds.getConnection();
     }

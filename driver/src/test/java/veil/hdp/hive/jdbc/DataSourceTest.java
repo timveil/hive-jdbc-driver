@@ -9,8 +9,8 @@ public class DataSourceTest extends AbstractConnectionTest {
 
         HiveDataSource ds = new HiveDataSource();
         ds.setHost(host);
-        ds.setPort(10500);
-        ds.setDatabase("jdbc_test");
+        ds.setPort(10000);
+        ds.setDatabase("tests");
 
         return ds.getConnection();
     }

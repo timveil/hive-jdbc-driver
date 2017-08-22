@@ -40,9 +40,6 @@
     <profiles>
         <profile>
             <id>HDP-2.1.0.2.6.1.0-129</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <hive.version>2.1.0.2.6.1.0-129</hive.version>
                 <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>
@@ -61,6 +58,9 @@
         </profile>
         <profile>
             <id>HDP-1.2.1000.2.6.1.0-129</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <hive.version>1.2.1000.2.6.1.0-129</hive.version>
                 <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>

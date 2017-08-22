@@ -9,7 +9,7 @@ public class BinaryNoSaslTest extends AbstractConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=NOSASL";
+        String url = "jdbc:hive2://" + host + ":10000/tests?authMode=NOSASL";
 
         return new HiveDriver().connect(url, properties);
     }

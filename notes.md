@@ -76,7 +76,7 @@ NO SUPPORT for IBM JDK
 
 
 // good sql to help look at date issues in hive
-select col_date, date_format(col_date, 'EEE, d MMM yyyy HH:mm:ss Z'), col_timestamp, date_format(col_timestamp, 'EEE, d MMM yyyy HH:mm:ss Z') from jdbc_test.date_time_test
+select col_date, date_format(col_date, 'EEE, d MMM yyyy HH:mm:ss Z'), col_timestamp, date_format(col_timestamp, 'EEE, d MMM yyyy HH:mm:ss Z') from tests.date_time_test
 
 
 

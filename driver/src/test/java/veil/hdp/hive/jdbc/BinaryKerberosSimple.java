@@ -20,7 +20,7 @@ public class BinaryKerberosSimple extends AbstractConnectionTest {
         properties.setProperty("user", "timve@LAB.LOCAL");
         properties.setProperty("password", "password");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=PASSWORD&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
+        String url = "jdbc:hive2://" + host + ":10000/tests?authMode=KERBEROS&krb5Mode=PASSWORD&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
 
         return new HiveDriver().connect(url, properties);
     }

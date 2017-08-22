@@ -15,7 +15,7 @@ public class OriginalHiveDriverBinaryConnectionTest extends AbstractConnectionTe
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test";
+        String url = "jdbc:hive2://" + host + ":10000/tests";
 
         return new HiveDriver().connect(url, properties);
     }

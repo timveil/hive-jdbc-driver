@@ -10,7 +10,7 @@ public class ZookeeperTest extends AbstractConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
 
-        String url = "jdbc:hive2://" + host + ":2181/jdbc_test?zkEnabled=true";
+        String url = "jdbc:hive2://" + host + ":2181/tests?zkEnabled=true";
 
         return new HiveDriver().connect(url, properties);
     }

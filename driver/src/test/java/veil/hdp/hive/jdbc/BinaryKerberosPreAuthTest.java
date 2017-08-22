@@ -25,7 +25,7 @@ public class BinaryKerberosPreAuthTest extends AbstractConnectionTest {
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
 
-        String url = "jdbc:hive2://" + host + ":10500/jdbc_test?authMode=KERBEROS&krb5Mode=PREAUTH&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
+        String url = "jdbc:hive2://" + host + ":10000/tests?authMode=KERBEROS&krb5Mode=PREAUTH&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
 
         try {
             return Subject.doAs(KerberosService.loginWithPassword(PrincipalUtils.parseUserPrincipal("timve@LAB.LOCAL"), "password", true), new PrivilegedExceptionAction<Connection>() {
