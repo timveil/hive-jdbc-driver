@@ -223,12 +223,15 @@ public abstract class AbstractConnectionTest extends BaseTest {
             executeSimpleQuery(false, false);
         }
 
+        String name = MetricRegistry.name(this.getClass(), "testSimpleQueryLoad");
+
         try (ConsoleReporter reporter = ConsoleReporter
                 .forRegistry(metrics)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build()) {
 
-            Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testSimpleQueryLoad"));
+
+            Timer timer = metrics.timer(name);
 
             for (int i = 0; i < getTestRuns(); i++) {
                 log.debug("run # {}", i);
@@ -251,12 +254,15 @@ public abstract class AbstractConnectionTest extends BaseTest {
             executePreparedStatement(false, false);
         }
 
+        String name = MetricRegistry.name(this.getClass(), "testPreparedStatementLoad");
+
         try (ConsoleReporter reporter = ConsoleReporter
                 .forRegistry(metrics)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build()) {
 
-            Timer timer = metrics.timer(MetricRegistry.name(this.getClass(), "testPreparedStatementLoad"));
+
+            Timer timer = metrics.timer(name);
 
             for (int i = 0; i < getTestRuns(); i++) {
                 log.debug("run # {}", i);
