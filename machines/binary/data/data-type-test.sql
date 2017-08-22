@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS data_type_test (
+CREATE EXTERNAL TABLE IF NOT EXISTS data_type_test (
   `col_tinyint` tinyint comment 'tinyint = byte',
   `col_smallint` smallint comment 'smallint = short',
   `col_int` int,

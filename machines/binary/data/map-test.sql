@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS map_test(
+CREATE EXTERNAL TABLE IF NOT EXISTS map_test(
   code int,
   area_name string,
   map_col map<int,string>

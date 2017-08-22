@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS  date_time_test (
+CREATE EXTERNAL TABLE IF NOT EXISTS  date_time_test (
   `col_date` date,
   `col_timestamp` timestamp
 )
