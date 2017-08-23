@@ -9,13 +9,8 @@ import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
-import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
-import veil.hdp.hive.jdbc.bindings.TOpenSessionResp;
-import veil.hdp.hive.jdbc.bindings.TProtocolVersion;
-import veil.hdp.hive.jdbc.bindings.TSessionHandle;
-import veil.hdp.hive.jdbc.bindings.TTypeDesc;
+import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
-import veil.hdp.hive.jdbc.utils.StopWatch;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
@@ -24,7 +19,6 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ThriftSession implements Closeable {
 
@@ -32,18 +26,16 @@ public class ThriftSession implements Closeable {
 
     // constructor
     private final ThriftTransport thriftTransport;
-    private final Client client;
+    private final TCLIService.Iface client;
     private final TSessionHandle sessionHandle;
     private final Properties properties;
     private final TProtocolVersion protocol;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
-    private final ReentrantLock sessionLock = new ReentrantLock(true);
 
     private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .recordStats()
+            .maximumSize(50)
             .build(new CacheLoader<TTypeDesc, ColumnTypeDescriptor>() {
                 @Override
                 public ColumnTypeDescriptor load(TTypeDesc tTypeDesc) throws Exception {
@@ -52,7 +44,7 @@ public class ThriftSession implements Closeable {
             });
 
 
-    private ThriftSession(Properties properties, ThriftTransport thriftTransport, Client client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Iface client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
         this.properties = properties;
         this.thriftTransport = thriftTransport;
         this.client = client;
@@ -76,7 +68,7 @@ public class ThriftSession implements Closeable {
         return null;
     }
 
-    public Client getClient() {
+    public TCLIService.Iface getClient() {
         return client;
     }
 
@@ -86,10 +78,6 @@ public class ThriftSession implements Closeable {
 
     public boolean isClosed() {
         return closed.get();
-    }
-
-    public ReentrantLock getSessionLock() {
-        return sessionLock;
     }
 
     public Properties getProperties() {
@@ -147,47 +135,23 @@ public class ThriftSession implements Closeable {
 
             while (protocol >= TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V8.getValue()) {
 
-                StopWatch sw = new StopWatch("open session");
-                sw.start("find protocol");
-
                 TProtocolVersion protocolVersion = TProtocolVersion.findByValue(protocol);
-
-                sw.stop();
-
 
                 log.debug("trying protocol {}", protocolVersion);
 
                 try {
 
-                    sw.start("build transport");
-
                     thriftTransport = ThriftTransport.builder().properties(properties).build();
 
-                    sw.stop();
-
-                    sw.start("create client");
-
-                    Client client = ThriftUtils.createClient(thriftTransport);
-
-                    sw.stop();
-
-                    sw.start("open session");
+                    TCLIService.Iface client = ThriftUtils.createClient(thriftTransport);
 
                     TOpenSessionResp openSessionResp = ThriftUtils.openSession(properties, client, protocolVersion);
-
-                    sw.stop();
-
-                    sw.start("get properties");
 
                     TSessionHandle sessionHandle = openSessionResp.getSessionHandle();
 
                     TProtocolVersion serverProtocolVersion = openSessionResp.getServerProtocolVersion();
 
                     log.debug("opened session with protocol {}", serverProtocolVersion);
-
-                    sw.stop();
-
-                    log.debug(sw.prettyPrint());
 
                     return new ThriftSession(properties, thriftTransport, client, sessionHandle, serverProtocolVersion);
 

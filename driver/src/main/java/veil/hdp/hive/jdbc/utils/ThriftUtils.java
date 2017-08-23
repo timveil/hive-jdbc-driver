@@ -8,27 +8,28 @@ import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import veil.hdp.hive.jdbc.ClientInvocationHandler;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
-import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.bindings.*;
+import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.data.RowBaseSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 
+import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public final class ThriftUtils {
 
-    private static final Logger log =  LogManager.getLogger(ThriftUtils.class);
+    private static final Logger log = LogManager.getLogger(ThriftUtils.class);
 
     private static final short FETCH_TYPE_QUERY = 0;
     private static final short FETCH_TYPE_LOG = 1;
@@ -42,14 +43,7 @@ public final class ThriftUtils {
             ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
 
             Future<Boolean> future = executor.submit(() -> {
-
-                StopWatch sw = new StopWatch("open transport");
-                sw.start();
                 transport.open();
-                sw.stop();
-
-                log.debug(sw.prettyPrint());
-
                 return true;
             });
 
@@ -64,12 +58,14 @@ public final class ThriftUtils {
     }
 
 
-    public static Client createClient(ThriftTransport transport) {
-        return new Client(new TBinaryProtocol(transport.getTransport()));
+    public static TCLIService.Iface createClient(ThriftTransport transport) {
+        TCLIService.Iface client = new Client(new TBinaryProtocol(transport.getTransport()));
+
+        return (TCLIService.Iface) Proxy.newProxyInstance(ThriftUtils.class.getClassLoader(), new Class[]{TCLIService.Iface.class}, new ClientInvocationHandler(client));
     }
 
 
-    public static TOpenSessionResp openSession(Properties properties, Client client, TProtocolVersion protocolVersion) throws InvalidProtocolException {
+    public static TOpenSessionResp openSession(Properties properties, TCLIService.Iface client, TProtocolVersion protocolVersion) throws InvalidProtocolException {
 
 
         TOpenSessionReq openSessionReq = new TOpenSessionReq(protocolVersion);
@@ -117,10 +113,7 @@ public final class ThriftUtils {
 
         TCloseSessionResp resp = null;
 
-        ReentrantLock lock = thriftSession.getSessionLock();
-        Client client = thriftSession.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = thriftSession.getClient();
 
         try {
             resp = client.CloseSession(closeRequest);
@@ -128,8 +121,6 @@ public final class ThriftUtils {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
         }
 
         if (resp != null) {
@@ -151,10 +142,7 @@ public final class ThriftUtils {
 
         TCloseOperationResp resp = null;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.CloseOperation(closeRequest);
@@ -162,8 +150,6 @@ public final class ThriftUtils {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
         }
 
         if (resp != null) {
@@ -181,10 +167,7 @@ public final class ThriftUtils {
 
         TCancelOperationResp resp = null;
 
-        ReentrantLock lock = operation.getSession().getSessionLock();
-        Client client = operation.getSession().getClient();
-
-        lock.lock();
+        TCLIService.Iface client = operation.getSession().getClient();
 
         try {
             resp = client.CancelOperation(cancelRequest);
@@ -192,8 +175,6 @@ public final class ThriftUtils {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
             log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
-        } finally {
-            lock.unlock();
         }
 
         if (resp != null) {
@@ -210,17 +191,12 @@ public final class ThriftUtils {
 
         TGetCatalogsResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetCatalogs(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -239,17 +215,12 @@ public final class ThriftUtils {
 
         TGetColumnsResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetColumns(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -267,17 +238,12 @@ public final class ThriftUtils {
 
         TGetFunctionsResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetFunctions(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -300,17 +266,12 @@ public final class ThriftUtils {
 
         TGetTablesResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetTables(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -325,17 +286,12 @@ public final class ThriftUtils {
 
         TGetTypeInfoResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetTypeInfo(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -350,17 +306,12 @@ public final class ThriftUtils {
 
         TGetInfoResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetInfo(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -374,17 +325,12 @@ public final class ThriftUtils {
 
         TGetTableTypesResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetTableTypes(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -400,17 +346,12 @@ public final class ThriftUtils {
 
         TGetSchemasResp resp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             resp = client.GetSchemas(req);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(resp.getStatus());
@@ -436,17 +377,12 @@ public final class ThriftUtils {
 
         TGetResultSetMetadataResp metadataResp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             metadataResp = client.GetResultSetMetadata(metadataReq);
         } catch (TException e) {
             throw new HiveException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(metadataResp.getStatus());
@@ -457,17 +393,12 @@ public final class ThriftUtils {
     private static TRowSet getRowSet(ThriftSession session, TFetchResultsReq tFetchResultsReq) {
         TFetchResultsResp fetchResults;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             fetchResults = client.FetchResults(tFetchResultsReq);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(fetchResults.getStatus());
@@ -484,17 +415,12 @@ public final class ThriftUtils {
 
         TExecuteStatementResp executeStatementResp;
 
-        ReentrantLock lock = session.getSessionLock();
-        Client client = session.getClient();
-
-        lock.lock();
+        TCLIService.Iface client = session.getClient();
 
         try {
             executeStatementResp = client.ExecuteStatement(executeStatementReq);
         } catch (TException e) {
             throw new HiveThriftException(e);
-        } finally {
-            lock.unlock();
         }
 
         checkStatus(executeStatementResp.getStatus());
@@ -519,7 +445,6 @@ public final class ThriftUtils {
         }
 
 
-
         waitForStatementToComplete(session, operationHandle);
 
         return ThriftOperation.builder()
@@ -542,20 +467,14 @@ public final class ThriftUtils {
 
         while (!isComplete) {
 
-
             TGetOperationStatusResp statusResp;
 
-            ReentrantLock lock = session.getSessionLock();
-            Client client = session.getClient();
-
-            lock.lock();
+            TCLIService.Iface client = session.getClient();
 
             try {
                 statusResp = client.GetOperationStatus(statusReq);
             } catch (TException e) {
                 throw new HiveThriftException(e);
-            } finally {
-                lock.unlock();
             }
 
             checkStatus(statusResp.getStatus());
@@ -609,24 +528,15 @@ public final class ThriftUtils {
 
     private static List<Row> getRows(TRowSet rowSet, Schema schema) {
 
-        List<Row> rows = null;
-
         if (rowSet != null && rowSet.isSetColumns()) {
 
-            StopWatch sw = new StopWatch();
-            sw.start("building cbs");
             ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(schema).build();
-            sw.stop();
 
-            sw.start("building rows");
-            rows = RowBaseSet.builder().columnBaseSet(cbs).build().getRows();
-            sw.stop();
-
-            log.debug(sw.prettyPrint());
+            return RowBaseSet.builder().columnBaseSet(cbs).build().getRows();
 
         }
 
-        return rows;
+        return null;
 
     }
 

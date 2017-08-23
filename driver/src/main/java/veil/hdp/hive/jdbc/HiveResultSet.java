@@ -6,7 +6,6 @@ import veil.hdp.hive.jdbc.bindings.TOperationHandle;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
-import veil.hdp.hive.jdbc.utils.StopWatch;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.SQLException;
@@ -191,24 +190,13 @@ public class HiveResultSet extends HiveBaseResultSet {
 
         public HiveResultSet build() {
 
-
-            StopWatch sw = new StopWatch();
-
-            sw.start("build schema");
-
             Schema schema = Schema.builder().session(thriftSession).handle(operationHandle).build();
-
-            sw.stop();
 
             if (maxRows > 0 && maxRows < fetchSize) {
                 fetchSize = maxRows;
             }
 
-            sw.start("get results");
             Iterable<Row> results = ThriftUtils.getResults(thriftSession, operationHandle, fetchSize, schema);
-            sw.stop();
-
-            log.debug(sw.prettyPrint());
 
             if (log.isTraceEnabled()) {
                 log.trace("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
