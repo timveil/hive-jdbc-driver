@@ -362,7 +362,7 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 
 | Apache Driver - OLD | This Driver - NEW | Notes |
 | :--- | :--- | :--- |
-|`transportMode`|`transportMode`|Drivers are separated based on transport mode.  To use `binary` or `http` transport mode use the appropriate driver|
+|`transportMode`|`transportMode`| |
 |`hive.server2.transport.mode`|`transportMode`|deprecated in Apache|
 |`httpPath`|`httpEndpoint`| |
 |`hive.server2.thrift.http.path`|`httpEndpoint`|deprecated in Apache|
@@ -372,7 +372,7 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 |`trustStorePassword`|`sslTrustStorePassword`| |
 |`sslKeyStore`|`sslKeyStorePath`| |
 |`keyStorePassword`|`sslKeyStorePassword`| |
-|`serviceDiscoveryMode`|`zkEnabled`|Zookeeper enabled drivers have this enabled by default.  To use Zookeeper discovery, make sure you are using the appropriate driver jar|
+|`serviceDiscoveryMode`|`zkEnabled`| |
 |`zooKeeperNamespace`|`zkNamespace`| |
 |`principal`|`krb5ServerPrincipal`| |
 |`saslQop`|`saslQOP`| |
