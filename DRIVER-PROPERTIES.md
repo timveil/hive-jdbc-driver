@@ -372,12 +372,12 @@ This table outlines how the existing Apache Hive drivers properties map to this 
 |`trustStorePassword`|`sslTrustStorePassword`| |
 |`sslKeyStore`|`sslKeyStorePath`| |
 |`keyStorePassword`|`sslKeyStorePassword`| |
-|`serviceDiscoveryMode`|`zkEnabled`| |
+|`serviceDiscoveryMode`|`zkEnabled`| the only value in the Apache driver for `serviceDiscoveryMode` is `zooKeeper` this is equivalent to `zkEnabled=true` |
 |`zooKeeperNamespace`|`zkNamespace`| |
 |`principal`|`krb5ServerPrincipal`| |
 |`saslQop`|`saslQOP`| |
 |`sasl.qop`|`saslQOP`|deprecated in Apache|
 |`cookieAuth`|`httpCookieReplayEnabled`| |
 |`cookieName`|`httpCookieName`| |
-|`kerberosAuthType`|`krb5Mode`| |
+|`kerberosAuthType`|`krb5Mode`| the only value in the Apache driver for `kerberosAuthType` is `fromSubject` this is equivalent to `krb5Mode=PREAUTH` |
 

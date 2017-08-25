@@ -36,6 +36,9 @@ public abstract class AbstractDriverTest extends BaseTest {
 
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
+        properties.setProperty("httpPath", "xxxx");
+        properties.setProperty("sslTrustStore", "dummy store");
+        properties.setProperty("zooKeeperNamespace", "zzzzzz");
 
         url = "jdbc:hive2://" + getHost() + ":10000/default";
 

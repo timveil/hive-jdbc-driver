@@ -5,7 +5,9 @@ import veil.hdp.hive.jdbc.security.KerberosMode;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 
 import java.sql.DriverPropertyInfo;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 public enum HiveDriverProperty {
 
@@ -26,14 +28,14 @@ public enum HiveDriverProperty {
     PORT_NUMBER("port", "10000", null, "hive.server2.thrift.port"),
 
     // should not be used in URL because its coded into separate drivers
-    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), null, "hive.server2.transport.mode", TransportMode.binary.name(), TransportMode.http.name()),
+    TRANSPORT_MODE("transportMode", TransportMode.binary.name(), null, "hive.server2.transport.mode", new String[]{TransportMode.binary.name(), TransportMode.http.name()}, null),
 
     AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), null, "hive.server2.authentication",
-            AuthenticationMode.NONE.name(),
-            AuthenticationMode.NOSASL.name(),
-            AuthenticationMode.KERBEROS.name(),
-            AuthenticationMode.LDAP.name(),
-            AuthenticationMode.PAM.name()),
+            new String[]{AuthenticationMode.NONE.name(),
+                    AuthenticationMode.NOSASL.name(),
+                    AuthenticationMode.KERBEROS.name(),
+                    AuthenticationMode.LDAP.name(),
+                    AuthenticationMode.PAM.name()}, null),
 
     // make sure to spell out differences in readme; look at *.thrift
     THRIFT_PROTOCOL_VERSION("thriftVersion", PropertyUtils.getInstance().getValue("thrift.protocol.version.default"), null, null),
@@ -58,33 +60,33 @@ public enum HiveDriverProperty {
      *  SSL
      ***************************************************/
 
-    SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), null, "hive.server2.use.ssl"),
+    SSL_ENABLED("sslEnabled", Boolean.FALSE.toString(), null, "hive.server2.use.ssl", null, new String[]{"ssl"}),
 
-    SSL_TRUST_STORE_PATH("sslTrustStorePath", null, null, null),
+    SSL_TRUST_STORE_PATH("sslTrustStorePath", null, null, null, null, new String[]{"sslTrustStore"}),
     SSL_TRUST_STORE_TYPE("sslTrustStoreType", "JKS", null, null),
-    SSL_TRUST_STORE_PASSWORD("sslTrustStorePassword", null, null, null),
+    SSL_TRUST_STORE_PASSWORD("sslTrustStorePassword", null, null, null, null, new String[]{"trustStorePassword"}),
 
-    SSL_TWO_WAY_ENABLED("sslTwoWayEnabled", Boolean.FALSE.toString(), null, null),
+    SSL_TWO_WAY_ENABLED("sslTwoWayEnabled", Boolean.FALSE.toString(), null, null, null, new String[]{"twoWay"}),
 
-    SSL_KEY_STORE_PATH("sslKeyStorePath", null, null, null),
+    SSL_KEY_STORE_PATH("sslKeyStorePath", null, null, null, null, new String[]{"sslKeyStore"}),
     SSL_KEY_STORE_TYPE("sslKeyStoreType", "JKS", null, null),
-    SSL_KEY_STORE_PASSWORD("sslKeyStorePassword", null, null, null),
+    SSL_KEY_STORE_PASSWORD("sslKeyStorePassword", null, null, null, null, new String[]{"keyStorePassword"}),
 
     /***************************************************
      *  HTTP
      ***************************************************/
 
-    HTTP_ENDPOINT("httpEndpoint", "cliservice", null, "hive.server2.thrift.http.path"),
+    HTTP_ENDPOINT("httpEndpoint", "cliservice", null, "hive.server2.thrift.http.path", null, new String[]{"httpPath"}),
 
     HTTP_POOL_ENABLED("httpPoolEnabled", "false", null, null),
     HTTP_POOL_MAX_TOTAL("httpPoolMax", "100", null, null),
     HTTP_POOL_MAX_PER_ROUTE("httpPoolMaxRoute", "20", null, null),
 
     // https://issues.apache.org/jira/browse/HIVE-9709
-    HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), null, null),
+    HTTP_COOKIE_REPLAY_ENABLED("httpCookieReplayEnabled", Boolean.TRUE.toString(), null, null, null, new String[]{"cookieAuth"}),
 
     // todo: this seems pretty hardcoded on the server side.  not sure how/why this would ever change
-    HTTP_COOKIE_NAME("httpCookieName", "hive.server2.auth", null, null),
+    HTTP_COOKIE_NAME("httpCookieName", "hive.server2.auth", null, null, null, new String[]{"cookieName"}),
 
     /***************************************************
      *  ZOOKEEPER
@@ -93,16 +95,16 @@ public enum HiveDriverProperty {
     // should not be used in URL because its coded into separate drivers
     ZOOKEEPER_DISCOVERY_ENABLED("zkEnabled", Boolean.FALSE.toString(), null, null),
 
-    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", null, null),
+    ZOOKEEPER_DISCOVERY_NAMESPACE("zkNamespace", "hiveserver2", null, null, null, new String[]{"zooKeeperNamespace"}),
     ZOOKEEPER_DISCOVERY_RETRY("zkRetry", "1000", null, null),
 
     /***************************************************
      *  KERBEROS
      ***************************************************/
 
-    KERBEROS_MODE("krb5Mode", KerberosMode.OS.name(), null, null, KerberosMode.OS.name(), KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()),
+    KERBEROS_MODE("krb5Mode", KerberosMode.OS.name(), null, null, new String[]{KerberosMode.OS.name(), KerberosMode.KEYTAB.name(), KerberosMode.PASSWORD.name(), KerberosMode.PREAUTH.name()}, null),
     // principal passed to thrift server using TSaslClientTransport.  this is not the local principal
-    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, "hive.server2.authentication.kerberos.principal"),
+    KERBEROS_SERVER_PRINCIPAL("krb5ServerPrincipal", null, null, "hive.server2.authentication.kerberos.principal", null, new String[]{"principal"}),
     // keytab used to authenticate when KerberosMode = KEYTAB; should be used in conjunction with USER property
     KERBEROS_USER_KEYTAB("krb5UserKeytab", null, null, null),
     // sun.security.krb5.debug
@@ -123,18 +125,20 @@ public enum HiveDriverProperty {
     private final String description;
     private final String hiveConfigurationKey;
     private final String[] choices;
+    private final String[] aliases;
 
 
     HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey) {
-        this(key, defaultValue, description, hiveConfigurationKey, (String[]) null);
+        this(key, defaultValue, description, hiveConfigurationKey, (String[]) null, (String[]) null);
     }
 
-    HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey, String... choices) {
+    HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey, String[] choices, String[] aliases) {
         this.key = key;
         this.defaultValue = defaultValue;
         this.description = description;
         this.hiveConfigurationKey = hiveConfigurationKey;
         this.choices = choices;
+        this.aliases = aliases;
     }
 
     public static HiveDriverProperty forAlias(String alias) {
@@ -149,7 +153,13 @@ public enum HiveDriverProperty {
 
     public static HiveDriverProperty forKeyIgnoreCase(String key) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.key != null && property.key.equalsIgnoreCase(key)) {
+
+            if (property.key.equalsIgnoreCase(key) || (property.aliases != null && Arrays.stream(property.aliases).anyMatch(new Predicate<String>() {
+                @Override
+                public boolean test(String s) {
+                    return s.equalsIgnoreCase(key);
+                }
+            }))) {
                 return property;
             }
         }
