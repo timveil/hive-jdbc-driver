@@ -37,6 +37,10 @@ public class ColumnData<T> {
         return values;
     }
 
+    public T getValue(int row) {
+        return values.get(row);
+    }
+
     public BitSet getNulls() {
         return nulls;
     }
