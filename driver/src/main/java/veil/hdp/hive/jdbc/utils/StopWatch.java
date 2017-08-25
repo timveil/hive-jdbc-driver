@@ -247,7 +247,7 @@ public class StopWatch {
             for (TaskInfo task : getTaskInfo()) {
                 sb.append(nf.format(task.getTimeMillis())).append("  ");
                 sb.append(pf.format(task.getTimeSeconds() / getTotalTimeSeconds())).append("  ");
-                sb.append(task.getTaskName()).append("\n");
+                sb.append(task.getTaskName()).append('\n');
             }
         }
         return sb.toString();
@@ -264,7 +264,7 @@ public class StopWatch {
             for (TaskInfo task : getTaskInfo()) {
                 sb.append("; [").append(task.getTaskName()).append("] took ").append(task.getTimeMillis());
                 long percent = Math.round((100.0 * task.getTimeSeconds()) / getTotalTimeSeconds());
-                sb.append(" = ").append(percent).append("%");
+                sb.append(" = ").append(percent).append('%');
             }
         }
         else {

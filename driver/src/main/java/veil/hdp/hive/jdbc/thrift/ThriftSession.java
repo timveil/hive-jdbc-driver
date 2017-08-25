@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftSession implements Closeable {
 
-    private static final Logger log =  LogManager.getLogger(ThriftSession.class);
+    private static final Logger log = LogManager.getLogger(ThriftSession.class);
 
     // constructor
     private final ThriftTransport thriftTransport;
@@ -37,12 +37,7 @@ public class ThriftSession implements Closeable {
 
     private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
             .maximumSize(50)
-            .build(new CacheLoader<TTypeDesc, ColumnTypeDescriptor>() {
-                @Override
-                public ColumnTypeDescriptor load(@Nonnull TTypeDesc tTypeDesc) throws Exception {
-                    return TypeDescriptorUtils.getDescriptor(tTypeDesc);
-                }
-            });
+            .build(new ColumnTypeCacheLoader());
 
 
     private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Iface client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
@@ -170,5 +165,12 @@ public class ThriftSession implements Closeable {
             throw new HiveException("cannot build ThriftSession.  check that the thrift protocol version on the server is compatible with this driver.");
         }
 
+    }
+
+    private static class ColumnTypeCacheLoader extends CacheLoader<TTypeDesc, ColumnTypeDescriptor> {
+        @Override
+        public ColumnTypeDescriptor load(@Nonnull TTypeDesc tTypeDesc) throws Exception {
+            return TypeDescriptorUtils.getDescriptor(tTypeDesc);
+        }
     }
 }

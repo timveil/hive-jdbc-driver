@@ -27,8 +27,8 @@ public class ClientInvocationHandler implements InvocationHandler {
 
         StopWatch sw = new StopWatch(method.getName());
         sw.start();
+        lock.lock();
         try {
-            lock.lock();
             return method.invoke(client, args);
         } catch (InvocationTargetException e) {
             Throwable targetException = e.getTargetException();

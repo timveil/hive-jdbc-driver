@@ -41,7 +41,7 @@ public class TypeDescriptorUtils {
         }
 
         if (hiveType == null) {
-            throw new HiveException("unable to determine type for entry [" + entry + "]");
+            throw new HiveException("unable to determine type for entry [" + entry + ']');
         }
 
         return ColumnTypeDescriptor.builder().hiveType(hiveType).scale(scale).precision(precision).maxLength(maxLength).build();
