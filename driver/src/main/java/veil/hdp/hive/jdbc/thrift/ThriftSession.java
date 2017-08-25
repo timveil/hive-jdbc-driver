@@ -14,6 +14,7 @@ import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
+import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Properties;
@@ -38,7 +39,7 @@ public class ThriftSession implements Closeable {
             .maximumSize(50)
             .build(new CacheLoader<TTypeDesc, ColumnTypeDescriptor>() {
                 @Override
-                public ColumnTypeDescriptor load(TTypeDesc tTypeDesc) throws Exception {
+                public ColumnTypeDescriptor load(@Nonnull TTypeDesc tTypeDesc) throws Exception {
                     return TypeDescriptorUtils.getDescriptor(tTypeDesc);
                 }
             });

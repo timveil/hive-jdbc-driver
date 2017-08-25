@@ -7,7 +7,6 @@ import veil.hdp.hive.jdbc.utils.PropertyUtils;
 import java.sql.DriverPropertyInfo;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.function.Predicate;
 
 public enum HiveDriverProperty {
 
@@ -129,7 +128,7 @@ public enum HiveDriverProperty {
 
 
     HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey) {
-        this(key, defaultValue, description, hiveConfigurationKey, (String[]) null, (String[]) null);
+        this(key, defaultValue, description, hiveConfigurationKey, null, null);
     }
 
     HiveDriverProperty(String key, String defaultValue, String description, String hiveConfigurationKey, String[] choices, String[] aliases) {
@@ -154,12 +153,7 @@ public enum HiveDriverProperty {
     public static HiveDriverProperty forKeyIgnoreCase(String key) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
 
-            if (property.key.equalsIgnoreCase(key) || (property.aliases != null && Arrays.stream(property.aliases).anyMatch(new Predicate<String>() {
-                @Override
-                public boolean test(String s) {
-                    return s.equalsIgnoreCase(key);
-                }
-            }))) {
+            if (property.key.equalsIgnoreCase(key) || (property.aliases != null && Arrays.stream(property.aliases).anyMatch(s -> s.equalsIgnoreCase(key)))) {
                 return property;
             }
         }
