@@ -24,7 +24,7 @@
 
         <junit.version>4.12</junit.version>
         <log4j2.version>2.8.2</log4j2.version>
-        <guava.version>22.0</guava.version>
+        <guava.version>23.0</guava.version>
         <commons-lang3.version>3.6</commons-lang3.version>
         <curator.version>4.0.0</curator.version>
         <http.version>4.5.3</http.version>
