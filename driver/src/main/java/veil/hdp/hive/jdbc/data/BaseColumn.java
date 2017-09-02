@@ -10,6 +10,7 @@ import veil.hdp.hive.jdbc.utils.SqlDateTimeUtils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -147,48 +148,50 @@ public class BaseColumn<T> implements Column<T> {
 
             BitSet bitSet = columnData.getNulls();
 
+            Object value = columnData.getValue(row);
+
             boolean isNull = bitSet.get(row);
 
             if (columnData instanceof BooleanColumnData) {
                 BooleanColumnData data = (BooleanColumnData) columnData;
 
-                return new BooleanColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new BooleanColumn(descriptor, isNull ? null : (Boolean) value);
 
             } else if (columnData instanceof ByteColumnData) {
                 ByteColumnData data = (ByteColumnData) columnData;
 
-                return new ByteColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new ByteColumn(descriptor, isNull ? null : (Byte) value);
 
             } else if (columnData instanceof ShortColumnData) {
                 ShortColumnData data = (ShortColumnData) columnData;
 
-                return new ShortColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new ShortColumn(descriptor, isNull ? null : (Short) value);
 
             } else if (columnData instanceof IntegerColumnData) {
                 IntegerColumnData data = (IntegerColumnData) columnData;
 
-                return new IntegerColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new IntegerColumn(descriptor, isNull ? null : (Integer) value);
 
             } else if (columnData instanceof LongColumnData) {
                 LongColumnData data = (LongColumnData) columnData;
 
-                return new LongColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new LongColumn(descriptor, isNull ? null : (Long) value);
 
             } else if (columnData instanceof BinaryColumnData) {
                 BinaryColumnData data = (BinaryColumnData) columnData;
 
-                return new BinaryColumn(descriptor, isNull ? null : data.getValues().get(row));
+                return new BinaryColumn(descriptor, isNull ? null : (ByteBuffer) value);
 
             } else if (columnData instanceof DoubleColumnData) {
 
                 DoubleColumnData data = (DoubleColumnData) columnData;
 
-                Double value = data.getValues().get(row);
+                Double aDouble = (Double) value;
 
                 if (hiveType == FLOAT) {
-                    return new FloatColumn(descriptor, isNull ? null : new Float(value));
+                    return new FloatColumn(descriptor, isNull ? null : new Float(aDouble));
                 } else {
-                    return new DoubleColumn(descriptor, isNull ? null : value);
+                    return new DoubleColumn(descriptor, isNull ? null : aDouble);
                 }
 
             } else if (columnData instanceof StringColumnData) {
@@ -196,20 +199,20 @@ public class BaseColumn<T> implements Column<T> {
 
                 StringColumnData data = (StringColumnData) columnData;
 
-                String value = data.getValues().get(row);
+                String aString = (String) value;
 
                 if (hiveType == DECIMAL) {
-                    return new DecimalColumn(descriptor, isNull ? null : new BigDecimal(value));
+                    return new DecimalColumn(descriptor, isNull ? null : new BigDecimal(aString));
                 } else if (hiveType == CHAR) {
-                    return new CharacterColumn(descriptor, isNull ? null : value.charAt(0));
+                    return new CharacterColumn(descriptor, isNull ? null : aString.charAt(0));
                 } else if (hiveType == VARCHAR) {
-                    return new VarcharColumn(descriptor, isNull ? null : value);
+                    return new VarcharColumn(descriptor, isNull ? null : aString);
                 } else if (hiveType == TIMESTAMP) {
-                    return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(value));
+                    return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(aString));
                 } else if (hiveType == DATE) {
-                    return new DateColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToDate(value));
+                    return new DateColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToDate(aString));
                 } else {
-                    return new StringColumn(descriptor, isNull ? null : value);
+                    return new StringColumn(descriptor, isNull ? null : aString);
                 }
 
                 // todo; add others

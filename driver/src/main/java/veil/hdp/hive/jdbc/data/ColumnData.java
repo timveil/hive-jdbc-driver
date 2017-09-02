@@ -1,7 +1,7 @@
 package veil.hdp.hive.jdbc.data;
 
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.bindings.TColumn;
+import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 
 import java.text.MessageFormat;
@@ -89,21 +89,29 @@ public class ColumnData<T> {
 
         public ColumnData build() {
             if (column.isSetBoolVal()) {
-                return new BooleanColumnData(columnDescriptor, column.getBoolVal().getValues(), buildBitSet(column.getBoolVal().getNulls()));
+                TBoolColumn boolVal = column.getBoolVal();
+                return new BooleanColumnData(columnDescriptor, boolVal.getValues(), buildBitSet(boolVal.getNulls()));
             } else if (column.isSetByteVal()) {
-                return new ByteColumnData(columnDescriptor, column.getByteVal().getValues(), buildBitSet(column.getByteVal().getNulls()));
+                TByteColumn byteVal = column.getByteVal();
+                return new ByteColumnData(columnDescriptor, byteVal.getValues(), buildBitSet(byteVal.getNulls()));
             } else if (column.isSetI16Val()) {
-                return new ShortColumnData(columnDescriptor, column.getI16Val().getValues(), buildBitSet(column.getI16Val().getNulls()));
+                TI16Column i16Val = column.getI16Val();
+                return new ShortColumnData(columnDescriptor, i16Val.getValues(), buildBitSet(i16Val.getNulls()));
             } else if (column.isSetI32Val()) {
-                return new IntegerColumnData(columnDescriptor, column.getI32Val().getValues(), buildBitSet(column.getI32Val().getNulls()));
+                TI32Column i32Val = column.getI32Val();
+                return new IntegerColumnData(columnDescriptor, i32Val.getValues(), buildBitSet(i32Val.getNulls()));
             } else if (column.isSetI64Val()) {
-                return new LongColumnData(columnDescriptor, column.getI64Val().getValues(), buildBitSet(column.getI64Val().getNulls()));
+                TI64Column i64Val = column.getI64Val();
+                return new LongColumnData(columnDescriptor, i64Val.getValues(), buildBitSet(i64Val.getNulls()));
             } else if (column.isSetDoubleVal()) {
-                return new DoubleColumnData(columnDescriptor, column.getDoubleVal().getValues(), buildBitSet(column.getDoubleVal().getNulls()));
+                TDoubleColumn doubleVal = column.getDoubleVal();
+                return new DoubleColumnData(columnDescriptor, doubleVal.getValues(), buildBitSet(doubleVal.getNulls()));
             } else if (column.isSetBinaryVal()) {
-                return new BinaryColumnData(columnDescriptor, column.getBinaryVal().getValues(), buildBitSet(column.getBinaryVal().getNulls()));
+                TBinaryColumn binaryVal = column.getBinaryVal();
+                return new BinaryColumnData(columnDescriptor, binaryVal.getValues(), buildBitSet(binaryVal.getNulls()));
             } else if (column.isSetStringVal()) {
-                return new StringColumnData(columnDescriptor, column.getStringVal().getValues(), buildBitSet(column.getStringVal().getNulls()));
+                TStringColumn stringVal = column.getStringVal();
+                return new StringColumnData(columnDescriptor, stringVal.getValues(), buildBitSet(stringVal.getNulls()));
             }
 
             throw new IllegalStateException(MessageFormat.format("no values set for TColumn [{0}]", column));
