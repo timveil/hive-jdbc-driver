@@ -15,7 +15,7 @@ import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
-import veil.hdp.hive.jdbc.data.RowBaseSet;
+import veil.hdp.hive.jdbc.data.RowBasedSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 
@@ -532,7 +532,7 @@ public final class ThriftUtils {
 
             ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(schema).build();
 
-            return RowBaseSet.builder().columnBaseSet(cbs).build().getRows();
+            return RowBasedSet.builder().columnBaseSet(cbs).build().getRows();
 
         }
 

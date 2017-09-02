@@ -5,11 +5,11 @@ import veil.hdp.hive.jdbc.Builder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RowBaseSet {
+public class RowBasedSet {
 
     private final List<Row> rows;
 
-    private RowBaseSet(List<Row> rows) {
+    private RowBasedSet(List<Row> rows) {
         this.rows = rows;
     }
 
@@ -21,7 +21,7 @@ public class RowBaseSet {
         return rows;
     }
 
-    public static class RowBasedSetBuilder implements Builder<RowBaseSet> {
+    public static class RowBasedSetBuilder implements Builder<RowBasedSet> {
         private ColumnBasedSet columnBasedSet;
 
         private RowBasedSetBuilder() {
@@ -32,7 +32,7 @@ public class RowBaseSet {
             return this;
         }
 
-        public RowBaseSet build() {
+        public RowBasedSet build() {
 
             int totalRows = columnBasedSet.getRowCount();
 
@@ -42,7 +42,7 @@ public class RowBaseSet {
                 rows.add(Row.builder().columnBasedSet(columnBasedSet).row(r).build());
             }
 
-            return new RowBaseSet(rows);
+            return new RowBasedSet(rows);
         }
     }
 
