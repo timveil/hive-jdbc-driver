@@ -12,7 +12,7 @@ public abstract class BaseTest {
         java.util.logging.Logger.getLogger("javax.security.sasl").setLevel(java.util.logging.Level.FINEST);
     }
 
-    public final String getHost() {
+    public static String getHost() {
         String host = System.getProperty("test.host", "jdbc-binary.hdp.local");
 
         if (host == null) {
@@ -22,7 +22,7 @@ public abstract class BaseTest {
         return host;
     }
 
-    public final int getTestRuns() {
+    public static int getTestRuns() {
         return Integer.parseInt(System.getProperty("test.runs", "10"));
     }
 

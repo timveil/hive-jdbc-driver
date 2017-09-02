@@ -39,6 +39,15 @@
 
     <profiles>
         <profile>
+            <id>HDP-2.1.0.2.6.2.0-205</id>
+            <properties>
+                <hive.version>2.1.0.2.6.2.0-205</hive.version>
+                <zookeeper.version>3.4.6.2.6.2.0-205</zookeeper.version>
+                <thrift.version>0.9.3</thrift.version>
+                <thrift.protocol.version>9</thrift.protocol.version>
+            </properties>
+        </profile>
+        <profile>
             <id>HDP-2.1.0.2.6.1.0-129</id>
             <properties>
                 <hive.version>2.1.0.2.6.1.0-129</hive.version>
@@ -57,10 +66,19 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.6.1.0-129</id>
+            <id>HDP-1.2.1000.2.6.2.0-205</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <hive.version>1.2.1000.2.6.2.0-205</hive.version>
+                <zookeeper.version>3.4.6.2.6.2.0-205</zookeeper.version>
+                <thrift.version>0.9.3</thrift.version>
+                <thrift.protocol.version>7</thrift.protocol.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>HDP-1.2.1000.2.6.1.0-129</id>
             <properties>
                 <hive.version>1.2.1000.2.6.1.0-129</hive.version>
                 <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>
