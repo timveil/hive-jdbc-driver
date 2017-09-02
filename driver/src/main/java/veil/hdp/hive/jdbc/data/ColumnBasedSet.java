@@ -56,25 +56,27 @@ public class ColumnBasedSet {
 
             List<TColumn> tColumns = rowSet.getColumns();
 
-            List<ColumnData> columnData = new ArrayList<>(tColumns.size());
+            List<ColumnData> columns = new ArrayList<>(tColumns.size());
 
             int position = 1;
 
-            int rowCount = 0;
+            int rowCount = -1;
 
             for (TColumn column : tColumns) {
 
                 ColumnData data = ColumnData.builder().column(column).descriptor(schema.getColumn(position)).build();
 
-                rowCount = data.getRowCount();
+                if (rowCount == -1) {
+                    rowCount = data.getRowCount();
+                }
 
-                columnData.add(data);
+                columns.add(data);
 
                 position++;
             }
 
 
-            return new ColumnBasedSet(rowCount, columnData);
+            return new ColumnBasedSet(rowCount, columns);
         }
     }
 
