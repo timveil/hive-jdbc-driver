@@ -113,7 +113,7 @@ public enum HiveDriverProperty {
     KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), null, null),
 
     // Sasl.QOP
-    SASL_QUALITY_OF_PROTECTION("saslQOP", SaslQop.AUTH.getName(), null, "hive.server2.thrift.sasl.qop", new String[]{SaslQop.AUTH.getName(), SaslQop.AUTH_INT.getName(), SaslQop.AUTH_CONF.getName()}, null),
+    SASL_QUALITY_OF_PROTECTION("saslQOP", SaslQop.AUTH.getValue(), null, "hive.server2.thrift.sasl.qop", new String[]{SaslQop.AUTH.getValue(), SaslQop.AUTH_INT.getValue(), SaslQop.AUTH_CONF.getValue()}, null),
     // Sasl.SERVER_AUTH
     SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), null, null),
 
