@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.security.KerberosMode;
+import veil.hdp.hive.jdbc.security.SaslQop;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
 import java.sql.Connection;
@@ -50,7 +51,7 @@ public class HiveDataSource extends AbstractDataSource {
     private String krb5UserKeytab;
     private Boolean krb5Debug;
     private Boolean krb5SubjectOnly;
-    private String saslQOP;
+    private SaslQop saslQOP;
     private Boolean saslAuth;
     private Boolean jaasDebug;
 
@@ -254,11 +255,11 @@ public class HiveDataSource extends AbstractDataSource {
         this.krb5SubjectOnly = krb5SubjectOnly;
     }
 
-    public String getSaslQOP() {
+    public SaslQop getSaslQOP() {
         return saslQOP;
     }
 
-    public void setSaslQOP(String saslQOP) {
+    public void setSaslQOP(SaslQop saslQOP) {
         this.saslQOP = saslQOP;
     }
 
@@ -424,7 +425,11 @@ public class HiveDataSource extends AbstractDataSource {
         HiveDriverProperty.KERBEROS_USER_KEYTAB.set(properties, krb5UserKeytab);
         HiveDriverProperty.KERBEROS_DEBUG_ENABLED.set(properties, krb5Debug);
         HiveDriverProperty.KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY.set(properties, krb5SubjectOnly);
-        HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.set(properties, saslQOP);
+
+        if (saslQOP != null) {
+            HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.set(properties, saslQOP.getValue());
+        }
+
         HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.set(properties, saslAuth);
         HiveDriverProperty.JAAS_DEBUG_ENABLED.set(properties, jaasDebug);
 
