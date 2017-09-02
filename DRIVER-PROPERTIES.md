@@ -286,13 +286,13 @@ The following properties only apply when `authMode` equals `KERBEROS`
 
 ### Client Kerberos Mode
 
-This defines how the driver authenticates on the client side.  This is not server side authentication.  In order to establish a jdbc connection using kerberos the client must be authenticated in one of the following ways so that a ticket can be shared with the server
-
-todo: these values need very thorough explanations and examples
-
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | krb5Mode | `OS` | false | none |
+
+This defines how the driver authenticates on the client side.  This is not server side authentication.  In order to establish a jdbc connection using kerberos the client must be authenticated in one of the following ways so that a ticket can be shared with the server
+
+todo: these values need very thorough explanations and examples
 
 * `OS` - Kerberos authentication has already happened at the OS level: todo better explanation
 * `PASSWORD` - must specify value for `user` and `password` properties
@@ -301,11 +301,11 @@ todo: these values need very thorough explanations and examples
 
 ### Server Principal
 
-todo: should this be named server or service?  also, not clear that the hive config property and the intent of this property are one in the same
-
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | krb5ServerPrincipal |  | true<sup>*</sup> | [hive.server2.authentication.kerberos.principal](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+
+todo: should this be named server or service?  also, not clear that the hive config property and the intent of this property are one in the same
 
 This is the Kerberos principal that is valid on the HS2 server.
 
@@ -329,11 +329,11 @@ Sets value for `sun.security.krb5.debug` as a System property
 
 ### Use Subject Credentials Only
 
-todo: need to better understand what the heck this means
-
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | krb5SubjectOnly | `false` | false | none |
+
+todo: need to better understand what the heck this means
 
 Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  See [here](http://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/BasicClientServer.html#useSub) for more details.
 
@@ -342,6 +342,12 @@ Sets value for `javax.security.auth.useSubjectCredsOnly` as a System Property.  
 | Property | Default Value | Required | Hive Configuration Property |
 | :--- | :--- | :--- | :--- |
 | saslQOP | `auth` | false | [hive.server2.thrift.sasl.qop](https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-HiveServer2) |
+
+Specifies the Quality of Protectoin to use when Kerberos is enabled.  Possible values are:
+
+* `auth` - authentication only
+* `auth-int` - authentication plus integrity protection
+* `auth-conf` - authentication plus integrity and confidentiality protection
 
 ### SASL Server Authentication Enabled
 

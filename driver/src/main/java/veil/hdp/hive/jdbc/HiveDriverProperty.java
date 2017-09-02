@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
 import veil.hdp.hive.jdbc.security.KerberosMode;
+import veil.hdp.hive.jdbc.security.SaslQop;
 import veil.hdp.hive.jdbc.utils.PropertyUtils;
 
 import java.sql.DriverPropertyInfo;
@@ -112,7 +113,7 @@ public enum HiveDriverProperty {
     KERBEROS_USE_SUBJECT_CREDENTIALS_ONLY("krb5SubjectOnly", Boolean.FALSE.toString(), null, null),
 
     // Sasl.QOP
-    SASL_QUALITY_OF_PROTECTION("saslQOP", "auth", null, "hive.server2.thrift.sasl.qop"),
+    SASL_QUALITY_OF_PROTECTION("saslQOP", SaslQop.AUTH.getName(), null, "hive.server2.thrift.sasl.qop", new String[]{SaslQop.AUTH.getName(), SaslQop.AUTH_INT.getName(), SaslQop.AUTH_CONF.getName()}, null),
     // Sasl.SERVER_AUTH
     SASL_SERVER_AUTHENTICATION_ENABLED("saslAuth", Boolean.TRUE.toString(), null, null),
 
