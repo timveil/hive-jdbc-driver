@@ -42,16 +42,6 @@ public class Schema {
         return columnDescriptors.get(position - 1);
     }
 
-    public void clear() {
-        if (columnDescriptors != null && !columnDescriptors.isEmpty()) {
-            columnDescriptors.clear();
-        }
-
-        if (columnMapping != null && !columnMapping.isEmpty()) {
-            columnMapping.clear();
-        }
-    }
-
     @Override
     public String toString() {
 

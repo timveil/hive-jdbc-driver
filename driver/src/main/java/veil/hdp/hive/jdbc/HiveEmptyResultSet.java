@@ -44,9 +44,6 @@ public class HiveEmptyResultSet extends AbstractResultSet {
             log.trace("attempting to close {}", this.getClass().getName());
         }
 
-        if (schema != null) {
-            schema.clear();
-        }
     }
 
     public static class HiveEmptyResultSetBuilder implements Builder<HiveEmptyResultSet> {

@@ -58,10 +58,6 @@ public class HiveMetaDataResultSet extends HiveBaseResultSet {
 
             ThriftUtils.closeOperation(session, operationHandle);
 
-            if (schema != null) {
-                schema.clear();
-            }
-
             currentRow.set(null);
 
         }

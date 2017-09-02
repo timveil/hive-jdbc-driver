@@ -69,10 +69,6 @@ public class HiveResultSet extends HiveBaseResultSet {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            if (schema != null) {
-                schema.clear();
-            }
-
             currentRow.set(null);
         }
     }
