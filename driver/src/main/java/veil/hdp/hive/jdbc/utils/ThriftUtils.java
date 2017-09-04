@@ -16,11 +16,9 @@ import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.data.RowBasedSet;
-import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.thrift.*;
 
 import java.lang.reflect.Proxy;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -137,7 +135,7 @@ public final class ThriftUtils {
         closeOperation(operation.getSession(), operation.getOperationHandle());
     }
 
-    public static void closeOperation(ThriftSession session, TOperationHandle handle) {
+    private static void closeOperation(ThriftSession session, TOperationHandle handle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(handle);
 
         TCloseOperationResp resp = null;
@@ -186,7 +184,7 @@ public final class ThriftUtils {
         }
     }
 
-    static ThriftOperation getCatalogsOperation(ThriftSession session, int fetchSize) {
+    static ThriftOperation getCatalogsOperation(ThriftSession session) {
         TGetCatalogsReq req = new TGetCatalogsReq(session.getSessionHandle());
 
         TGetCatalogsResp resp;
@@ -201,12 +199,12 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
 
     }
 
-    static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, int fetchSize) {
+    static ThriftOperation getColumnsOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
         TGetColumnsReq req = new TGetColumnsReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -225,11 +223,11 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
     }
 
-    static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern, int fetchSize) {
+    static ThriftOperation getFunctionsOperation(ThriftSession session, String catalog, String schemaPattern, String functionNamePattern) {
         TGetFunctionsReq req = new TGetFunctionsReq();
         req.setSessionHandle(session.getSessionHandle());
         req.setCatalogName(catalog);
@@ -248,12 +246,12 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
 
     }
 
-    static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String[] types, int fetchSize) {
+    static ThriftOperation getTablesOperation(ThriftSession session, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
         TGetTablesReq req = new TGetTablesReq(session.getSessionHandle());
 
         req.setCatalogName(catalog);
@@ -276,12 +274,12 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
 
     }
 
-    static ThriftOperation getTypeInfoOperation(ThriftSession session, int fetchSize) {
+    static ThriftOperation getTypeInfoOperation(ThriftSession session) {
         TGetTypeInfoReq req = new TGetTypeInfoReq(session.getSessionHandle());
 
         TGetTypeInfoResp resp;
@@ -296,7 +294,7 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
 
     }
@@ -320,7 +318,7 @@ public final class ThriftUtils {
 
     }
 
-    static ThriftOperation getTableTypesOperation(ThriftSession session, int fetchSize) {
+    static ThriftOperation getTableTypesOperation(ThriftSession session) {
         TGetTableTypesReq req = new TGetTableTypesReq(session.getSessionHandle());
 
         TGetTableTypesResp resp;
@@ -335,11 +333,11 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
     }
 
-    static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern, int fetchSize) {
+    static ThriftOperation getDatabaseSchemaOperation(ThriftSession session, String catalog, String schemaPattern) {
         TGetSchemasReq req = new TGetSchemasReq(session.getSessionHandle());
         req.setCatalogName(catalog);
         req.setSchemaName(schemaPattern);
@@ -356,7 +354,7 @@ public final class ThriftUtils {
 
         checkStatus(resp.getStatus());
 
-        return ThriftOperation.builder().handle(resp.getOperationHandle()).metaData(true).fetchSize(fetchSize).session(session).build();
+        return ThriftOperation.builder().handle(resp.getOperationHandle()).session(session).build();
 
 
     }
@@ -390,10 +388,10 @@ public final class ThriftUtils {
         return metadataResp.getSchema();
     }
 
-    private static TRowSet getRowSet(ThriftSession session, TFetchResultsReq tFetchResultsReq) {
+    private static TRowSet getRowSet(ThriftOperation operation, TFetchResultsReq tFetchResultsReq) {
         TFetchResultsResp fetchResults;
 
-        TCLIService.Iface client = session.getClient();
+        TCLIService.Iface client = operation.getSession().getClient();
 
         try {
             fetchResults = client.FetchResults(tFetchResultsReq);
@@ -406,7 +404,7 @@ public final class ThriftUtils {
         return fetchResults.getResults();
     }
 
-    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout, int fetchSize, int maxRows, int resultSetConcurrency, int resultSetHoldability, int resultSetType, int fetchDirection) {
+    public static ThriftOperation executeSql(ThriftSession session, String sql, long queryTimeout) {
         TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(session.getSessionHandle(), StringUtils.trim(sql));
         executeStatementReq.setRunAsync(true);
         executeStatementReq.setQueryTimeout(queryTimeout);
@@ -427,6 +425,7 @@ public final class ThriftUtils {
 
         TOperationHandle operationHandle = executeStatementResp.getOperationHandle();
 
+        /*
         if (HiveDriverProperty.FETCH_SERVER_LOGS.getBoolean(session.getProperties())) {
 
             ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "fetch-logs-thread"));
@@ -443,19 +442,13 @@ public final class ThriftUtils {
                 }
             });
         }
-
+        */
 
         waitForStatementToComplete(session, operationHandle);
 
         return ThriftOperation.builder()
                 .session(session)
                 .handle(operationHandle)
-                .resultSetConcurrency(resultSetConcurrency)
-                .resultSetHoldability(resultSetHoldability)
-                .maxRows(maxRows)
-                .fetchSize(fetchSize)
-                .fetchDirection(fetchDirection)
-                .resultSetType(resultSetType)
                 .build();
 
     }
@@ -502,37 +495,47 @@ public final class ThriftUtils {
         }
     }
 
-    private static List<Row> fetchResults(ThriftSession session, TOperationHandle operationHandle, TFetchOrientation orientation, int fetchSize, Schema schema) {
-        TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, orientation, fetchSize);
+    private static List<Row> fetchResults(ThriftOperation operation, TFetchOrientation orientation, int fetchSize) {
+        TFetchResultsReq fetchReq = new TFetchResultsReq(operation.getOperationHandle(), orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
-        return getRows(session, schema, fetchReq);
+        return getRows(operation, fetchReq);
     }
 
-    private static List<Row> fetchLogs(ThriftSession session, TOperationHandle operationHandle, Schema schema, int fetchSize) {
+    private static List<Row> fetchLogs(ThriftOperation operation, int fetchSize) {
 
-        TFetchResultsReq fetchReq = new TFetchResultsReq(operationHandle, TFetchOrientation.FETCH_FIRST, fetchSize);
+        TFetchResultsReq fetchReq = new TFetchResultsReq(operation.getOperationHandle(), TFetchOrientation.FETCH_FIRST, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_LOG);
 
-        return getRows(session, schema, fetchReq);
+        return getRows(operation, fetchReq);
 
     }
 
-    private static List<Row> getRows(ThriftSession session, Schema schema, TFetchResultsReq tFetchResultsReq) {
-        TRowSet results = getRowSet(session, tFetchResultsReq);
+    private static List<Row> getRows(ThriftOperation operation, TFetchResultsReq tFetchResultsReq) {
+        TRowSet results = getRowSet(operation, tFetchResultsReq);
 
-        return getRows(results, schema);
+        return getRows(operation, results);
 
 
     }
 
-    private static List<Row> getRows(TRowSet rowSet, Schema schema) {
+    private static List<Row> getRows(ThriftOperation operation, TRowSet rowSet) {
+
+        StopWatch sw = new StopWatch();
+
 
         if (rowSet != null && rowSet.isSetColumns()) {
+            sw.start("columns");
+            ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(operation.getSchema()).build();
+            sw.stop();
 
-            ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(schema).build();
+            sw.start("rows");
+            List<Row> rows = RowBasedSet.builder().columnBaseSet(cbs).build().getRows();
+            sw.stop();
 
-            return RowBasedSet.builder().columnBaseSet(cbs).build().getRows();
+            log.debug("rows size {}", rows.size());
+            log.debug(sw.prettyPrint());
+            return rows;
 
         }
 
@@ -541,10 +544,10 @@ public final class ThriftUtils {
     }
 
 
-    public static Iterable<Row> getResults(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
+    public static Iterable<Row> getResults(ThriftOperation operation, int fetchSize) {
         return () -> {
 
-            Iterator<List<Row>> fetchIterator = fetchIterator(session, handle, fetchSize, schema);
+            Iterator<List<Row>> fetchIterator = fetchIterator(operation, fetchSize);
 
             return new AbstractIterator<Row>() {
 
@@ -585,13 +588,13 @@ public final class ThriftUtils {
         };
     }
 
-    private static AbstractIterator<List<Row>> fetchIterator(ThriftSession session, TOperationHandle handle, int fetchSize, Schema schema) {
+    private static AbstractIterator<List<Row>> fetchIterator(ThriftOperation operation, int fetchSize) {
         return new AbstractIterator<List<Row>>() {
 
             @Override
             protected List<Row> computeNext() {
 
-                List<Row> results = fetchResults(session, handle, TFetchOrientation.FETCH_NEXT, fetchSize, schema);
+                List<Row> results = fetchResults(operation, TFetchOrientation.FETCH_NEXT, fetchSize);
 
                 if (results != null && !results.isEmpty()) {
                     return results;

@@ -3,35 +3,36 @@ package veil.hdp.hive.jdbc.thrift;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.HiveEmptyResultSet;
-import veil.hdp.hive.jdbc.HiveMetaDataResultSet;
-import veil.hdp.hive.jdbc.HiveResultSet;
 import veil.hdp.hive.jdbc.bindings.TOperationHandle;
+import veil.hdp.hive.jdbc.bindings.TOperationType;
+import veil.hdp.hive.jdbc.metadata.Schema;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftOperation implements Closeable {
+public class ThriftOperation implements AutoCloseable {
 
-    private static final Logger log =  LogManager.getLogger(ThriftOperation.class);
+    private static final Logger log = LogManager.getLogger(ThriftOperation.class);
 
     // constructor
     private final ThriftSession session;
-    private final TOperationHandle operation;
-    private final ResultSet resultSet;
+    private TOperationHandle operationHandle;
+    private Schema schema;
+    private final boolean hasResultSet;
+    private final int modifiedCount;
+    private final String operationType;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
-    private ThriftOperation(ThriftSession thriftSession, TOperationHandle operationHandle, ResultSet resultSet) {
+    private ThriftOperation(ThriftSession thriftSession, TOperationHandle operationHandle, Schema schema, boolean hasResultSet, int modifiedCount, String operationType) {
 
         this.session = thriftSession;
-        this.operation = operationHandle;
-        this.resultSet = resultSet;
+        this.operationHandle = operationHandle;
+        this.schema = schema;
+        this.hasResultSet = hasResultSet;
+        this.modifiedCount = modifiedCount;
+        this.operationType = operationType;
 
         closed.set(false);
     }
@@ -45,7 +46,7 @@ public class ThriftOperation implements Closeable {
     }
 
     public TOperationHandle getOperationHandle() {
-        return operation;
+        return operationHandle;
     }
 
     public boolean isClosed() {
@@ -53,23 +54,23 @@ public class ThriftOperation implements Closeable {
     }
 
     public boolean hasResultSet() {
-        return operation.isHasResultSet();
-    }
-
-    public ResultSet getResultSet() {
-        return resultSet;
+        return hasResultSet;
     }
 
     public int getModifiedCount() {
-        if (operation.isSetModifiedRowCount()) {
-            return new Double(operation.getModifiedRowCount()).intValue();
-        }
+        return modifiedCount;
+    }
 
-        return -1;
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public Schema getSchema() {
+        return schema;
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
         if (closed.compareAndSet(false, true)) {
             if (log.isTraceEnabled()) {
                 log.trace("attempting to close {}", this.getClass().getName());
@@ -77,11 +78,8 @@ public class ThriftOperation implements Closeable {
 
             ThriftUtils.closeOperation(this);
 
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                log.warn(e.getMessage(), e);
-            }
+            schema = null;
+            operationHandle = null;
         }
     }
 
@@ -100,13 +98,7 @@ public class ThriftOperation implements Closeable {
 
         private TOperationHandle operationHandle;
         private ThriftSession session;
-        private int maxRows = -1;
-        private int fetchSize = -1;
-        private int fetchDirection = -1;
-        private int resultSetType = -1;
-        private int resultSetConcurrency = -1;
-        private int resultSetHoldability = -1;
-        private boolean metaDataOperation;
+
 
         private ThriftOperationBuilder() {
         }
@@ -123,76 +115,31 @@ public class ThriftOperation implements Closeable {
         }
 
 
-        public ThriftOperationBuilder fetchSize(int fetchSize) {
-            this.fetchSize = fetchSize;
-            return this;
-        }
-
-
-        public ThriftOperationBuilder maxRows(int maxRows) {
-            this.maxRows = maxRows;
-            return this;
-        }
-
-        public ThriftOperationBuilder fetchDirection(int fetchDirection) {
-            this.fetchDirection = fetchDirection;
-            return this;
-        }
-
-
-        public ThriftOperationBuilder resultSetType(int resultSetType) {
-            this.resultSetType = resultSetType;
-            return this;
-        }
-
-
-        public ThriftOperationBuilder resultSetConcurrency(int resultSetConcurrency) {
-            this.resultSetConcurrency = resultSetConcurrency;
-            return this;
-        }
-
-
-        public ThriftOperationBuilder resultSetHoldability(int resultSetHoldability) {
-            this.resultSetHoldability = resultSetHoldability;
-            return this;
-        }
-
-        public ThriftOperationBuilder metaData(boolean metaDataOperation) {
-            this.metaDataOperation = metaDataOperation;
-            return this;
-        }
-
         public ThriftOperation build() {
 
-            ResultSet resultSet;
+            boolean hasResultSet = false;
 
-            if (operationHandle.isHasResultSet()) {
-
-                if (metaDataOperation) {
-                    resultSet = HiveMetaDataResultSet.builder()
-                            .handle(operationHandle)
-                            .thriftSession(session)
-                            .fetchSize(fetchSize)
-                            .build();
-                } else {
-                    resultSet = HiveResultSet.builder()
-                            .thriftSession(session)
-                            .handle(operationHandle)
-                            .resultSetConcurrency(resultSetConcurrency)
-                            .resultSetHoldability(resultSetHoldability)
-                            .maxRows(maxRows)
-                            .fetchSize(fetchSize)
-                            .fetchDirection(fetchDirection)
-                            .resultSetType(resultSetType)
-                            .build();
-                }
-
-            } else {
-                resultSet = HiveEmptyResultSet.builder().build();
+            if (operationHandle.isSetHasResultSet()) {
+                hasResultSet = operationHandle.isSetHasResultSet();
             }
 
-            return new ThriftOperation(session, operationHandle, resultSet);
+            int modifiedCount = -1;
 
+            if (operationHandle.isSetModifiedRowCount()) {
+                modifiedCount = new Double(operationHandle.getModifiedRowCount()).intValue();
+            }
+
+            String operation = null;
+
+            if (operationHandle.isSetOperationType()) {
+                TOperationType operationType = operationHandle.getOperationType();
+
+                operation = operationType.name();
+            }
+
+            Schema schema = Schema.builder().session(session).handle(operationHandle).build();
+
+            return new ThriftOperation(session, operationHandle, schema, hasResultSet, modifiedCount, operation);
         }
 
     }

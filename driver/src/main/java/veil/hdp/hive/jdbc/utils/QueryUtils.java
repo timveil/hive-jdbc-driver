@@ -2,10 +2,9 @@ package veil.hdp.hive.jdbc.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import veil.hdp.hive.jdbc.HiveConnection;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveEmptyResultSet;
+import veil.hdp.hive.jdbc.*;
 import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,37 +13,65 @@ import java.sql.Statement;
 
 public final class QueryUtils {
 
-    private static final Logger log =  LogManager.getLogger(QueryUtils.class);
+    private static final Logger log = LogManager.getLogger(QueryUtils.class);
 
     private QueryUtils() {
     }
 
-    public static ResultSet getCatalogs(HiveConnection connection) {
-        return ThriftUtils.getCatalogsOperation(connection.getThriftSession(), HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getCatalogs(HiveConnection connection) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation catalogsOperation = ThriftUtils.getCatalogsOperation(connection.getThriftSession());
+
+        return HiveResultSet.builder().thriftOperation(catalogsOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) {
-        return ThriftUtils.getDatabaseSchemaOperation(connection.getThriftSession(), catalog, schemaPattern, HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getSchemas(HiveConnection connection, String catalog, String schemaPattern) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation databaseSchemaOperation = ThriftUtils.getDatabaseSchemaOperation(connection.getThriftSession(), catalog, schemaPattern);
+
+        return HiveResultSet.builder().thriftOperation(databaseSchemaOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getTypeInfo(HiveConnection connection) {
-        return ThriftUtils.getTypeInfoOperation(connection.getThriftSession(), HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getTypeInfo(HiveConnection connection) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation typeInfoOperation = ThriftUtils.getTypeInfoOperation(connection.getThriftSession());
+
+        return HiveResultSet.builder().thriftOperation(typeInfoOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getTableTypes(HiveConnection connection) {
-        return ThriftUtils.getTableTypesOperation(connection.getThriftSession(), HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getTableTypes(HiveConnection connection) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation tableTypesOperation = ThriftUtils.getTableTypesOperation(connection.getThriftSession());
+
+        return HiveResultSet.builder().thriftOperation(tableTypesOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
-        return ThriftUtils.getTablesOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types, HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getTables(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String types[]) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation tablesOperation = ThriftUtils.getTablesOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, types);
+
+        return HiveResultSet.builder().thriftOperation(tablesOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
-        return ThriftUtils.getColumnsOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern, HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getColumns(HiveConnection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation columnsOperation = ThriftUtils.getColumnsOperation(connection.getThriftSession(), catalog, schemaPattern, tableNamePattern, columnNamePattern);
+
+        return HiveResultSet.builder().thriftOperation(columnsOperation).fetchSize(fetchSize).build();
     }
 
-    public static ResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) {
-        return ThriftUtils.getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern, HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties())).getResultSet();
+    public static ResultSet getFunctions(HiveConnection connection, String catalog, String schemaPattern, String functionNamePattern) throws HiveSQLException {
+        int fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+
+        ThriftOperation functionsOperation = ThriftUtils.getFunctionsOperation(connection.getThriftSession(), catalog, schemaPattern, functionNamePattern);
+
+        return HiveResultSet.builder().thriftOperation(functionsOperation).fetchSize(fetchSize).build();
     }
 
     //TODO - NOW AVAILABLE

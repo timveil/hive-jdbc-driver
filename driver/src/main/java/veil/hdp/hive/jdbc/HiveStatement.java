@@ -8,15 +8,13 @@ import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class HiveStatement extends AbstractStatement {
 
-    private static final Logger log =  LogManager.getLogger(HiveStatement.class);
+    private static final Logger log = LogManager.getLogger(HiveStatement.class);
 
     // constructor
     private final HiveConnection connection;
@@ -25,7 +23,7 @@ public class HiveStatement extends AbstractStatement {
     private final int resultSetHoldability;
 
     // private
-    private final AtomicReference<ThriftOperation> currentOperation = new AtomicReference<>();
+    private ThriftOperation thriftOperation = null;
 
     // public getter & setter
     private int queryTimeout;
@@ -33,6 +31,9 @@ public class HiveStatement extends AbstractStatement {
     private int fetchSize;
     private int fetchDirection;
     private SQLWarning sqlWarning;
+    private int updateCount = -1;
+    private ResultSet resultSet;
+
 
 
     HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
@@ -45,64 +46,65 @@ public class HiveStatement extends AbstractStatement {
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
-
     }
 
     public static HiveStatementBuilder builder() {
         return new HiveStatementBuilder();
     }
 
-    private void performThriftOperation(String sql) {
-
-        ThriftOperation operation = currentOperation.get();
-
-        if (operation != null) {
-            try {
-                log.warn("Closing current ThriftOperation before preforming another.  This is very unusual.  Possible Bug!");
-                operation.close();
-            } catch (IOException e) {
-                log.warn(e.getMessage(), e);
-            }
-
-            currentOperation.compareAndSet(operation, null);
-        }
-
-        currentOperation.compareAndSet(null, ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout, fetchSize, maxRows, resultSetConcurrency, resultSetHoldability, resultSetType, fetchDirection));
-    }
-
     @Override
     public boolean execute(String sql) throws SQLException {
-        performThriftOperation(sql);
 
-        return currentOperation.get().hasResultSet();
+        if (thriftOperation != null) {
+            close();
+        }
+
+        thriftOperation = ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout);
+
+        if (thriftOperation.hasResultSet()) {
+
+            resultSet = HiveResultSet.builder()
+                    .thriftOperation(thriftOperation)
+                    .statement(this)
+                    .resultSetConcurrency(resultSetConcurrency)
+                    .resultSetHoldability(resultSetHoldability)
+                    .resultSetType(resultSetType)
+                    .fetchDirection(fetchDirection)
+                    .fetchSize(fetchSize)
+                    .maxRows(maxRows)
+                    .build();
+
+            return true;
+        } else {
+            updateCount = thriftOperation.getModifiedCount();
+
+            return false;
+        }
+
 
     }
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        performThriftOperation(sql);
+        boolean result = execute(sql);
 
-        ThriftOperation thriftOperation = currentOperation.get();
-
-        if (!thriftOperation.hasResultSet()) {
+        if (!result) {
             throw new HiveSQLException("The query did not generate a result set!");
         }
 
-        return thriftOperation.getResultSet();
+        return resultSet;
     }
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
 
-        performThriftOperation(sql);
+        boolean result = execute(sql);
 
-        ThriftOperation thriftOperation = currentOperation.get();
-
-        if (thriftOperation.hasResultSet()) {
+        if (result) {
             throw new HiveSQLException("The query generated a result set when an updated was expected");
         }
 
-        return thriftOperation.getModifiedCount();
+        return updateCount;
     }
 
     @Override
@@ -147,7 +149,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return currentOperation.get().getResultSet();
+        return resultSet;
     }
 
     @Override
@@ -162,19 +164,18 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void cancel() throws SQLException {
-        ThriftOperation operation = currentOperation.get();
-
-        if (operation != null) {
-            operation.cancel();
+        if (thriftOperation != null) {
+            thriftOperation.cancel();
         }
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        ThriftOperation operation = currentOperation.get();
+        if (thriftOperation != null) {
+            return thriftOperation.isClosed();
+        }
 
-        return operation == null || operation.isClosed();
-
+        return true;
     }
 
     @Override
@@ -189,13 +190,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        ThriftOperation operation = currentOperation.get();
-
-        if (operation != null) {
-            return operation.getModifiedCount();
-        }
-
-        return -1;
+        return updateCount;
     }
 
     @Override
@@ -211,21 +206,23 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void close() throws SQLException {
 
-        ThriftOperation operation = currentOperation.get();
-
-        if (operation != null) {
+        if (thriftOperation != null) {
 
             if (log.isTraceEnabled()) {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
             try {
-                operation.close();
-            } catch (IOException e) {
+                thriftOperation.close();
+            } catch (Exception e) {
                 log.warn(e.getMessage(), e);
+            } finally {
+                thriftOperation = null;
             }
 
-            currentOperation.set(null);
+            resultSet.close();
+
+            resultSet = null;
         }
     }
 
@@ -287,9 +284,9 @@ public class HiveStatement extends AbstractStatement {
     public static class HiveStatementBuilder implements Builder<HiveStatement> {
 
         HiveConnection connection;
-        int resultSetType;
-        int resultSetConcurrency;
-        int resultSetHoldability;
+        int resultSetType = ResultSet.TYPE_FORWARD_ONLY;
+        int resultSetConcurrency = ResultSet.CONCUR_READ_ONLY;
+        int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
 
         HiveStatementBuilder() {
         }

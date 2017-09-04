@@ -3,6 +3,7 @@ package veil.hdp.hive.jdbc;
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.base.Stopwatch;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractConnectionTest extends BaseTest {
 
     private static final MetricRegistry metrics = new MetricRegistry();
+    private static final int WARMUP = 10;
     private Connection connection;
 
     public abstract Connection createConnection(String host) throws SQLException;
@@ -156,7 +158,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     private void executeSimpleQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test limit 10")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test")) {
 
             if (printResults) {
                 Printer.printResultSet(rs, printMetaData);
@@ -219,7 +221,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     public void testSimpleQueryLoad() throws SQLException {
 
         // warm-up
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < WARMUP; i++) {
             executeSimpleQuery(false, false);
         }
 
@@ -234,11 +236,18 @@ public abstract class AbstractConnectionTest extends BaseTest {
             Timer timer = metrics.timer(name);
 
             for (int i = 0; i < getTestRuns(); i++) {
-                log.debug("run # {}", i);
+
+                log.debug("------------------------------------- start run # {}", i);
+
+                Stopwatch sw = Stopwatch.createStarted();
 
                 try (Timer.Context queryContext = timer.time()) {
                     executeSimpleQuery(true, false);
                 }
+
+                sw.stop();
+
+                log.debug("------------------------------------- end run # {}, took {}ms", i, sw.elapsed(TimeUnit.MILLISECONDS));
             }
 
             reporter.report();
@@ -250,7 +259,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     public void testPreparedStatementLoad() throws SQLException {
 
         // warm-up
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < WARMUP; i++) {
             executePreparedStatement(false, false);
         }
 

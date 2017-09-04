@@ -15,22 +15,20 @@ import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
 import javax.annotation.Nonnull;
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftSession implements Closeable {
+public class ThriftSession implements AutoCloseable {
 
     private static final Logger log = LogManager.getLogger(ThriftSession.class);
 
     // constructor
-    private final ThriftTransport thriftTransport;
-    private final TCLIService.Iface client;
-    private final TSessionHandle sessionHandle;
+    private ThriftTransport thriftTransport;
+    private TCLIService.Iface client;
+    private TSessionHandle sessionHandle;
     private final Properties properties;
-    private final TProtocolVersion protocol;
+    private TProtocolVersion protocol;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -94,7 +92,7 @@ public class ThriftSession implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
         if (closed.compareAndSet(false, true)) {
 
             if (log.isTraceEnabled()) {
@@ -103,7 +101,15 @@ public class ThriftSession implements Closeable {
 
             ThriftUtils.closeSession(this);
 
+            sessionHandle = null;
+
             thriftTransport.close();
+
+            thriftTransport = null;
+
+            client = null;
+
+            protocol = null;
 
             cache.invalidateAll();
 
@@ -156,7 +162,7 @@ public class ThriftSession implements Closeable {
 
                     try {
                         thriftTransport.close();
-                    } catch (IOException io) {
+                    } catch (Exception io) {
                         log.warn(io.getMessage(), io);
                     }
                 }

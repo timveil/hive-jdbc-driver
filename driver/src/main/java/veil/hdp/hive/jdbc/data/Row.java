@@ -2,13 +2,18 @@ package veil.hdp.hive.jdbc.data;
 
 
 import com.google.common.primitives.Ints;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
+import veil.hdp.hive.jdbc.utils.StopWatch;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Row {
+
+    private static final Logger log = LogManager.getLogger(Row.class);
 
     private final List<Column> columns;
 
@@ -52,11 +57,20 @@ public class Row {
 
             List<Column> columns = new ArrayList<>(columnCount);
 
+            StopWatch sw = new StopWatch("build row");
+            sw.start("loop columns");
+
             for (ColumnData columnData : columnBasedSet.getColumns()) {
                 columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
             }
+            sw.stop();
+
+            sw.start("sort columns");
 
             columns.sort(COLUMN_COMPARATOR);
+            sw.stop();
+
+            log.debug(sw.prettyPrint());
 
 
             return new Row(columns);
