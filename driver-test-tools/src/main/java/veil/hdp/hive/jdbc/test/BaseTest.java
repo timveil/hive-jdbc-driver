@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.test;
 
 
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.test;
 
 import org.junit.After;
 import org.junit.Assert;

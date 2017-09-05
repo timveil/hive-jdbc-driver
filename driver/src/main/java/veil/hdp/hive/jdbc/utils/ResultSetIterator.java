@@ -28,12 +28,16 @@ public class ResultSetIterator extends AbstractIterator<Row> {
 
         while (true) {
 
+
             if (fetchRowIterator == null) {
+                // no rows inside a page available; go get them
 
                 if (fetchIterator.hasNext()) {
+                    // there is another page avaialble, so create the row iterator
                     ColumnBasedSet cbs = fetchIterator.next();
                     fetchRowIterator = cbs.iterator();
                 } else {
+                    // no more pages, so its the end of the line
                     return endOfData();
                 }
 
