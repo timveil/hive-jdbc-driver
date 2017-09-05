@@ -39,8 +39,9 @@ public final class ThriftUtils {
 
     public static void openTransport(TTransport transport, int timeout) {
 
+        ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
+
         try {
-            ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
 
             Future<Boolean> future = executor.submit(() -> {
                 transport.open();
@@ -53,6 +54,8 @@ public final class ThriftUtils {
             throw new HiveException(e);
         } catch (TimeoutException e) {
             throw new HiveException("The Thrift Transport did not open prior to Timeout.  If using Kerberos, double check that you have a valid client Principal by running klist.", e);
+        } finally {
+            executor.shutdown();
         }
 
     }
