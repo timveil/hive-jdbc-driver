@@ -5,7 +5,6 @@ import com.google.common.primitives.Ints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.utils.StopWatch;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -57,21 +56,14 @@ public class Row {
 
             List<Column> columns = new ArrayList<>(columnCount);
 
-            StopWatch sw = new StopWatch("build row");
-            sw.start("loop columns");
+            if (columnCount > 0) {
 
-            for (ColumnData columnData : columnBasedSet.getColumns()) {
-                columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
+                for (ColumnData columnData : columnBasedSet.getColumns()) {
+                    columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
+                }
+
+                columns.sort(COLUMN_COMPARATOR);
             }
-            sw.stop();
-
-            sw.start("sort columns");
-
-            columns.sort(COLUMN_COMPARATOR);
-            sw.stop();
-
-            log.debug(sw.prettyPrint());
-
 
             return new Row(columns);
 

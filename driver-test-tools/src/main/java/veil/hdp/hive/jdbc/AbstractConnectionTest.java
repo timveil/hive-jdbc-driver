@@ -158,7 +158,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     private void executeSimpleQuery(boolean printResults, boolean printMetaData) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test")) {
+             ResultSet rs = statement.executeQuery("SELECT * FROM data_type_test limit 10")) {
 
             if (printResults) {
                 Printer.printResultSet(rs, printMetaData);

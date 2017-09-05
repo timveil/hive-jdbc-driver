@@ -1,14 +1,20 @@
 package veil.hdp.hive.jdbc.data;
 
+import com.google.common.collect.AbstractIterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumn;
 import veil.hdp.hive.jdbc.bindings.TRowSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ColumnBasedSet {
+public class ColumnBasedSet implements Iterable<Row> {
+
+    private static final Logger log = LogManager.getLogger(ColumnBasedSet.class);
 
     private final int rowCount;
     private final List<ColumnData> columns;
@@ -32,6 +38,35 @@ public class ColumnBasedSet {
 
     public int getColumnCount() {
         return columns.size();
+    }
+
+    @Override
+    public Iterator<Row> iterator() {
+
+        return new AbstractIterator<Row>() {
+
+            private int index = 0;
+
+            @Override
+            protected Row computeNext() {
+
+                if (rowCount <= 0) {
+                    return endOfData();
+                }
+
+                if (index < rowCount) {
+                    Row row = Row.builder().columnBasedSet(ColumnBasedSet.this).row(index).build();
+
+                    index++;
+
+                    return row;
+                }
+
+                index = 0;
+
+                return endOfData();
+            }
+        };
     }
 
     public static class ColumnBasedSetBuilder implements Builder<ColumnBasedSet> {
@@ -62,17 +97,20 @@ public class ColumnBasedSet {
 
             int rowCount = -1;
 
-            for (TColumn column : tColumns) {
+            if (!tColumns.isEmpty()) {
 
-                ColumnData data = ColumnData.builder().column(column).descriptor(schema.getColumn(position)).build();
+                for (TColumn column : tColumns) {
 
-                if (rowCount == -1) {
-                    rowCount = data.getRowCount();
+                    ColumnData data = ColumnData.builder().column(column).descriptor(schema.getColumn(position)).build();
+
+                    if (rowCount == -1) {
+                        rowCount = data.getRowCount();
+                    }
+
+                    columns.add(data);
+
+                    position++;
                 }
-
-                columns.add(data);
-
-                position++;
             }
 
 

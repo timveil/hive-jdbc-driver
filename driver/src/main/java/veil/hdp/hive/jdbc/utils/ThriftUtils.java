@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.utils;
 
-import com.google.common.collect.AbstractIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,15 +13,15 @@ import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.bindings.TCLIService.Client;
 import veil.hdp.hive.jdbc.data.ColumnBasedSet;
-import veil.hdp.hive.jdbc.data.Row;
-import veil.hdp.hive.jdbc.data.RowBasedSet;
 import veil.hdp.hive.jdbc.thrift.*;
 
 import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public final class ThriftUtils {
@@ -495,114 +494,32 @@ public final class ThriftUtils {
         }
     }
 
-    private static List<Row> fetchResults(ThriftOperation operation, TFetchOrientation orientation, int fetchSize) {
+    public static ColumnBasedSet fetchResults(ThriftOperation operation, TFetchOrientation orientation, int fetchSize) {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operation.getOperationHandle(), orientation, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_QUERY);
 
-        return getRows(operation, fetchReq);
+        TRowSet tRowSet = getRowSet(operation, fetchReq);
+
+        return convertToCBS(operation, tRowSet);
     }
 
-    private static List<Row> fetchLogs(ThriftOperation operation, int fetchSize) {
-
+    /*private static List<Row> fetchLogs(ThriftOperation operation, int fetchSize) {
         TFetchResultsReq fetchReq = new TFetchResultsReq(operation.getOperationHandle(), TFetchOrientation.FETCH_FIRST, fetchSize);
         fetchReq.setFetchType(FETCH_TYPE_LOG);
 
-        return getRows(operation, fetchReq);
+        TRowSet tRowSet = getRowSet(operation, fetchReq);
 
-    }
+        return convertTRowSet(operation, tRowSet);
 
-    private static List<Row> getRows(ThriftOperation operation, TFetchResultsReq tFetchResultsReq) {
-        TRowSet results = getRowSet(operation, tFetchResultsReq);
+    }*/
 
-        return getRows(operation, results);
-
-
-    }
-
-    private static List<Row> getRows(ThriftOperation operation, TRowSet rowSet) {
-
-        StopWatch sw = new StopWatch();
-
-
+    private static ColumnBasedSet convertToCBS(ThriftOperation operation, TRowSet rowSet) {
         if (rowSet != null && rowSet.isSetColumns()) {
-            sw.start("columns");
-            ColumnBasedSet cbs = ColumnBasedSet.builder().rowSet(rowSet).schema(operation.getSchema()).build();
-            sw.stop();
-
-            sw.start("rows");
-            List<Row> rows = RowBasedSet.builder().columnBaseSet(cbs).build().getRows();
-            sw.stop();
-
-            log.debug("rows size {}", rows.size());
-            log.debug(sw.prettyPrint());
-            return rows;
-
+            if (!rowSet.getColumns().isEmpty()) {
+                return ColumnBasedSet.builder().rowSet(rowSet).schema(operation.getSchema()).build();
+            }
         }
 
         return null;
-
-    }
-
-
-    public static Iterable<Row> getResults(ThriftOperation operation, int fetchSize) {
-        return () -> {
-
-            Iterator<List<Row>> fetchIterator = fetchIterator(operation, fetchSize);
-
-            return new AbstractIterator<Row>() {
-
-                private final AtomicInteger rowCount = new AtomicInteger(0);
-                private Iterator<Row> rowSet;
-
-                @Override
-                protected Row computeNext() {
-                    while (true) {
-                        if (rowSet == null) {
-                            if (fetchIterator.hasNext()) {
-                                rowSet = fetchIterator.next().iterator();
-                            } else {
-                                return endOfData();
-                            }
-                        }
-
-                        if (rowSet.hasNext()) {
-                            // the page has more results
-                            rowCount.incrementAndGet();
-                            return rowSet.next();
-                        } else if (rowCount.get() < fetchSize) {
-                            // the page has no more results and the rowCount is < fetchSize; then i don't need
-                            // to go back to the server to know if i'm done.
-                            //
-                            // for example rowCount = 10; fetchSize = 100; then no need to look for another page
-                            //
-                            return endOfData();
-                        } else {
-                            // the page has no more results, but rowCount = fetchSize.  need to check server for more results
-                            rowSet = null;
-                            rowCount.set(0);
-
-                        }
-                    }
-                }
-            };
-        };
-    }
-
-    private static AbstractIterator<List<Row>> fetchIterator(ThriftOperation operation, int fetchSize) {
-        return new AbstractIterator<List<Row>>() {
-
-            @Override
-            protected List<Row> computeNext() {
-
-                List<Row> results = fetchResults(operation, TFetchOrientation.FETCH_NEXT, fetchSize);
-
-                if (results != null && !results.isEmpty()) {
-                    return results;
-                } else {
-                    return endOfData();
-                }
-
-            }
-        };
     }
 }

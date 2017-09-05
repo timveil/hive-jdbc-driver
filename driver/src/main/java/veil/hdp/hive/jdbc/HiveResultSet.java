@@ -4,13 +4,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
+import veil.hdp.hive.jdbc.utils.FetchIterator;
+import veil.hdp.hive.jdbc.utils.ResultSetIterator;
 import veil.hdp.hive.jdbc.utils.ResultSetUtils;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -20,31 +20,29 @@ public class HiveResultSet extends AbstractResultSet {
 
     private static final Logger log = LogManager.getLogger(HiveResultSet.class);
 
-    // constructor
-    private ThriftOperation thriftOperation;
-    private Statement statement;
-    private Iterator<Row> results;
     private final int maxRows;
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
-
     // atomic
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicInteger rowCount = new AtomicInteger(0);
     private final AtomicReference<Row> currentRow = new AtomicReference<>();
-
+    // constructor
+    private ThriftOperation thriftOperation;
+    private Statement statement;
+    private ResultSetIterator iterator;
     // public getter & setter
     private int fetchSize;
     private int fetchDirection;
     private SQLWarning sqlWarning;
 
 
-    public HiveResultSet(ThriftOperation thriftOperation, Statement statement, Iterator<Row> results, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    public HiveResultSet(ThriftOperation thriftOperation, Statement statement, ResultSetIterator iterator, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.thriftOperation = thriftOperation;
         this.statement = statement;
-        this.results = results;
+        this.iterator = iterator;
         this.maxRows = maxRows;
         this.fetchSize = fetchSize;
         this.fetchDirection = fetchDirection;
@@ -93,7 +91,7 @@ public class HiveResultSet extends AbstractResultSet {
                 thriftOperation = null;
             }
 
-            results = null;
+            iterator = null;
 
             currentRow.set(null);
 
@@ -377,12 +375,12 @@ public class HiveResultSet extends AbstractResultSet {
 
     @Override
     public boolean next() throws SQLException {
-        if (!results.hasNext() || (maxRows > 0 && rowCount.get() >= maxRows)) {
+        if (!iterator.hasNext() || (maxRows > 0 && rowCount.get() >= maxRows)) {
             currentRow.set(null);
             return false;
         }
 
-        currentRow.set(results.next());
+        currentRow.set(iterator.next());
 
         rowCount.incrementAndGet();
 
@@ -516,13 +514,13 @@ public class HiveResultSet extends AbstractResultSet {
                 fetchSize = maxRows;
             }
 
-            Iterable<Row> results = ThriftUtils.getResults(thriftOperation, fetchSize);
-
             if (log.isTraceEnabled()) {
                 log.trace("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
             }
 
-            return new HiveResultSet(thriftOperation, statement, results.iterator(),
+            ResultSetIterator iterator = new ResultSetIterator(new FetchIterator(thriftOperation, fetchSize), fetchSize);
+
+            return new HiveResultSet(thriftOperation, statement, iterator,
                     maxRows,
                     fetchSize,
                     fetchDirection,
