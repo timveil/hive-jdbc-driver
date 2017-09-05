@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import com.google.common.collect.AbstractIterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
@@ -9,10 +8,9 @@ import veil.hdp.hive.jdbc.bindings.TRowSet;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class ColumnBasedSet implements Iterable<Row> {
+public class ColumnBasedSet {
 
     private static final Logger log = LogManager.getLogger(ColumnBasedSet.class);
 
@@ -38,35 +36,6 @@ public class ColumnBasedSet implements Iterable<Row> {
 
     public int getColumnCount() {
         return columns.size();
-    }
-
-    @Override
-    public Iterator<Row> iterator() {
-
-        return new AbstractIterator<Row>() {
-
-            private int index = 0;
-
-            @Override
-            protected Row computeNext() {
-
-                if (rowCount <= 0) {
-                    return endOfData();
-                }
-
-                if (index < rowCount) {
-                    Row row = Row.builder().columnBasedSet(ColumnBasedSet.this).row(index).build();
-
-                    index++;
-
-                    return row;
-                }
-
-                index = 0;
-
-                return endOfData();
-            }
-        };
     }
 
     public static class ColumnBasedSetBuilder implements Builder<ColumnBasedSet> {
