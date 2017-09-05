@@ -1,12 +1,10 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
 public class BooleanColumn extends BaseColumn<Boolean> {
-    BooleanColumn(ColumnDescriptor descriptor, Boolean value) {
-        super(descriptor, value);
+    BooleanColumn(Boolean value) {
+        super(value);
     }
 
     @Override

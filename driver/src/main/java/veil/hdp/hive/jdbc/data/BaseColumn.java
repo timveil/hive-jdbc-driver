@@ -24,21 +24,14 @@ public class BaseColumn<T> implements Column<T> {
 
     static final Logger log =  LogManager.getLogger(BaseColumn.class);
 
-    private final ColumnDescriptor descriptor;
-
     final T value;
 
-    BaseColumn(ColumnDescriptor columnDescriptor, T value) {
-        this.descriptor = columnDescriptor;
+    BaseColumn(T value) {
         this.value = value;
     }
 
     public static BaseColumnBuilder builder() {
         return new BaseColumnBuilder();
-    }
-
-    public ColumnDescriptor getDescriptor() {
-        return descriptor;
     }
 
     @Override
@@ -153,66 +146,50 @@ public class BaseColumn<T> implements Column<T> {
             boolean isNull = bitSet.get(row);
 
             if (columnData instanceof BooleanColumnData) {
-                BooleanColumnData data = (BooleanColumnData) columnData;
-
-                return new BooleanColumn(descriptor, isNull ? null : (Boolean) value);
+                return new BooleanColumn(isNull ? null : (Boolean) value);
 
             } else if (columnData instanceof ByteColumnData) {
-                ByteColumnData data = (ByteColumnData) columnData;
-
-                return new ByteColumn(descriptor, isNull ? null : (Byte) value);
+                return new ByteColumn(isNull ? null : (Byte) value);
 
             } else if (columnData instanceof ShortColumnData) {
-                ShortColumnData data = (ShortColumnData) columnData;
-
-                return new ShortColumn(descriptor, isNull ? null : (Short) value);
+                return new ShortColumn(isNull ? null : (Short) value);
 
             } else if (columnData instanceof IntegerColumnData) {
-                IntegerColumnData data = (IntegerColumnData) columnData;
-
-                return new IntegerColumn(descriptor, isNull ? null : (Integer) value);
+                return new IntegerColumn(isNull ? null : (Integer) value);
 
             } else if (columnData instanceof LongColumnData) {
-                LongColumnData data = (LongColumnData) columnData;
-
-                return new LongColumn(descriptor, isNull ? null : (Long) value);
+                return new LongColumn(isNull ? null : (Long) value);
 
             } else if (columnData instanceof BinaryColumnData) {
-                BinaryColumnData data = (BinaryColumnData) columnData;
-
-                return new BinaryColumn(descriptor, isNull ? null : (ByteBuffer) value);
+                return new BinaryColumn(isNull ? null : (ByteBuffer) value);
 
             } else if (columnData instanceof DoubleColumnData) {
-
-                DoubleColumnData data = (DoubleColumnData) columnData;
 
                 Double aDouble = (Double) value;
 
                 if (hiveType == FLOAT) {
-                    return new FloatColumn(descriptor, isNull ? null : new Float(aDouble));
+                    return new FloatColumn(isNull ? null : new Float(aDouble));
                 } else {
-                    return new DoubleColumn(descriptor, isNull ? null : aDouble);
+                    return new DoubleColumn(isNull ? null : aDouble);
                 }
 
             } else if (columnData instanceof StringColumnData) {
                 //may need to convert; STRING, LIST, MAP, STRUCT, UNIONTYPE, DECIMAL, NULL, CHAR, VARCHAR
 
-                StringColumnData data = (StringColumnData) columnData;
-
                 String aString = (String) value;
 
                 if (hiveType == DECIMAL) {
-                    return new DecimalColumn(descriptor, isNull ? null : new BigDecimal(aString));
+                    return new DecimalColumn(isNull ? null : new BigDecimal(aString));
                 } else if (hiveType == CHAR) {
-                    return new CharacterColumn(descriptor, isNull ? null : aString.charAt(0));
+                    return new CharacterColumn(isNull ? null : aString.charAt(0));
                 } else if (hiveType == VARCHAR) {
-                    return new VarcharColumn(descriptor, isNull ? null : aString);
+                    return new VarcharColumn(isNull ? null : aString);
                 } else if (hiveType == TIMESTAMP) {
-                    return new TimestampColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(aString));
+                    return new TimestampColumn(isNull ? null : SqlDateTimeUtils.convertStringToTimestamp(aString));
                 } else if (hiveType == DATE) {
-                    return new DateColumn(descriptor, isNull ? null : SqlDateTimeUtils.convertStringToDate(aString));
+                    return new DateColumn(isNull ? null : SqlDateTimeUtils.convertStringToDate(aString));
                 } else {
-                    return new StringColumn(descriptor, isNull ? null : aString);
+                    return new StringColumn(isNull ? null : aString);
                 }
 
                 // todo; add others
@@ -220,7 +197,6 @@ public class BaseColumn<T> implements Column<T> {
             } else {
                 throw new IllegalStateException(MessageFormat.format("unknown instance of ColumnData [{0}]", columnData));
             }
-
 
         }
 

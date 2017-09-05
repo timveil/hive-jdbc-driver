@@ -1,12 +1,10 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
 public class FloatColumn extends BaseColumn<Float> {
-    FloatColumn(ColumnDescriptor descriptor, Float value) {
-        super(descriptor, value);
+    FloatColumn(Float value) {
+        super(value);
     }
 
     @Override

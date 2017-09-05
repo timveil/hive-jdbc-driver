@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
 public class LongColumn extends BaseColumn<Long> {
@@ -12,8 +10,8 @@ public class LongColumn extends BaseColumn<Long> {
      */
 
 
-    LongColumn(ColumnDescriptor descriptor, Long value) {
-        super(descriptor, value);
+    LongColumn(Long value) {
+        super(value);
     }
 
     @Override

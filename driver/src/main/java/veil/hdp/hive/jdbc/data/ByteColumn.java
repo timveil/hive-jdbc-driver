@@ -1,12 +1,10 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
 public class ByteColumn extends BaseColumn<Byte> {
-    ByteColumn(ColumnDescriptor descriptor, Byte value) {
-        super(descriptor, value);
+    ByteColumn(Byte value) {
+        super(value);
     }
 
     @Override

@@ -1,13 +1,11 @@
 package veil.hdp.hive.jdbc.data;
 
 
-import com.google.common.primitives.Ints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Row {
@@ -29,8 +27,6 @@ public class Row {
     }
 
     public static class RowBuilder implements Builder<Row> {
-
-        private static final Comparator<Column> COLUMN_COMPARATOR = (o1, o2) -> Ints.compare(o1.getDescriptor().getPosition(), o2.getDescriptor().getPosition());
 
         private ColumnBasedSet columnBasedSet;
         private int row;
@@ -62,7 +58,6 @@ public class Row {
                     columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
                 }
 
-                columns.sort(COLUMN_COMPARATOR);
             }
 
             return new Row(columns);

@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -13,8 +11,8 @@ public class DateColumn extends BaseColumn<Date> {
     for hive always use string representation and static helpers on java.sql.Date to construct
      */
 
-    DateColumn(ColumnDescriptor descriptor, Date value) {
-        super(descriptor, value);
+    DateColumn(Date value) {
+        super(value);
     }
 
     @Override

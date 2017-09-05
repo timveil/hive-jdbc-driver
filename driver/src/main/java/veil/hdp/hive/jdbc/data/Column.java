@@ -1,7 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -10,8 +8,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 public interface Column<T> {
-
-    ColumnDescriptor getDescriptor();
 
     T getValue();
 
