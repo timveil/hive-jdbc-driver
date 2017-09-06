@@ -31,7 +31,7 @@ public class HiveResultSet extends AbstractResultSet {
     private final AtomicReference<Row> currentRow = new AtomicReference<>();
     // constructor
     private ThriftOperation thriftOperation;
-    private Statement statement;
+    private final Statement statement;
     private ResultSetIterator iterator;
     // public getter & setter
     private int fetchSize;

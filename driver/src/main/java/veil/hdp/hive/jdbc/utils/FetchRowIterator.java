@@ -6,7 +6,7 @@ import veil.hdp.hive.jdbc.data.Row;
 
 class FetchRowIterator extends AbstractIterator<Row> {
 
-    private ColumnBasedSet columnBasedSet;
+    private final ColumnBasedSet columnBasedSet;
     private int index = 0;
 
     public FetchRowIterator(ColumnBasedSet columnBasedSet) {

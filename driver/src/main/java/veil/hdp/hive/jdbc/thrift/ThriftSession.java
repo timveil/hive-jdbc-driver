@@ -34,7 +34,7 @@ public class ThriftSession implements AutoCloseable {
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
     private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
-            .maximumSize(50)
+            .maximumSize(500)
             .build(new ColumnTypeCacheLoader());
 
 
