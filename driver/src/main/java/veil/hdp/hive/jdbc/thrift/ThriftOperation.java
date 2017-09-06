@@ -126,7 +126,7 @@ public class ThriftOperation implements AutoCloseable {
             int modifiedCount = -1;
 
             if (operationHandle.isSetModifiedRowCount()) {
-                modifiedCount = new Double(operationHandle.getModifiedRowCount()).intValue();
+                modifiedCount = (int) operationHandle.getModifiedRowCount();
             }
 
             String operation = null;
