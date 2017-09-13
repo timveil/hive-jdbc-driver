@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import java.sql.SQLException;
 
-public class ByteColumn extends BaseColumn<Byte> {
+public class ByteColumn extends AbstractColumn<Byte> {
     ByteColumn(Byte value) {
         super(value);
     }

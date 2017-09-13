@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import java.sql.SQLException;
 
-public class DoubleColumn extends BaseColumn<Double> {
+public class DoubleColumn extends AbstractColumn<Double> {
     DoubleColumn(Double value) {
         super(value);
     }

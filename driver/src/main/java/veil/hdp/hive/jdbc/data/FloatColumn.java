@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import java.sql.SQLException;
 
-public class FloatColumn extends BaseColumn<Float> {
+public class FloatColumn extends AbstractColumn<Float> {
     FloatColumn(Float value) {
         super(value);
     }

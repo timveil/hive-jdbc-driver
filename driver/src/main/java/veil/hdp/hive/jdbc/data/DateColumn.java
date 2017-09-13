@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.data;
 import java.sql.Date;
 import java.sql.SQLException;
 
-public class DateColumn extends BaseColumn<Date> {
+public class DateColumn extends AbstractColumn<Date> {
 
     /*
     resist temptation to convert timestamp/date to long.  java.sql.date does not need/want time and doesn't fit spec

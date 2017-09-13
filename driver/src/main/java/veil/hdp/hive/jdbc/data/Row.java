@@ -55,7 +55,7 @@ public class Row {
             if (columnCount > 0) {
 
                 for (ColumnData columnData : columnBasedSet.getColumns()) {
-                    columns.add(BaseColumn.builder().row(row).columnData(columnData).build());
+                    columns.add(columnData.getColumn(row));
                 }
 
             }

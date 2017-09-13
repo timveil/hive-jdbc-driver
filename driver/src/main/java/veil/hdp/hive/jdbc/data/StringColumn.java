@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 
 import static java.lang.Boolean.valueOf;
 
-public class StringColumn extends BaseColumn<String> {
+public class StringColumn extends AbstractColumn<String> {
 
     StringColumn(String value) {
         super(value);

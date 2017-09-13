@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import java.sql.SQLException;
 
-public class BooleanColumn extends BaseColumn<Boolean> {
+public class BooleanColumn extends AbstractColumn<Boolean> {
     BooleanColumn(Boolean value) {
         super(value);
     }

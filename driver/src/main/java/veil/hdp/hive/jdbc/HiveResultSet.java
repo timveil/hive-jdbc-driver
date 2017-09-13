@@ -2,6 +2,7 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import veil.hdp.hive.jdbc.bindings.TFetchOrientation;
 import veil.hdp.hive.jdbc.data.Row;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 import veil.hdp.hive.jdbc.utils.FetchIterator;
@@ -518,7 +519,7 @@ public class HiveResultSet extends AbstractResultSet {
                 log.trace("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
             }
 
-            ResultSetIterator iterator = new ResultSetIterator(new FetchIterator(thriftOperation, fetchSize), fetchSize);
+            ResultSetIterator iterator = new ResultSetIterator(new FetchIterator(thriftOperation, TFetchOrientation.FETCH_NEXT, fetchSize), fetchSize);
 
             return new HiveResultSet(thriftOperation, statement, iterator,
                     maxRows,

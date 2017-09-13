@@ -3,7 +3,7 @@ package veil.hdp.hive.jdbc.data;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-public class DecimalColumn extends BaseColumn<BigDecimal> {
+public class DecimalColumn extends AbstractColumn<BigDecimal> {
     DecimalColumn(BigDecimal value) {
         super(value);
     }

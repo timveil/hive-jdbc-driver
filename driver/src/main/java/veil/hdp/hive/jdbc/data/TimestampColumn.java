@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-public class TimestampColumn extends BaseColumn<Timestamp> {
+public class TimestampColumn extends AbstractColumn<Timestamp> {
 
         /*
     resist temptation to convert timestamp/date to long.  java.sql.date does not need/want time and doesn't fit spec

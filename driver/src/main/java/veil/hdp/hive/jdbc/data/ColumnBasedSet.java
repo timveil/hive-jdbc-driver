@@ -3,14 +3,20 @@ package veil.hdp.hive.jdbc.data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.bindings.TColumn;
-import veil.hdp.hive.jdbc.bindings.TRowSet;
+import veil.hdp.hive.jdbc.bindings.*;
+import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.metadata.Schema;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class ColumnBasedSet {
+
+    private static final byte[] MASKS = {
+            0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
+    };
 
     private static final Logger log = LogManager.getLogger(ColumnBasedSet.class);
 
@@ -46,6 +52,26 @@ public class ColumnBasedSet {
         private ColumnBasedSetBuilder() {
         }
 
+        private static BitSet buildBitSet(byte[] nulls) {
+            int nullsLength = nulls.length;
+            int bitsLength = nullsLength * 8;
+
+            BitSet bitset = new BitSet(bitsLength);
+
+            for (int i = 0; i < bitsLength; i++) {
+                int nullIndex = i / 8;
+                int maskIndex = i % 8;
+
+                byte aNull = nulls[nullIndex];
+                byte mask = MASKS[maskIndex];
+
+                boolean isNull = (aNull & mask) != 0;
+                bitset.set(i, isNull);
+            }
+
+            return bitset;
+        }
+
         public ColumnBasedSetBuilder rowSet(TRowSet tRowSet) {
             this.rowSet = tRowSet;
             return this;
@@ -58,28 +84,51 @@ public class ColumnBasedSet {
 
         public ColumnBasedSet build() {
 
-            List<TColumn> tColumns = rowSet.getColumns();
+            List<ColumnData> columns = new ArrayList<>(rowSet.getColumnsSize());
 
-            List<ColumnData> columns = new ArrayList<>(tColumns.size());
+            Iterator<TColumn> columnsIterator = rowSet.getColumnsIterator();
 
             int position = 1;
 
             int rowCount = -1;
 
-            if (!tColumns.isEmpty()) {
+            while (columnsIterator.hasNext()) {
 
-                for (TColumn column : tColumns) {
+                TColumn column = columnsIterator.next();
 
-                    ColumnData data = ColumnData.builder().column(column).descriptor(schema.getColumn(position)).build();
+                ColumnDescriptor columnDescriptor = schema.getColumn(position);
 
-                    if (rowCount == -1) {
-                        rowCount = data.getRowCount();
-                    }
-
-                    columns.add(data);
-
-                    position++;
+                if (column.isSetBoolVal()) {
+                    TBoolColumn boolVal = column.getBoolVal();
+                    columns.add(new BooleanColumnData(columnDescriptor, boolVal.getValues(), buildBitSet(boolVal.getNulls()), boolVal.getValuesSize()));
+                } else if (column.isSetByteVal()) {
+                    TByteColumn byteVal = column.getByteVal();
+                    columns.add(new ByteColumnData(columnDescriptor, byteVal.getValues(), buildBitSet(byteVal.getNulls()), byteVal.getValuesSize()));
+                } else if (column.isSetI16Val()) {
+                    TI16Column i16Val = column.getI16Val();
+                    columns.add(new ShortColumnData(columnDescriptor, i16Val.getValues(), buildBitSet(i16Val.getNulls()), i16Val.getValuesSize()));
+                } else if (column.isSetI32Val()) {
+                    TI32Column i32Val = column.getI32Val();
+                    columns.add(new IntegerColumnData(columnDescriptor, i32Val.getValues(), buildBitSet(i32Val.getNulls()), i32Val.getValuesSize()));
+                } else if (column.isSetI64Val()) {
+                    TI64Column i64Val = column.getI64Val();
+                    columns.add(new LongColumnData(columnDescriptor, i64Val.getValues(), buildBitSet(i64Val.getNulls()), i64Val.getValuesSize()));
+                } else if (column.isSetDoubleVal()) {
+                    TDoubleColumn doubleVal = column.getDoubleVal();
+                    columns.add(new DoubleColumnData(columnDescriptor, doubleVal.getValues(), buildBitSet(doubleVal.getNulls()), doubleVal.getValuesSize()));
+                } else if (column.isSetBinaryVal()) {
+                    TBinaryColumn binaryVal = column.getBinaryVal();
+                    columns.add(new BinaryColumnData(columnDescriptor, binaryVal.getValues(), buildBitSet(binaryVal.getNulls()), binaryVal.getValuesSize()));
+                } else if (column.isSetStringVal()) {
+                    TStringColumn stringVal = column.getStringVal();
+                    columns.add(new StringColumnData(columnDescriptor, stringVal.getValues(), buildBitSet(stringVal.getNulls()), stringVal.getValuesSize()));
                 }
+
+                position++;
+            }
+
+            if (!columns.isEmpty()) {
+                rowCount = columns.get(0).getRowCount();
             }
 
 

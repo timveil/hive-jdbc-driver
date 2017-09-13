@@ -2,7 +2,7 @@ package veil.hdp.hive.jdbc.data;
 
 import java.sql.SQLException;
 
-public class ShortColumn extends BaseColumn<Short> {
+public class ShortColumn extends AbstractColumn<Short> {
 
     ShortColumn(Short value) {
         super(value);

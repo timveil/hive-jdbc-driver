@@ -13,16 +13,18 @@ public class FetchIterator extends AbstractIterator<ColumnBasedSet> {
 
     private final ThriftOperation operation;
     private final int fetchSize;
+    private final TFetchOrientation orientation;
 
-    public FetchIterator(ThriftOperation operation, int fetchSize) {
+    public FetchIterator(ThriftOperation operation, TFetchOrientation orientation, int fetchSize) {
         this.operation = operation;
+        this.orientation = orientation;
         this.fetchSize = fetchSize;
     }
 
     @Override
     protected ColumnBasedSet computeNext() {
 
-        ColumnBasedSet cbs = ThriftUtils.fetchResults(operation, TFetchOrientation.FETCH_NEXT, fetchSize);
+        ColumnBasedSet cbs = ThriftUtils.fetchResults(operation, orientation, fetchSize);
 
         if (cbs != null && cbs.getRowCount() > 0) {
             return cbs;
