@@ -11,6 +11,7 @@ import veil.hdp.hive.jdbc.utils.ThriftUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveStatement extends AbstractStatement {
 
@@ -21,10 +22,9 @@ public class HiveStatement extends AbstractStatement {
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
-
+    private final AtomicBoolean closed = new AtomicBoolean(true);
     // private
     private ThriftOperation thriftOperation = null;
-
     // public getter & setter
     private int queryTimeout;
     private int maxRows;
@@ -33,7 +33,6 @@ public class HiveStatement extends AbstractStatement {
     private SQLWarning sqlWarning;
     private int updateCount = -1;
     private ResultSet resultSet;
-
 
 
     HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
@@ -46,6 +45,8 @@ public class HiveStatement extends AbstractStatement {
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;
+
+        closed.set(false);
     }
 
     public static HiveStatementBuilder builder() {
@@ -171,11 +172,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public boolean isClosed() throws SQLException {
-        if (thriftOperation != null) {
-            return thriftOperation.isClosed();
-        }
-
-        return true;
+        return closed.get();
     }
 
     @Override
@@ -206,23 +203,27 @@ public class HiveStatement extends AbstractStatement {
     @Override
     public void close() throws SQLException {
 
-        if (thriftOperation != null) {
+        if (closed.compareAndSet(false, true)) {
 
             if (log.isTraceEnabled()) {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            try {
-                thriftOperation.close();
-            } catch (Exception e) {
-                log.warn(e.getMessage(), e);
-            } finally {
+            if (thriftOperation != null && !thriftOperation.isClosed()) {
+                try {
+                    thriftOperation.close();
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                }
+
                 thriftOperation = null;
             }
 
-            resultSet.close();
+            if (resultSet != null && !resultSet.isClosed()) {
+                resultSet.close();
+                resultSet = null;
+            }
 
-            resultSet = null;
         }
     }
 

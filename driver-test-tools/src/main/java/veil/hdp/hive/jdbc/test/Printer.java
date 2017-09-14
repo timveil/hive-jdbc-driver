@@ -63,7 +63,7 @@ final class Printer {
 
             while (rs.next()) {
 
-                List<String> row = new ArrayList<>();
+                List<String> row = new ArrayList<>(columnCount);
 
                 for (int i = 0; i < columnCount; i++) {
 

@@ -84,13 +84,15 @@ public class HiveResultSet extends AbstractResultSet {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            try {
-                thriftOperation.close();
-            } catch (Exception e) {
-                log.warn(e.getMessage(), e);
-            } finally {
-                thriftOperation = null;
+            if (!thriftOperation.isClosed()) {
+                try {
+                    thriftOperation.close();
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                }
             }
+
+            thriftOperation = null;
 
             iterator = null;
 
