@@ -17,7 +17,7 @@ public class DateColumn extends AbstractColumn<Date> {
 
     @Override
     public Date asDate() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override

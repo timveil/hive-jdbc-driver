@@ -28,7 +28,7 @@ class StringColumnData extends AbstractColumnData<String> {
         } else if (stringType == CHAR) {
             return new CharacterColumn(value == null ? null : value.charAt(0));
         } else if (stringType == VARCHAR) {
-            return new VarcharColumn(value == null ? null : value);
+            return new VarcharColumn(value);
         } else if (stringType == TIMESTAMP) {
             return new TimestampColumn(value == null ? null : SqlDateTimeUtils.convertStringToTimestamp(value));
         } else if (stringType == DATE) {

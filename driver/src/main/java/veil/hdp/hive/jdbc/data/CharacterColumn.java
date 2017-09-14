@@ -10,7 +10,7 @@ public class CharacterColumn extends AbstractColumn<Character> {
 
     @Override
     public Character asCharacter() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override

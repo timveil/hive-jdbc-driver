@@ -21,7 +21,7 @@ public class TimestampColumn extends AbstractColumn<Timestamp> {
 
     @Override
     public Timestamp asTimestamp() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override
