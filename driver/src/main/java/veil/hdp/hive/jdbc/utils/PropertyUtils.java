@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,10 @@ public class PropertyUtils {
     private PropertyUtils() throws IOException {
 
         properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/driver-config.properties"));
+
+        try (InputStream resourceAsStream = getClass().getResourceAsStream("/driver-config.properties")) {
+            properties.load(resourceAsStream);
+        }
 
     }
 

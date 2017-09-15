@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
-import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -18,7 +17,7 @@ public class HiveConnection extends AbstractConnection {
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
     // constructor
-    private final ThriftSession thriftSession;
+    private ThriftSession thriftSession;
 
     // public getter & setter
     private SQLWarning sqlWarning;
@@ -44,8 +43,10 @@ public class HiveConnection extends AbstractConnection {
 
         try {
             thriftSession.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn(e.getMessage(), e);
+        } finally {
+            thriftSession = null;
         }
     }
 
@@ -58,20 +59,18 @@ public class HiveConnection extends AbstractConnection {
     public Statement createStatement() throws SQLException {
         return HiveStatement.builder()
                 .connection(this)
-                .type(ResultSet.TYPE_FORWARD_ONLY)
-                .concurrency(ResultSet.CONCUR_READ_ONLY)
                 .holdability(getHoldability())
                 .build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return HivePreparedStatement.builder().connection(this).sql(sql).build();
+        return HivePreparedStatement.builder().connection(this).sql(sql).holdability(getHoldability()).build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return HivePreparedStatement.builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).build();
+        return HivePreparedStatement.builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(getHoldability()).build();
     }
 
     @Override

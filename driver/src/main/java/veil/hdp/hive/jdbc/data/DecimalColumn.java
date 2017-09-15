@@ -1,18 +1,16 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-public class DecimalColumn extends BaseColumn<BigDecimal> {
-    DecimalColumn(ColumnDescriptor descriptor, BigDecimal value) {
-        super(descriptor, value);
+public class DecimalColumn extends AbstractColumn<BigDecimal> {
+    DecimalColumn(BigDecimal value) {
+        super(value);
     }
 
     @Override
     public BigDecimal asBigDecimal() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override

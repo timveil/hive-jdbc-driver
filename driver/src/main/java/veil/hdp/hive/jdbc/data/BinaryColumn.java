@@ -1,15 +1,13 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 
-public class BinaryColumn extends BaseColumn<ByteBuffer> {
-    BinaryColumn(ColumnDescriptor descriptor, ByteBuffer value) {
-        super(descriptor, value);
+public class BinaryColumn extends AbstractColumn<ByteBuffer> {
+    BinaryColumn(ByteBuffer value) {
+        super(value);
     }
 
 

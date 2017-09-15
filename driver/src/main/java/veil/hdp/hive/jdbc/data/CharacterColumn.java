@@ -1,18 +1,16 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
-public class CharacterColumn extends BaseColumn<Character> {
-    CharacterColumn(ColumnDescriptor descriptor, Character value) {
-        super(descriptor, value);
+public class CharacterColumn extends AbstractColumn<Character> {
+    CharacterColumn(Character value) {
+        super(value);
     }
 
 
     @Override
     public Character asCharacter() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override

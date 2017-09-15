@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ThriftTransport implements Closeable {
+public class ThriftTransport implements AutoCloseable {
 
     private static final Logger log =  LogManager.getLogger(ThriftTransport.class);
 
-    private final TTransport transport;
-
-    private final List<Closeable> closeableList;
+    // constructor
+    private TTransport transport;
+    private List<Closeable> closeableList;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -60,7 +60,7 @@ public class ThriftTransport implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
 
         if (closed.compareAndSet(false, true)) {
 
@@ -79,13 +79,19 @@ public class ThriftTransport implements Closeable {
                     closeable.close();
                 } catch (IOException e) {
                     log.warn(e.getMessage(), e);
+                } finally {
+                    closeable = null;
                 }
             }
+
+            closeableList = null;
 
             try {
                 transport.close();
             } catch (Exception e) {
                 log.warn(e.getMessage(), e);
+            } finally {
+                transport = null;
             }
 
         }

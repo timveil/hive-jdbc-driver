@@ -1,4 +1,4 @@
-package veil.hdp.hive.jdbc;
+package veil.hdp.hive.jdbc.test;
 
 import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +48,7 @@ final class Printer {
 
     }
 
-    static void printResultSet(ResultSet rs, boolean printMetaData) {
+    static void printResultSet(ResultSet rs, boolean printResults, boolean printMetaData) {
 
 
         try {
@@ -63,7 +63,7 @@ final class Printer {
 
             while (rs.next()) {
 
-                List<String> row = new ArrayList<>();
+                List<String> row = new ArrayList<>(columnCount);
 
                 for (int i = 0; i < columnCount; i++) {
 
@@ -74,10 +74,9 @@ final class Printer {
 
                 }
 
-
-                String join = Joiner.on(",").join(row);
-
-                log.debug("row {} - data [{}]", counter, join);
+                if (printResults) {
+                    log.debug("row {} - data [{}]", counter, Joiner.on(",").join(row));
+                }
 
                 counter++;
             }

@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.utils.SqlDateTimeUtils;
 
 import java.sql.Date;
@@ -8,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-public class TimestampColumn extends BaseColumn<Timestamp> {
+public class TimestampColumn extends AbstractColumn<Timestamp> {
 
         /*
     resist temptation to convert timestamp/date to long.  java.sql.date does not need/want time and doesn't fit spec
@@ -16,13 +15,13 @@ public class TimestampColumn extends BaseColumn<Timestamp> {
     for hive always use string representation and static helpers on java.sql.Date to construct
      */
 
-    TimestampColumn(ColumnDescriptor descriptor, Timestamp value) {
-        super(descriptor, value);
+    TimestampColumn(Timestamp value) {
+        super(value);
     }
 
     @Override
     public Timestamp asTimestamp() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override

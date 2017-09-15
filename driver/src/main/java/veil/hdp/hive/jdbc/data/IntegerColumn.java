@@ -1,12 +1,10 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
-public class IntegerColumn extends BaseColumn<Integer> {
-    IntegerColumn(ColumnDescriptor descriptor, Integer value) {
-        super(descriptor, value);
+public class IntegerColumn extends AbstractColumn<Integer> {
+    IntegerColumn(Integer value) {
+        super(value);
     }
 
     @Override

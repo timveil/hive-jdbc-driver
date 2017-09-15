@@ -1,13 +1,11 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
-public class ShortColumn extends BaseColumn<Short> {
+public class ShortColumn extends AbstractColumn<Short> {
 
-    ShortColumn(ColumnDescriptor descriptor, Short value) {
-        super(descriptor, value);
+    ShortColumn(Short value) {
+        super(value);
     }
 
     @Override

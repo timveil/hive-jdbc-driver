@@ -14,6 +14,7 @@ import javax.net.ssl.SSLSocket;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 import javax.security.sasl.Sasl;
+import javax.security.sasl.SaslClient;
 import javax.security.sasl.SaslException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Properties;
 
 public final class BinaryUtils {
 
-    private static final Logger log =  LogManager.getLogger(BinaryUtils.class);
+    private static final Logger log = LogManager.getLogger(BinaryUtils.class);
     private static final String ENDPOINT_IDENTIFICATION_ALGORITHM_NAME = "HTTPS";
 
     private BinaryUtils() {
@@ -102,14 +103,12 @@ public final class BinaryUtils {
     private static TTransport buildSocketWithSASL(TSocket socket) {
 
         try {
+
+            SaslClient saslClient = Sasl.createSaslClient(new String[]{SaslMechanism.PLAIN.name()}, null, null, null, null, new AnonymousCallbackHandler());
+
             // some userid must be specified.  it can really be anything when AuthenticationMode = NONE
-            return new TSaslClientTransport(SaslMechanism.PLAIN.name(),
-                    null,
-                    null,
-                    null,
-                    null,
-                    new AnonymousCallbackHandler(),
-                    socket);
+            return new TSaslClientTransport(saslClient, socket);
+
         } catch (SaslException e) {
             throw new HiveException(e);
         }
@@ -146,14 +145,9 @@ public final class BinaryUtils {
         saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));
         saslProps.put(Sasl.SERVER_AUTH, HiveDriverProperty.SASL_SERVER_AUTHENTICATION_ENABLED.get(properties));
 
-        return new TSaslClientTransport(
-                SaslMechanism.GSSAPI.name(),
-                null,
-                servicePrincipal.getService(),
-                servicePrincipal.getHost(),
-                saslProps,
-                new TextCallbackHandler(),
-                socket);
+        SaslClient saslClient = Sasl.createSaslClient(new String[]{SaslMechanism.GSSAPI.name()}, null, servicePrincipal.getService(), servicePrincipal.getHost(), saslProps, new TextCallbackHandler());
+
+        return new TSaslClientTransport(saslClient, socket);
     }
 
 

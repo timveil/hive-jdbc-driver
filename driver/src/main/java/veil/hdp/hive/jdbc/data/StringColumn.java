@@ -1,6 +1,5 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
 import veil.hdp.hive.jdbc.utils.SqlDateTimeUtils;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +12,10 @@ import java.sql.Timestamp;
 
 import static java.lang.Boolean.valueOf;
 
-public class StringColumn extends BaseColumn<String> {
+public class StringColumn extends AbstractColumn<String> {
 
-    StringColumn(ColumnDescriptor descriptor, String value) {
-        super(descriptor, value);
+    StringColumn(String value) {
+        super(value);
     }
 
     @Override

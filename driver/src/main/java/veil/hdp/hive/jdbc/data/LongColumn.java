@@ -1,10 +1,8 @@
 package veil.hdp.hive.jdbc.data;
 
-import veil.hdp.hive.jdbc.metadata.ColumnDescriptor;
-
 import java.sql.SQLException;
 
-public class LongColumn extends BaseColumn<Long> {
+public class LongColumn extends AbstractColumn<Long> {
             /*
     resist temptation to convert long to timestamp/date/time.  java.sql.date does not need/want time and doesn't fit spec
     furthermore, time as long assumes timezone as GMT and can cause unexpected results.
@@ -12,8 +10,8 @@ public class LongColumn extends BaseColumn<Long> {
      */
 
 
-    LongColumn(ColumnDescriptor descriptor, Long value) {
-        super(descriptor, value);
+    LongColumn(Long value) {
+        super(value);
     }
 
     @Override
