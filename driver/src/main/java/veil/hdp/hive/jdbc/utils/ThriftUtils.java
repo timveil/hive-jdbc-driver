@@ -36,13 +36,24 @@ public final class ThriftUtils {
 
     public static void openTransport(TTransport transport, int timeout) {
 
-        ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "open-thrift-transport-thread"));
+        ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "open-thrift-transport-thread");
+            }
+        });
 
         try {
 
-            Future<Boolean> future = executor.submit(() -> {
-                transport.open();
-                return true;
+            Future future = executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        transport.open();
+                    } catch (TTransportException e) {
+                        throw new HiveException(e);
+                    }
+                }
             });
 
             future.get(timeout, TimeUnit.MILLISECONDS);
