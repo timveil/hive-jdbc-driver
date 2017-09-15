@@ -76,10 +76,11 @@ public class ThriftOperation implements AutoCloseable {
                 log.trace("attempting to close {}", this.getClass().getName());
             }
 
-            ThriftUtils.closeOperation(this);
+            ThriftUtils.closeOperation(session, operationHandle);
 
-            schema = null;
             operationHandle = null;
+            schema = null;
+
         }
     }
 

@@ -22,20 +22,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ThriftSession implements AutoCloseable {
 
     private static final Logger log = LogManager.getLogger(ThriftSession.class);
-
+    private final Properties properties;
+    // atomic
+    private final AtomicBoolean closed = new AtomicBoolean(true);
+    private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
+            .maximumSize(500)
+            .build(new ColumnTypeCacheLoader());
     // constructor
     private ThriftTransport thriftTransport;
     private TCLIService.Iface client;
     private TSessionHandle sessionHandle;
-    private final Properties properties;
     private TProtocolVersion protocol;
-
-    // atomic
-    private final AtomicBoolean closed = new AtomicBoolean(true);
-
-    private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
-            .maximumSize(500)
-            .build(new ColumnTypeCacheLoader());
 
 
     private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Iface client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
@@ -103,7 +100,9 @@ public class ThriftSession implements AutoCloseable {
 
             sessionHandle = null;
 
-            thriftTransport.close();
+            if (!thriftTransport.isClosed()) {
+                thriftTransport.close();
+            }
 
             thriftTransport = null;
 

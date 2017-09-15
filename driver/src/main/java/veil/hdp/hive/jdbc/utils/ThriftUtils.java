@@ -133,11 +133,8 @@ public final class ThriftUtils {
 
     }
 
-    public static void closeOperation(ThriftOperation operation) {
-        closeOperation(operation.getSession(), operation.getOperationHandle());
-    }
 
-    private static void closeOperation(ThriftSession session, TOperationHandle handle) {
+    public static void closeOperation(ThriftSession session, TOperationHandle handle) {
         TCloseOperationReq closeRequest = new TCloseOperationReq(handle);
 
         TCloseOperationResp resp = null;
