@@ -10,7 +10,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
 
     @Override
     public BigDecimal asBigDecimal() throws SQLException {
-        return getValue();
+        return value;
     }
 
     @Override
