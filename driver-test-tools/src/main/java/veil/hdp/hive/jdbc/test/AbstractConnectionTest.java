@@ -20,8 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractConnectionTest extends BaseTest {
 
-    private static final MetricRegistry metrics = new MetricRegistry();
     private static final int WARMUP = 10;
+    private static final String SIMPLE_QUERY_LOAD = MetricRegistry.name(AbstractConnectionTest.class, "testSimpleQueryLoad");
+    private static final String PREPARED_STATEMENT_LOAD = MetricRegistry.name(AbstractConnectionTest.class, "testPreparedStatementLoad");
+    private static MetricRegistry METRIC_REGISTRY = new MetricRegistry();
+
     private Connection connection;
 
     public abstract Connection createConnection(String host) throws SQLException;
@@ -35,7 +38,14 @@ public abstract class AbstractConnectionTest extends BaseTest {
     public void tearDown() throws Exception {
         if (connection != null) {
             connection.close();
+            connection = null;
         }
+
+        METRIC_REGISTRY.remove(SIMPLE_QUERY_LOAD);
+        METRIC_REGISTRY.remove(PREPARED_STATEMENT_LOAD);
+
+        METRIC_REGISTRY = null;
+
     }
 
     @Test
@@ -213,15 +223,14 @@ public abstract class AbstractConnectionTest extends BaseTest {
             executeSimpleQuery(false, false);
         }
 
-        String name = MetricRegistry.name(this.getClass(), "testSimpleQueryLoad");
 
         try (ConsoleReporter reporter = ConsoleReporter
-                .forRegistry(metrics)
+                .forRegistry(METRIC_REGISTRY)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build()) {
 
 
-            Timer timer = metrics.timer(name);
+            Timer timer = METRIC_REGISTRY.timer(SIMPLE_QUERY_LOAD);
 
             for (int i = 0; i < getTestRuns(); i++) {
 
@@ -251,15 +260,14 @@ public abstract class AbstractConnectionTest extends BaseTest {
             executePreparedStatement(false, false);
         }
 
-        String name = MetricRegistry.name(this.getClass(), "testPreparedStatementLoad");
 
         try (ConsoleReporter reporter = ConsoleReporter
-                .forRegistry(metrics)
+                .forRegistry(METRIC_REGISTRY)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build()) {
 
 
-            Timer timer = metrics.timer(name);
+            Timer timer = METRIC_REGISTRY.timer(PREPARED_STATEMENT_LOAD);
 
             for (int i = 0; i < getTestRuns(); i++) {
                 log.debug("run # {}", i);

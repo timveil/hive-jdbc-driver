@@ -12,6 +12,7 @@ import java.util.List;
 
 final class Printer {
     private static final Logger log = LogManager.getLogger(Printer.class);
+    private static final String SEPARATOR = ",";
 
     private Printer() {
     }
@@ -75,7 +76,7 @@ final class Printer {
                 }
 
                 if (printResults) {
-                    log.debug("row {} - data [{}]", counter, Joiner.on(",").join(row));
+                    log.debug("row {} - data [{}]", counter, Joiner.on(SEPARATOR).join(row));
                 }
 
                 counter++;
