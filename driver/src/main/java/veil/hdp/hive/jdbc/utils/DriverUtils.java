@@ -25,8 +25,10 @@ public final class DriverUtils {
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";
     private static final String JDBC_HIVE2_PREFIX = JDBC_PART + HIVE2_PART + "//";
-    private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile("/");
+    private static final String FORWARD_SLASH = "/";
+    private static final Pattern FORWARD_SLASH_PATTERN = Pattern.compile(FORWARD_SLASH);
     private static final Pattern JDBC_PATTERN = Pattern.compile(JDBC_PART, Pattern.LITERAL);
+    private static final String EMPTY_STRING = "";
 
     private DriverUtils() {
     }
@@ -190,8 +192,8 @@ public final class DriverUtils {
     private static String getDatabaseName(URI uri) {
         String path = uri.getPath();
 
-        if (path != null && path.startsWith("/")) {
-            return FORWARD_SLASH_PATTERN.matcher(path).replaceFirst("");
+        if (path != null && path.startsWith(FORWARD_SLASH)) {
+            return FORWARD_SLASH_PATTERN.matcher(path).replaceFirst(EMPTY_STRING);
         }
 
         return null;
@@ -199,7 +201,7 @@ public final class DriverUtils {
 
 
     private static String stripPrefix(String url) {
-        return JDBC_PATTERN.matcher(url).replaceAll(Matcher.quoteReplacement(""));
+        return JDBC_PATTERN.matcher(url).replaceAll(Matcher.quoteReplacement(EMPTY_STRING));
 
     }
 

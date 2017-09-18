@@ -45,7 +45,7 @@ public enum HiveDriverProperty {
 
     FETCH_SIZE("fetchSize", "1000", null, null),
 
-    FETCH_SERVER_LOGS("fetchLogs", "false", null, null),
+    FETCH_SERVER_LOGS("fetchLogs", Boolean.FALSE.toString(), null, null),
 
 
     /***************************************************
@@ -78,7 +78,7 @@ public enum HiveDriverProperty {
 
     HTTP_ENDPOINT("httpEndpoint", "cliservice", null, "hive.server2.thrift.http.path", null, new String[]{"httpPath"}),
 
-    HTTP_POOL_ENABLED("httpPoolEnabled", "false", null, null),
+    HTTP_POOL_ENABLED("httpPoolEnabled", Boolean.FALSE.toString(), null, null),
     HTTP_POOL_MAX_TOTAL("httpPoolMax", "100", null, null),
     HTTP_POOL_MAX_PER_ROUTE("httpPoolMaxRoute", "20", null, null),
 
