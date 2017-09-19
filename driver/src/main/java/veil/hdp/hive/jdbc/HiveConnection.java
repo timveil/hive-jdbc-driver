@@ -37,9 +37,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void close() throws SQLException {
 
-        if (log.isTraceEnabled()) {
             log.trace("attempting to close {}", this.getClass().getName());
-        }
 
         try {
             thriftSession.close();
@@ -236,9 +234,7 @@ public class HiveConnection extends AbstractConnection {
     public class AbortCommand implements Runnable {
         public void run() {
             try {
-                if (log.isTraceEnabled()) {
                     log.trace("attempting to close from abort command");
-                }
                 close();
             } catch (SQLException e) {
                 log.error(MessageFormat.format("error closing during abort: sql state [{0}]", e.getSQLState()), e);

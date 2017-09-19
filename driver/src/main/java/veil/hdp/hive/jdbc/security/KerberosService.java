@@ -45,9 +45,7 @@ public final class KerberosService {
         AccessControlContext preAuthContext = AccessController.getContext();
         Subject subject = Subject.getSubject(preAuthContext);
 
-        if (log.isDebugEnabled()) {
             log.debug("pre-auth subject [{}]", subject);
-        }
 
         return subject;
     }
@@ -86,9 +84,7 @@ public final class KerberosService {
 
         KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
 
-        if (log.isDebugEnabled()) {
             log.debug("kerberos mode [{}]", kerberosMode);
-        }
 
         boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
@@ -99,9 +95,7 @@ public final class KerberosService {
         } else {
             UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
-            if (log.isDebugEnabled()) {
                 log.debug("user principal [{}]", userPrincipal);
-            }
 
             if (kerberosMode == KerberosMode.KEYTAB) {
                 String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
@@ -137,9 +131,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-        if (log.isDebugEnabled()) {
             log.debug("successfully logged in subject with password [{}]", subject);
-        }
 
         return subject;
     }
@@ -162,9 +154,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-        if (log.isDebugEnabled()) {
             log.debug("successfully logged in subject with OS module [{}]", subject);
-        }
 
         return subject;
     }
@@ -189,9 +179,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-        if (log.isDebugEnabled()) {
             log.debug("successfully logged in subject with keytab [{}]", subject);
-        }
 
         return subject;
     }

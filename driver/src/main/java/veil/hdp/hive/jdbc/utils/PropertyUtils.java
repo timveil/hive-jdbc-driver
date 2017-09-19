@@ -58,9 +58,7 @@ public class PropertyUtils {
         }
         builder.append(" -------------------------------------------------------------\n");
 
-        if (log.isDebugEnabled()) {
             log.debug(builder.toString());
-        }
     }
 
     public String getValue(String key) {

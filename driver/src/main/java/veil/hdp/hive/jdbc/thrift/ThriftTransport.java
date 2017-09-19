@@ -64,16 +64,11 @@ public class ThriftTransport implements AutoCloseable {
 
         if (closed.compareAndSet(false, true)) {
 
-            if (log.isTraceEnabled()) {
                 log.trace("attempting to close {}", this.getClass().getName());
-            }
-
 
             for (Closeable closeable : closeableList) {
 
-                if (log.isTraceEnabled()) {
                     log.trace("attempting to close {}", closeable.getClass().getName());
-                }
 
                 try {
                     closeable.close();

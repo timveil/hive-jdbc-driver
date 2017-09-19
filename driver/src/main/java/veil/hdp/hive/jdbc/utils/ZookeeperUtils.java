@@ -80,9 +80,7 @@ final class ZookeeperUtils {
 
                         if (!value.equals(originalValue)) {
 
-                            if (log.isDebugEnabled()) {
                                 log.debug("updating existing property [{}] from zookeeper:  Old value [{}], New value [{}].  hive configuration parameter [{}].", hiveDriverProperty.getKey(), originalValue, value, key);
-                            }
 
                             hiveDriverProperty.set(properties, value);
                         }

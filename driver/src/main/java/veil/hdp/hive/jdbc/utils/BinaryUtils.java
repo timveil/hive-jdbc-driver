@@ -139,9 +139,7 @@ public final class BinaryUtils {
 
         ServicePrincipal servicePrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties), HiveDriverProperty.HOST_NAME.get(properties));
 
-        if (log.isDebugEnabled()) {
             log.debug("service principal [{}]", servicePrincipal);
-        }
 
         Map<String, String> saslProps = new HashMap<>(2);
         saslProps.put(Sasl.QOP, HiveDriverProperty.SASL_QUALITY_OF_PROTECTION.get(properties));

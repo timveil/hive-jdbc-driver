@@ -72,9 +72,8 @@ public class ThriftOperation implements AutoCloseable {
     @Override
     public void close() throws Exception {
         if (closed.compareAndSet(false, true)) {
-            if (log.isTraceEnabled()) {
-                log.trace("attempting to close {}", this.getClass().getName());
-            }
+
+            log.trace("attempting to close {}", this.getClass().getName());
 
             ThriftUtils.closeOperation(session, operationHandle);
 
@@ -87,9 +86,7 @@ public class ThriftOperation implements AutoCloseable {
     public void cancel() {
         if (!closed.get()) {
 
-            if (log.isTraceEnabled()) {
                 log.trace("attempting to cancel {}", this.getClass().getName());
-            }
 
             ThriftUtils.cancelOperation(this);
         }
