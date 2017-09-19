@@ -57,9 +57,11 @@ public class HiveDriver implements Driver {
 
     public Connection connect(String url, Properties info) throws SQLException {
 
-        log.info("connecting to hive version [{}] with thrift protocol version [{}].  Please ensure these match your HiveServer2 instance or unexpected errors and behavior may occur.",
-                PropertyUtils.getInstance().getValue("hive.version"),
-                PropertyUtils.getInstance().getValue("thrift.protocol.version.default"));
+        if (log.isInfoEnabled()) {
+            log.info("connecting to hive version [{}] with thrift protocol version [{}].  Please ensure these match your HiveServer2 instance or unexpected errors and behavior may occur.",
+                    PropertyUtils.getInstance().getValue("hive.version"),
+                    PropertyUtils.getInstance().getValue("thrift.protocol.version.default"));
+        }
 
         url = StringUtils.trimToNull(url);
 

@@ -25,7 +25,9 @@ public class TextCallbackHandler implements CallbackHandler {
 
                 switch (toc.getMessageType()) {
                     case TextOutputCallback.INFORMATION:
-                        log.info("from TextCallbackHandler: {}", toc.getMessage());
+                        if (log.isInfoEnabled()) {
+                            log.info("from TextCallbackHandler: {}", toc.getMessage());
+                        }
                         break;
                     case TextOutputCallback.ERROR:
                         log.error("from TextCallbackHandler: {}", toc.getMessage());

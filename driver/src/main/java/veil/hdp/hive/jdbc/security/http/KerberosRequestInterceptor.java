@@ -53,16 +53,22 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
             if (cookies != null && !cookies.isEmpty()) {
 
                 for (Cookie cookie : cookies) {
-                    log.debug("cookie name [{}], cookie value [{}]", cookie.getName(), cookie.getValue());
+                    if (log.isDebugEnabled()) {
+                        log.debug("cookie name [{}], cookie value [{}]", cookie.getName(), cookie.getValue());
+                    }
 
                     if (cookie.isSecure() && !HiveDriverProperty.SSL_ENABLED.getBoolean(properties)) {
-                        log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName());
+                        if (log.isDebugEnabled()) {
+                            log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName());
+                        }
                         continue;
                     }
 
                     if (cookie.getName().equalsIgnoreCase(cookieName)) {
 
-                        log.debug("retry cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
+                        if (log.isDebugEnabled()) {
+                            log.debug("retry cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
+                        }
 
                         authenticate = false;
                         break;
@@ -86,7 +92,9 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
                     ServicePrincipal servicePrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties), HiveDriverProperty.HOST_NAME.get(properties));
 
-                    log.debug("service principal [{}]", servicePrincipal);
+                    if (log.isDebugEnabled()) {
+                        log.debug("service principal [{}]", servicePrincipal);
+                    }
 
                     byte[] token = KerberosService.getToken(servicePrincipal);
 

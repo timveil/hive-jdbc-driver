@@ -138,7 +138,9 @@ public class ThriftSession implements AutoCloseable {
 
                 TProtocolVersion protocolVersion = TProtocolVersion.findByValue(protocol);
 
-                log.debug("trying protocol {}", protocolVersion);
+                if (log.isDebugEnabled()) {
+                    log.debug("trying protocol {}", protocolVersion);
+                }
 
                 try {
 
@@ -152,7 +154,9 @@ public class ThriftSession implements AutoCloseable {
 
                     TProtocolVersion serverProtocolVersion = openSessionResp.getServerProtocolVersion();
 
-                    log.debug("opened session with protocol {}", serverProtocolVersion);
+                    if (log.isDebugEnabled()) {
+                        log.debug("opened session with protocol {}", serverProtocolVersion);
+                    }
 
                     return new ThriftSession(properties, thriftTransport, client, sessionHandle, serverProtocolVersion);
 

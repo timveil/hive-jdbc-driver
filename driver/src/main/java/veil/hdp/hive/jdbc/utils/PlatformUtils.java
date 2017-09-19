@@ -29,7 +29,9 @@ public final class PlatformUtils {
     public static String getKrb5LoginModuleClassName() {
         String loginModule = KRB5_LOGIN_MODULE;
 
-        log.debug("krb5 login module [{}]", loginModule);
+        if (log.isDebugEnabled()) {
+            log.debug("krb5 login module [{}]", loginModule);
+        }
 
         return loginModule;
     }
@@ -38,7 +40,9 @@ public final class PlatformUtils {
 
         String loginModule = isWindows ? NT_LOGIN_MODULE : UNIX_LOGIN_MODULE;
 
-        log.debug("os login module [{}]", loginModule);
+        if (log.isDebugEnabled()) {
+            log.debug("os login module [{}]", loginModule);
+        }
 
         return loginModule;
     }
