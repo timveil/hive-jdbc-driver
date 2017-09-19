@@ -253,6 +253,14 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     @Test
+    public void testSimpleQueryInfiniteLoop() throws SQLException {
+        while (true) {
+            executeSimpleQuery(false, false);
+        }
+    }
+
+
+    @Test
     public void testPreparedStatementLoad() throws SQLException {
 
         // warm-up
