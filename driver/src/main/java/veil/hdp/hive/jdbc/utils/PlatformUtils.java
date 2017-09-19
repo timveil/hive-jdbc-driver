@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 public final class PlatformUtils {
 
-    private static final Logger log =  LogManager.getLogger(PlatformUtils.class);
+    private static final Logger log = LogManager.getLogger(PlatformUtils.class);
 
     private static final String OS_NAME = System.getProperty("os.name");
     private static final String OS_ARCH = System.getProperty("os.arch");
@@ -29,7 +29,7 @@ public final class PlatformUtils {
     public static String getKrb5LoginModuleClassName() {
         String loginModule = KRB5_LOGIN_MODULE;
 
-            log.debug("krb5 login module [{}]", loginModule);
+        log.debug("krb5 login module [{}]", loginModule);
 
         return loginModule;
     }
@@ -38,7 +38,7 @@ public final class PlatformUtils {
 
         String loginModule = isWindows ? NT_LOGIN_MODULE : UNIX_LOGIN_MODULE;
 
-            log.debug("os login module [{}]", loginModule);
+        log.debug("os login module [{}]", loginModule);
 
         return loginModule;
     }

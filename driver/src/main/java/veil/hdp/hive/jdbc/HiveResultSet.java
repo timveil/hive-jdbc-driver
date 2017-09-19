@@ -80,7 +80,7 @@ public class HiveResultSet extends AbstractResultSet {
     public void close() throws SQLException {
         if (closed.compareAndSet(false, true)) {
 
-                log.trace("attempting to close {}", this.getClass().getName());
+            log.trace("attempting to close {}", this.getClass().getName());
 
             if (!thriftOperation.isClosed()) {
                 try {
@@ -515,7 +515,7 @@ public class HiveResultSet extends AbstractResultSet {
                 fetchSize = maxRows;
             }
 
-                log.trace("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
+            log.trace("maxRows {}, fetchSize {}, fetchDirection {}, resultSetType {}, resultSetConcurrency {}, resultSetHoldability {}", maxRows, fetchSize, fetchDirection, resultSetType, resultSetConcurrency, resultSetHoldability);
 
             ResultSetIterator iterator = new ResultSetIterator(new FetchIterator(thriftOperation, TFetchOrientation.FETCH_NEXT, fetchSize), fetchSize);
 

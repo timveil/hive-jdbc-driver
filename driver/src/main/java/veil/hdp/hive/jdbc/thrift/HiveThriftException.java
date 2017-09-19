@@ -10,7 +10,7 @@ import veil.hdp.hive.jdbc.utils.HiveExceptionUtils;
 
 public class HiveThriftException extends RuntimeException {
 
-    private static final Logger log =  LogManager.getLogger(HiveThriftException.class);
+    private static final Logger log = LogManager.getLogger(HiveThriftException.class);
     private static final long serialVersionUID = 1700514420277606047L;
 
 

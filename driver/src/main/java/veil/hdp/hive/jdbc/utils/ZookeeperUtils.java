@@ -20,7 +20,7 @@ import java.util.Random;
 
 final class ZookeeperUtils {
 
-    private static final Logger log =  LogManager.getLogger(ZookeeperUtils.class);
+    private static final Logger log = LogManager.getLogger(ZookeeperUtils.class);
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private ZookeeperUtils() {
@@ -80,7 +80,7 @@ final class ZookeeperUtils {
 
                         if (!value.equals(originalValue)) {
 
-                                log.debug("updating existing property [{}] from zookeeper:  Old value [{}], New value [{}].  hive configuration parameter [{}].", hiveDriverProperty.getKey(), originalValue, value, key);
+                            log.debug("updating existing property [{}] from zookeeper:  Old value [{}], New value [{}].  hive configuration parameter [{}].", hiveDriverProperty.getKey(), originalValue, value, key);
 
                             hiveDriverProperty.set(properties, value);
                         }

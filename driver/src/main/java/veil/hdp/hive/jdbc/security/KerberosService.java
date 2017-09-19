@@ -22,7 +22,7 @@ import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControl
 
 public final class KerberosService {
 
-    private static final Logger log =  LogManager.getLogger(KerberosService.class);
+    private static final Logger log = LogManager.getLogger(KerberosService.class);
     private static final String KRB5_OID = "1.2.840.113554.1.2.2";
     private static final String KRB5_NAME_OID = "1.2.840.113554.1.2.2.1";
 
@@ -45,7 +45,7 @@ public final class KerberosService {
         AccessControlContext preAuthContext = AccessController.getContext();
         Subject subject = Subject.getSubject(preAuthContext);
 
-            log.debug("pre-auth subject [{}]", subject);
+        log.debug("pre-auth subject [{}]", subject);
 
         return subject;
     }
@@ -84,7 +84,7 @@ public final class KerberosService {
 
         KerberosMode kerberosMode = KerberosMode.valueOf(HiveDriverProperty.KERBEROS_MODE.get(properties));
 
-            log.debug("kerberos mode [{}]", kerberosMode);
+        log.debug("kerberos mode [{}]", kerberosMode);
 
         boolean debugJaas = HiveDriverProperty.JAAS_DEBUG_ENABLED.getBoolean(properties);
 
@@ -95,7 +95,7 @@ public final class KerberosService {
         } else {
             UserPrincipal userPrincipal = PrincipalUtils.parseUserPrincipal(HiveDriverProperty.USER.get(properties));
 
-                log.debug("user principal [{}]", userPrincipal);
+            log.debug("user principal [{}]", userPrincipal);
 
             if (kerberosMode == KerberosMode.KEYTAB) {
                 String keyTab = HiveDriverProperty.KERBEROS_USER_KEYTAB.get(properties);
@@ -131,7 +131,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-            log.debug("successfully logged in subject with password [{}]", subject);
+        log.debug("successfully logged in subject with password [{}]", subject);
 
         return subject;
     }
@@ -154,7 +154,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-            log.debug("successfully logged in subject with OS module [{}]", subject);
+        log.debug("successfully logged in subject with OS module [{}]", subject);
 
         return subject;
     }
@@ -179,7 +179,7 @@ public final class KerberosService {
 
         Subject subject = context.getSubject();
 
-            log.debug("successfully logged in subject with keytab [{}]", subject);
+        log.debug("successfully logged in subject with keytab [{}]", subject);
 
         return subject;
     }

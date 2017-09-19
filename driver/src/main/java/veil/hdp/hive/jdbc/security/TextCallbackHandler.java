@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class TextCallbackHandler implements CallbackHandler {
 
-    private static final Logger log =  LogManager.getLogger(TextCallbackHandler.class);
+    private static final Logger log = LogManager.getLogger(TextCallbackHandler.class);
 
 
     @Override

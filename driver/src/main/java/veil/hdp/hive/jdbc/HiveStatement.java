@@ -205,7 +205,7 @@ public class HiveStatement extends AbstractStatement {
 
         if (closed.compareAndSet(false, true)) {
 
-                log.trace("attempting to close {}", this.getClass().getName());
+            log.trace("attempting to close {}", this.getClass().getName());
 
             if (thriftOperation != null && !thriftOperation.isClosed()) {
                 try {

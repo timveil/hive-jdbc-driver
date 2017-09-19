@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class PropertyUtils {
 
-    private static final Logger log =  LogManager.getLogger(PropertyUtils.class);
+    private static final Logger log = LogManager.getLogger(PropertyUtils.class);
 
     private static PropertyUtils instance;
     private final Properties properties;
@@ -58,7 +58,7 @@ public class PropertyUtils {
         }
         builder.append(" -------------------------------------------------------------\n");
 
-            log.debug(builder.toString());
+        log.debug(builder.toString());
     }
 
     public String getValue(String key) {

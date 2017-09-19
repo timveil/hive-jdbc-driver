@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class HiveDriver implements Driver {
 
-    private static final Logger log =  LogManager.getLogger(HiveDriver.class);
+    private static final Logger log = LogManager.getLogger(HiveDriver.class);
     private static final String NOT_PROVIDED = "NOT PROVIDED";
     private static final String UNKNOWN = "UNKNOWN";
 

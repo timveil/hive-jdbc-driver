@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class HiveEmptyResultSet extends AbstractResultSet {
 
-    private static final Logger log =  LogManager.getLogger(HiveEmptyResultSet.class);
+    private static final Logger log = LogManager.getLogger(HiveEmptyResultSet.class);
 
     // constructor
     private final Schema schema;
@@ -39,7 +39,7 @@ public class HiveEmptyResultSet extends AbstractResultSet {
 
     @Override
     public void close() throws SQLException {
-            log.trace("attempting to close {}", this.getClass().getName());
+        log.trace("attempting to close {}", this.getClass().getName());
     }
 
     public static class HiveEmptyResultSetBuilder implements Builder<HiveEmptyResultSet> {

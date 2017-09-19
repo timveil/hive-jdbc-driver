@@ -86,7 +86,7 @@ public class ThriftOperation implements AutoCloseable {
     public void cancel() {
         if (!closed.get()) {
 
-                log.trace("attempting to cancel {}", this.getClass().getName());
+            log.trace("attempting to cancel {}", this.getClass().getName());
 
             ThriftUtils.cancelOperation(this);
         }

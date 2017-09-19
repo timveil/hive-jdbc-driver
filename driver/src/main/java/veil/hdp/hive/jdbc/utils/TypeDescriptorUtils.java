@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class TypeDescriptorUtils {
 
-    private static final Logger log =  LogManager.getLogger(TypeDescriptorUtils.class);
+    private static final Logger log = LogManager.getLogger(TypeDescriptorUtils.class);
 
     public static ColumnTypeDescriptor getDescriptor(TTypeDesc typeDesc) {
 

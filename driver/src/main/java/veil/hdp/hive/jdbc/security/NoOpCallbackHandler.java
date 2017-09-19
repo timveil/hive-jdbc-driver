@@ -10,7 +10,7 @@ import java.io.IOException;
 
 class NoOpCallbackHandler implements CallbackHandler {
 
-    private static final Logger log =  LogManager.getLogger(NoOpCallbackHandler.class);
+    private static final Logger log = LogManager.getLogger(NoOpCallbackHandler.class);
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {

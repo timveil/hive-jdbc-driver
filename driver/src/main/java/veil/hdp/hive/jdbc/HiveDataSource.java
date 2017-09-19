@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class HiveDataSource extends AbstractDataSource {
 
-    private static final Logger log =  LogManager.getLogger(HiveDataSource.class);
+    private static final Logger log = LogManager.getLogger(HiveDataSource.class);
 
 
     // required for all DataSource Implementations per JDBC Spec

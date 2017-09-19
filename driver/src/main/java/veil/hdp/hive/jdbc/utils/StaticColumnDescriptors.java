@@ -459,7 +459,7 @@ final class StaticColumnDescriptors {
         PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("COLUMN_NAME").typeDescriptor(STRING).position(4).build());
         PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_NAME").typeDescriptor(STRING).position(3).build());
         PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_SCHEM").typeDescriptor(STRING).position(2).build());
-        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position( 1).build());
+        PSEUDO_COLUMNS.add(ColumnDescriptor.builder().name("TABLE_CAT").typeDescriptor(STRING).position(1).build());
     }
 
     static final List<ColumnDescriptor> GENERATED_KEYS = new ArrayList<>(1);

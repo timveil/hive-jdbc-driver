@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 
 public class HiveConnection extends AbstractConnection {
 
-    private static final Logger log =  LogManager.getLogger(HiveConnection.class);
+    private static final Logger log = LogManager.getLogger(HiveConnection.class);
 
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
@@ -37,7 +37,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void close() throws SQLException {
 
-            log.trace("attempting to close {}", this.getClass().getName());
+        log.trace("attempting to close {}", this.getClass().getName());
 
         try {
             thriftSession.close();
@@ -234,7 +234,7 @@ public class HiveConnection extends AbstractConnection {
     public class AbortCommand implements Runnable {
         public void run() {
             try {
-                    log.trace("attempting to close from abort command");
+                log.trace("attempting to close from abort command");
                 close();
             } catch (SQLException e) {
                 log.error(MessageFormat.format("error closing during abort: sql state [{0}]", e.getSQLState()), e);

@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Schema {
 
-    private static final Logger log =  LogManager.getLogger(Schema.class);
+    private static final Logger log = LogManager.getLogger(Schema.class);
 
     private final List<ColumnDescriptor> columnDescriptors;
     private final Map<String, ColumnDescriptor> columnMapping;

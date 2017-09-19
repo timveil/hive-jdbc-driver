@@ -8,7 +8,7 @@ import veil.hdp.hive.jdbc.Builder;
 
 public class ColumnTypeDescriptor {
 
-    private static final Logger log =  LogManager.getLogger(ColumnTypeDescriptor.class);
+    private static final Logger log = LogManager.getLogger(ColumnTypeDescriptor.class);
 
     private final HiveType hiveType;
 

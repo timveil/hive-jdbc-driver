@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftTransport implements AutoCloseable {
 
-    private static final Logger log =  LogManager.getLogger(ThriftTransport.class);
+    private static final Logger log = LogManager.getLogger(ThriftTransport.class);
 
     // constructor
     private TTransport transport;
@@ -64,11 +64,11 @@ public class ThriftTransport implements AutoCloseable {
 
         if (closed.compareAndSet(false, true)) {
 
-                log.trace("attempting to close {}", this.getClass().getName());
+            log.trace("attempting to close {}", this.getClass().getName());
 
             for (Closeable closeable : closeableList) {
 
-                    log.trace("attempting to close {}", closeable.getClass().getName());
+                log.trace("attempting to close {}", closeable.getClass().getName());
 
                 try {
                     closeable.close();

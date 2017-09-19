@@ -26,7 +26,7 @@ import java.util.Properties;
 
 public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
-    private static final Logger log =  LogManager.getLogger(KerberosRequestInterceptor.class);
+    private static final Logger log = LogManager.getLogger(KerberosRequestInterceptor.class);
 
     private static final Base64 BASE_64 = new Base64(0);
 
@@ -53,16 +53,16 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
             if (cookies != null && !cookies.isEmpty()) {
 
                 for (Cookie cookie : cookies) {
-                        log.debug("cookie name [{}], cookie value [{}]", cookie.getName(), cookie.getValue());
+                    log.debug("cookie name [{}], cookie value [{}]", cookie.getName(), cookie.getValue());
 
                     if (cookie.isSecure() && !HiveDriverProperty.SSL_ENABLED.getBoolean(properties)) {
-                            log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName());
+                        log.debug("cookie name [{}] is secure but SSL is not enabled; skipping", cookie.getName());
                         continue;
                     }
 
                     if (cookie.getName().equalsIgnoreCase(cookieName)) {
 
-                            log.debug("retry cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
+                        log.debug("retry cookie [{}] found in CookieStore therefore no need to authenticate again.", cookieName);
 
                         authenticate = false;
                         break;
@@ -72,7 +72,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
             }
         }
 
-            log.debug("authenticate with kerberos and retrieve ticket [{}]", authenticate);
+        log.debug("authenticate with kerberos and retrieve ticket [{}]", authenticate);
 
         if (authenticate) {
 
@@ -84,7 +84,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
 
                     ServicePrincipal servicePrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties), HiveDriverProperty.HOST_NAME.get(properties));
 
-                        log.debug("service principal [{}]", servicePrincipal);
+                    log.debug("service principal [{}]", servicePrincipal);
 
                     byte[] token = KerberosService.getToken(servicePrincipal);
 

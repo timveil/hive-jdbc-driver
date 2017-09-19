@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public final class DriverUtils {
 
-    private static final Logger log =  LogManager.getLogger(DriverUtils.class);
+    private static final Logger log = LogManager.getLogger(DriverUtils.class);
 
     private static final String JDBC_PART = "jdbc:";
     private static final String HIVE2_PART = "hive2:";

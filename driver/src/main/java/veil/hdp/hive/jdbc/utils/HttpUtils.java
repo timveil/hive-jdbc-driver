@@ -37,7 +37,7 @@ import java.util.Properties;
 
 public final class HttpUtils {
 
-    private static final Logger log =  LogManager.getLogger(HttpUtils.class);
+    private static final Logger log = LogManager.getLogger(HttpUtils.class);
 
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
@@ -191,7 +191,7 @@ public final class HttpUtils {
 
         boolean isCookieReplayEnabled = HiveDriverProperty.HTTP_COOKIE_REPLAY_ENABLED.getBoolean(properties);
 
-            log.debug("Cookie Replay is enabled!");
+        log.debug("Cookie Replay is enabled!");
 
         CookieStore cookieStore = null;
 

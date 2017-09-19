@@ -11,7 +11,7 @@ import java.util.List;
 
 public final class PrincipalUtils {
 
-    private static final Logger log =  LogManager.getLogger(PrincipalUtils.class);
+    private static final Logger log = LogManager.getLogger(PrincipalUtils.class);
 
     private PrincipalUtils() {
     }
