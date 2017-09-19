@@ -1,0 +1,25 @@
+{
+  "blueprint": "generated",
+  "default_password": "password",
+  "credentials": [
+    {
+      "alias": "kdc.admin.credential",
+      "principal": "admin/admin",
+      "key": "password",
+      "type": "TEMPORARY"
+    }
+  ],
+  "security": {
+    "type": "KERBEROS"
+  },
+  "host_groups": [
+    {
+      "name": "host_group_1",
+      "hosts": [
+        {
+          "fqdn": "jdbc-binary-kerberos.hdp.local"
+        }
+      ]
+    }
+  ]
+}
