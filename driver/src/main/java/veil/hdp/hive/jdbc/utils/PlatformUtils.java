@@ -14,6 +14,10 @@ public final class PlatformUtils {
 
     private static final boolean isWindows = StringUtils.startsWithIgnoreCase(OS_NAME, "windows");
 
+    private static final String KRB5_LOGIN_MODULE = "com.sun.security.auth.module.Krb5LoginModule";
+    private static final String NT_LOGIN_MODULE = "com.sun.security.auth.module.NTLoginModule";
+    private static final String UNIX_LOGIN_MODULE = "com.sun.security.auth.module.UnixLoginModule";
+
     private PlatformUtils() {
     }
 
@@ -23,7 +27,7 @@ public final class PlatformUtils {
     }
 
     public static String getKrb5LoginModuleClassName() {
-        String loginModule = "com.sun.security.auth.module.Krb5LoginModule";
+        String loginModule = KRB5_LOGIN_MODULE;
 
         log.debug("krb5 login module [{}]", loginModule);
 
@@ -32,7 +36,7 @@ public final class PlatformUtils {
 
     public static String getOSLoginModuleClassName() {
 
-        String loginModule = isWindows ? "com.sun.security.auth.module.NTLoginModule" : "com.sun.security.auth.module.UnixLoginModule";
+        String loginModule = isWindows ? NT_LOGIN_MODULE : UNIX_LOGIN_MODULE;
 
         log.debug("os login module [{}]", loginModule);
 
