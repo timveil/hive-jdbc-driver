@@ -19,8 +19,10 @@ public class BinaryKerberosOSTest extends AbstractConnectionTest {
     @Override
     public Connection createConnection(String host) throws SQLException {
         Properties properties = new Properties();
+        properties.setProperty("krb5Debug", "true");
+        properties.setProperty("jaasDebug", "true");
 
-        String url = "jdbc:hive2://" + host + ":10000/tests?authMode=KERBEROS&krb5Mode=OS&krb5ServerPrincipal=hive/hdp2.lab.local@LAB.LOCAL";
+        String url = "jdbc:hive2://" + host + ":10000/tests?authMode=KERBEROS&krb5Mode=OS&krb5ServerPrincipal=hive/" + host + "@HDP.LOCAL";
 
 
         return new HiveDriver().connect(url, properties);

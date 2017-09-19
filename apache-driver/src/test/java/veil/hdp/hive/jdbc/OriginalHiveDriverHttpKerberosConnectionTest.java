@@ -16,7 +16,7 @@ public class OriginalHiveDriverHttpKerberosConnectionTest extends AbstractConnec
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10501/tests;principal=hive/hdp2.lab.local@LAB.LOCAL;transportMode=http;httpPath=cliservice";
+        String url = "jdbc:hive2://" + host + ":10501/tests;principal=hive/" + host + "@HDP.LOCAL;transportMode=http;httpPath=cliservice";
 
         return new HiveDriver().connect(url, properties);
     }

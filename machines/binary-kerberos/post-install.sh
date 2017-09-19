@@ -1,6 +1,6 @@
 #!/bin/sh
 
-kadmin.local -q 'xst -k /tmp/admin.keytab admin/admin' -w password
+kadmin.local -q 'xst -norandkey -k /tmp/admin.keytab admin/admin' -w password
 
 chown admin:admin /tmp/admin.keytab
 
