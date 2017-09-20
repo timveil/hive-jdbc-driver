@@ -1,0 +1,14 @@
+{
+  "blueprint": "generated",
+  "default_password": "password",
+  "host_groups": [
+    {
+      "name": "host_group_1",
+      "hosts": [
+        {
+          "fqdn": "jdbc-http.hdp.local"
+        }
+      ]
+    }
+  ]
+}
