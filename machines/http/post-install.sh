@@ -17,10 +17,10 @@ sudo su - admin << EOF
     hadoop fs -copyFromLocal /vagrant/data/struct-test.csv /tmp/struct_test
 EOF
 
-beeline -u jdbc:hive2://localhost:10000/default -e 'create database if not exists tests' -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/default;transportMode=http;httpPath=cliservice' -e 'create database if not exists tests' -n admin -p admin
 
-beeline -u jdbc:hive2://localhost:10000/tests -f /vagrant/data/array-test.sql -n admin -p admin
-beeline -u jdbc:hive2://localhost:10000/tests -f /vagrant/data/data-type-test.sql -n admin -p admin
-beeline -u jdbc:hive2://localhost:10000/tests -f /vagrant/data/date-time-test.sql -n admin -p admin
-beeline -u jdbc:hive2://localhost:10000/tests -f /vagrant/data/map-test.sql -n admin -p admin
-beeline -u jdbc:hive2://localhost:10000/tests -f /vagrant/data/struct-test.sql -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/tests;transportMode=http;httpPath=cliservice' -f /vagrant/data/array-test.sql -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/tests;transportMode=http;httpPath=cliservice' -f /vagrant/data/data-type-test.sql -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/tests;transportMode=http;httpPath=cliservice' -f /vagrant/data/date-time-test.sql -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/tests;transportMode=http;httpPath=cliservice' -f /vagrant/data/map-test.sql -n admin -p admin
+beeline -u 'jdbc:hive2://localhost:10001/tests;transportMode=http;httpPath=cliservice' -f /vagrant/data/struct-test.sql -n admin -p admin

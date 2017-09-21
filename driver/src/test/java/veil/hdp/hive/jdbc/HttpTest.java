@@ -14,7 +14,7 @@ public class HttpTest extends AbstractConnectionTest {
         Properties properties = new Properties();
         properties.setProperty("user", "hive");
 
-        String url = "jdbc:hive2://" + host + ":10501/tests?transportMode=http";
+        String url = "jdbc:hive2://" + host + ":10001/tests?transportMode=http";
 
         return new HiveDriver().connect(url, properties);
     }
