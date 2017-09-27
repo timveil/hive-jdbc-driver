@@ -50,7 +50,7 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public boolean isClosed() throws SQLException {
-        return thriftSession.isClosed();
+        return thriftSession != null && thriftSession.isClosed();
     }
 
     @Override
@@ -186,13 +186,13 @@ public class HiveConnection extends AbstractConnection {
             throw new SQLDataException(MessageFormat.format("timeout must be greater than or equal to 0.  Current value is {0}", timeout));
         }
 
-        return thriftSession.isValid();
+        return thriftSession != null && thriftSession.isValid();
     }
 
     @Override
     public void abort(Executor executor) throws SQLException {
 
-        if (thriftSession.isClosed()) {
+        if (thriftSession != null && thriftSession.isClosed()) {
             return;
         }
 
