@@ -1,14 +1,15 @@
 package veil.hdp.hive.jdbc.test;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractDriverTest extends BaseTest {
 
@@ -16,12 +17,12 @@ public abstract class AbstractDriverTest extends BaseTest {
 
     public abstract Driver createDriver() throws SQLException;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         driver = createDriver();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (driver != null) {
             driver = null;
@@ -45,7 +46,7 @@ public abstract class AbstractDriverTest extends BaseTest {
         try {
             connection = driver.connect(url, properties);
 
-            Assert.assertNotNull(connection);
+            assertNotNull(connection);
         } finally {
 
             if (connection != null) {
@@ -62,12 +63,12 @@ public abstract class AbstractDriverTest extends BaseTest {
 
         boolean acceptsURL = driver.acceptsURL(url);
 
-        Assert.assertTrue(acceptsURL);
+        assertTrue(acceptsURL);
 
         url = "jdbc:mysql://foo";
 
         acceptsURL = driver.acceptsURL(url);
 
-        Assert.assertFalse(acceptsURL);
+        assertFalse(acceptsURL);
     }
 }

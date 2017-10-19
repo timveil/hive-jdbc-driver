@@ -4,10 +4,9 @@ import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Stopwatch;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -17,6 +16,8 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class AbstractConnectionTest extends BaseTest {
 
@@ -29,12 +30,12 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     public abstract Connection createConnection(String host) throws SQLException;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         connection = createConnection(getHost());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (connection != null) {
             connection.close();
@@ -373,7 +374,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     public void testMetadataConcurrency() throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
 
-        Assert.assertNotNull(metaData);
+        assertNotNull(metaData);
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -400,7 +401,7 @@ public abstract class AbstractConnectionTest extends BaseTest {
     public void testGetMetaData() throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
 
-        Assert.assertNotNull(metaData);
+        assertNotNull(metaData);
 
         log.debug("driver version: [{}]", metaData.getDriverVersion());
         log.debug("database product version: [{}]", metaData.getDatabaseProductVersion());
