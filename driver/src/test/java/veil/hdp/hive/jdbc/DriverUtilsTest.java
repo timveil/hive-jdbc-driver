@@ -1,8 +1,9 @@
 package veil.hdp.hive.jdbc;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import veil.hdp.hive.jdbc.test.BaseTest;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
 
@@ -17,7 +18,7 @@ public class DriverUtilsTest extends BaseTest {
     private String url;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         url = "jdbc:hive2://somehost:10000/test?transportMode=http&whoknows=me";
@@ -26,7 +27,7 @@ public class DriverUtilsTest extends BaseTest {
         suppliedProperties.setProperty("user", "hive");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         url = null;
