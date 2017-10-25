@@ -9,6 +9,7 @@ import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HiveConnection extends AbstractConnection {
 
@@ -18,12 +19,15 @@ public class HiveConnection extends AbstractConnection {
 
     // constructor
     private ThriftSession thriftSession;
+    private final AtomicBoolean closed = new AtomicBoolean(true);
 
     // public getter & setter
     private SQLWarning sqlWarning;
 
     private HiveConnection(ThriftSession thriftSession) {
         this.thriftSession = thriftSession;
+
+        closed.set(false);
     }
 
     public static HiveConnectionBuilder builder() {
@@ -37,20 +41,23 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void close() throws SQLException {
 
-        log.trace("attempting to close {}", this.getClass().getName());
+        if (closed.compareAndSet(false, true)) {
 
-        try {
-            thriftSession.close();
-        } catch (Exception e) {
-            log.warn(e.getMessage(), e);
-        } finally {
-            thriftSession = null;
+            log.trace("attempting to close {}", this.getClass().getName());
+
+            try {
+                thriftSession.close();
+            } catch (Exception e) {
+                log.warn(e.getMessage(), e);
+            } finally {
+                thriftSession = null;
+            }
         }
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return thriftSession != null && thriftSession.isClosed();
+        return closed.get();
     }
 
     @Override
@@ -192,7 +199,7 @@ public class HiveConnection extends AbstractConnection {
     @Override
     public void abort(Executor executor) throws SQLException {
 
-        if (thriftSession != null && thriftSession.isClosed()) {
+        if (isClosed()) {
             return;
         }
 

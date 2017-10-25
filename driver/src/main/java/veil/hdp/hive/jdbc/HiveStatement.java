@@ -165,6 +165,11 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public void cancel() throws SQLException {
+
+        if (isClosed()) {
+            throw new HiveSQLException("Cannot 'cancel' Statement.  Connection is closed.");
+        }
+
         if (thriftOperation != null) {
             thriftOperation.cancel();
         }
@@ -212,16 +217,20 @@ public class HiveStatement extends AbstractStatement {
                     thriftOperation.close();
                 } catch (Exception e) {
                     log.warn(e.getMessage(), e);
+                } finally {
+                    thriftOperation = null;
                 }
-
-                thriftOperation = null;
             }
 
             if (resultSet != null && !resultSet.isClosed()) {
-                resultSet.close();
-                resultSet = null;
+                try {
+                    resultSet.close();
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                } finally {
+                    resultSet = null;
+                }
             }
-
         }
     }
 

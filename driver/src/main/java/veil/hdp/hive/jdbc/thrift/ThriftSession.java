@@ -94,22 +94,22 @@ public class ThriftSession implements AutoCloseable {
 
             log.trace("attempting to close {}", this.getClass().getName());
 
-            ThriftUtils.closeSession(this);
+            try {
+                ThriftUtils.closeSession(this);
 
-            sessionHandle = null;
+                if (!thriftTransport.isClosed()) {
+                    thriftTransport.close();
+                }
+            } catch (Exception e) {
+                log.warn(e.getMessage(), e);
+            } finally {
+                sessionHandle = null;
+                thriftTransport = null;
+                client = null;
+                protocol = null;
 
-            if (!thriftTransport.isClosed()) {
-                thriftTransport.close();
+                cache.invalidateAll();
             }
-
-            thriftTransport = null;
-
-            client = null;
-
-            protocol = null;
-
-            cache.invalidateAll();
-
         }
     }
 

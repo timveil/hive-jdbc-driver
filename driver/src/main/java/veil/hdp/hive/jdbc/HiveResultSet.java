@@ -30,9 +30,9 @@ public class HiveResultSet extends AbstractResultSet {
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicInteger rowCount = new AtomicInteger(0);
     private final AtomicReference<Row> currentRow = new AtomicReference<>();
+    private final Statement statement;
     // constructor
     private ThriftOperation thriftOperation;
-    private final Statement statement;
     private ResultSetIterator iterator;
     // public getter & setter
     private int fetchSize;
@@ -82,19 +82,18 @@ public class HiveResultSet extends AbstractResultSet {
 
             log.trace("attempting to close {}", this.getClass().getName());
 
-            if (!thriftOperation.isClosed()) {
-                try {
+            try {
+                if (!thriftOperation.isClosed()) {
                     thriftOperation.close();
-                } catch (Exception e) {
-                    log.warn(e.getMessage(), e);
                 }
+            } catch (Exception e) {
+                log.warn(e.getMessage(), e);
+            } finally {
+                thriftOperation = null;
+                iterator = null;
+                currentRow.set(null);
             }
 
-            thriftOperation = null;
-
-            iterator = null;
-
-            currentRow.set(null);
 
         }
     }

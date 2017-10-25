@@ -16,14 +16,13 @@ public class ThriftOperation implements AutoCloseable {
 
     // constructor
     private final ThriftSession session;
-    private TOperationHandle operationHandle;
-    private Schema schema;
     private final boolean hasResultSet;
     private final int modifiedCount;
     private final String operationType;
-
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
+    private TOperationHandle operationHandle;
+    private Schema schema;
 
     private ThriftOperation(ThriftSession thriftSession, TOperationHandle operationHandle, Schema schema, boolean hasResultSet, int modifiedCount, String operationType) {
 
@@ -75,11 +74,14 @@ public class ThriftOperation implements AutoCloseable {
 
             log.trace("attempting to close {}", this.getClass().getName());
 
-            ThriftUtils.closeOperation(session, operationHandle);
-
-            operationHandle = null;
-            schema = null;
-
+            try {
+                ThriftUtils.closeOperation(session, operationHandle);
+            } catch (Exception e) {
+                log.warn(e.getMessage(), e);
+            } finally {
+                operationHandle = null;
+                schema = null;
+            }
         }
     }
 
