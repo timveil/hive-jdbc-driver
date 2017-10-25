@@ -1,9 +1,6 @@
 package veil.hdp.hive.jdbc;
 
-import veil.hdp.hive.jdbc.utils.Constants;
-import veil.hdp.hive.jdbc.utils.PropertyUtils;
-import veil.hdp.hive.jdbc.utils.QueryUtils;
-import veil.hdp.hive.jdbc.utils.VersionUtils;
+import veil.hdp.hive.jdbc.utils.*;
 
 import java.sql.*;
 
@@ -18,9 +15,11 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     private final String hiveVersion;
     private final int hiveMajorVersion;
     private final int hiveMinorVersion;
+    private final String url;
 
-    private HiveDatabaseMetaData(HiveConnection connection, String productName, String driverVersion, int driverMajorVersion, int driverMinorVersion, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
+    private HiveDatabaseMetaData(HiveConnection connection, String url, String productName, String driverVersion, int driverMajorVersion, int driverMinorVersion, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
         this.connection = connection;
+        this.url = url;
         this.productName = productName;
         this.driverVersion = driverVersion;
         this.driverMajorVersion = driverMajorVersion;
@@ -151,7 +150,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getURL() throws SQLException {
-        return null;
+        return url;
     }
 
     @Override
@@ -920,7 +919,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
             String productName = PropertyUtils.getInstance().getValue("product.name");
 
-            return new HiveDatabaseMetaData(connection, productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
+            return new HiveDatabaseMetaData(connection, DriverUtils.buildUrl(connection.getThriftSession().getProperties()), productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
         }
     }
 
