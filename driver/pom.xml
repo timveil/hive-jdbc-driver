@@ -50,6 +50,7 @@
             <version>${log4j2.version}</version>
         </dependency>
 
+        <!-- todo: why is this needed?  who is using JCL; looks like this is needed because of HTTP -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jcl</artifactId>

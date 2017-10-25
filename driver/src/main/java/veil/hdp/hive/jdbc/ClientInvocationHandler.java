@@ -44,7 +44,7 @@ public class ClientInvocationHandler implements InvocationHandler {
         } finally {
             lock.unlock();
             sw.stop();
-            log.debug(sw.shortSummary());
+            log.trace(sw.shortSummary());
         }
     }
 }

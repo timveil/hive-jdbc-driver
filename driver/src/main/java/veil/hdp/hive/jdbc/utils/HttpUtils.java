@@ -191,7 +191,7 @@ public final class HttpUtils {
 
         boolean isCookieReplayEnabled = HiveDriverProperty.HTTP_COOKIE_REPLAY_ENABLED.getBoolean(properties);
 
-        log.debug("Cookie Replay is enabled!");
+        log.info("Cookie Replay is enabled!");
 
         CookieStore cookieStore = null;
 
