@@ -38,14 +38,19 @@ public abstract class AbstractConnectionTest extends BaseTest {
     @AfterEach
     public void tearDown() throws Exception {
         if (connection != null) {
-            connection.close();
-            connection = null;
+            try {
+                connection.close();
+            } finally {
+                connection = null;
+            }
         }
 
-        METRIC_REGISTRY.remove(SIMPLE_QUERY_LOAD);
-        METRIC_REGISTRY.remove(PREPARED_STATEMENT_LOAD);
-
-        METRIC_REGISTRY = null;
+        try {
+            METRIC_REGISTRY.remove(SIMPLE_QUERY_LOAD);
+            METRIC_REGISTRY.remove(PREPARED_STATEMENT_LOAD);
+        } finally {
+            METRIC_REGISTRY = null;
+        }
 
     }
 
