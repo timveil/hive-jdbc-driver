@@ -40,7 +40,7 @@
 
     <profiles>
         <profile>
-            <id>HDP-2.1.0.2.6.2.0-205</id>
+            <id>HDP-2.1.0.2.6.3.0-235</id>
             <properties>
                 <hive.version>2.1.0.2.6.3.0-235</hive.version>
                 <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
@@ -152,7 +152,7 @@
             <extension>
                 <groupId>io.packagecloud.maven.wagon</groupId>
                 <artifactId>maven-packagecloud-wagon</artifactId>
-                <version>0.0.4</version>
+                <version>0.0.6</version>
             </extension>
         </extensions>
         <plugins>
