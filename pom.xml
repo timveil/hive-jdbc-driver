@@ -23,12 +23,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
 
-        <junit.version>5.0.1</junit.version>
-        <log4j2.version>2.9.1</log4j2.version>
-        <guava.version>23.3-jre</guava.version>
-        <commons-lang3.version>3.6</commons-lang3.version>
+        <junit.version>5.0.2</junit.version>
+        <log4j2.version>2.10.0</log4j2.version>
+        <guava.version>23.5-jre</guava.version>
+        <commons-lang3.version>3.7</commons-lang3.version>
         <curator.version>4.0.0</curator.version>
-        <http.version>4.5.3</http.version>
+        <http.version>4.5.4</http.version>
         <metrics.version>3.2.3</metrics.version>
     </properties>
 
@@ -129,10 +129,6 @@
         <repository>
             <id>hwx-releases</id>
             <url>http://repo.hortonworks.com/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>hwx-public</id>
-            <url>http://repo.hortonworks.com/content/groups/public/</url>
         </repository>
     </repositories>
 
