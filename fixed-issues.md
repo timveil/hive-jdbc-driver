@@ -1,13 +1,13 @@
-- fixed by retrying with lesser protocol until connected
+-- fixed by retrying with lesser protocol until connected
 https://issues.apache.org/jira/browse/HIVE-6050
 
-- no such url ogging exists; passswords are hidden from property printout
+-- no such url ogging exists; passswords are hidden from property printout
 https://issues.apache.org/jira/browse/HIVE-16089
 
-- preauth works fine
+-- preauth works fine
 https://issues.apache.org/jira/browse/HIVE-15868
 
-- get array works fine
+-- get array works fine
 https://issues.apache.org/jira/browse/HIVE-15561
 
 -- no such getfunctions issue

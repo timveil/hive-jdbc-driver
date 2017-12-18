@@ -44,7 +44,7 @@
             <properties>
                 <hive.version>2.1.0.2.6.3.0-235</hive.version>
                 <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
+                <thrift.version>0.11.0</thrift.version>
                 <thrift.protocol.version>9</thrift.protocol.version>
             </properties>
         </profile>
@@ -83,7 +83,7 @@
             <properties>
                 <hive.version>1.2.1000.2.6.3.0-235</hive.version>
                 <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
+                <thrift.version>0.11.0</thrift.version>
                 <thrift.protocol.version>7</thrift.protocol.version>
             </properties>
         </profile>
