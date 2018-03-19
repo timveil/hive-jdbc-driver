@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
 
-        <junit.version>5.0.2</junit.version>
+        <junit.version>5.0.3</junit.version>
         <log4j2.version>2.10.0</log4j2.version>
         <guava.version>23.6-jre</guava.version>
         <commons-lang3.version>3.7</commons-lang3.version>
