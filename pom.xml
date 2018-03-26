@@ -24,11 +24,11 @@
         <maven.deploy.skip>true</maven.deploy.skip>
 
         <junit.version>5.0.3</junit.version>
-        <log4j2.version>2.10.0</log4j2.version>
+        <log4j2.version>2.11.0</log4j2.version>
         <guava.version>23.6-jre</guava.version>
         <commons-lang3.version>3.7</commons-lang3.version>
-        <curator.version>4.0.0</curator.version>
-        <http.version>4.5.4</http.version>
+        <curator.version>4.0.1</curator.version>
+        <http.version>4.5.5</http.version>
         <metrics.version>3.2.5</metrics.version>
     </properties>
 
