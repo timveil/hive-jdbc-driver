@@ -57,12 +57,7 @@ public class Schema {
 
     public static class SchemaBuilder implements Builder<Schema> {
 
-        private static final Comparator<ColumnDescriptor> COLUMN_DESCRIPTOR_COMPARATOR = new Comparator<ColumnDescriptor>() {
-            @Override
-            public int compare(ColumnDescriptor o1, ColumnDescriptor o2) {
-                return Integer.compare(o1.getPosition(), o2.getPosition());
-            }
-        };
+        private static final Comparator<ColumnDescriptor> COLUMN_DESCRIPTOR_COMPARATOR = Comparator.comparingInt(ColumnDescriptor::getPosition);
 
         private ThriftSession thriftSession;
 

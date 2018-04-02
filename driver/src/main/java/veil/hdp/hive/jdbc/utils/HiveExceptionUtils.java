@@ -85,7 +85,7 @@ public final class HiveExceptionUtils {
         Throwable build(Throwable cause) {
 
             Throwable throwable = newInstance(exceptionClass, exceptionMessage, cause);
-            throwable.setStackTrace(stackTraceElements.toArray(new StackTraceElement[stackTraceElements.size()]));
+            throwable.setStackTrace(stackTraceElements.toArray(new StackTraceElement[0]));
 
             return throwable;
         }

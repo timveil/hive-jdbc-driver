@@ -228,7 +228,7 @@ public class StopWatch {
         if (!this.keepTaskList) {
             throw new UnsupportedOperationException("Task info is not being kept!");
         }
-        return this.taskList.toArray(new TaskInfo[this.taskList.size()]);
+        return this.taskList.toArray(new TaskInfo[0]);
     }
 
 

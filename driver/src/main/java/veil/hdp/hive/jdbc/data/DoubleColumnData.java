@@ -21,7 +21,7 @@ class DoubleColumnData extends AbstractColumnData<Double> {
         Double value = getValue(row);
 
         if (doubleType == FLOAT) {
-            return new FloatColumn(value == null ? null : new Float(value));
+            return new FloatColumn(value == null ? null : value.floatValue());
         } else {
             return new DoubleColumn(value);
         }
