@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class StopWatch {
 
+    public static final char NEW_LINE = '\n';
     /**
      * Identifier of this stop watch.
      * Handy when we have output from multiple stop watches
@@ -245,7 +246,7 @@ public class StopWatch {
      */
     public String prettyPrint() {
         StringBuilder sb = new StringBuilder(shortSummary());
-        sb.append('\n');
+        sb.append(NEW_LINE);
         if (!this.keepTaskList) {
             sb.append("No task info kept");
         } else {
@@ -261,7 +262,7 @@ public class StopWatch {
             for (TaskInfo task : getTaskInfo()) {
                 sb.append(nf.format(task.getTimeMillis())).append("  ");
                 sb.append(pf.format(task.getTimeSeconds() / getTotalTimeSeconds())).append("  ");
-                sb.append(task.getTaskName()).append('\n');
+                sb.append(task.getTaskName()).append(NEW_LINE);
             }
         }
         return sb.toString();
