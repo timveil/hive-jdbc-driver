@@ -15,7 +15,7 @@ import java.util.List;
 public class ColumnBasedSet {
 
     private static final byte[] MASKS = {
-            0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80
+            (byte) 0x01, (byte) 0x02, (byte) 0x04, (byte) 0x08, (byte) 0x10, (byte) 0x20, (byte) 0x40, (byte) 0x80
     };
 
     private static final Logger log = LogManager.getLogger(ColumnBasedSet.class);
@@ -65,7 +65,7 @@ public class ColumnBasedSet {
                 byte aNull = nulls[nullIndex];
                 byte mask = MASKS[maskIndex];
 
-                boolean isNull = (aNull & mask) != 0;
+                boolean isNull = ((int) aNull & (int) mask) != 0;
                 bitset.set(i, isNull);
             }
 

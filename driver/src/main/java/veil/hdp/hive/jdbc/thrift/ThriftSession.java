@@ -172,8 +172,8 @@ public class ThriftSession implements AutoCloseable {
 
     private static class ColumnTypeCacheLoader extends CacheLoader<TTypeDesc, ColumnTypeDescriptor> {
         @Override
-        public ColumnTypeDescriptor load(@Nonnull TTypeDesc tTypeDesc) throws Exception {
-            return TypeDescriptorUtils.getDescriptor(tTypeDesc);
+        public ColumnTypeDescriptor load(@Nonnull TTypeDesc key) throws Exception {
+            return TypeDescriptorUtils.getDescriptor(key);
         }
     }
 }

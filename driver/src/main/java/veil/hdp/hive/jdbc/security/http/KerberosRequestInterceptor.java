@@ -39,12 +39,12 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
     }
 
     @Override
-    public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
+    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
 
         boolean authenticate = true;
 
         if (cookieStore != null) {
-            httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            context.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
             String cookieName = HiveDriverProperty.HTTP_COOKIE_NAME.get(properties);
 
@@ -91,7 +91,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
                     return new String(BASE_64.encode(token));
                 });
 
-                httpRequest.addHeader("Authorization: Negotiate ", header);
+                request.addHeader("Authorization: Negotiate ", header);
             } catch (LoginException | PrivilegedActionException e) {
                 log.error(e.getMessage(), e);
             }
