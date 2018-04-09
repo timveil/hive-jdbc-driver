@@ -30,7 +30,7 @@ public class ResultSetIterator extends AbstractIterator<Row> {
                 // no rows inside a page available; go get them
 
                 if (fetchIterator.hasNext()) {
-                    // there is another page avaialble, so create the row iterator
+                    // there is another page available, so create the row iterator
                     fetchRowIterator = new FetchRowIterator(fetchIterator.next());
                 } else {
                     // no more pages, so its the end of the line
