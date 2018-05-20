@@ -69,7 +69,7 @@ public class ThriftOperation implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
 
             log.trace("attempting to close {}", this.getClass().getName());

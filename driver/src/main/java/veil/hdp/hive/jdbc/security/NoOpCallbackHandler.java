@@ -13,7 +13,7 @@ class NoOpCallbackHandler implements CallbackHandler {
     private static final Logger log = LogManager.getLogger(NoOpCallbackHandler.class);
 
     @Override
-    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+    public void handle(Callback[] callbacks) {
         log.warn("this is not implemented and should not have been called.  this is a problem!");
 
         for (Callback callback : callbacks) {

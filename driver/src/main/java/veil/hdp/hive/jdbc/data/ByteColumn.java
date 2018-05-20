@@ -13,12 +13,12 @@ public class ByteColumn extends AbstractColumn<Byte> {
     }
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         return getValue();
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             return Byte.toString(value);
         }
@@ -27,7 +27,7 @@ public class ByteColumn extends AbstractColumn<Byte> {
     }
 
     @Override
-    public Boolean asBoolean() throws SQLException {
+    public Boolean asBoolean() {
         if (value != null) {
             return value == 1;
         }
@@ -37,27 +37,27 @@ public class ByteColumn extends AbstractColumn<Byte> {
 
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         return getValue().floatValue();
     }
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         return getValue().intValue();
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         return getValue().doubleValue();
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         return getValue().longValue();
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         return getValue().shortValue();
     }
 }

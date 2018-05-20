@@ -9,12 +9,12 @@ public class CharacterColumn extends AbstractColumn<Character> {
 
 
     @Override
-    public Character asCharacter() throws SQLException {
+    public Character asCharacter() {
         return value;
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             return Character.toString(value);
         }

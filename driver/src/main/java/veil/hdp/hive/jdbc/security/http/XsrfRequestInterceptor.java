@@ -12,7 +12,7 @@ public class XsrfRequestInterceptor implements HttpRequestInterceptor {
     private static final String X_XSRF_HEADER = "X-XSRF-HEADER";
 
     @Override
-    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+    public void process(HttpRequest request, HttpContext context) {
         request.addHeader(X_XSRF_HEADER, Boolean.TRUE.toString());
     }
 }

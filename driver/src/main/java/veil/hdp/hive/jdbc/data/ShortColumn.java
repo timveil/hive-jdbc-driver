@@ -14,17 +14,17 @@ public class ShortColumn extends AbstractColumn<Short> {
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         return getValue();
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         return Short.toString(getValue());
     }
 
     @Override
-    public Boolean asBoolean() throws SQLException {
+    public Boolean asBoolean() {
         if (value != null) {
             return value == 1;
         }
@@ -33,30 +33,30 @@ public class ShortColumn extends AbstractColumn<Short> {
     }
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         return getValue().floatValue();
     }
 
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         return getValue().intValue();
 
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         return getValue().doubleValue();
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         return getValue().longValue();
     }
 
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         log.warn("may lose precision going from {} to {}; value [{}]", Short.class, Byte.class, value);
 
         return getValue().byteValue();

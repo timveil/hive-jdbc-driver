@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class BasicRequestInterceptor implements HttpRequestInterceptor {
     @Override
-    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+    public void process(HttpRequest request, HttpContext context) throws HttpException {
         request.addHeader(new BasicScheme().authenticate(new AnonymousCredentials(), request, context));
     }
 }

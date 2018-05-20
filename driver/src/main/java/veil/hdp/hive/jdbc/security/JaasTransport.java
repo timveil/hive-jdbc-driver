@@ -18,7 +18,7 @@ public class JaasTransport extends WrappedTransport {
     }
 
     @Override
-    public void open() throws TTransportException {
+    public void open() {
 
         try {
             Subject.doAs(subject, new PrivilegedTransportAction(wrapped));

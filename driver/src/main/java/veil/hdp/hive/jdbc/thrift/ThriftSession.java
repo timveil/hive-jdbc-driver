@@ -89,7 +89,7 @@ public class ThriftSession implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (closed.compareAndSet(false, true)) {
 
             log.trace("attempting to close {}", this.getClass().getName());
@@ -172,7 +172,7 @@ public class ThriftSession implements AutoCloseable {
 
     private static class ColumnTypeCacheLoader extends CacheLoader<TTypeDesc, ColumnTypeDescriptor> {
         @Override
-        public ColumnTypeDescriptor load(@Nonnull TTypeDesc key) throws Exception {
+        public ColumnTypeDescriptor load(@Nonnull TTypeDesc key) {
             return TypeDescriptorUtils.getDescriptor(key);
         }
     }

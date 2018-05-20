@@ -14,7 +14,7 @@ class UsernamePasswordCallbackHandler implements CallbackHandler {
     }
 
     @Override
-    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+    public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
 
         for (Callback callback : callbacks) {
             if (callback instanceof NameCallback) {

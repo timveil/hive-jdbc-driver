@@ -9,12 +9,12 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
     }
 
     @Override
-    public BigDecimal asBigDecimal() throws SQLException {
+    public BigDecimal asBigDecimal() {
         return value;
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             return value.toString();
         }
@@ -23,7 +23,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
 
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Integer.class, value);
 
         if (value != null) {
@@ -33,7 +33,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Long.class, value);
 
         if (value != null) {
@@ -43,7 +43,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Double.class, value);
 
         if (value != null) {
@@ -53,7 +53,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
     }
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Float.class, value);
 
         if (value != null) {
@@ -63,7 +63,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Short.class, value);
 
         if (value != null) {
@@ -74,7 +74,7 @@ public class DecimalColumn extends AbstractColumn<BigDecimal> {
 
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         log.warn("may lose precision going from {} to {}; value [{}]", BigDecimal.class, Byte.class, value);
 
         if (value != null) {

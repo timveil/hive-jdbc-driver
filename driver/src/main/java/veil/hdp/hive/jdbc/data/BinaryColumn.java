@@ -12,7 +12,7 @@ public class BinaryColumn extends AbstractColumn<ByteBuffer> {
 
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             return new String(asByteArray());
         }
@@ -21,7 +21,7 @@ public class BinaryColumn extends AbstractColumn<ByteBuffer> {
     }
 
     @Override
-    public byte[] asByteArray() throws SQLException {
+    public byte[] asByteArray() {
         if (value != null) {
             return value.array();
         }
@@ -30,7 +30,7 @@ public class BinaryColumn extends AbstractColumn<ByteBuffer> {
     }
 
     @Override
-    public InputStream asInputStream() throws SQLException {
+    public InputStream asInputStream() {
         if (value != null) {
             return new ByteArrayInputStream(value.array());
         }

@@ -13,18 +13,18 @@ public class DoubleColumn extends AbstractColumn<Double> {
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         return getValue();
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         return Double.toString(getValue());
     }
 
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         log.warn("may lose precision going from {} to {}; value [{}]", Double.class, Integer.class, value);
 
         return getValue().intValue();
@@ -32,7 +32,7 @@ public class DoubleColumn extends AbstractColumn<Double> {
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         log.warn("may lose precision going from {} to {}; value [{}]", Double.class, Long.class, value);
 
         return getValue().longValue();
@@ -40,14 +40,14 @@ public class DoubleColumn extends AbstractColumn<Double> {
 
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         log.warn("may lose precision going from {} to {}; value [{}]", Double.class, Short.class, value);
 
         return getValue().floatValue();
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         log.warn("may lose precision going from {} to {}; value [{}]", Double.class, Short.class, value);
 
         return getValue().shortValue();
@@ -55,7 +55,7 @@ public class DoubleColumn extends AbstractColumn<Double> {
 
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         log.warn("may lose precision going from {} to {}; value [{}]", Double.class, Byte.class, value);
 
         return getValue().byteValue();

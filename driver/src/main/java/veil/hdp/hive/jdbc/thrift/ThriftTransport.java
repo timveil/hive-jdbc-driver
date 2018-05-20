@@ -60,7 +60,7 @@ public class ThriftTransport implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
 
         if (closed.compareAndSet(false, true)) {
 

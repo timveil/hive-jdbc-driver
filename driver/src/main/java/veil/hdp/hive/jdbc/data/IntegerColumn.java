@@ -13,13 +13,13 @@ public class IntegerColumn extends AbstractColumn<Integer> {
     }
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         return getValue();
     }
 
 
     @Override
-    public Boolean asBoolean() throws SQLException {
+    public Boolean asBoolean() {
         if (value != null) {
             return value == 1;
         }
@@ -29,28 +29,28 @@ public class IntegerColumn extends AbstractColumn<Integer> {
 
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         return Integer.toString(getValue());
     }
 
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         return getValue().floatValue();
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         return getValue().longValue();
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         return getValue().doubleValue();
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Short.class, value);
 
         return getValue().shortValue();
@@ -58,7 +58,7 @@ public class IntegerColumn extends AbstractColumn<Integer> {
 
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         log.warn("may lose precision going from {} to {}; value [{}]", Integer.class, Byte.class, value);
 
         return getValue().byteValue();

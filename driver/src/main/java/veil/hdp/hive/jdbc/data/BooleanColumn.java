@@ -13,13 +13,13 @@ public class BooleanColumn extends AbstractColumn<Boolean> {
     }
 
     @Override
-    public Boolean asBoolean() throws SQLException {
+    public Boolean asBoolean() {
         return getValue();
     }
 
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             return Boolean.toString(value);
         }

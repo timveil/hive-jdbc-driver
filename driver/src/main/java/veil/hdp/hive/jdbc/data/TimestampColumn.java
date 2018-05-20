@@ -20,12 +20,12 @@ public class TimestampColumn extends AbstractColumn<Timestamp> {
     }
 
     @Override
-    public Timestamp asTimestamp() throws SQLException {
+    public Timestamp asTimestamp() {
         return value;
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             // should be YYYY-MM-DD HH:MM:SS.fffffffff
             return value.toString();
@@ -35,14 +35,14 @@ public class TimestampColumn extends AbstractColumn<Timestamp> {
     }
 
     @Override
-    public Date asDate() throws SQLException {
+    public Date asDate() {
         log.warn("will lose data going from {} to {}; value [{}]", Timestamp.class, Date.class, value);
 
         return SqlDateTimeUtils.convertTimestampToDate(value);
     }
 
     @Override
-    public Time asTime() throws SQLException {
+    public Time asTime() {
         log.warn("will lose data going from {} to {}; value [{}]", Timestamp.class, Time.class, value);
 
         return SqlDateTimeUtils.convertTimestampToTime(value);

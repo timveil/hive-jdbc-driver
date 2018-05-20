@@ -39,7 +39,7 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
     }
 
     @Override
-    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+    public void process(HttpRequest request, HttpContext context) {
 
         boolean authenticate = true;
 

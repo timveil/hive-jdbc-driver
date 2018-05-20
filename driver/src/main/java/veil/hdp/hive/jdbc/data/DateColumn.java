@@ -16,12 +16,12 @@ public class DateColumn extends AbstractColumn<Date> {
     }
 
     @Override
-    public Date asDate() throws SQLException {
+    public Date asDate() {
         return value;
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         if (value != null) {
             // should be YYYY-MM-DD
             return value.toString();

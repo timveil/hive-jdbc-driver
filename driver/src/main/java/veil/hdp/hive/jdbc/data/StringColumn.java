@@ -19,12 +19,12 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public String asString() throws SQLException {
+    public String asString() {
         return value;
     }
 
     @Override
-    public Boolean asBoolean() throws SQLException {
+    public Boolean asBoolean() {
         if (value != null) {
             return valueOf(value);
         }
@@ -33,7 +33,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Date asDate() throws SQLException {
+    public Date asDate() {
         if (value != null) {
             return SqlDateTimeUtils.convertStringToDate(value);
         }
@@ -42,7 +42,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Timestamp asTimestamp() throws SQLException {
+    public Timestamp asTimestamp() {
         if (value != null) {
             return SqlDateTimeUtils.convertStringToTimestamp(value);
         }
@@ -51,7 +51,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public BigDecimal asBigDecimal() throws SQLException {
+    public BigDecimal asBigDecimal() {
         if (value != null) {
             return new BigDecimal(value);
         }
@@ -60,7 +60,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Double asDouble() throws SQLException {
+    public Double asDouble() {
         if (value != null) {
             return Double.valueOf(value);
         }
@@ -69,7 +69,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Float asFloat() throws SQLException {
+    public Float asFloat() {
         if (value != null) {
             return Float.valueOf(value);
         }
@@ -78,7 +78,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Integer asInt() throws SQLException {
+    public Integer asInt() {
         if (value != null) {
             return Integer.valueOf(value);
         }
@@ -87,7 +87,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Long asLong() throws SQLException {
+    public Long asLong() {
         if (value != null) {
             return Long.valueOf(value);
         }
@@ -96,7 +96,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Short asShort() throws SQLException {
+    public Short asShort() {
         if (value != null) {
             return Short.valueOf(value);
         }
@@ -105,7 +105,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Byte asByte() throws SQLException {
+    public Byte asByte() {
         if (value != null) {
             return Byte.valueOf(value);
         }
@@ -114,7 +114,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Time asTime() throws SQLException {
+    public Time asTime() {
         if (value != null) {
             return SqlDateTimeUtils.convertStringToTime(value);
         }
@@ -123,7 +123,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public InputStream asInputStream() throws SQLException {
+    public InputStream asInputStream() {
         if (value != null) {
             return new ByteArrayInputStream(value.getBytes());
         }
@@ -132,7 +132,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public byte[] asByteArray() throws SQLException {
+    public byte[] asByteArray() {
         if (value != null) {
             return value.getBytes();
         }
@@ -141,7 +141,7 @@ public class StringColumn extends AbstractColumn<String> {
     }
 
     @Override
-    public Character asCharacter() throws SQLException {
+    public Character asCharacter() {
         if (value != null) {
 
             if (value.length() != 1) {
