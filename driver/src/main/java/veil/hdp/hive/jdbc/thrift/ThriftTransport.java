@@ -74,8 +74,6 @@ public class ThriftTransport implements AutoCloseable {
                     closeable.close();
                 } catch (IOException e) {
                     log.warn(e.getMessage(), e);
-                } finally {
-                    closeable = null;
                 }
             }
 
