@@ -131,6 +131,7 @@
             <url>http://repo.hortonworks.com/content/repositories/releases/</url>
         </repository>
     </repositories>
+<!--
 
     <distributionManagement>
         <repository>
@@ -142,6 +143,7 @@
             <url>packagecloud+https://packagecloud.io/timveil/hive-jdbc-driver</url>
         </snapshotRepository>
     </distributionManagement>
+-->
 
     <build>
         <extensions>
