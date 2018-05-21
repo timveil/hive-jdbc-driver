@@ -27,7 +27,6 @@ public enum HiveDriverProperty {
 
     PORT_NUMBER("port", "10000", null, "hive.server2.thrift.port"),
 
-    // should not be used in URL because its coded into separate drivers
     TRANSPORT_MODE("transportMode", TransportMode.binary.name(), null, "hive.server2.transport.mode", new String[]{TransportMode.binary.name(), TransportMode.http.name()}, null),
 
     AUTHENTICATION_MODE("authMode", AuthenticationMode.NONE.name(), null, "hive.server2.authentication",

@@ -25,9 +25,12 @@ public class ClientInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
+
+        lock.lock();
+
         StopWatch sw = new StopWatch(method.getName());
         sw.start();
-        lock.lock();
+
         try {
             return method.invoke(client, args);
         } catch (InvocationTargetException e) {
@@ -42,9 +45,12 @@ public class ClientInvocationHandler implements InvocationHandler {
         } catch (Exception e) {
             throw new TException("Error in calling method " + method.getName(), e);
         } finally {
-            lock.unlock();
+
             sw.stop();
             log.trace(sw.shortSummary());
+
+            lock.unlock();
+
         }
     }
 }
