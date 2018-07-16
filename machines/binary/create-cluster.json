@@ -1,7 +1,7 @@
 {
   "blueprint": "generated",
   "default_password": "password",
-  "config_recommendation_strategy": "NEVER_APPLY",
+  "config_recommendation_strategy": "ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES",
   "provision_action": "INSTALL_AND_START",
   "host_groups": [
     {

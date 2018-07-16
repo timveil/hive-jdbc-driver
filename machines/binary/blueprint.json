@@ -1,112 +1,112 @@
 {
-    "configurations": [
-        {
-            "hdfs-site": {
-                "properties": {
-                    "dfs.replication": "1"
-                }
-            }
-        },
-        {
-            "core-site" : {
-                "properties" : {
-                    "hadoop.proxyuser.root.groups" : "*",
-                    "hadoop.proxyuser.root.hosts" : "*"
-                }
-            }
-        },
-        {
-            "hive-site" : {
-                "properties" : {
-                    "hive.server2.transport.mode" : "binary"
-                }
-            }
+  "configurations": [
+    {
+      "hdfs-site": {
+        "properties": {
+          "dfs.replication": "1"
         }
-    ],
-    "host_groups": [
-        {
-            "name": "host_group_0",
-            "configurations": [],
-            "cardinality": "1",
-            "components": [
-                {
-                    "name": "MYSQL_SERVER"
-                },
-                {
-                    "name": "NAMENODE"
-                },
-                {
-                    "name": "SECONDARY_NAMENODE"
-                },
-                {
-                    "name": "APP_TIMELINE_SERVER"
-                },
-                {
-                    "name": "TIMELINE_READER"
-                },
-                {
-                    "name": "YARN_REGISTRY_DNS"
-                },
-                {
-                    "name": "RESOURCEMANAGER"
-                },
-                {
-                    "name": "HISTORYSERVER"
-                },
-                {
-                    "name": "HIVE_METASTORE"
-                },
-                {
-                    "name": "HIVE_SERVER"
-                },
-                {
-                    "name": "ZOOKEEPER_SERVER"
-                },
-                {
-                    "name": "METRICS_GRAFANA"
-                },
-                {
-                    "name": "METRICS_COLLECTOR"
-                },
-                {
-                    "name": "ACTIVITY_ANALYZER"
-                },
-                {
-                    "name": "ACTIVITY_EXPLORER"
-                },
-                {
-                    "name": "HST_SERVER"
-                },
-                {
-                    "name": "DATANODE"
-                },
-                {
-                    "name": "NODEMANAGER"
-                },
-                {
-                    "name": "HDFS_CLIENT"
-                },
-                {
-                    "name": "YARN_CLIENT"
-                },
-                {
-                    "name": "MAPREDUCE2_CLIENT"
-                },
-                {
-                    "name": "TEZ_CLIENT"
-                },
-                {
-                    "name": "HIVE_CLIENT"
-                },
-                {
-                    "name": "ZOOKEEPER_CLIENT"
-                }
-            ]
+      }
+    },
+    {
+      "core-site": {
+        "properties": {
+          "hadoop.proxyuser.root.groups": "*",
+          "hadoop.proxyuser.root.hosts": "*"
         }
-    ],
-    "Blueprints": {
-        "blueprint_name": "generated",
-        "stack_name": "HDP",
-        "stack_version": "3.0"
+      }
+    },
+    {
+      "hive-site": {
+        "properties": {
+          "hive.server2.transport.mode": "binary"
+        }
+      }
     }
+  ],
+  "host_groups": [
+    {
+      "name": "host_group_0",
+      "configurations": [],
+      "cardinality": "1",
+      "components": [
+        {
+          "name": "MYSQL_SERVER"
+        },
+        {
+          "name": "NAMENODE"
+        },
+        {
+          "name": "SECONDARY_NAMENODE"
+        },
+        {
+          "name": "APP_TIMELINE_SERVER"
+        },
+        {
+          "name": "TIMELINE_READER"
+        },
+        {
+          "name": "YARN_REGISTRY_DNS"
+        },
+        {
+          "name": "RESOURCEMANAGER"
+        },
+        {
+          "name": "HISTORYSERVER"
+        },
+        {
+          "name": "HIVE_METASTORE"
+        },
+        {
+          "name": "HIVE_SERVER"
+        },
+        {
+          "name": "ZOOKEEPER_SERVER"
+        },
+        {
+          "name": "METRICS_GRAFANA"
+        },
+        {
+          "name": "METRICS_COLLECTOR"
+        },
+        {
+          "name": "ACTIVITY_ANALYZER"
+        },
+        {
+          "name": "ACTIVITY_EXPLORER"
+        },
+        {
+          "name": "HST_SERVER"
+        },
+        {
+          "name": "DATANODE"
+        },
+        {
+          "name": "NODEMANAGER"
+        },
+        {
+          "name": "HDFS_CLIENT"
+        },
+        {
+          "name": "YARN_CLIENT"
+        },
+        {
+          "name": "MAPREDUCE2_CLIENT"
+        },
+        {
+          "name": "TEZ_CLIENT"
+        },
+        {
+          "name": "HIVE_CLIENT"
+        },
+        {
+          "name": "ZOOKEEPER_CLIENT"
+        }
+      ]
+    }
+  ],
+  "Blueprints": {
+    "blueprint_name": "generated",
+    "stack_name": "HDP",
+    "stack_version": "3.0"
+  }
 }
