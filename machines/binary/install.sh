@@ -25,8 +25,7 @@ echo "----- get ambari repo"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
 
-wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.2/ambari.repo -O /etc/yum.repos.d/ambari.repo
-
+wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.0.0/ambari.repo -O /etc/yum.repos.d/ambari.repo
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
@@ -44,6 +43,15 @@ echo " "
 
 sed -i "s/^hostname=localhost/hostname=jdbc-binary.hdp.local/g" /etc/ambari-agent/conf/ambari-agent.ini
 
+echo " "
+echo "---------------------------------------------------------------------------------------------------------------"
+echo "----- install overops"
+echo "---------------------------------------------------------------------------------------------------------------"
+echo " "
+
+curl -sL /dev/null http://get.takipi.com | sudo bash /dev/stdin -i --sk=S36579#bLFSWU3y+KL7s5kP#Ulu1V6TctQOeemsAKFeWiK09lzHRHEkX5HGbx7pL3N4=#386e
+
+export JAVA_TOOL_OPTIONS="-agentlib:TakipiAgent"
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
@@ -51,7 +59,7 @@ echo "----- running ambari setup"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
 
-ambari-server setup -s
+ambari-server setup --silent --java-home=$JAVA_HOME
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"

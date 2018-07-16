@@ -1,14 +1,16 @@
 {
-    "blueprint" : "generated",
-    "default_password" : "password",
-    "host_groups" :[
+  "blueprint": "generated",
+  "default_password": "password",
+  "config_recommendation_strategy": "NEVER_APPLY",
+  "provision_action": "INSTALL_AND_START",
+  "host_groups": [
+    {
+      "name": "host_group_0",
+      "hosts": [
         {
-            "name" : "host_group_1",
-            "hosts" : [
-                {
-                    "fqdn" : "jdbc-binary.hdp.local"
-                }
-            ]
+          "fqdn": "jdbc-binary.hdp.local"
         }
-    ]
+      ]
+    }
+  ]
 }
