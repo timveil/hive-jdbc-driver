@@ -28,6 +28,7 @@ public class TCLIServiceConstants {
     PRIMITIVE_TYPES.add(veil.hdp.hive.jdbc.bindings.TTypeId.CHAR_TYPE);
     PRIMITIVE_TYPES.add(veil.hdp.hive.jdbc.bindings.TTypeId.INTERVAL_YEAR_MONTH_TYPE);
     PRIMITIVE_TYPES.add(veil.hdp.hive.jdbc.bindings.TTypeId.INTERVAL_DAY_TIME_TYPE);
+    PRIMITIVE_TYPES.add(veil.hdp.hive.jdbc.bindings.TTypeId.TIMESTAMPLOCALTZ_TYPE);
   }
 
   public static final java.util.Set<TTypeId> COMPLEX_TYPES = java.util.EnumSet.noneOf(TTypeId.class);
@@ -68,6 +69,7 @@ public class TCLIServiceConstants {
     TYPE_NAMES.put(veil.hdp.hive.jdbc.bindings.TTypeId.CHAR_TYPE, "CHAR");
     TYPE_NAMES.put(veil.hdp.hive.jdbc.bindings.TTypeId.INTERVAL_YEAR_MONTH_TYPE, "INTERVAL_YEAR_MONTH");
     TYPE_NAMES.put(veil.hdp.hive.jdbc.bindings.TTypeId.INTERVAL_DAY_TIME_TYPE, "INTERVAL_DAY_TIME");
+    TYPE_NAMES.put(veil.hdp.hive.jdbc.bindings.TTypeId.TIMESTAMPLOCALTZ_TYPE, "TIMESTAMP WITH LOCAL TIME ZONE");
   }
 
   public static final java.lang.String CHARACTER_MAXIMUM_LENGTH = "characterMaximumLength";
