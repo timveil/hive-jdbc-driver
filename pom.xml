@@ -40,55 +40,19 @@
 
     <profiles>
         <profile>
-            <id>HDP-2.1.0.2.6.3.0-235</id>
-            <properties>
-                <hive.version>2.1.0.2.6.3.0-235</hive.version>
-                <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>9</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.1.0.2.6.2.0-205</id>
-            <properties>
-                <hive.version>2.1.0.2.6.2.0-205</hive.version>
-                <zookeeper.version>3.4.6.2.6.2.0-205</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>9</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.1.0.2.6.1.0-129</id>
-            <properties>
-                <hive.version>2.1.0.2.6.1.0-129</hive.version>
-                <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>9</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.1.0.2.6.0.3-8</id>
-            <properties>
-                <hive.version>2.1.0.2.6.0.3-8</hive.version>
-                <zookeeper.version>3.4.6.2.6.0.3-8</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>9</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-1.2.1000.2.6.4.0-91</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.4.0-91</hive.version>
-                <zookeeper.version>3.4.6.2.6.4.0-91</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-1.2.1000.2.6.5.0-292</id>
+            <id>HDP-3.0.0.0-1634</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <hive.version>3.1.0.3.0.0.0-1634</hive.version>
+                <zookeeper.version>3.4.6.3.0.0.0-1634</zookeeper.version>
+                <thrift.version>0.11.0</thrift.version>
+                <thrift.protocol.version>9</thrift.protocol.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>HDP-2.6.5.0-292</id>
             <properties>
                 <hive.version>1.2.1000.2.6.5.0-292</hive.version>
                 <zookeeper.version>3.4.6.2.6.5.0-292</zookeeper.version>
@@ -97,7 +61,16 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.6.3.0-235</id>
+            <id>HDP-2.6.4.0-91</id>
+            <properties>
+                <hive.version>1.2.1000.2.6.4.0-91</hive.version>
+                <zookeeper.version>3.4.6.2.6.4.0-91</zookeeper.version>
+                <thrift.version>0.11.0</thrift.version>
+                <thrift.protocol.version>7</thrift.protocol.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>HDP-2.6.3.0-235</id>
             <properties>
                 <hive.version>1.2.1000.2.6.3.0-235</hive.version>
                 <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
@@ -106,7 +79,7 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.6.2.0-205</id>
+            <id>HDP-2.6.2.0-205</id>
             <properties>
                 <hive.version>1.2.1000.2.6.2.0-205</hive.version>
                 <zookeeper.version>3.4.6.2.6.2.0-205</zookeeper.version>
@@ -115,7 +88,7 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.6.1.0-129</id>
+            <id>HDP-2.6.1.0-129</id>
             <properties>
                 <hive.version>1.2.1000.2.6.1.0-129</hive.version>
                 <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>
@@ -124,7 +97,7 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.6.0.3-8</id>
+            <id>HDP-2.6.0.3-8</id>
             <properties>
                 <hive.version>1.2.1000.2.6.0.3-8</hive.version>
                 <zookeeper.version>3.4.6.2.6.0.3-8</zookeeper.version>
@@ -133,7 +106,7 @@
             </properties>
         </profile>
         <profile>
-            <id>HDP-1.2.1000.2.5.3.0-37</id>
+            <id>HDP-2.5.3.0-37</id>
             <properties>
                 <hive.version>1.2.1000.2.5.3.0-37</hive.version>
                 <zookeeper.version>3.4.6.2.5.3.0-37</zookeeper.version>

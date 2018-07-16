@@ -43,15 +43,15 @@ echo " "
 
 sed -i "s/^hostname=localhost/hostname=jdbc-binary.hdp.local/g" /etc/ambari-agent/conf/ambari-agent.ini
 
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- install overops"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
+# echo " "
+# echo "---------------------------------------------------------------------------------------------------------------"
+# echo "----- install overops"
+# echo "---------------------------------------------------------------------------------------------------------------"
+# echo " "
 
-curl -sL /dev/null http://get.takipi.com | sudo bash /dev/stdin -i --sk=S36579#bLFSWU3y+KL7s5kP#Ulu1V6TctQOeemsAKFeWiK09lzHRHEkX5HGbx7pL3N4=#386e
+# curl -sL /dev/null http://get.takipi.com | sudo bash /dev/stdin -i --sk=S36579#bLFSWU3y+KL7s5kP#Ulu1V6TctQOeemsAKFeWiK09lzHRHEkX5HGbx7pL3N4=#386e
 
-export JAVA_TOOL_OPTIONS="-agentlib:TakipiAgent"
+# export JAVA_TOOL_OPTIONS="-agentlib:TakipiAgent"
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
