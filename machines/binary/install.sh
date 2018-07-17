@@ -29,73 +29,11 @@ wget -nv http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.0.0
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- installing mysql"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
-
-sudo su - << EOF
-    wget http://repo.mysql.com/mysql80-community-release-el7-1.noarch.rpm
-    rpm -Uvh mysql80-community-release-el7-1.noarch.rpm
-    yum install mysql-community-server -y
-    service mysqld start
-EOF
-
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- creating mysql root user"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
-
-mysql_secret=$(sudo grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
-
-echo $mysql_secret
-
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssword1234'" --connect-expired-password -u root -p$mysql_secret
-#mysql -e "CREATE USER 'root'@'%' IDENTIFIED BY 'password'"
-#mysql -e "CREATE USER 'root'@'127.0.0.1' IDENTIFIED BY 'password'"
-#mysql -e "CREATE USER 'root'@'localhost' IDENTIFIED BY 'password'"
-#mysql -e "CREATE USER 'root'@'jdbc-binary.hdp.local' IDENTIFIED BY 'password'"
-#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'"
-#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1'"
-#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost'"
-#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'jdbc-binary.hdp.local'"
-
-mysql -e "FLUSH PRIVILEGES"
-
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- creating mysql admin user"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
-
-mysql -e "CREATE USER 'admin'@'%' IDENTIFIED BY 'P@ssword1234'" -u root -pP@ssword1234
-mysql -e "CREATE USER 'admin'@'127.0.0.1' IDENTIFIED BY 'P@ssword1234'" -u root -pP@ssword1234
-mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'P@ssword1234'" -u root -pP@ssword1234
-mysql -e "CREATE USER 'admin'@'jdbc-binary.hdp.local' IDENTIFIED BY 'P@ssword1234'" -u root -pP@ssword1234
-mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%'" -u root -pP@ssword1234
-mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'127.0.0.1'" -u root -pP@ssword1234
-mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost'" -u root -pP@ssword1234
-mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'jdbc-binary.hdp.local'" -u root -pP@ssword1234
-
-mysql -e "FLUSH PRIVILEGES"
-
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
 echo "----- running yum install"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
 
 yum install ambari-server ambari-agent -y
-
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- create ambari database"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
-
-mysql -e "CREATE DATABASE ambari" -u admin -pP@ssword1234
-mysql -e "USE ambari" -u admin -pP@ssword1234
-mysql -e "SOURCE /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql" -u admin -pP@ssword1234
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
@@ -136,7 +74,7 @@ ambari-server setup --silent --java-home=$JAVA_HOME
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- starting ambari server and agent test"
+echo "----- starting ambari server and agent"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
 
