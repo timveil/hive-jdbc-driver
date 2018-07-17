@@ -55,6 +55,16 @@ sed -i "s/^hostname=localhost/hostname=jdbc-binary.hdp.local/g" /etc/ambari-agen
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
+echo "----- install mysql jdbc driver"
+echo "---------------------------------------------------------------------------------------------------------------"
+echo " "
+
+sudo yum install mysql-connector-java* -y
+ln -s /usr/share/java/mysql-connector-java.jar /var/lib/ambari-server/resources/mysql-connector-java.jar
+
+
+echo " "
+echo "---------------------------------------------------------------------------------------------------------------"
 echo "----- running ambari setup"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
@@ -69,15 +79,6 @@ echo " "
 
 ambari-server start
 ambari-agent start
-
-echo " "
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- fixing ambari mysql issue"
-echo "---------------------------------------------------------------------------------------------------------------"
-echo " "
-
-sudo yum install mysql-connector-java* -y
-ln -s /usr/share/java/mysql-connector-java.jar /var/lib/ambari-server/resources/mysql-connector-java.jar
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"

@@ -21,6 +21,13 @@
           "hive.server2.transport.mode": "binary"
         }
       }
+    },
+    {
+      "superset": {
+        "properties": {
+          "SUPERSET_DATABASE_TYPE": "sqlite"
+        }
+      }
     }
   ],
   "host_groups": [
@@ -63,19 +70,7 @@
           "name": "ZOOKEEPER_SERVER"
         },
         {
-          "name": "METRICS_GRAFANA"
-        },
-        {
-          "name": "METRICS_COLLECTOR"
-        },
-        {
-          "name": "ACTIVITY_ANALYZER"
-        },
-        {
-          "name": "ACTIVITY_EXPLORER"
-        },
-        {
-          "name": "HST_SERVER"
+          "name": "SUPERSET"
         },
         {
           "name": "DATANODE"
