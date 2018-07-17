@@ -136,7 +136,7 @@ ambari-server setup --silent --java-home=$JAVA_HOME
 
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
-echo "----- starting ambari server and agent"
+echo "----- starting ambari server and agent test"
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
 
