@@ -25,7 +25,8 @@
     {
       "superset": {
         "properties": {
-          "SUPERSET_DATABASE_TYPE": "sqlite"
+          "SUPERSET_DATABASE_TYPE": "sqlite",
+          "SECRET_KEY": "password"
         }
       }
     }
