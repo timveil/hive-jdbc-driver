@@ -7,6 +7,7 @@ As I started building out this project I realized that I wanted to deviate signi
 Another significant deviation from the Apache implementation is the absence of Hadoop or Hive dependencies and their transitive dependency graphs.  The only bridge to Hive in this driver is the Thrift Interface Description Language (IDL) file and the Java bindings it generates.  All necessary code was rewritten from the ground up with an emphasis on eliminating external dependencies.  This has the clear benefit of significantly reducing jar sizes and reducing opportunities for class conflicts!  See size comparison below:
 
 ![](docs/sizes.png)
+_the standalone jar for Hive 1.2.x does not contain all necessary dependencies so this is not an accurate representation of the real size_
 
 ## Areas of Focus
 
