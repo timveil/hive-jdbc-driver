@@ -774,7 +774,7 @@ struct TGetCatalogsResp {
 
 // GetSchemas()
 //
-// Retrieves the schema names available in this database. 
+// Retrieves the schema names available in this database.
 // The results are ordered by TABLE_CATALOG and TABLE_SCHEM.
 // col1
 // name: TABLE_SCHEM
@@ -1069,7 +1069,6 @@ struct TGetOperationStatusResp {
 
   10: optional TProgressUpdateResp progressUpdateResponse
 
-  11: optional i64 numModifiedRows
 }
 
 
