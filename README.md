@@ -22,4 +22,4 @@ The following are board areas where I have attempted expand or improve the exist
 
 ## Current State
 
-This project is **pre-alpha** and should be considered **experimental** a this point.  Currently it his built against Hortonworks Repos, but will soon be switched to more closely follow the Apache released versions.
+This project is **pre-alpha** and should be considered **experimental** a this point.  Currently it is built against Hortonworks Repos, but will soon be switched to more closely follow the Apache released versions.
