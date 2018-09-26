@@ -4,7 +4,7 @@ This project is alternative to the JDBC driver that is bundled with the Apache H
 
 As I started building out this project I realized that I wanted to deviate significantly from the existing Apache implementation.  As a result, this project does not desire or attempt to be URL or even feature compatible with the existing Apache Driver.  One obvious manifestation of this is that existing JDBC connection strings/URLs that work with the Apache Driver __WILL NOT WORK__ with this driver without modification.  I've provided a mapping for existing URL properties [here](DRIVER-PROPERTIES.md#apache-driver-property-mapping) as well as plenty of [examples](EXAMPLES.md). 
 
-Another significant deviation from the Apache implementation is the absence of Hadoop or Hive dependencies and their transitive dependency graphs.  The only bridge to Hive in this driver is the Thrift Interface Description Language (IDL) file and the Java bindings it generates.  All necessary code was rewritten from the ground up with an emphasis on eliminating external dependencies.  This has the clear benefit of significantly reducing jar sizes and reducing oppotunities for class conflicts!  See size comparison below:
+Another significant deviation from the Apache implementation is the absence of Hadoop or Hive dependencies and their transitive dependency graphs.  The only bridge to Hive in this driver is the Thrift Interface Description Language (IDL) file and the Java bindings it generates.  All necessary code was rewritten from the ground up with an emphasis on eliminating external dependencies.  This has the clear benefit of significantly reducing jar sizes and reducing opportunities for class conflicts!  See size comparison below:
 
 ![](docs/sizes.png)
 
@@ -22,4 +22,4 @@ The following are board areas where I have attempted expand or improve the exist
 
 ## Current State
 
-// talk about the fact that this is a small experimental project
+This project is **pre-alpha** and should be considered **experimental** a this point.  Currently it his built against Hortonworks Repos, but will soon be switched to more closely follow the Apache released versions.
