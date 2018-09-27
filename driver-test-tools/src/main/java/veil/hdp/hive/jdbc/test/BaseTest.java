@@ -29,7 +29,7 @@ public abstract class BaseTest {
     }
 
     public static String getHost() {
-        String host = System.getProperty("test.host", "jdbc-binary.hdp.local");
+        String host = System.getProperty("test.host", "localhost");
 
         if (host == null) {
             throw new IllegalArgumentException("can't run test without a valid host.  You must set the property \"test.host\" before executing test.  For example: -Dtest.host=jdbc-binary.hdp.local");

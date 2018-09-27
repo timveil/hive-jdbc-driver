@@ -61,11 +61,15 @@ public abstract class AbstractConnectionTest extends BaseTest {
             }
         }
 
-        try {
-            METRIC_REGISTRY.remove(SIMPLE_QUERY_LOAD);
-            METRIC_REGISTRY.remove(PREPARED_STATEMENT_LOAD);
-        } finally {
-            METRIC_REGISTRY = null;
+        if (METRIC_REGISTRY != null) {
+            try {
+
+                METRIC_REGISTRY.remove(SIMPLE_QUERY_LOAD);
+                METRIC_REGISTRY.remove(PREPARED_STATEMENT_LOAD);
+
+            } finally {
+                METRIC_REGISTRY = null;
+            }
         }
 
     }
@@ -274,7 +278,6 @@ public abstract class AbstractConnectionTest extends BaseTest {
 
     }
 
-    @Test
     public void testSimpleQueryInfiniteLoop() throws SQLException {
         while (true) {
             executeSimpleQuery(false, false);
