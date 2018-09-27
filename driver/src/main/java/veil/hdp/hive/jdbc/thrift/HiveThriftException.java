@@ -39,6 +39,7 @@ public class HiveThriftException extends RuntimeException {
         super();
 
         // todo - need to understand whats available here
+        // can generate this when i call create database when database already exists
         log.warn("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + operationStatusResp);
     }
 

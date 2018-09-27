@@ -136,7 +136,7 @@ public class ThriftOperation implements AutoCloseable {
             boolean hasResultSet = false;
 
             if (operationHandle.isSetHasResultSet()) {
-                hasResultSet = operationHandle.isSetHasResultSet();
+                hasResultSet = operationHandle.isHasResultSet();
             }
 
             int modifiedCount = -1;
@@ -153,7 +153,12 @@ public class ThriftOperation implements AutoCloseable {
                 operation = operationType.name();
             }
 
-            Schema schema = Schema.builder().session(session).handle(operationHandle).build();
+            Schema schema = null;
+
+            // if operation is something like EXECUTE_STATEMENT and doesn't have a result set, then schema building can fail
+            if (hasResultSet) {
+                schema = Schema.builder().session(session).handle(operationHandle).build();
+            }
 
             return new ThriftOperation(session, operationHandle, schema, hasResultSet, modifiedCount, operation);
         }
