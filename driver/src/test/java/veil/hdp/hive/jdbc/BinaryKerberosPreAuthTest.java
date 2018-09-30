@@ -51,9 +51,7 @@ public class BinaryKerberosPreAuthTest extends AbstractConnectionTest {
                     return new HiveDriver().connect(url, properties);
                 }
             });
-        } catch (PrivilegedActionException e) {
-            throw new SQLException(e);
-        } catch (LoginException e) {
+        } catch (PrivilegedActionException | LoginException e) {
             throw new SQLException(e);
         }
 

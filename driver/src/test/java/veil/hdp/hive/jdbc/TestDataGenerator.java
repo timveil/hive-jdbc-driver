@@ -35,7 +35,7 @@ public class TestDataGenerator {
         RandomStringGenerator stringGenerator = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
         for (int i = 0; i < 1000; i++) {
-            List<String> row = new ArrayList<String>(13);
+            List<String> row = new ArrayList<>(13);
 
             String randomByte = Integer.toString(ThreadLocalRandom.current().nextInt(Byte.MIN_VALUE, Byte.MAX_VALUE));
             String randomShort = Integer.toString(ThreadLocalRandom.current().nextInt(Short.MIN_VALUE, Short.MAX_VALUE));

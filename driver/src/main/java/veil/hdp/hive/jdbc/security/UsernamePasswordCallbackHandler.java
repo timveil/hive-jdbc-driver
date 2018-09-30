@@ -17,7 +17,6 @@
 package veil.hdp.hive.jdbc.security;
 
 import javax.security.auth.callback.*;
-import java.io.IOException;
 
 class UsernamePasswordCallbackHandler implements CallbackHandler {
 

@@ -88,7 +88,7 @@ public enum HiveType {
 
     public static HiveType valueOf(TTypeId tTypeId) {
         for (HiveType hiveType : values()) {
-            if (hiveType.getThriftType() == tTypeId) {
+            if (hiveType.thriftType == tTypeId) {
                 return hiveType;
             }
         }

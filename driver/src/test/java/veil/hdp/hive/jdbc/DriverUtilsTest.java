@@ -62,7 +62,7 @@ public class DriverUtilsTest extends BaseTest {
         }
 
         // expect success
-        boolean accpeted = DriverUtils.acceptURL(url);
+        boolean accepted = DriverUtils.acceptURL(url);
 
         log.debug("accepted: {}", url);
     }

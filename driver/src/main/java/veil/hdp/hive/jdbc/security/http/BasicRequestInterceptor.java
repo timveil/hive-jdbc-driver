@@ -23,8 +23,6 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.protocol.HttpContext;
 
-import java.io.IOException;
-
 public class BasicRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest request, HttpContext context) throws HttpException {

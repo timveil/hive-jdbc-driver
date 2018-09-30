@@ -23,7 +23,6 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.TextOutputCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.IOException;
 
 
 public class TextCallbackHandler implements CallbackHandler {

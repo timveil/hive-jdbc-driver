@@ -158,7 +158,7 @@ public enum HiveDriverProperty {
 
     public static HiveDriverProperty forAlias(String alias) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
-            if (property.getHiveConfigurationKey() != null && property.getHiveConfigurationKey().equalsIgnoreCase(alias)) {
+            if (property.hiveConfigurationKey != null && property.hiveConfigurationKey.equalsIgnoreCase(alias)) {
                 return property;
             }
         }
@@ -169,7 +169,7 @@ public enum HiveDriverProperty {
     public static HiveDriverProperty forKeyIgnoreCase(String key) {
         for (HiveDriverProperty property : HiveDriverProperty.values()) {
 
-            if (property.getKey().equalsIgnoreCase(key) || (property.getAliases() != null && Arrays.stream(property.getAliases()).anyMatch(s -> s.equalsIgnoreCase(key)))) {
+            if (property.key.equalsIgnoreCase(key) || (property.getAliases() != null && Arrays.stream(property.getAliases()).anyMatch(s -> s.equalsIgnoreCase(key)))) {
                 return property;
             }
         }

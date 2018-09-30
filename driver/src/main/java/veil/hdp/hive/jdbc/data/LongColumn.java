@@ -16,8 +16,6 @@
 
 package veil.hdp.hive.jdbc.data;
 
-import java.sql.SQLException;
-
 public class LongColumn extends AbstractColumn<Long> {
             /*
     resist temptation to convert long to timestamp/date/time.  java.sql.date does not need/want time and doesn't fit spec

@@ -17,7 +17,6 @@
 package veil.hdp.hive.jdbc.data;
 
 import java.sql.Date;
-import java.sql.SQLException;
 
 public class DateColumn extends AbstractColumn<Date> {
 

@@ -17,7 +17,6 @@
 package veil.hdp.hive.jdbc.security.http;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.CookieStore;
@@ -33,7 +32,6 @@ import veil.hdp.hive.jdbc.utils.PrincipalUtils;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.List;

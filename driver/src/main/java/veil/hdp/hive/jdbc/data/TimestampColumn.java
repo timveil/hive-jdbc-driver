@@ -19,7 +19,6 @@ package veil.hdp.hive.jdbc.data;
 import veil.hdp.hive.jdbc.utils.SqlDateTimeUtils;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 

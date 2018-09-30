@@ -16,8 +16,6 @@
 
 package veil.hdp.hive.jdbc.data;
 
-import java.sql.SQLException;
-
 public class IntegerColumn extends AbstractColumn<Integer> {
     IntegerColumn(Integer value) {
         super(value);

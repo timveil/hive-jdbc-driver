@@ -19,7 +19,6 @@ package veil.hdp.hive.jdbc.data;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.sql.SQLException;
 
 public class BinaryColumn extends AbstractColumn<ByteBuffer> {
     BinaryColumn(ByteBuffer value) {

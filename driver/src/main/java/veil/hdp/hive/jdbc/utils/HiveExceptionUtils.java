@@ -19,6 +19,7 @@ package veil.hdp.hive.jdbc.utils;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import veil.hdp.hive.jdbc.HiveSQLException;
 
@@ -42,7 +43,7 @@ public final class HiveExceptionUtils {
             if (detail.startsWith("*")) {
 
                 detail = StringUtils.stripStart(detail, "*");
-                detail = StringUtils.removePattern(detail, ":[0-9]+:[0-9]+$");
+                detail = RegExUtils.removePattern(detail, ":[0-9]+:[0-9]+$");
 
                 int firstColon = detail.indexOf(':');
                 String exceptionClass = detail.substring(0, firstColon);

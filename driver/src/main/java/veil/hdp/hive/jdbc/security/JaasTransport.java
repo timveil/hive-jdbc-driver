@@ -17,7 +17,6 @@
 package veil.hdp.hive.jdbc.security;
 
 import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.thrift.WrappedTransport;
 

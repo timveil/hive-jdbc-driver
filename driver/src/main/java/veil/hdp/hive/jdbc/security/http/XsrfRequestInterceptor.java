@@ -16,12 +16,9 @@
 
 package veil.hdp.hive.jdbc.security.http;
 
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
-
-import java.io.IOException;
 
 public class XsrfRequestInterceptor implements HttpRequestInterceptor {
 
