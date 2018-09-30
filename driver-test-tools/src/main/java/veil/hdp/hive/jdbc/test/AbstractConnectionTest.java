@@ -163,6 +163,15 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     @Test
+    public void testCreateDatabase() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            int updated = statement.executeUpdate("create database mytest");
+
+            log.debug("updated after create {}", updated);
+        }
+    }
+
+    @Test
     public void testDates() throws SQLException {
 
         //get Calendar instance

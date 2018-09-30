@@ -72,6 +72,7 @@ public class HiveConnection extends AbstractConnection {
     public Statement createStatement() throws SQLException {
         return HiveStatement.builder()
                 .connection(this)
+                .session(thriftSession)
                 .holdability(getHoldability())
                 .build();
     }
