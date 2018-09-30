@@ -96,7 +96,7 @@ public class ThriftTransport implements AutoCloseable {
 
             closeableList = null;
 
-            DriverUtils.closeAndNull(transport);
+            DriverUtils.close(transport);
 
         }
     }

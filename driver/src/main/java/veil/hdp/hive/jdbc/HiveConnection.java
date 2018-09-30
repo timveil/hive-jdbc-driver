@@ -62,7 +62,7 @@ public class HiveConnection extends AbstractConnection {
 
             log.trace("attempting to close {}", this.getClass().getName());
 
-            DriverUtils.closeAndNull(thriftSession);
+            DriverUtils.close(thriftSession);
 
         }
     }

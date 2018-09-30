@@ -230,11 +230,11 @@ public class HiveStatement extends AbstractStatement {
             log.trace("attempting to close {}", this.getClass().getName());
 
             if (thriftOperation != null && !thriftOperation.isClosed()) {
-                DriverUtils.closeAndNull(thriftOperation);
+                DriverUtils.close(thriftOperation);
             }
 
             if (resultSet != null && !resultSet.isClosed()) {
-                DriverUtils.closeAndNull(resultSet);
+                DriverUtils.close(resultSet);
             }
         }
     }
