@@ -17,46 +17,41 @@
 package veil.hdp.hive.jdbc.thrift;
 
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.HiveDriverProperty;
-import veil.hdp.hive.jdbc.HiveException;
+import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
+import veil.hdp.hive.jdbc.*;
 import veil.hdp.hive.jdbc.bindings.*;
-import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
+import veil.hdp.hive.jdbc.metadata.Schema;
+import veil.hdp.hive.jdbc.utils.StaticColumnDescriptors;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
-import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
-import javax.annotation.Nonnull;
+import java.sql.ResultSet;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ThriftSession implements AutoCloseable {
 
     private static final Logger log = LogManager.getLogger(ThriftSession.class);
-    private final Properties properties;
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
-    private final LoadingCache<TTypeDesc, ColumnTypeDescriptor> cache = CacheBuilder.newBuilder()
-            .maximumSize(500)
-            .build(new ColumnTypeCacheLoader());
+
     // constructor
-    private ThriftTransport thriftTransport;
-    private TCLIService.Iface client;
-    private TSessionHandle sessionHandle;
-    private TProtocolVersion protocol;
+    private final Properties properties;
+    private final ThriftTransport thriftTransport;
+    private final TCLIService.Iface client;
+    private final TSessionHandle sessionHandle;
 
 
-    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Iface client, TSessionHandle sessionHandle, TProtocolVersion protocol) {
+    private ThriftSession(Properties properties, ThriftTransport thriftTransport, TCLIService.Iface client, TSessionHandle sessionHandle) {
         this.properties = properties;
         this.thriftTransport = thriftTransport;
         this.client = client;
         this.sessionHandle = sessionHandle;
-        this.protocol = protocol;
 
         closed.set(false);
     }
@@ -65,34 +60,8 @@ public class ThriftSession implements AutoCloseable {
         return new ThriftSessionBuilder();
     }
 
-    public ColumnTypeDescriptor getCachedDescriptor(TTypeDesc type) {
-        try {
-            return cache.get(type);
-        } catch (ExecutionException e) {
-            log.error(e.getMessage(), e);
-        }
-
-        return null;
-    }
-
-    public TCLIService.Iface getClient() {
-        return client;
-    }
-
-    public TSessionHandle getSessionHandle() {
-        return sessionHandle;
-    }
-
-    public boolean isClosed() {
-        return closed.get();
-    }
-
     public Properties getProperties() {
         return properties;
-    }
-
-    public TProtocolVersion getProtocol() {
-        return protocol;
     }
 
     /**
@@ -111,23 +80,388 @@ public class ThriftSession implements AutoCloseable {
             log.trace("attempting to close {}", this.getClass().getName());
 
             try {
-                ThriftUtils.closeSession(this);
+                closeSession();
 
                 if (!thriftTransport.isClosed()) {
                     thriftTransport.close();
                 }
+
             } catch (Exception e) {
                 log.warn(e.getMessage(), e);
-            } finally {
-                sessionHandle = null;
-                thriftTransport = null;
-                client = null;
-                protocol = null;
-
-                cache.invalidateAll();
             }
         }
     }
+
+
+    private void closeSession() {
+
+        try {
+
+            TCloseSessionReq closeRequest = new TCloseSessionReq(sessionHandle);
+
+            TCloseSessionResp resp = client.CloseSession(closeRequest);
+
+
+            if (resp != null) {
+                try {
+                    ThriftUtils.checkStatus(resp.getStatus());
+                } catch (HiveThriftException e) {
+                    log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
+                }
+            }
+
+        } catch (TTransportException e) {
+            log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
+        } catch (TException e) {
+            log.warn(MessageFormat.format("thrift exception exception: message [{0}]", e.getMessage()), e);
+        }
+
+
+    }
+
+
+    public ResultSet getCatalogs() {
+
+        try {
+
+            TGetCatalogsReq req = new TGetCatalogsReq(sessionHandle);
+
+            TGetCatalogsResp resp = client.GetCatalogs(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
+
+        try {
+
+            TGetColumnsReq req = new TGetColumnsReq(sessionHandle);
+            req.setCatalogName(catalog);
+            req.setSchemaName(schemaPattern);
+            req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
+            req.setColumnName(columnNamePattern == null ? "%" : columnNamePattern);
+
+            TGetColumnsResp resp = client.GetColumns(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) {
+
+        try {
+
+            TGetFunctionsReq req = new TGetFunctionsReq();
+            req.setSessionHandle(sessionHandle);
+            req.setCatalogName(catalog);
+            req.setSchemaName(schemaPattern);
+            req.setFunctionName(functionNamePattern == null ? "%" : functionNamePattern);
+
+            TGetFunctionsResp resp = client.GetFunctions(req);
+
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) {
+
+        try {
+            TGetTablesReq req = new TGetTablesReq(sessionHandle);
+
+            req.setCatalogName(catalog);
+            req.setSchemaName(schemaPattern);
+            req.setTableName(tableNamePattern == null ? "%" : tableNamePattern);
+
+            if (types != null) {
+                req.setTableTypes(Arrays.asList(types));
+            }
+
+            TGetTablesResp resp = client.GetTables(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getTypeInfo() {
+
+        try {
+
+            TGetTypeInfoReq req = new TGetTypeInfoReq(sessionHandle);
+
+            TGetTypeInfoResp resp = client.GetTypeInfo(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+
+    }
+
+    public TGetInfoValue getServerInfo(TGetInfoType type) {
+
+        try {
+
+            TGetInfoReq req = new TGetInfoReq(sessionHandle, type);
+
+            TGetInfoResp resp = client.GetInfo(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            return resp.getInfoValue();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+
+    }
+
+    public ResultSet getTableTypes() {
+
+        try {
+            TGetTableTypesReq req = new TGetTableTypesReq(sessionHandle);
+
+            TGetTableTypesResp resp = client.GetTableTypes(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getSchemas(String catalog, String schemaPattern) {
+
+        try {
+            TGetSchemasReq req = new TGetSchemasReq(sessionHandle);
+            req.setCatalogName(catalog);
+            req.setSchemaName(schemaPattern);
+
+            TGetSchemasResp resp = client.GetSchemas(req);
+
+            ThriftUtils.checkStatus(resp.getStatus());
+
+            ThriftOperation thriftOperation = ThriftOperation.builder().handle(resp.getOperationHandle()).client(client).build();
+
+            return HiveResultSet.builder().thriftOperation(thriftOperation).fetchSize(HiveDriverProperty.FETCH_SIZE.getInt(properties)).build();
+
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+    }
+
+    public ResultSet getPrimaryKeys(String catalog, String schema, String table) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PRIMARY_KEYS).build()).build();
+    }
+
+    public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PROCEDURE_COLUMNS).build()).build();
+    }
+
+    public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PROCEDURES).build()).build();
+    }
+
+    public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.COLUMN_PRIVILEGES).build()).build();
+    }
+
+    public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.TABLE_PRIVILEGES).build()).build();
+    }
+
+    public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.BEST_ROW_IDENTIFIER).build()).build();
+    }
+
+    public ResultSet getVersionColumns(String catalog, String schema, String table) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.VERSION_COLUMNS).build()).build();
+    }
+
+    public ResultSet getImportedKeys(String catalog, String schema, String table) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.IMPORTED_KEYS).build()).build();
+    }
+
+    public ResultSet getExportedKeys(String catalog, String schema, String table) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.EXPORTED_KEYS).build()).build();
+    }
+
+    //TODO - NOW AVAILABLE
+    public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.CROSS_REFERENCE).build()).build();
+    }
+
+    public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.INDEX_INFO).build()).build();
+    }
+
+    public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.UDT).build()).build();
+    }
+
+    public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.SUPER_TYPES).build()).build();
+    }
+
+    public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.SUPER_TABLES).build()).build();
+    }
+
+    public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.ATTRIBUTES).build()).build();
+    }
+
+    public ResultSet getClientInfoProperties() {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.CLIENT_INFO_PROPERTIES).build()).build();
+    }
+
+    public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.FUNCTION_COLUMNS).build()).build();
+    }
+
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.PSEUDO_COLUMNS).build()).build();
+    }
+
+    public ResultSet getGeneratedKeys() {
+        return HiveEmptyResultSet.builder().schema(Schema.builder().descriptors(StaticColumnDescriptors.GENERATED_KEYS).build()).build();
+    }
+
+
+    public ThriftOperation executeSql(String sql, long queryTimeout) {
+        TExecuteStatementReq executeStatementReq = new TExecuteStatementReq(sessionHandle, StringUtils.trim(sql));
+        executeStatementReq.setRunAsync(true);
+        executeStatementReq.setQueryTimeout(queryTimeout);
+        //todo: allows per statement configuration of session handle
+        //executeStatementReq.setConfOverlay(null);
+
+        TExecuteStatementResp executeStatementResp;
+
+        try {
+            executeStatementResp = client.ExecuteStatement(executeStatementReq);
+        } catch (TException e) {
+            throw new HiveThriftException(e);
+        }
+
+        ThriftUtils.checkStatus(executeStatementResp.getStatus());
+
+        TOperationHandle operationHandle = executeStatementResp.getOperationHandle();
+
+        /*
+        if (HiveDriverProperty.FETCH_SERVER_LOGS.getBoolean(session.getProperties())) {
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "fetch-logs-thread"));
+
+            executorService.submit(() -> {
+                List<Row> rows = fetchLogs(session, operationHandle, Schema.builder().descriptors(StaticColumnDescriptors.QUERY_LOG).build(), fetchSize);
+
+                for (Row row : rows) {
+                    try {
+                        log.debug(row.getColumn(1).asString());
+                    } catch (SQLException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            });
+        }
+        */
+
+        waitForStatementToComplete(operationHandle);
+
+        return ThriftOperation.builder()
+                .client(client)
+                .handle(operationHandle)
+                .build();
+
+    }
+
+    private void waitForStatementToComplete(TOperationHandle handle) {
+        boolean isComplete = false;
+
+        TGetOperationStatusReq statusReq = new TGetOperationStatusReq(handle);
+
+        while (!isComplete) {
+
+            TGetOperationStatusResp statusResp;
+
+            try {
+                statusResp = client.GetOperationStatus(statusReq);
+            } catch (TException e) {
+                throw new HiveThriftException(e);
+            }
+
+            ThriftUtils.checkStatus(statusResp.getStatus());
+
+            if (statusResp.isSetOperationState()) {
+
+                switch (statusResp.getOperationState()) {
+                    case FINISHED_STATE:
+                        isComplete = true;
+                        break;
+                    case CLOSED_STATE:
+                    case CANCELED_STATE:
+                    case TIMEDOUT_STATE:
+                    case ERROR_STATE:
+                    case UKNOWN_STATE:
+                        throw new HiveThriftException(statusResp);
+                    case INITIALIZED_STATE:
+                    case PENDING_STATE:
+                    case RUNNING_STATE:
+                        break;
+                }
+            }
+
+
+        }
+    }
+
 
     public static class ThriftSessionBuilder implements Builder<ThriftSession> {
         private Properties properties;
@@ -168,7 +502,7 @@ public class ThriftSession implements AutoCloseable {
 
                     log.debug("opened session with protocol {}", serverProtocolVersion);
 
-                    return new ThriftSession(properties, thriftTransport, client, sessionHandle, serverProtocolVersion);
+                    return new ThriftSession(properties, thriftTransport, client, sessionHandle);
 
                 } catch (InvalidProtocolException e) {
                     protocol--;
@@ -186,10 +520,4 @@ public class ThriftSession implements AutoCloseable {
 
     }
 
-    private static class ColumnTypeCacheLoader extends CacheLoader<TTypeDesc, ColumnTypeDescriptor> {
-        @Override
-        public ColumnTypeDescriptor load(@Nonnull TTypeDesc key) {
-            return TypeDescriptorUtils.getDescriptor(key);
-        }
-    }
 }

@@ -26,21 +26,25 @@ import java.util.Map;
 
 abstract class AbstractResultSet implements ResultSet {
     @Override
+    @Deprecated
     public final BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
     }
 
     @Override
+    @Deprecated
     public final InputStream getUnicodeStream(int columnIndex) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
     }
 
     @Override
+    @Deprecated
     public final BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
     }
 
     @Override
+    @Deprecated
     public final InputStream getUnicodeStream(String columnLabel) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
     }

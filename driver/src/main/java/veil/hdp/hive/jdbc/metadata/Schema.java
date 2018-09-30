@@ -18,11 +18,10 @@ package veil.hdp.hive.jdbc.metadata;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.thrift.TException;
 import veil.hdp.hive.jdbc.Builder;
-import veil.hdp.hive.jdbc.bindings.TColumnDesc;
-import veil.hdp.hive.jdbc.bindings.TOperationHandle;
-import veil.hdp.hive.jdbc.bindings.TTableSchema;
-import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.HiveException;
+import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.util.*;
@@ -75,7 +74,7 @@ public class Schema {
 
         private static final Comparator<ColumnDescriptor> COLUMN_DESCRIPTOR_COMPARATOR = Comparator.comparingInt(ColumnDescriptor::getPosition);
 
-        private ThriftSession thriftSession;
+        private TCLIService.Iface client;
 
         private TOperationHandle operationHandle;
 
@@ -84,8 +83,8 @@ public class Schema {
         private SchemaBuilder() {
         }
 
-        public SchemaBuilder session(ThriftSession thriftSession) {
-            this.thriftSession = thriftSession;
+        public SchemaBuilder client(TCLIService.Iface client) {
+            this.client = client;
             return this;
         }
 
@@ -110,10 +109,12 @@ public class Schema {
                 }
             } else {
 
-                TTableSchema tableSchema = ThriftUtils.getTableSchema(thriftSession, operationHandle);
+                TTableSchema tableSchema = getTableSchema(client, operationHandle);
+
+
 
                 for (TColumnDesc columnDesc : tableSchema.getColumns()) {
-                    ColumnDescriptor descriptor = ColumnDescriptor.builder().session(thriftSession).thriftColumn(columnDesc).build();
+                    ColumnDescriptor descriptor = ColumnDescriptor.builder().thriftColumn(columnDesc).build();
                     mapping.put(descriptor.getName(), descriptor);
                 }
 
@@ -125,5 +126,23 @@ public class Schema {
 
             return new Schema(mapping, columns, columns.size());
         }
+
+
+        private static TTableSchema getTableSchema(TCLIService.Iface client, TOperationHandle operationHandle) {
+            TGetResultSetMetadataReq metadataReq = new TGetResultSetMetadataReq(operationHandle);
+
+            TGetResultSetMetadataResp metadataResp;
+
+            try {
+                metadataResp = client.GetResultSetMetadata(metadataReq);
+            } catch (TException e) {
+                throw new HiveException(e);
+            }
+
+            ThriftUtils.checkStatus(metadataResp.getStatus());
+
+            return metadataResp.getSchema();
+        }
+
     }
 }

@@ -16,6 +16,8 @@
 
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.thrift.ThriftSession;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -27,8 +29,8 @@ import java.util.Calendar;
 abstract class AbstractPreparedStatement extends HiveStatement implements PreparedStatement {
 
 
-    AbstractPreparedStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
-        super(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
+    AbstractPreparedStatement(HiveConnection connection, ThriftSession thriftSession, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+        super(connection, thriftSession, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
@@ -117,6 +119,7 @@ abstract class AbstractPreparedStatement extends HiveStatement implements Prepar
     }
 
     @Override
+    @Deprecated
     public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
         throw HiveDriver.notImplemented(this.getClass());
     }

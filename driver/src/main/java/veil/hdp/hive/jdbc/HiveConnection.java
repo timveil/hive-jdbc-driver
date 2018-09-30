@@ -35,7 +35,7 @@ public class HiveConnection extends AbstractConnection {
     private static final SQLPermission SQL_PERMISSION_ABORT = new SQLPermission("callAbort");
 
     // constructor
-    private ThriftSession thriftSession;
+    private final ThriftSession thriftSession;
     private final AtomicBoolean closed = new AtomicBoolean(true);
 
     // public getter & setter
@@ -49,10 +49,6 @@ public class HiveConnection extends AbstractConnection {
 
     public static HiveConnectionBuilder builder() {
         return new HiveConnectionBuilder();
-    }
-
-    public ThriftSession getThriftSession() {
-        return thriftSession;
     }
 
     @Override
@@ -82,22 +78,44 @@ public class HiveConnection extends AbstractConnection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return HivePreparedStatement.builder().connection(this).sql(sql).holdability(getHoldability()).build();
+        return HivePreparedStatement.builder()
+                .connection(this)
+                .session(thriftSession)
+                .sql(sql)
+                .holdability(getHoldability())
+                .build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return HivePreparedStatement.builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(getHoldability()).build();
+        return HivePreparedStatement.builder()
+                .connection(this)
+                .session(thriftSession)
+                .sql(sql)
+                .type(resultSetType)
+                .concurrency(resultSetConcurrency)
+                .holdability(getHoldability())
+                .build();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return HivePreparedStatement.builder().connection(this).sql(sql).type(resultSetType).concurrency(resultSetConcurrency).holdability(resultSetHoldability).build();
+        return HivePreparedStatement.builder()
+                .connection(this)
+                .session(thriftSession)
+                .sql(sql)
+                .type(resultSetType)
+                .concurrency(resultSetConcurrency)
+                .holdability(resultSetHoldability)
+                .build();
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return HiveDatabaseMetaData.builder().connection(this).build();
+        return HiveDatabaseMetaData.builder()
+                .connection(this)
+                .session(thriftSession)
+                .build();
     }
 
     @Override
@@ -115,6 +133,7 @@ public class HiveConnection extends AbstractConnection {
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
         return HiveStatement.builder()
                 .connection(this)
+                .session(thriftSession)
                 .type(resultSetType)
                 .concurrency(resultSetConcurrency)
                 .holdability(getHoldability())
@@ -125,6 +144,7 @@ public class HiveConnection extends AbstractConnection {
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         return HiveStatement.builder()
                 .connection(this)
+                .session(thriftSession)
                 .type(resultSetType)
                 .concurrency(resultSetConcurrency)
                 .holdability(resultSetHoldability)

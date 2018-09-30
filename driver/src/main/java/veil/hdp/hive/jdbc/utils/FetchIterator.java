@@ -40,7 +40,7 @@ public class FetchIterator extends AbstractIterator<ColumnBasedSet> {
     @Override
     protected ColumnBasedSet computeNext() {
 
-        ColumnBasedSet cbs = ThriftUtils.fetchResults(operation, orientation, fetchSize);
+        ColumnBasedSet cbs = operation.fetchResults(orientation, fetchSize);
 
         if (cbs != null && cbs.getRowCount() > 0) {
             return cbs;

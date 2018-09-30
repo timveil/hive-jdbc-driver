@@ -41,8 +41,8 @@ public class ThriftTransport implements AutoCloseable {
     private static final Logger log = LogManager.getLogger(ThriftTransport.class);
 
     // constructor
-    private TTransport transport;
-    private List<Closeable> closeableList;
+    private final TTransport transport;
+    private final List<Closeable> closeableList;
 
     // atomic
     private final AtomicBoolean closed = new AtomicBoolean(true);
@@ -93,8 +93,6 @@ public class ThriftTransport implements AutoCloseable {
                     log.warn(e.getMessage(), e);
                 }
             }
-
-            closeableList = null;
 
             DriverUtils.close(transport);
 

@@ -20,10 +20,9 @@ package veil.hdp.hive.jdbc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
+import veil.hdp.hive.jdbc.thrift.ThriftSession;
 import veil.hdp.hive.jdbc.utils.Constants;
 import veil.hdp.hive.jdbc.utils.DriverUtils;
-import veil.hdp.hive.jdbc.utils.QueryUtils;
-import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +35,7 @@ public class HiveStatement extends AbstractStatement {
 
     // constructor
     private final HiveConnection connection;
+    private final ThriftSession thriftSession;
     private final int resultSetType;
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
@@ -52,12 +52,12 @@ public class HiveStatement extends AbstractStatement {
     private ResultSet resultSet;
 
 
-    HiveStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    HiveStatement(HiveConnection connection, ThriftSession thriftSession, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.connection = connection;
-
+        this.thriftSession = thriftSession;
         this.queryTimeout = Constants.DEFAULT_QUERY_TIMEOUT;
         this.maxRows = Constants.DEFAULT_MAX_ROWS;
-        this.fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(connection.getThriftSession().getProperties());
+        this.fetchSize = HiveDriverProperty.FETCH_SIZE.getInt(thriftSession.getProperties());
         this.fetchDirection = ResultSet.FETCH_FORWARD;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
@@ -77,7 +77,7 @@ public class HiveStatement extends AbstractStatement {
             close();
         }
 
-        thriftOperation = ThriftUtils.executeSql(connection.getThriftSession(), sql, queryTimeout);
+        thriftOperation = thriftSession.executeSql(sql, queryTimeout);
 
         if (thriftOperation.hasResultSet()) {
 
@@ -280,7 +280,7 @@ public class HiveStatement extends AbstractStatement {
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        return QueryUtils.getGeneratedKeys(connection);
+        return thriftSession.getGeneratedKeys();
     }
 
     @Override
@@ -297,6 +297,7 @@ public class HiveStatement extends AbstractStatement {
     public static class HiveStatementBuilder implements Builder<HiveStatement> {
 
         HiveConnection connection;
+        ThriftSession thriftSession;
         int resultSetType = ResultSet.TYPE_FORWARD_ONLY;
         int resultSetConcurrency = ResultSet.CONCUR_READ_ONLY;
         int resultSetHoldability = ResultSet.CLOSE_CURSORS_AT_COMMIT;
@@ -306,6 +307,11 @@ public class HiveStatement extends AbstractStatement {
 
         HiveStatementBuilder connection(HiveConnection connection) {
             this.connection = connection;
+            return this;
+        }
+
+        HiveStatementBuilder session(ThriftSession thriftSession) {
+            this.thriftSession = thriftSession;
             return this;
         }
 
@@ -326,7 +332,7 @@ public class HiveStatement extends AbstractStatement {
 
 
         public HiveStatement build() {
-            return new HiveStatement(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
+            return new HiveStatement(connection, thriftSession, resultSetType, resultSetConcurrency, resultSetHoldability);
         }
     }
 

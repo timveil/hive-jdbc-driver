@@ -19,7 +19,7 @@ package veil.hdp.hive.jdbc.metadata;
 
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.bindings.TColumnDesc;
-import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.utils.TypeDescriptorUtils;
 
 public class ColumnDescriptor {
 
@@ -86,8 +86,6 @@ public class ColumnDescriptor {
         private ColumnTypeDescriptor columnTypeDescriptor;
         private String name;
         private int position;
-        private ThriftSession session;
-
 
         private ColumnDescriptorBuilder() {
         }
@@ -99,11 +97,6 @@ public class ColumnDescriptor {
 
         public ColumnDescriptorBuilder typeDescriptor(ColumnTypeDescriptor typeDescriptor) {
             this.columnTypeDescriptor = typeDescriptor;
-            return this;
-        }
-
-        public ColumnDescriptorBuilder session(ThriftSession session) {
-            this.session = session;
             return this;
         }
 
@@ -119,7 +112,7 @@ public class ColumnDescriptor {
 
         public ColumnDescriptor build() {
 
-            if (tColumnDesc != null && session != null) {
+            if (tColumnDesc != null) {
                 String rawName = tColumnDesc.getColumnName();
 
                 String columnName;
@@ -136,7 +129,7 @@ public class ColumnDescriptor {
                     columnName = rawName;
                 }
 
-                columnTypeDescriptor = session.getCachedDescriptor(tColumnDesc.getTypeDesc());
+                columnTypeDescriptor = TypeDescriptorUtils.getCachedDescriptor(tColumnDesc.getTypeDesc());
 
                 return new ColumnDescriptor(columnName,
                         null,

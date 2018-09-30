@@ -16,6 +16,9 @@
 
 package veil.hdp.hive.jdbc.utils;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveException;
@@ -23,13 +26,29 @@ import veil.hdp.hive.jdbc.bindings.*;
 import veil.hdp.hive.jdbc.metadata.ColumnTypeDescriptor;
 import veil.hdp.hive.jdbc.metadata.HiveType;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class TypeDescriptorUtils {
 
     private static final Logger log = LogManager.getLogger(TypeDescriptorUtils.class);
 
-    public static ColumnTypeDescriptor getDescriptor(TTypeDesc typeDesc) {
+    private static final LoadingCache<TTypeDesc, ColumnTypeDescriptor> CACHE = CacheBuilder.newBuilder()
+            .maximumSize(500)
+            .build(new ColumnTypeCacheLoader());
+
+    public static ColumnTypeDescriptor getCachedDescriptor(TTypeDesc type) {
+        try {
+            return CACHE.get(type);
+        } catch (ExecutionException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private static ColumnTypeDescriptor getDescriptor(TTypeDesc typeDesc) {
 
         TTypeEntry entry = typeDesc.getTypes().get(0);
 
@@ -73,5 +92,13 @@ public class TypeDescriptorUtils {
         }
 
         return null;
+    }
+
+
+    private static class ColumnTypeCacheLoader extends CacheLoader<TTypeDesc, ColumnTypeDescriptor> {
+        @Override
+        public ColumnTypeDescriptor load(@Nonnull TTypeDesc key) {
+            return TypeDescriptorUtils.getDescriptor(key);
+        }
     }
 }

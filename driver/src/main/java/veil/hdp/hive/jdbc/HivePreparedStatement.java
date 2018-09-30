@@ -17,6 +17,7 @@
 package veil.hdp.hive.jdbc;
 
 import org.apache.commons.lang3.StringUtils;
+import veil.hdp.hive.jdbc.thrift.ThriftSession;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -43,8 +44,8 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
     private final Map<Integer, String> parameterValues;
 
 
-    private HivePreparedStatement(HiveConnection connection, int resultSetType, int resultSetConcurrency, int resultSetHoldability, String sql) {
-        super(connection, resultSetType, resultSetConcurrency, resultSetHoldability);
+    private HivePreparedStatement(HiveConnection connection, ThriftSession thriftSession, int resultSetType, int resultSetConcurrency, int resultSetHoldability, String sql) {
+        super(connection, thriftSession, resultSetType, resultSetConcurrency, resultSetHoldability);
         this.sql = sql;
         parameterValues = new HashMap<>();
     }
@@ -232,6 +233,12 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         }
 
         @Override
+        PreparedStatementBuilder session(ThriftSession thriftSession) {
+            super.thriftSession = thriftSession;
+            return this;
+        }
+
+        @Override
         PreparedStatementBuilder type(int resultSetType) {
             super.resultSetType = resultSetType;
             return this;
@@ -250,7 +257,7 @@ public class HivePreparedStatement extends AbstractPreparedStatement {
         }
 
         public HivePreparedStatement build() {
-            return new HivePreparedStatement(connection, resultSetType, resultSetConcurrency, resultSetHoldability, StringUtils.trim(sql));
+            return new HivePreparedStatement(connection, thriftSession, resultSetType, resultSetConcurrency, resultSetHoldability, StringUtils.trim(sql));
         }
     }
 }

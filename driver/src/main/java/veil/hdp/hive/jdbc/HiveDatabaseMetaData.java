@@ -16,6 +16,7 @@
 
 package veil.hdp.hive.jdbc;
 
+import veil.hdp.hive.jdbc.thrift.ThriftSession;
 import veil.hdp.hive.jdbc.utils.*;
 
 import java.sql.*;
@@ -24,6 +25,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     // constructor
     private final HiveConnection connection;
+    private final ThriftSession thriftSession;
     private final String productName;
     private final String driverVersion;
     private final int driverMajorVersion;
@@ -33,8 +35,9 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     private final int hiveMinorVersion;
     private final String url;
 
-    private HiveDatabaseMetaData(HiveConnection connection, String url, String productName, String driverVersion, int driverMajorVersion, int driverMinorVersion, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
+    private HiveDatabaseMetaData(HiveConnection connection, ThriftSession thriftSession, String url, String productName, String driverVersion, int driverMajorVersion, int driverMinorVersion, String hiveVersion, int hiveMajorVersion, int hiveMinorVersion) {
         this.connection = connection;
+        this.thriftSession = thriftSession;
         this.url = url;
         this.productName = productName;
         this.driverVersion = driverVersion;
@@ -111,7 +114,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        return QueryUtils.getCatalogs(connection);
+        return thriftSession.getCatalogs();
     }
 
     @Override
@@ -121,27 +124,27 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-        return QueryUtils.getSchemas(connection, catalog, schemaPattern);
+        return thriftSession.getSchemas(catalog, schemaPattern);
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        return QueryUtils.getTypeInfo(connection);
+        return thriftSession.getTypeInfo();
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        return QueryUtils.getTableTypes(connection);
+        return thriftSession.getTableTypes();
     }
 
     @Override
     public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-        return QueryUtils.getTables(connection, catalog, schemaPattern, tableNamePattern, types);
+        return thriftSession.getTables(catalog, schemaPattern, tableNamePattern, types);
     }
 
     @Override
     public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return QueryUtils.getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        return thriftSession.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     @Override
@@ -171,7 +174,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public String getUserName() throws SQLException {
-        return HiveDriverProperty.USER.get(connection.getThriftSession().getProperties());
+        return HiveDriverProperty.USER.get(thriftSession.getProperties());
     }
 
     @Override
@@ -181,97 +184,97 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryUtils.getPrimaryKeys(connection, catalog, schema, table);
+        return thriftSession.getPrimaryKeys(catalog, schema, table);
     }
 
     @Override
     public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern) throws SQLException {
-        return QueryUtils.getProcedures(connection, catalog, schemaPattern, procedureNamePattern);
+        return thriftSession.getProcedures(catalog, schemaPattern, procedureNamePattern);
     }
 
     @Override
     public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern) throws SQLException {
-        return QueryUtils.getProcedureColumns(connection, catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+        return thriftSession.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
     }
 
     @Override
     public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern) throws SQLException {
-        return QueryUtils.getColumnPrivileges(connection, catalog, schema, table, columnNamePattern);
+        return thriftSession.getColumnPrivileges(catalog, schema, table, columnNamePattern);
     }
 
     @Override
     public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return QueryUtils.getTablePrivileges(connection, catalog, schemaPattern, tableNamePattern);
+        return thriftSession.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable) throws SQLException {
-        return QueryUtils.getBestRowIdentifier(connection, catalog, schema, table, scope, nullable);
+        return thriftSession.getBestRowIdentifier(catalog, schema, table, scope, nullable);
     }
 
     @Override
     public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
-        return QueryUtils.getVersionColumns(connection, catalog, schema, table);
+        return thriftSession.getVersionColumns(catalog, schema, table);
     }
 
     @Override
     public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryUtils.getImportedKeys(connection, catalog, schema, table);
+        return thriftSession.getImportedKeys(catalog, schema, table);
     }
 
     @Override
     public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
-        return QueryUtils.getExportedKeys(connection, catalog, schema, table);
+        return thriftSession.getExportedKeys(catalog, schema, table);
     }
 
     @Override
     public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
-        return QueryUtils.getCrossReference(connection, parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
+        return thriftSession.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
     }
 
     @Override
     public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-        return QueryUtils.getIndexInfo(connection, catalog, schema, table, unique, approximate);
+        return thriftSession.getIndexInfo(catalog, schema, table, unique, approximate);
     }
 
     @Override
     public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types) throws SQLException {
-        return QueryUtils.getUDTs(connection, catalog, schemaPattern, typeNamePattern, types);
+        return thriftSession.getUDTs(catalog, schemaPattern, typeNamePattern, types);
     }
 
     @Override
     public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
-        return QueryUtils.getSuperTypes(connection, catalog, schemaPattern, typeNamePattern);
+        return thriftSession.getSuperTypes(catalog, schemaPattern, typeNamePattern);
     }
 
     @Override
     public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return QueryUtils.getSuperTables(connection, catalog, schemaPattern, tableNamePattern);
+        return thriftSession.getSuperTables(catalog, schemaPattern, tableNamePattern);
     }
 
     @Override
     public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException {
-        return QueryUtils.getAttributes(connection, catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+        return thriftSession.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
     }
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        return QueryUtils.getClientInfoProperties(connection);
+        return thriftSession.getClientInfoProperties();
     }
 
     @Override
     public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern) throws SQLException {
-        return QueryUtils.getFunctions(connection, catalog, schemaPattern, functionNamePattern);
+        return thriftSession.getFunctions(catalog, schemaPattern, functionNamePattern);
     }
 
     @Override
     public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern) throws SQLException {
-        return QueryUtils.getFunctionColumns(connection, catalog, schemaPattern, functionNamePattern, columnNamePattern);
+        return thriftSession.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
     }
 
     @Override
     public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return QueryUtils.getPseudoColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        return thriftSession.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
     }
 
     @Override
@@ -922,6 +925,7 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
     public static class HiveDatabaseMetaDataBuilder implements Builder<HiveDatabaseMetaData> {
 
         private HiveConnection connection;
+        private ThriftSession thriftSession;
 
         private HiveDatabaseMetaDataBuilder() {
         }
@@ -931,11 +935,16 @@ public class HiveDatabaseMetaData extends AbstractDatabaseMetaData {
             return this;
         }
 
+        public HiveDatabaseMetaDataBuilder session(ThriftSession thriftSession) {
+            this.thriftSession = thriftSession;
+            return this;
+        }
+
         public HiveDatabaseMetaData build() {
 
             String productName = PropertyUtils.getInstance().getValue("product.name");
 
-            return new HiveDatabaseMetaData(connection, DriverUtils.buildUrl(connection.getThriftSession().getProperties()), productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
+            return new HiveDatabaseMetaData(connection, thriftSession, DriverUtils.buildUrl(thriftSession.getProperties()), productName, VersionUtils.DRIVER_VERSION, VersionUtils.getDriverMajorVersion(), VersionUtils.getDriverMinorVersion(), VersionUtils.HIVE_VERSION, VersionUtils.getHiveMajorVersion(), VersionUtils.getHiveMinorVersion());
         }
     }
 
