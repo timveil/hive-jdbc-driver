@@ -56,7 +56,7 @@ public class HiveResultSet extends AbstractResultSet {
     private SQLWarning sqlWarning;
 
 
-    public HiveResultSet(ThriftOperation thriftOperation, Statement statement, ResultSetIterator iterator, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
+    private HiveResultSet(ThriftOperation thriftOperation, Statement statement, ResultSetIterator iterator, int maxRows, int fetchSize, int fetchDirection, int resultSetType, int resultSetConcurrency, int resultSetHoldability) {
         this.thriftOperation = thriftOperation;
         this.statement = statement;
         this.iterator = iterator;

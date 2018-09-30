@@ -39,9 +39,7 @@ public class HiveDriver implements Driver {
 
             DriverManager.registerDriver(new HiveDriver());
 
-            if (log.isInfoEnabled()) {
-                log.info("driver [{}] has been registered.", HiveDriver.class.getName());
-            }
+            log.info("driver [{}] has been registered.", HiveDriver.class.getName());
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -73,11 +71,9 @@ public class HiveDriver implements Driver {
 
     public Connection connect(String url, Properties info) throws SQLException {
 
-        if (log.isInfoEnabled()) {
-            log.info("connecting to hive version [{}] with thrift protocol version [{}].  Please ensure these match your HiveServer2 instance or unexpected errors and behavior may occur.",
-                    PropertyUtils.getInstance().getValue("hive.version"),
-                    PropertyUtils.getInstance().getValue("thrift.protocol.version.default"));
-        }
+        log.info("connecting to hive version [{}] with thrift protocol version [{}].  Please ensure these match your HiveServer2 instance or unexpected errors and behavior may occur.",
+                PropertyUtils.getInstance().getValue("hive.version"),
+                PropertyUtils.getInstance().getValue("thrift.protocol.version.default"));
 
         url = StringUtils.trimToNull(url);
 
