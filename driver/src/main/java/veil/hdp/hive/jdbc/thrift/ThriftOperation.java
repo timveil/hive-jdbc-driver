@@ -117,7 +117,7 @@ public class ThriftOperation implements AutoCloseable {
                     log.warn(MessageFormat.format("sql exception: message [{0}]", e.getMessage()), e);
                 }
             }
-            
+
         } catch (TTransportException e) {
             log.warn(MessageFormat.format("thrift transport exception: type [{0}]", e.getType()), e);
         } catch (TException e) {
@@ -233,6 +233,10 @@ public class ThriftOperation implements AutoCloseable {
             if (hasResultSet) {
                 schema = Schema.builder().client(client).handle(operationHandle).build();
             } else {
+
+                // return actual modified count or zero since -1 is not a valid value when no result set exists
+                modifiedCount = 0;
+
                 if (operationHandle.isSetModifiedRowCount()) {
                     modifiedCount = (int) operationHandle.getModifiedRowCount();
                 }

@@ -163,11 +163,26 @@ public abstract class AbstractConnectionTest extends BaseTest {
     }
 
     @Test
-    public void testCreateDatabase() throws SQLException {
+    public void testCreateAndDropDatabase() throws SQLException {
         try (Statement statement = connection.createStatement()) {
             int updated = statement.executeUpdate("create database mytest");
 
-            log.debug("updated after create {}", updated);
+            log.debug("updated after create database {}", updated);
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            int updated = statement.executeUpdate("drop database mytest");
+
+            log.debug("updated after drop database {}", updated);
+        }
+    }
+
+    @Test
+    public void testCreateTable() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            int updated = statement.executeUpdate("create table mytesttable");
+
+            log.debug("updated after create table{}", updated);
         }
     }
 
