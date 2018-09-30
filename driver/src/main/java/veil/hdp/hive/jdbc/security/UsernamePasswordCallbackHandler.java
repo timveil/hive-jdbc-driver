@@ -21,11 +21,11 @@ import javax.security.auth.callback.*;
 class UsernamePasswordCallbackHandler implements CallbackHandler {
 
     private final String username;
-    private final String password;
+    private final char[] password;
 
     UsernamePasswordCallbackHandler(String username, String password) {
         this.username = username;
-        this.password = password;
+        this.password = password.toCharArray();
     }
 
     @Override
@@ -37,7 +37,7 @@ class UsernamePasswordCallbackHandler implements CallbackHandler {
                 nameCallback.setName(username);
             } else if (callback instanceof PasswordCallback) {
                 PasswordCallback passwordCallback = (PasswordCallback) callback;
-                passwordCallback.setPassword(password.toCharArray());
+                passwordCallback.setPassword(password);
             } else {
                 throw new UnsupportedCallbackException(callback, "callback class is not supported [" + callback.getClass().getName() + ']');
             }
