@@ -230,10 +230,12 @@ public final class HttpUtils {
 
         String scheme = sslEnabled ? HTTPS : HTTP;
 
+        String url = scheme + "://" + host + ':' + port + '/' + endpoint;
+
         try {
-            return new THttpClient(scheme + "://" + host + ':' + port + '/' + endpoint, httpClient);
+            return new THttpClient(url, httpClient);
         } catch (TTransportException e) {
-            throw new HiveThriftException(e);
+            throw new HiveThriftException("error creating client for url [" + url + ']', e);
         }
 
     }

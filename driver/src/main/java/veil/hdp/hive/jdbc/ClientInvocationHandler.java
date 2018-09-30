@@ -18,7 +18,6 @@ package veil.hdp.hive.jdbc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.thrift.TException;
 import veil.hdp.hive.jdbc.bindings.TCLIService;
 import veil.hdp.hive.jdbc.utils.StopWatch;
 
@@ -41,7 +40,6 @@ public class ClientInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-
         lock.lock();
 
         StopWatch sw = new StopWatch(method.getName());
@@ -50,16 +48,7 @@ public class ClientInvocationHandler implements InvocationHandler {
         try {
             return method.invoke(client, args);
         } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
-
-            if (targetException instanceof TException) {
-                throw targetException;
-            } else {
-                throw new TException("Error in calling method " + method.getName(), targetException);
-            }
-
-        } catch (Exception e) {
-            throw new TException("Error in calling method " + method.getName(), e);
+            throw e.getTargetException();
         } finally {
 
             sw.stop();

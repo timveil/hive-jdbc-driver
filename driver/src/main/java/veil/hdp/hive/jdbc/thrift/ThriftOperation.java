@@ -139,7 +139,7 @@ public class ThriftOperation implements AutoCloseable {
             return fetchResults.getResults();
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveThriftException("error getting TRowSet for [" + tFetchResultsReq.toString() + ']', e);
         }
     }
 

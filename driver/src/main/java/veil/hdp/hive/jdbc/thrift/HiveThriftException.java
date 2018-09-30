@@ -35,8 +35,12 @@ public class HiveThriftException extends RuntimeException {
     private String sqlState;
     private int errorCode;
 
-    public HiveThriftException(TException cause) {
-        super(cause);
+    public HiveThriftException(String message, TException cause) {
+        super(message, cause);
+    }
+
+    public HiveThriftException(Exception cause) {
+        super(cause.getMessage(), cause);
     }
 
 

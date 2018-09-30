@@ -103,7 +103,7 @@ public final class ThriftUtils {
                 // this often happens when the protocol of the driver is higher than supported by the server.  in other words, driver is newer than server.  handle this gracefully.
                 throw new InvalidProtocolException(e);
             } else {
-                throw new HiveThriftException(e);
+                throw new HiveThriftException("error opening session with [" + openSessionReq + ']', e);
             }
         }
 

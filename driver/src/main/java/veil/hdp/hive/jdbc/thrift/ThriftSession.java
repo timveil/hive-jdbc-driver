@@ -160,7 +160,7 @@ public class ThriftSession implements AutoCloseable {
 
 
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveThriftException("error getting columns for catalog " + catalog + ", schema pattern " + schemaPattern + ", table name pattern " + tableNamePattern + ", column name pattern " + columnNamePattern, e);
         }
 
     }
@@ -387,7 +387,7 @@ public class ThriftSession implements AutoCloseable {
         try {
             executeStatementResp = client.ExecuteStatement(executeStatementReq);
         } catch (TException e) {
-            throw new HiveThriftException(e);
+            throw new HiveThriftException("error executing sql [" + sql + ']', e);
         }
 
         ThriftUtils.checkStatus(executeStatementResp.getStatus());
@@ -434,7 +434,7 @@ public class ThriftSession implements AutoCloseable {
             try {
                 statusResp = client.GetOperationStatus(statusReq);
             } catch (TException e) {
-                throw new HiveThriftException(e);
+                throw new HiveThriftException("error checking status for [" + handle + ']', e);
             }
 
             ThriftUtils.checkStatus(statusResp.getStatus());
