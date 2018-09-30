@@ -25,6 +25,7 @@ import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
 import veil.hdp.hive.jdbc.TransportMode;
 import veil.hdp.hive.jdbc.utils.BinaryUtils;
+import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.HttpUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
@@ -95,13 +96,7 @@ public class ThriftTransport implements AutoCloseable {
 
             closeableList = null;
 
-            try {
-                transport.close();
-            } catch (Exception e) {
-                log.warn(e.getMessage(), e);
-            } finally {
-                transport = null;
-            }
+            DriverUtils.closeAndNull(transport);
 
         }
     }

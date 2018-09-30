@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.thrift.ThriftOperation;
 import veil.hdp.hive.jdbc.utils.Constants;
+import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 import veil.hdp.hive.jdbc.utils.ThriftUtils;
 
@@ -229,23 +230,11 @@ public class HiveStatement extends AbstractStatement {
             log.trace("attempting to close {}", this.getClass().getName());
 
             if (thriftOperation != null && !thriftOperation.isClosed()) {
-                try {
-                    thriftOperation.close();
-                } catch (Exception e) {
-                    log.warn(e.getMessage(), e);
-                } finally {
-                    thriftOperation = null;
-                }
+                DriverUtils.closeAndNull(thriftOperation);
             }
 
             if (resultSet != null && !resultSet.isClosed()) {
-                try {
-                    resultSet.close();
-                } catch (Exception e) {
-                    log.warn(e.getMessage(), e);
-                } finally {
-                    resultSet = null;
-                }
+                DriverUtils.closeAndNull(resultSet);
             }
         }
     }

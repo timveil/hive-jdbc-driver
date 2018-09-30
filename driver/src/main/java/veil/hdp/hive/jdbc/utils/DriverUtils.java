@@ -221,5 +221,15 @@ public final class DriverUtils {
 
     }
 
+    public static void closeAndNull(AutoCloseable closeable) {
+        try {
+            closeable.close();
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
+        } finally {
+            closeable = null;
+        }
+    }
+
 
 }

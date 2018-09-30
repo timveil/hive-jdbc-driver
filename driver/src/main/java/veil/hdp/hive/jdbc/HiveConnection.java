@@ -19,6 +19,7 @@ package veil.hdp.hive.jdbc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.thrift.ThriftSession;
+import veil.hdp.hive.jdbc.utils.DriverUtils;
 import veil.hdp.hive.jdbc.utils.QueryUtils;
 
 import java.sql.*;
@@ -61,13 +62,8 @@ public class HiveConnection extends AbstractConnection {
 
             log.trace("attempting to close {}", this.getClass().getName());
 
-            try {
-                thriftSession.close();
-            } catch (Exception e) {
-                log.warn(e.getMessage(), e);
-            } finally {
-                thriftSession = null;
-            }
+            DriverUtils.closeAndNull(thriftSession);
+
         }
     }
 
