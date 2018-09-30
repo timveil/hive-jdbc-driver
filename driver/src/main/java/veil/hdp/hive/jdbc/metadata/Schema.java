@@ -101,9 +101,12 @@ public class Schema {
 
         public Schema build() {
 
-            Map<String, ColumnDescriptor> mapping = new HashMap<>();
+            Map<String, ColumnDescriptor> mapping = null;
 
             if (columnDescriptors != null) {
+
+                mapping = new HashMap<>(columnDescriptors.size());
+
                 for (ColumnDescriptor descriptor : columnDescriptors) {
                     mapping.put(descriptor.getName(), descriptor);
                 }
@@ -111,9 +114,11 @@ public class Schema {
 
                 TTableSchema tableSchema = getTableSchema(client, operationHandle);
 
+                List<TColumnDesc> columns = tableSchema.getColumns();
 
+                mapping = new HashMap<>(columns.size());
 
-                for (TColumnDesc columnDesc : tableSchema.getColumns()) {
+                for (TColumnDesc columnDesc : columns) {
                     ColumnDescriptor descriptor = ColumnDescriptor.builder().thriftColumn(columnDesc).build();
                     mapping.put(descriptor.getName(), descriptor);
                 }

@@ -27,7 +27,6 @@ import veil.hdp.hive.jdbc.HiveSQLException;
 import java.net.URI;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -189,19 +188,18 @@ public final class DriverUtils {
 
     private static void parseQueryParameters(String uriQuery, Properties properties) {
 
-        Map<String, String> parameters = new HashMap<>();
-
         if (uriQuery != null) {
-            parameters.putAll(Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(uriQuery));
-        }
+            Map<String, String> parameters = Splitter.on("&").trimResults().omitEmptyStrings().withKeyValueSeparator("=").split(uriQuery);
 
-        for (Entry<String, String> entry : parameters.entrySet()) {
-            String value = StringUtils.trimToNull(entry.getValue());
+            for (Entry<String, String> entry : parameters.entrySet()) {
+                String value = StringUtils.trimToNull(entry.getValue());
 
-            if (value != null) {
-                properties.setProperty(normalizeKey(entry.getKey()), value);
+                if (value != null) {
+                    properties.setProperty(normalizeKey(entry.getKey()), value);
+                }
             }
         }
+
 
     }
 

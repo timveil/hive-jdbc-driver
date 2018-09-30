@@ -36,6 +36,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.*;
 
 
@@ -110,9 +111,11 @@ public final class ThriftUtils {
 
 
     private static Map<String, String> buildSessionConfig(Properties properties) {
-        Map<String, String> openSessionConfig = new HashMap<>();
+        Set<String> propertyNames = properties.stringPropertyNames();
 
-        for (String property : properties.stringPropertyNames()) {
+        Map<String, String> openSessionConfig = new HashMap<>(propertyNames.size() + 1);
+
+        for (String property : propertyNames) {
             // no longer going to use HiveConf.ConfVars to validate properties.  it requires too many dependencies.  let server side deal with this.
             if (property.startsWith("hive.")) {
                 openSessionConfig.put("set:hiveconf:" + property, properties.getProperty(property));
