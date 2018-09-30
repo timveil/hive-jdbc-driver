@@ -42,14 +42,14 @@ public class HiveResultSet extends AbstractResultSet {
     private final int resultSetConcurrency;
     private final int resultSetHoldability;
     // atomic
+    private final ThriftOperation thriftOperation;
+    private final ResultSetIterator iterator;
     private final AtomicBoolean lastColumnNull = new AtomicBoolean(true);
     private final AtomicBoolean closed = new AtomicBoolean(true);
     private final AtomicInteger rowCount = new AtomicInteger(0);
     private final AtomicReference<Row> currentRow = new AtomicReference<>();
     private final Statement statement;
     // constructor
-    private ThriftOperation thriftOperation;
-    private ResultSetIterator iterator;
     // public getter & setter
     private int fetchSize;
     private int fetchDirection;
@@ -105,8 +105,6 @@ public class HiveResultSet extends AbstractResultSet {
             } catch (Exception e) {
                 log.warn(e.getMessage(), e);
             } finally {
-                thriftOperation = null;
-                iterator = null;
                 currentRow.set(null);
             }
 
