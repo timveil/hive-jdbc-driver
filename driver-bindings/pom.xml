@@ -23,7 +23,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Driver Bindings</name>
+    <name>Hive Driver Bindings</name>
     <artifactId>driver-bindings</artifactId>
 
     <packaging>jar</packaging>
