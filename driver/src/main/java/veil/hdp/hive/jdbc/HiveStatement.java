@@ -107,7 +107,7 @@ public class HiveStatement extends AbstractStatement {
         boolean result = execute(sql);
 
         if (!result) {
-            throw new HiveSQLException("The query did not generate a result set!");
+            throw new HiveSQLException("The query returned a modified count (update) when a result set (query) was expected");
         }
 
         return resultSet;
@@ -119,7 +119,7 @@ public class HiveStatement extends AbstractStatement {
         boolean result = execute(sql);
 
         if (result) {
-            throw new HiveSQLException("The query generated a result set when an updated was expected");
+            throw new HiveSQLException("The query returned a result set (query) when a modified count (update) expected");
         }
 
         return updateCount;
