@@ -56,10 +56,19 @@
 
     <profiles>
         <profile>
-            <id>HIVE-3.1.0</id>
+            <id>HIVE-3.1.1</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <hive.version>3.1.0</hive.version>
+                <zookeeper.version>3.4.13</zookeeper.version>
+                <thrift.version>0.12.0</thrift.version>
+                <thrift.protocol.version>10</thrift.protocol.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>HIVE-3.1.0</id>
             <properties>
                 <hive.version>3.1.0</hive.version>
                 <zookeeper.version>3.4.13</zookeeper.version>

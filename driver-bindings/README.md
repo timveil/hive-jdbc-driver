@@ -17,11 +17,11 @@ To generate the java files in this module, you must first install Docker then do
 ```bash
 // run from root of driver-bindings module to pull the correct Docker image
 
-docker pull thrift:0.11.0
+docker pull thrift:0.12.0
 ```
 Then run the following command to use the Docker image to compile the `.thrift` file into java classes.
 
 
 ```bash
-docker run -v "$PWD:/data" thrift:0.11.0 thrift --gen java:beans -out /data/src/main/java /data/src/main/resources/TCLIService.thrift
+docker run -v "$PWD:/data" thrift:0.12.0 thrift --gen java:beans -out /data/src/main/java /data/src/main/resources/TCLIService.thrift
 ```
