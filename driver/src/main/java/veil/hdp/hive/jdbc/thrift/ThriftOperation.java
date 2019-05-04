@@ -61,6 +61,10 @@ public class ThriftOperation implements AutoCloseable {
         return new ThriftOperationBuilder();
     }
 
+    public boolean isOpen() {
+        return !closed.get();
+    }
+
     public boolean isClosed() {
         return closed.get();
     }

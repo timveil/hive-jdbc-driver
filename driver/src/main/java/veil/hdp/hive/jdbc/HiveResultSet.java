@@ -99,7 +99,7 @@ public class HiveResultSet extends AbstractResultSet {
             log.trace("attempting to close {}", this.getClass().getName());
 
             try {
-                if (!thriftOperation.isClosed()) {
+                if (thriftOperation.isOpen()) {
                     thriftOperation.close();
                 }
             } catch (Exception e) {

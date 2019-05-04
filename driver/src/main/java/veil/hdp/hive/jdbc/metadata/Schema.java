@@ -101,7 +101,7 @@ public class Schema {
 
         public Schema build() {
 
-            Map<String, ColumnDescriptor> mapping = null;
+            Map<String, ColumnDescriptor> mapping;
 
             if (columnDescriptors != null) {
 
