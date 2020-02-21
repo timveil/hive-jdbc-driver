@@ -44,7 +44,7 @@
         <guava.version>26.0-jre</guava.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <curator.version>4.0.1</curator.version>
-        <http.version>4.5.6</http.version>
+        <http.version>4.5.11</http.version>
         <metrics.version>4.0.2</metrics.version>
     </properties>
 
