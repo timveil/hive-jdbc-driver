@@ -43,7 +43,7 @@
         <log4j2.version>2.11.2</log4j2.version>
         <guava.version>27.1-jre</guava.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <curator.version>4.0.1</curator.version>
+        <curator.version>5.1.0</curator.version>
         <http.version>4.5.8</http.version>
         <metrics.version>4.0.2</metrics.version>
     </properties>
