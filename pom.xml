@@ -43,7 +43,7 @@
         <log4j2.version>2.11.2</log4j2.version>
         <guava.version>27.1-jre</guava.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <curator.version>4.0.1</curator.version>
+        <curator.version>5.1.0</curator.version>
         <http.version>4.5.8</http.version>
         <metrics.version>4.0.2</metrics.version>
     </properties>
@@ -56,125 +56,27 @@
 
     <profiles>
         <profile>
-            <id>HIVE-3.1.1</id>
+            <id>HIVE-3.x</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <hive.version>3.1.0</hive.version>
-                <zookeeper.version>3.4.13</zookeeper.version>
+                <hive.version>3.1.2</hive.version>
+                <zookeeper.version>3.6.1</zookeeper.version>
                 <thrift.version>0.12.0</thrift.version>
                 <thrift.protocol.version>10</thrift.protocol.version>
             </properties>
         </profile>
         <profile>
-            <id>HIVE-3.1.0</id>
+            <id>HIVE-2.x</id>
             <properties>
-                <hive.version>3.1.0</hive.version>
-                <zookeeper.version>3.4.13</zookeeper.version>
+                <hive.version>2.3.7</hive.version>
+                <zookeeper.version>3.6.1</zookeeper.version>
                 <thrift.version>0.11.0</thrift.version>
                 <thrift.protocol.version>10</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HIVE-2.3.3</id>
-            <properties>
-                <hive.version>2.3.3</hive.version>
-                <zookeeper.version>3.4.13</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>10</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HIVE-1.2.2</id>
-            <properties>
-                <hive.version>1.2.2</hive.version>
-                <zookeeper.version>3.4.13</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-3.0.0.0-1634</id>
-            <properties>
-                <hive.version>3.1.0.3.0.0.0-1634</hive.version>
-                <zookeeper.version>3.4.6.3.0.0.0-1634</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>10</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.5.0-292</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.5.0-292</hive.version>
-                <zookeeper.version>3.4.6.2.6.5.0-292</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.4.0-91</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.4.0-91</hive.version>
-                <zookeeper.version>3.4.6.2.6.4.0-91</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.3.0-235</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.3.0-235</hive.version>
-                <zookeeper.version>3.4.6.2.6.3.0-235</zookeeper.version>
-                <thrift.version>0.11.0</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.2.0-205</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.2.0-205</hive.version>
-                <zookeeper.version>3.4.6.2.6.2.0-205</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.1.0-129</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.1.0-129</hive.version>
-                <zookeeper.version>3.4.6.2.6.1.0-129</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.6.0.3-8</id>
-            <properties>
-                <hive.version>1.2.1000.2.6.0.3-8</hive.version>
-                <zookeeper.version>3.4.6.2.6.0.3-8</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>HDP-2.5.3.0-37</id>
-            <properties>
-                <hive.version>1.2.1000.2.5.3.0-37</hive.version>
-                <zookeeper.version>3.4.6.2.5.3.0-37</zookeeper.version>
-                <thrift.version>0.9.3</thrift.version>
-                <thrift.protocol.version>7</thrift.protocol.version>
             </properties>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>hwx-releases</id>
-            <url>http://repo.hortonworks.com/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-
 
     <build>
         <plugins>

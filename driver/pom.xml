@@ -131,11 +131,6 @@
                     <groupId>jline</groupId>
                     <artifactId>jline</artifactId>
                 </exclusion>
-                <!-- this is essentially optional inside of zookeeper and is only used on server side -->
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
@@ -209,14 +204,6 @@
                                         <include>**/*.MF</include>
                                         <include>**/driver-config.properties</include>
                                     </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.apache.zookeeper:zookeeper</artifact>
-                                    <!-- since i am excluding netty from my zookeeper dependency, lets remove the only classes that call reference it -->
-                                    <excludes>
-                                        <exclude>org/apache/zookeeper/server/NettyServerCnxn</exclude>
-                                        <exclude>org/apache/zookeeper/server/NettyServerCnxnFactory</exclude>
-                                    </excludes>
                                 </filter>
                             </filters>
                         </configuration>
