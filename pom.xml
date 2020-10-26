@@ -41,7 +41,7 @@
 
         <junit.version>5.7.0</junit.version>
         <log4j2.version>2.13.3</log4j2.version>
-        <guava.version>27.1-jre</guava.version>
+        <guava.version>30.0-jre</guava.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <curator.version>5.1.0</curator.version>
         <http.version>4.5.13</http.version>
@@ -62,7 +62,7 @@
             </activation>
             <properties>
                 <hive.version>3.1.2</hive.version>
-                <zookeeper.version>3.6.1</zookeeper.version>
+                <zookeeper.version>3.6.3</zookeeper.version>
                 <thrift.version>0.13.0</thrift.version>
                 <thrift.protocol.version>10</thrift.protocol.version>
             </properties>
