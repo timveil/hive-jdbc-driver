@@ -40,7 +40,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
 
         <junit.version>5.8.2</junit.version>
-        <log4j2.version>2.15.0</log4j2.version>
+        <log4j2.version>2.16.0</log4j2.version>
         <guava.version>31.0.1-jre</guava.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <curator.version>5.1.0</curator.version>
