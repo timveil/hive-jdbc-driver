@@ -16,6 +16,7 @@
 
 package veil.hdp.hive.jdbc.thrift;
 
+import org.apache.thrift.TConfiguration;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
@@ -90,5 +91,20 @@ public class WrappedTransport extends TTransport {
     @Override
     public void consumeBuffer(int len) {
         wrapped.consumeBuffer(len);
+    }
+
+    @Override
+    public void checkReadBytesAvailable(long l) throws TTransportException {
+        wrapped.checkReadBytesAvailable(l);
+    }
+
+    @Override
+    public void updateKnownMessageSize(long l) throws TTransportException {
+        wrapped.updateKnownMessageSize(l);
+    }
+
+    @Override
+    public TConfiguration getConfiguration() {
+        return wrapped.getConfiguration();
     }
 }

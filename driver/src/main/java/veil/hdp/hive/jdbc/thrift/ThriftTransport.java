@@ -20,6 +20,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import veil.hdp.hive.jdbc.Builder;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
 import veil.hdp.hive.jdbc.HiveException;
@@ -121,7 +122,11 @@ public class ThriftTransport implements AutoCloseable {
             List<Closeable> closeableList = new ArrayList<>(1);
 
             if (mode == TransportMode.binary) {
-                transport = BinaryUtils.createBinaryTransport(properties);
+                try {
+                    transport = BinaryUtils.createBinaryTransport(properties);
+                } catch (TTransportException e) {
+                    throw new HiveThriftException(e);
+                }
             } else if (mode == TransportMode.http) {
                 CloseableHttpClient client = HttpUtils.buildClient(properties);
 

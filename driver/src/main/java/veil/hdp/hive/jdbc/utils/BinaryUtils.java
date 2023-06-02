@@ -18,6 +18,7 @@ package veil.hdp.hive.jdbc.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.thrift.TConfiguration;
 import org.apache.thrift.transport.*;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 import veil.hdp.hive.jdbc.AuthenticationMode;
@@ -45,7 +46,7 @@ public final class BinaryUtils {
     private BinaryUtils() {
     }
 
-    private static TSocket createSocket(Properties properties) {
+    private static TSocket createSocket(Properties properties) throws TTransportException {
 
         String host = HiveDriverProperty.HOST_NAME.get(properties);
         int port = HiveDriverProperty.PORT_NUMBER.getInt(properties);
@@ -58,8 +59,7 @@ public final class BinaryUtils {
             return buildSSLSocket(properties, host, port, socketTimeout);
 
         } else {
-
-            return new TSocket(host, port, socketTimeout, connectionTimeout);
+            return new TSocket(new TConfiguration(), host, port, socketTimeout, connectionTimeout);
         }
 
     }
@@ -92,7 +92,7 @@ public final class BinaryUtils {
         }
     }
 
-    public static TTransport createBinaryTransport(Properties properties) {
+    public static TTransport createBinaryTransport(Properties properties) throws TTransportException {
         // todo: no support for delegation tokens
 
 
@@ -116,7 +116,7 @@ public final class BinaryUtils {
 
     }
 
-    private static TTransport buildSocketWithSASL(TSocket socket) {
+    private static TTransport buildSocketWithSASL(TSocket socket) throws TTransportException {
 
         try {
 
@@ -145,13 +145,13 @@ public final class BinaryUtils {
 
             return new JaasTransport(saslTransport, subject);
 
-        } catch (SaslException | LoginException e) {
+        } catch (SaslException | LoginException | TTransportException e) {
             throw new HiveException(e);
         }
 
     }
 
-    private static TTransport buildSaslTransport(Properties properties, TSocket socket) throws SaslException {
+    private static TTransport buildSaslTransport(Properties properties, TSocket socket) throws SaslException, TTransportException {
 
         ServicePrincipal servicePrincipal = PrincipalUtils.parseServicePrincipal(HiveDriverProperty.KERBEROS_SERVER_PRINCIPAL.get(properties), HiveDriverProperty.HOST_NAME.get(properties));
 
