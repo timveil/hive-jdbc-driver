@@ -63,7 +63,7 @@
             </activation>
             <properties>
                 <hive.version>3.1.3</hive.version>
-                <zookeeper.version>3.8.1</zookeeper.version>
+                <zookeeper.version>3.8.2</zookeeper.version>
                 <thrift.version>0.18.1</thrift.version>
                 <thrift.protocol.version>10</thrift.protocol.version>
             </properties>
