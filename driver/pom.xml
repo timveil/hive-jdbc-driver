@@ -76,8 +76,8 @@
 
         <!-- needed for http connectivity -->
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
             <version>${http.version}</version>
             <exclusions>
                 <exclusion>

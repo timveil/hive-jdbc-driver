@@ -17,15 +17,22 @@
 package veil.hdp.hive.jdbc.security.http;
 
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.protocol.HttpContext;
+import org.apache.hc.client5.http.utils.Base64;
+import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.protocol.HttpContext;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class BasicRequestInterceptor implements HttpRequestInterceptor {
+
     @Override
-    public void process(HttpRequest request, HttpContext context) throws HttpException {
-        request.addHeader(new BasicScheme().authenticate(new AnonymousCredentials(), request, context));
+    public void process(HttpRequest httpRequest, EntityDetails entityDetails, HttpContext httpContext) throws HttpException, IOException {
+        AnonymousCredentials anonymousCredentials = new AnonymousCredentials();
+
+        final String auth = anonymousCredentials.getUserPrincipal().getName() + ":" + String.valueOf(anonymousCredentials.getPassword());
+        final byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+        final String authHeader = "Basic " + new String(encodedAuth);
+        httpRequest.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
     }
 }

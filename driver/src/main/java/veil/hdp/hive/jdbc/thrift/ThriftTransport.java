@@ -16,7 +16,7 @@
 
 package veil.hdp.hive.jdbc.thrift;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.thrift.transport.TTransport;

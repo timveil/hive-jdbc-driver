@@ -15,13 +15,13 @@ I have tried many approaches to generate these files using Thrift... from instal
 To generate the java files in this module, you must first install Docker then do the following:
 
 ```bash
-// run from root of driver-bindings module to pull the correct Docker image
+// run from root of driver-bindings module to build the provided Docker image
 
-docker pull docker.io/ahawkins/thrift:0.18.1
+docker build -t hive-jdbc-driver/thrift:0.19.0 .
 ```
 Then run the following command to use the Docker image to compile the `.thrift` file into java classes.
 
 
 ```bash
-docker run -v "$PWD:/data" ahawkins/thrift:0.18.1 thrift --gen java:beans,generated_annotations=suppress -out /data/src/main/java /data/src/main/resources/TCLIService.thrift
+docker run -v "$PWD:/data" hive-jdbc-driver/thrift:0.19.0 thrift --gen java:beans,generated_annotations=suppress -out /data/src/main/java /data/src/main/resources/TCLIService.thrift
 ```

@@ -16,13 +16,16 @@
 
 package veil.hdp.hive.jdbc.security.http;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.protocol.HttpContext;
+
+import org.apache.hc.client5.http.cookie.Cookie;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.utils.Base64;
+import org.apache.hc.core5.http.EntityDetails;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import veil.hdp.hive.jdbc.HiveDriverProperty;
@@ -32,6 +35,7 @@ import veil.hdp.hive.jdbc.utils.PrincipalUtils;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.List;
@@ -53,12 +57,12 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
     }
 
     @Override
-    public void process(HttpRequest request, HttpContext context) {
+    public void process(HttpRequest httpRequest, EntityDetails entityDetails, HttpContext httpContext) throws HttpException, IOException {
 
         boolean authenticate = true;
 
         if (cookieStore != null) {
-            context.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+            httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
             String cookieName = HiveDriverProperty.HTTP_COOKIE_NAME.get(properties);
 
@@ -105,11 +109,12 @@ public class KerberosRequestInterceptor implements HttpRequestInterceptor {
                     return new String(BASE_64.encode(token));
                 });
 
-                request.addHeader("Authorization: Negotiate ", header);
+                httpRequest.addHeader("Authorization: Negotiate ", header);
             } catch (LoginException | PrivilegedActionException e) {
                 log.error(e.getMessage(), e);
             }
         }
 
     }
+
 }
