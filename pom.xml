@@ -46,7 +46,7 @@
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <curator.version>5.6.0</curator.version>
         <http.version>5.3</http.version>
-        <metrics.version>4.2.24</metrics.version>
+        <metrics.version>4.2.25</metrics.version>
     </properties>
 
     <scm>
