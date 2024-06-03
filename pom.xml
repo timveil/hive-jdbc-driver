@@ -72,7 +72,7 @@
             <id>HIVE-2.x</id>
             <properties>
                 <hive.version>2.3.7</hive.version>
-                <zookeeper.version>3.6.1</zookeeper.version>
+                <zookeeper.version>3.9.2</zookeeper.version>
                 <thrift.version>0.19.0</thrift.version>
                 <thrift.protocol.version>10</thrift.protocol.version>
             </properties>
